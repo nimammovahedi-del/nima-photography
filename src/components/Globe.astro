@@ -108,7 +108,7 @@ const config = {
       {
         regions.map((r) => (
           <section class="region" data-list={r} aria-label={`Countries in ${r}`}>
-            <h3>{r}</h3>
+            <h2>{r}</h2>
             <ul>
               {sortedPlaces
                 .filter((p) => p.region === r)
@@ -130,7 +130,7 @@ const config = {
 
       <section class="country" hidden aria-live="polite">
         <button type="button" class="back"><span aria-hidden="true">←</span> <span class="back-label">Back</span></button>
-        <h3></h3>
+        <h2></h2>
         <ul class="cities"></ul>
         <a class="all accent" href="#"></a>
       </section>
@@ -190,7 +190,7 @@ const config = {
     lists.forEach((l) => (l.hidden = true));
     countryPanel.hidden = false;
     countryPanel.querySelector('.back-label')!.textContent = p.region;
-    countryPanel.querySelector('h3')!.textContent = p.name;
+    countryPanel.querySelector('h2')!.textContent = p.name;
     const ul = countryPanel.querySelector('.cities')!;
     ul.replaceChildren(
       ...p.cities.map((c) => {
@@ -522,7 +522,7 @@ const config = {
   .panel {
     min-height: 220px;
   }
-  .panel h3 {
+  .panel h2 {
     margin: 0 0 12px;
     font-size: clamp(26px, 4vw, 34px);
     font-weight: 300;
