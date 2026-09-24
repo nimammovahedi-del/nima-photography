@@ -1,0 +1,120 @@
+# One entry per photo. Order here = order on the page.
+#
+#   file:     path inside src/photos/ (the folder sets the category)
+#   title:    shown in captions
+#   alt:      describes the photo for screen readers — please always fill this in
+#   filmSim:  film photos only, e.g. Classic Chrome, Kodak Portra 400
+#   featured: true to include on the home page
+#
+# Camera settings are read from the photo's EXIF automatically.
+
+# ── Architecture ──
+- file: architecture/placeholder-01.jpg
+  title: Architecture Study 1
+  alt: Placeholder image — replace with a description of the photo
+  featured: true
+- file: architecture/placeholder-02.jpg
+  title: Architecture Study 2
+  alt: Placeholder image — replace with a description of the photo
+- file: architecture/placeholder-03.jpg
+  title: Architecture Study 3
+  alt: Placeholder image — replace with a description of the photo
+- file: architecture/placeholder-04.jpg
+  title: Architecture Study 4
+  alt: Placeholder image — replace with a description of the photo
+- file: architecture/placeholder-05.jpg
+  title: Architecture Study 5
+  alt: Placeholder image — replace with a description of the photo
+
+# ── Cities ──
+- file: cities/placeholder-01.jpg
+  title: Cities Study 1
+  alt: Placeholder image — replace with a description of the photo
+  featured: true
+- file: cities/placeholder-02.jpg
+  title: Cities Study 2
+  alt: Placeholder image — replace with a description of the photo
+  featured: true
+- file: cities/placeholder-03.jpg
+  title: Cities Study 3
+  alt: Placeholder image — replace with a description of the photo
+- file: cities/placeholder-04.jpg
+  title: Cities Study 4
+  alt: Placeholder image — replace with a description of the photo
+- file: cities/placeholder-05.jpg
+  title: Cities Study 5
+  alt: Placeholder image — replace with a description of the photo
+
+# ── Nature ──
+- file: nature/placeholder-01.jpg
+  title: Nature Study 1
+  alt: Placeholder image — replace with a description of the photo
+  featured: true
+- file: nature/placeholder-02.jpg
+  title: Nature Study 2
+  alt: Placeholder image — replace with a description of the photo
+- file: nature/placeholder-03.jpg
+  title: Nature Study 3
+  alt: Placeholder image — replace with a description of the photo
+  featured: true
+- file: nature/placeholder-04.jpg
+  title: Nature Study 4
+  alt: Placeholder image — replace with a description of the photo
+- file: nature/placeholder-05.jpg
+  title: Nature Study 5
+  alt: Placeholder image — replace with a description of the photo
+
+# ── Animals ──
+- file: animals/placeholder-01.jpg
+  title: Animals Study 1
+  alt: Placeholder image — replace with a description of the photo
+  featured: true
+- file: animals/placeholder-02.jpg
+  title: Animals Study 2
+  alt: Placeholder image — replace with a description of the photo
+- file: animals/placeholder-03.jpg
+  title: Animals Study 3
+  alt: Placeholder image — replace with a description of the photo
+- file: animals/placeholder-04.jpg
+  title: Animals Study 4
+  alt: Placeholder image — replace with a description of the photo
+
+# ── Film ──
+- file: film/placeholder-01.jpg
+  title: Film Study 1
+  alt: Placeholder image — replace with a description of the photo
+  filmSim: Classic Chrome
+  featured: true
+- file: film/placeholder-02.jpg
+  title: Film Study 2
+  alt: Placeholder image — replace with a description of the photo
+  filmSim: Classic Neg
+- file: film/placeholder-03.jpg
+  title: Film Study 3
+  alt: Placeholder image — replace with a description of the photo
+  filmSim: Nostalgic Neg
+  featured: true
+- file: film/placeholder-04.jpg
+  title: Film Study 4
+  alt: Placeholder image — replace with a description of the photo
+  filmSim: Reala Ace
+- file: film/placeholder-05.jpg
+  title: Film Study 5
+  alt: Placeholder image — replace with a description of the photo
+  filmSim: Eterna
+- file: film/placeholder-06.jpg
+  title: Film Study 6
+  alt: Placeholder image — replace with a description of the photo
+  filmSim: Acros
+- file: film/placeholder-07.jpg
+  title: Film Study 7
+  alt: Placeholder image — replace with a description of the photo
+  filmSim: Classic Chrome
+- file: film/placeholder-08.jpg
+  title: Film Study 8
+  alt: Placeholder image — replace with a description of the photo
+  filmSim: Nostalgic Neg
+- file: film/placeholder-09.jpg
+  title: Film Study 9
+  alt: Placeholder image — replace with a description of the photo
+  filmSim: Pro Neg Std

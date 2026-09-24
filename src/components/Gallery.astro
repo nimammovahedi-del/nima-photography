@@ -1,0 +1,179 @@
+---
+// Masonry grid of photos. Never crops: every photo keeps its own shape.
+// Clicking a photo opens the lightbox (see Lightbox.astro).
+import { Picture, getImage } from 'astro:assets';
+import type { Photo } from '../lib/photos';
+import Lightbox from './Lightbox.astro';
+
+interface Props {
+  photos: Photo[];
+  /** 'film' = framed prints; single centred column until the collection grows. */
+  variant?: 'default' | 'film';
+  /** How many photos load immediately (the rest lazy-load). */
+  eager?: number;
+  label: string;
+}
+
+const { photos, variant = 'default', eager = 2, label } = Astro.props;
+
+// Film stays a single, contact-sheet-like column until there are enough photos for two.
+const FILM_TWO_COLUMN_AT = 12;
+const layout =
+  variant === 'film' ? (photos.length >= FILM_TWO_COLUMN_AT ? 'film-2' : 'film-1') : 'grid';
+
+const sizes = {
+  grid: '(min-width: 1280px) 30vw, (min-width: 768px) 46vw, 100vw',
+  'film-1': '(min-width: 768px) 560px, 92vw',
+  'film-2': '(min-width: 1024px) 440px, (min-width: 768px) 46vw, 92vw',
+}[layout];
+
+const WIDTHS = [480, 720, 960, 1280, 1600, 2000];
+
+const items = await Promise.all(
+  photos.map(async (p) => {
+    const w = p.image.width;
+    const large = await getImage({ src: p.image, width: Math.min(2400, w), format: 'webp' });
+    return {
+      ...p,
+      widths: [...WIDTHS.filter((x) => x < w), Math.min(w, 2400)],
+      large,
+    };
+  }),
+);
+---
+
+<section class:list={['gallery', layout]} data-gallery aria-label={label}>
+  {
+    items.map((p, i) => (
+      <figure class:list={['item', { 'is-film': p.category === 'film' }]}>
+        <a
+          class="frame"
+          href={p.large.src}
+          data-pswp-width={p.large.attributes.width}
+          data-pswp-height={p.large.attributes.height}
+          data-title={p.title}
+          data-sim={p.filmSim}
+          data-exif={p.exif}
+          style={`background-image:url(${p.blur});aspect-ratio:${p.image.width}/${p.image.height}`}
+        >
+          <Picture
+            src={p.image}
+            alt={p.alt}
+            formats={['avif', 'webp']}
+            widths={p.widths}
+            sizes={sizes}
+            loading={i < eager ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : undefined}
+            decoding="async"
+          />
+          <span class="visually-hidden">Open {p.title} full screen</span>
+        </a>
+        {variant === 'default' && p.category === 'film' && (
+          <figcaption>
+            <span class="t">Film{p.filmSim && ` · ${p.filmSim}`}</span>
+          </figcaption>
+        )}
+        {variant === 'film' && (
+          <figcaption>
+            <span class="t">{p.title}</span>
+            {p.filmSim && <span class="sim">{p.filmSim}</span>}
+          </figcaption>
+        )}
+      </figure>
+    ))
+  }
+</section>
+
+<Lightbox />
+
+<style>
+  .gallery {
+    margin: 0;
+  }
+
+  /* Masonry via CSS columns: 1 on phones, 2 on tablets, 3 on large screens. */
+  .grid {
+    columns: 1;
+    column-gap: var(--gap);
+  }
+  @media (min-width: 768px) {
+    .grid {
+      columns: 2;
+    }
+  }
+  @media (min-width: 1280px) {
+    .grid {
+      columns: 3;
+    }
+  }
+
+  .item {
+    margin: 0 0 var(--gap);
+    break-inside: avoid;
+  }
+
+  .frame {
+    display: block;
+    background-size: cover;
+    background-color: var(--bg-raised);
+    overflow: hidden;
+    cursor: zoom-in;
+  }
+  .frame :global(img) {
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.25s ease;
+  }
+  @media (hover: hover) {
+    .frame:hover :global(img) {
+      opacity: 0.88;
+    }
+  }
+
+  /* ── Film: framed prints ───────────────── */
+  .film-1,
+  .film-2 {
+    --print-gap: 56px;
+  }
+  .film-1 {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .film-2 {
+    max-width: 920px;
+    margin: 0 auto;
+    column-gap: 40px;
+  }
+  @media (min-width: 768px) {
+    .film-2 {
+      columns: 2;
+    }
+  }
+  .film-1 .item,
+  .film-2 .item {
+    margin-bottom: var(--print-gap);
+  }
+  .film-1 .frame,
+  .film-2 .frame,
+  .is-film .frame {
+    /* Photo sits inside a thin cream border, like a print. The padding box keeps the image uncropped. */
+    padding: 6px;
+    border: 1px solid var(--film-frame);
+    background-origin: content-box;
+    background-clip: content-box;
+    box-sizing: content-box;
+  }
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 10px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  figcaption .sim {
+    font-style: italic;
+    text-align: right;
+  }
+</style>

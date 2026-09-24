@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Gallery from '../components/Gallery.astro';
+import { categories, site } from '../site.config';
+import { getFeatured } from '../lib/photos';
+
+const featured = await getFeatured();
+---
+
+<BaseLayout>
+  <section class="intro">
+    <h1>{site.name}</h1>
+    <p>{site.intro}</p>
+  </section>
+
+  <h2 class="visually-hidden">Selected work</h2>
+  <Gallery photos={featured} label="Selected photographs" />
+
+  <nav class="explore" aria-label="Collections">
+    {
+      categories.map((c) => (
+        <a href={`/${c.slug}`} class:list={{ film: c.slug === 'film' }}>
+          {c.label} <span aria-hidden="true">→</span>
+        </a>
+      ))
+    }
+  </nav>
+</BaseLayout>
+
+<style>
+  .intro {
+    max-width: 36rem;
+    padding: 48px 0 40px;
+  }
+  .intro h1 {
+    margin: 0 0 12px;
+    font-size: clamp(28px, 7vw, 44px);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .intro p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .explore {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    padding-top: 40px;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .explore a {
+    text-decoration: none;
+    color: var(--muted);
+    padding: 6px 0;
+  }
+  .explore a:hover {
+    color: var(--text);
+  }
+  .explore .film {
+    color: var(--film-frame);
+  }
+</style>

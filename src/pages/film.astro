@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Gallery from '../components/Gallery.astro';
+import { getCategory } from '../lib/photos';
+
+const photos = await getCategory('film');
+---
+
+<BaseLayout title="Film" description="Film simulation photography by Nima Movahedi." film>
+  <header class="page-head film-head">
+    <h1>Film</h1>
+    <p>A smaller, slower collection — shot with film simulations.</p>
+  </header>
+  <Gallery photos={photos} variant="film" eager={1} label="Film photographs" />
+</BaseLayout>
+
+<style>
+  .film-head {
+    max-width: 560px;
+    margin: 0 auto;
+    padding-top: 56px;
+    padding-bottom: 48px;
+    text-align: center;
+  }
+</style>

@@ -1,0 +1,147 @@
+---
+// Full-screen viewer powered by PhotoSwipe.
+// Swipe on phones · ← → and Esc on desktop · caption with optional camera settings (ⓘ).
+---
+
+<script>
+  import PhotoSwipeLightbox from 'photoswipe/lightbox';
+  import 'photoswipe/style.css';
+
+  const esc = (s = '') =>
+    s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((gallery) => {
+    const lightbox = new PhotoSwipeLightbox({
+      gallery,
+      children: 'a.frame',
+      pswpModule: () => import('photoswipe'),
+      bgOpacity: 1,
+      showHideAnimationType: 'fade',
+      imageClickAction: 'close',
+      tapAction: 'toggle-controls',
+      wheelToZoom: false,
+      // Leave room at the bottom for the caption so it never covers the photo.
+      paddingFn: (viewport) => ({
+        top: viewport.x < 768 ? 56 : 64,
+        bottom: viewport.x < 768 ? 88 : 96,
+        left: viewport.x < 768 ? 0 : 48,
+        right: viewport.x < 768 ? 0 : 48,
+      }),
+      closeTitle: 'Close (Esc)',
+      arrowPrevTitle: 'Previous (←)',
+      arrowNextTitle: 'Next (→)',
+    });
+
+    lightbox.on('uiRegister', () => {
+      const pswp = lightbox.pswp!;
+      let showInfo = false;
+
+      pswp.ui!.registerElement({
+        name: 'custom-caption',
+        order: 9,
+        isButton: false,
+        appendTo: 'root',
+        onInit: (el) => {
+          el.setAttribute('aria-live', 'polite');
+          const render = () => {
+            const d = (pswp.currSlide?.data.element as HTMLElement | undefined)?.dataset ?? {};
+            const title = esc(d.title);
+            const sim = d.sim ? `<span class="pswp-sim">${esc(d.sim)}</span>` : '';
+            const info =
+              d.exif && showInfo ? `<span class="pswp-exif">${esc(d.exif)}</span>` : '';
+            el.innerHTML = `<span class="pswp-title">${title}</span>${sim}${info}`;
+            infoBtn?.toggleAttribute('hidden', !d.exif);
+          };
+          pswp.on('change', render);
+          pswp.on('info-toggle' as any, render);
+        },
+      });
+
+      let infoBtn: HTMLButtonElement | undefined;
+      pswp.ui!.registerElement({
+        name: 'info',
+        order: 15,
+        isButton: true,
+        tagName: 'button',
+        title: 'Camera settings (i)',
+        ariaLabel: 'Show camera settings',
+        html: '<span aria-hidden="true" class="pswp-info-icon">i</span>',
+        onInit: (el) => {
+          infoBtn = el as HTMLButtonElement;
+          el.setAttribute('aria-pressed', 'false');
+        },
+        onClick: (_e, el) => {
+          showInfo = !showInfo;
+          el.setAttribute('aria-pressed', String(showInfo));
+          pswp.dispatch('info-toggle' as any);
+        },
+      });
+
+      pswp.on('keydown', (e) => {
+        if (e.originalEvent.key === 'i') {
+          infoBtn?.click();
+        }
+      });
+    });
+
+    lightbox.init();
+  });
+</script>
+
+<style is:global>
+  .pswp {
+    --pswp-bg: var(--bg);
+    --pswp-icon-color: var(--text);
+    --pswp-icon-color-secondary: var(--bg);
+    font-family: var(--font);
+  }
+  .pswp__custom-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    gap: 4px 14px;
+    min-height: 72px;
+    padding: 16px var(--gutter) max(18px, env(safe-area-inset-bottom));
+    color: var(--text);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    text-align: center;
+    pointer-events: none;
+  }
+  .pswp-sim {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .pswp-exif {
+    flex-basis: 100%;
+    color: var(--muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .pswp__button--info {
+    display: grid;
+    place-items: center;
+  }
+  .pswp__button--info[hidden] {
+    display: none;
+  }
+  .pswp-info-icon {
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    color: var(--text);
+    font: italic 600 12px/1 Georgia, serif;
+  }
+  .pswp__button--info[aria-pressed='true'] .pswp-info-icon {
+    background: var(--text);
+    color: var(--bg);
+  }
+</style>
