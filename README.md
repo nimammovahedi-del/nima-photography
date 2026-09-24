@@ -49,8 +49,6 @@ npm run dev      # open http://localhost:4321 — the page updates as you edit
    - **country / city** make the photo appear under **Places → that country / city** too, whichever tab
      it lives in. So the Barbican shot above shows in Architecture → Brutalism *and* Places → England →
      London.
-   - **featured: true** adds the photo to the mixed feed on the landing page (the feed alternates
-     between tabs automatically, so mark a few from each — including a film shot or two).
    - The **order in this file is the order on the page**.
    - **alt** describes the photo for people using screen readers. Please always fill it in.
    - Camera, lens, aperture, shutter speed and ISO are **read from the photo's EXIF automatically** and
@@ -86,8 +84,10 @@ All of these live in `src/site.config.ts`:
 
 ## The globe
 
-- **Landing page** — a compact globe beside the intro. Drag to spin it; clicking a highlighted country
-  opens that country's page.
+- **Landing page** — one full-window screen: your name and intro on the left, a large globe cut off
+  by the right edge (rising from the bottom on phones). Drag to spin, pinch or two-finger scroll to
+  zoom. Clicking a country flies in to it, drops its city pins, then glides into its page. The
+  **Menu** button slides the tab list in beside the intro without covering the globe.
 - **Places page** — three stacked region panels (Americas, Europe, Africa). Click one and it opens
   out to a full-screen map with its countries labelled; click a country to zoom in to its city pins.
   **Pinch or two-finger scroll** (trackpad) zooms; zooming out — or the back button, Esc, or the

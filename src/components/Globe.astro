@@ -1,21 +1,16 @@
 ---
-// Compact landing-page globe: drag to spin, click a country to open its page.
-// A still picture is drawn at build time so something shows instantly; the interactive
-// version (src/scripts/globe.ts) loads when the globe scrolls into view.
+// The landing page's large globe. Drag to spin, pinch/scroll to zoom. Clicking a country flies
+// in to it, drops its city pins, then glides into that country's page (the map there picks up
+// where the globe left off). A still picture is drawn at build time so it shows instantly.
 import '../styles/map.css';
 import { geoGraticule10, geoOrthographic, geoPath } from 'd3-geo';
-import type { Geometry } from 'geojson';
 import { sortedPlaces } from '../site.config';
-import { countries, countryView, findCountry, mainland } from '../lib/world';
+import { countries } from '../lib/world';
 
 const S = 600;
-const base = S / 2 - 14; // radius at which the whole globe fits, with a little breathing room
-
-// Start turned towards Europe (where most of the countries are), whole globe visible.
-const europe = sortedPlaces
-  .filter((p) => p.region === 'Europe')
-  .map((p) => mainland(findCountry(p.map)!.geometry));
-const { center } = countryView({ type: 'GeometryCollection', geometries: europe } as Geometry, [], S, S, 60);
+const base = S / 2 - 4;
+// Turned so your countries in Europe and North Africa sit in the visible (left) part of the globe.
+const center: [number, number] = [36, 30];
 
 const projection = geoOrthographic()
   .translate([S / 2, S / 2])
@@ -36,7 +31,8 @@ const config = {
   width: S,
   height: S,
   start: { center, scale: base },
-  minScale: base * 0.85,
+  minScale: base * 0.9,
+  touchVertical: true,
   places: sortedPlaces.map((p) => ({
     name: p.name,
     map: p.map,
@@ -50,9 +46,9 @@ const config = {
 <div class="globe map-ui" data-globe data-config={JSON.stringify(config)}>
   <svg class="map" viewBox={`0 0 ${S} ${S}`} role="img" aria-label="Globe with the countries I've photographed highlighted">
     <defs>
-      <radialGradient id="globe-shade" cx="35%" cy="30%" r="75%">
-        <stop offset="0" stop-color="#151515"></stop>
-        <stop offset="1" stop-color="#0b0b0b"></stop>
+      <radialGradient id="globe-shade" cx="38%" cy="32%" r="72%">
+        <stop offset="0" stop-color="#1d1d1b"></stop>
+        <stop offset="1" stop-color="#0d0d0d"></stop>
       </radialGradient>
     </defs>
     <circle class="sphere" cx={S / 2} cy={S / 2} r={base}></circle>
@@ -71,33 +67,55 @@ const config = {
 
   const root = document.querySelector<HTMLElement>('[data-globe]')!;
   const cfg: MapConfig = JSON.parse(root.dataset.config!);
-  new IntersectionObserver(
-    (entries, io) => {
-      if (!entries.some((e) => e.isIntersecting)) return;
-      io.disconnect();
-      import('../scripts/globe').then((m) =>
-        m.createMap(root, cfg, { onCountryClick: (p) => location.assign(`/places/${p.slug}`) }),
-      );
-    },
-    { rootMargin: '300px' },
-  ).observe(root);
+  const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  let going = false;
+
+  import('../scripts/globe').then(async (m) => {
+    const engine = await m.createMap(root, cfg, {
+      async onCountryClick(p) {
+        if (going) return;
+        going = true;
+        root.classList.add('travelling');
+        // 1) fly in to the country, 2) let the pins land, 3) glide into its page.
+        await engine.showCountry(p);
+        await wait(650);
+        root.style.setProperty('view-transition-name', 'country-map');
+        try {
+          sessionStorage.setItem('from-globe', '1');
+        } catch {}
+        location.assign(`/places/${p.slug}`);
+      },
+    });
+    // Coming back with the browser's Back button: reset to the whole globe.
+    window.addEventListener('pageshow', (e) => {
+      if (!e.persisted) return;
+      going = false;
+      root.classList.remove('travelling');
+      root.style.removeProperty('view-transition-name');
+      engine.reset();
+    });
+  });
 </script>
 
 <style>
   .globe {
     width: 100%;
     aspect-ratio: 1;
-    touch-action: pan-y; /* sideways drags spin the globe; vertical ones scroll the page */
+    touch-action: none; /* the landing page doesn't scroll, so every gesture belongs to the globe */
+    filter: drop-shadow(0 0 80px rgb(201 188 152 / 0.07));
   }
   .globe :global(.sphere) {
     fill: url(#globe-shade);
   }
-  /* Fade the globe's edge into the page so it sits quietly behind the content. */
-  .globe {
-    -webkit-mask-image: radial-gradient(circle closest-side, #000 62%, transparent 100%);
-    mask-image: radial-gradient(circle closest-side, #000 62%, transparent 100%);
+  .globe :global(.graticule) {
+    stroke: #232321;
   }
-  .globe :global(.land path) {
-    stroke-width: 0.4;
+  .globe:global(.travelling) {
+    cursor: progress;
+  }
+  /* Zoomed into a country the sea fills the whole square — feather its edges into the page. */
+  .globe:global(.focus) {
+    -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
   }
 </style>

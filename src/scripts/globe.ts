@@ -115,11 +115,11 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   // ── Camera flights, arcing out a little on long trips ──
   let anim = 0;
   let finishFlight: (() => void) | undefined;
-  function flyTo(to: MapView, ms = 1100) {
+  function flyTo(to: MapView, msOverride?: number) {
     cancelAnimationFrame(anim);
     finishFlight?.();
     stopSpin();
-    if (reduceMotion() || ms === 0) {
+    if (reduceMotion() || msOverride === 0) {
       center = to.center;
       scale = to.scale;
       draw();
@@ -129,7 +129,10 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     const fromScale = scale;
     const interp = geoInterpolate(from, to.center);
     const dist = (geoDistance(from, to.center) * 180) / Math.PI;
-    const dip = Math.min(dist / 120, 0.45);
+    const zoom = Math.abs(Math.log(to.scale / fromScale));
+    // Longer journeys (in distance or zoom) take a little longer, so every flight feels unhurried.
+    const ms = msOverride ?? Math.min(1700, Math.max(850, 700 + dist * 5 + zoom * 220));
+    const dip = Math.min(dist / 140, 0.35); // pull back a touch mid-flight on long trips
     const t0 = performance.now();
     return new Promise<void>((resolve) => {
       finishFlight = resolve;
@@ -232,7 +235,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     return { center: v.center, scale: Math.min(v.scale, MAX_SCALE) };
   }
 
-  async function showRegion(name: string, ms = 1100) {
+  async function showRegion(name: string, ms?: number) {
     const mine = ++request;
     const v = regionView(name);
     region = name;
@@ -257,7 +260,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     root.classList.add('focus');
     shapes.forEach((s) => s.el.classList.toggle('focused', s.place === place));
     setMarkers([]);
-    await Promise.all([flyTo({ center: v.center, scale: focusScale }, 1400), detailReady]);
+    await Promise.all([flyTo({ center: v.center, scale: focusScale }), detailReady]);
     if (mine !== request) return;
     draw();
     setMarkers(
@@ -429,12 +432,25 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
 
   draw();
   root.classList.add('live');
+  // Fetch the detailed outlines quietly in the background, so zooming into a country is
+  // smooth from the first frame instead of swapping shapes at the end.
+  (window.requestIdleCallback ?? setTimeout)(() => loadDetail().then((d) => void (detail = d)));
+
+  /** Back to the starting view, with no country selected. */
+  function reset() {
+    request++;
+    region = null;
+    unfocus();
+    setMarkers([]);
+    flyTo(cfg.start, 0);
+  }
 
   return {
     showRegion,
     showCountry,
     highlight,
     regionView,
+    reset,
     destroy() {
       cancelAnimationFrame(anim);
       stopSpin();

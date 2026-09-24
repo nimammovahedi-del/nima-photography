@@ -8,20 +8,17 @@
 #   country:  where it was taken (must match a country in site.config.ts) — the photo
 #   city:     then also appears under Places → that country / city, whatever its tab
 #   filmSim:  film photos only, e.g. Classic Chrome, Kodak Portra 400
-#   featured: true = include in the mixed feed on the landing page
 #
 # Camera settings are read from the photo's EXIF automatically.
 
 # ── Architecture ──
 - file: architecture/placeholder-01.jpg
-  featured: true
   title: Ancient Study
   alt: Placeholder image — replace with a description of the photo
   sub: Ancient
   country: Egypt
   city: Luxor
 - file: architecture/placeholder-02.jpg
-  featured: true
   title: Brutalism Study
   alt: Placeholder image — replace with a description of the photo
   sub: Brutalism
@@ -40,7 +37,6 @@
   country: England
   city: Bath
 - file: architecture/placeholder-05.jpg
-  featured: true
   title: Islamic Study
   alt: Placeholder image — replace with a description of the photo
   sub: Islamic
@@ -67,13 +63,11 @@
 
 # ── Places ──
 - file: places/placeholder-01.jpg
-  featured: true
   title: Cairo
   alt: Placeholder image — replace with a description of the photo
   country: Egypt
   city: Cairo
 - file: places/placeholder-02.jpg
-  featured: true
   title: London
   alt: Placeholder image — replace with a description of the photo
   country: England
@@ -84,7 +78,6 @@
   country: Norway
   city: Oslo
 - file: places/placeholder-04.jpg
-  featured: true
   title: Lisbon
   alt: Placeholder image — replace with a description of the photo
   country: Portugal
@@ -130,7 +123,6 @@
 
 # ── Nature ──
 - file: nature/placeholder-01.jpg
-  featured: true
   title: Coast Study
   alt: Placeholder image — replace with a description of the photo
   sub: Coast
@@ -143,7 +135,6 @@
   country: United States
   city: Palm Desert
 - file: nature/placeholder-03.jpg
-  featured: true
   title: Forest Study
   alt: Placeholder image — replace with a description of the photo
   sub: Forest
@@ -156,7 +147,6 @@
   country: Norway
   city: Bergen
 - file: nature/placeholder-05.jpg
-  featured: true
   title: Mountains Study
   alt: Placeholder image — replace with a description of the photo
   sub: Mountains
@@ -171,7 +161,6 @@
 
 # ── Animals ──
 - file: animals/placeholder-01.jpg
-  featured: true
   title: Birds Study
   alt: Placeholder image — replace with a description of the photo
   sub: Birds
@@ -188,7 +177,6 @@
   country: Morocco
   city: Rabat
 - file: animals/placeholder-04.jpg
-  featured: true
   title: Wildlife Study
   alt: Placeholder image — replace with a description of the photo
   sub: Wildlife
@@ -202,7 +190,6 @@
 
 # ── Film ──
 - file: film/placeholder-01.jpg
-  featured: true
   title: Film Study 1
   alt: Placeholder image — replace with a description of the photo
   filmSim: Classic Chrome
@@ -211,7 +198,6 @@
   alt: Placeholder image — replace with a description of the photo
   filmSim: Classic Neg
 - file: film/placeholder-03.jpg
-  featured: true
   title: Film Study 3
   alt: Placeholder image — replace with a description of the photo
   filmSim: Nostalgic Neg
@@ -224,7 +210,6 @@
   alt: Placeholder image — replace with a description of the photo
   filmSim: Eterna
 - file: film/placeholder-06.jpg
-  featured: true
   title: Film Study 6
   alt: Placeholder image — replace with a description of the photo
   filmSim: Acros

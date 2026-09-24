@@ -4,7 +4,6 @@
 import { Picture, getImage } from 'astro:assets';
 import type { Photo } from '../lib/photos';
 import Lightbox from './Lightbox.astro';
-import { categories } from '../site.config';
 
 interface Props {
   photos: Photo[];
@@ -13,12 +12,9 @@ interface Props {
   /** How many photos load immediately (the rest lazy-load). */
   eager?: number;
   label: string;
-  /** Show each photo's tab (Architecture, Film…) in its hover overlay — for mixed feeds. */
-  showCategory?: boolean;
 }
 
-const { photos, variant = 'default', eager = 2, label, showCategory = false } = Astro.props;
-const categoryLabel = Object.fromEntries(categories.map((c) => [c.slug, c.label]));
+const { photos, variant = 'default', eager = 2, label } = Astro.props;
 
 // Film stays a calm two-column contact sheet until there are enough photos for three.
 const FILM_THREE_COLUMN_AT = 12;
@@ -88,7 +84,6 @@ const items = await Promise.all(
           <span class="visually-hidden">Open {p.title} full screen</span>
           {variant === 'default' && (
             <span class="overlay" aria-hidden="true">
-              {showCategory && <span class="cat">{categoryLabel[p.category]}</span>}
               <span class="title">{p.title}</span>
               {(p.filmSim || p.exif) && <span class="meta">{p.filmSim ?? p.exif}</span>}
             </span>
@@ -158,13 +153,6 @@ const items = await Promise.all(
     transition: opacity 0.3s ease;
     pointer-events: none;
   }
-  .cat {
-    color: var(--accent);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
   .title {
     font-size: 14px;
     font-weight: 500;
@@ -182,17 +170,9 @@ const items = await Promise.all(
       transform: scale(1.02);
     }
   }
-  /* On a mixed feed, phones show the category label permanently (there's no hover). */
+  /* Touchscreens have no hover, so the overlay stays out of the way. */
   @media (hover: none) {
-    .overlay:not(:has(.cat)) {
-      display: none;
-    }
-    .overlay:has(.cat) {
-      opacity: 1;
-      padding: 28px 10px 8px;
-      background: linear-gradient(to top, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0));
-    }
-    .overlay:has(.cat) :is(.title, .meta) {
+    .overlay {
       display: none;
     }
   }

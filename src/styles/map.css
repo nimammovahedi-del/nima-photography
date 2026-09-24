@@ -33,10 +33,14 @@
   stroke: var(--land-edge);
   stroke-width: 0.5;
   stroke-linejoin: round;
-  transition: fill 0.4s ease;
+  transition:
+    fill 0.6s ease,
+    stroke 0.6s ease;
 }
 .map-ui .land path.visited {
   fill: var(--visited);
+  stroke: var(--visited-edge);
+  stroke-width: 0.8;
   cursor: pointer;
 }
 .map-ui .land path.visited:hover {
@@ -45,14 +49,15 @@
 /* Zoomed into a country: everything else steps back. */
 .map-ui.focus .land path {
   fill: var(--land-dim);
+  stroke: #4c4739;
 }
 .map-ui.focus .land path.visited {
   fill: var(--visited-dim);
 }
 .map-ui.focus .land path.focused {
   fill: var(--visited-soft);
-  stroke: var(--visited);
-  stroke-width: 1.3;
+  stroke: var(--visited-edge);
+  stroke-width: 1.2;
 }
 
 /* ── Markers (city pins and country names) ── */

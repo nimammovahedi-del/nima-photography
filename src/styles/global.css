@@ -19,18 +19,19 @@
   --accent-soft: rgb(164 189 186 / 0.1);
   --on-accent: #0b0b0b;
 
-  /* Maps — nearly the page colour so the globe melts into it */
-  --sea: #0e0e0e;
-  --sea-light: #151515;
-  --land: #232323;
-  --land-edge: #0b0b0b;
-  --land-dim: #1a1a1a; /* other countries while zoomed into one */
-  --graticule: #141414;
-  --rim: transparent;
-  --visited: var(--tan);
-  --visited-hover: #c8bb95;
-  --visited-soft: rgb(176 162 124 / 0.3);
-  --visited-dim: #4a4436;
+  /* Maps — an antique-globe look: light tan land on a near-black sea, your countries in cream */
+  --sea: #111111;
+  --sea-light: #1b1b1a;
+  --land: #c9bc98;
+  --land-edge: #a89b78;
+  --land-dim: #5f5947; /* other countries while zoomed into one */
+  --graticule: #1e1e1d;
+  --rim: rgb(201 188 152 / 0.18);
+  --visited: #efe8d2;
+  --visited-edge: #7d7156; /* thin outline so cream reads against tan */
+  --visited-hover: #ffffff;
+  --visited-soft: #efe8d2;
+  --visited-dim: #8c836a;
   --label-bg: rgb(11 11 11 / 0.88);
 
   --film-bg: #100f0d;
@@ -189,6 +190,17 @@ a.accent:hover {
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 0.35s;
+}
+/* Landing globe → country page: the zoomed-in globe morphs into the country map. */
+::view-transition-group(country-map) {
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+::view-transition-old(country-map),
+::view-transition-new(country-map) {
+  animation-duration: 0.7s;
+  height: 100%;
+  object-fit: cover;
 }
 @media (prefers-reduced-motion: reduce) {
   @view-transition {
