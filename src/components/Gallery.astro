@@ -4,6 +4,7 @@
 import { Picture, getImage } from 'astro:assets';
 import type { Photo } from '../lib/photos';
 import Lightbox from './Lightbox.astro';
+import { categories } from '../site.config';
 
 interface Props {
   photos: Photo[];
@@ -12,9 +13,12 @@ interface Props {
   /** How many photos load immediately (the rest lazy-load). */
   eager?: number;
   label: string;
+  /** Show each photo's tab (Architecture, Film…) in its hover overlay — for mixed feeds. */
+  showCategory?: boolean;
 }
 
-const { photos, variant = 'default', eager = 2, label } = Astro.props;
+const { photos, variant = 'default', eager = 2, label, showCategory = false } = Astro.props;
+const categoryLabel = Object.fromEntries(categories.map((c) => [c.slug, c.label]));
 
 // Film stays a calm two-column contact sheet until there are enough photos for three.
 const FILM_THREE_COLUMN_AT = 12;
@@ -22,15 +26,30 @@ const layout =
   variant === 'film' ? (photos.length >= FILM_THREE_COLUMN_AT ? 'film-3' : 'film-2') : 'grid';
 
 const sizes = {
-  grid: '(min-width: 1400px) 23vw, (min-width: 900px) 31vw, 50vw',
+  grid: '(min-width: 1440px) 450px, (min-width: 900px) 31vw, 50vw',
   'film-2': '(min-width: 900px) 440px, 46vw',
   'film-3': '(min-width: 900px) 380px, 46vw',
 }[layout];
 
 const WIDTHS = [480, 720, 960, 1280, 1600, 2000];
 
+// CSS columns fill top-to-bottom, so a list in order would read down the first column.
+// Deal the photos into three balanced columns (shortest column first) and output them column
+// by column: the page then reads left-to-right in roughly the original order.
+function balance(list: Photo[], cols = 3) {
+  const heights = new Array(cols).fill(0);
+  const buckets: Photo[][] = Array.from({ length: cols }, () => []);
+  for (const p of list) {
+    const i = heights.indexOf(Math.min(...heights));
+    buckets[i].push(p);
+    heights[i] += p.image.height / p.image.width;
+  }
+  return buckets.flat();
+}
+const ordered = layout === 'grid' ? balance(photos) : photos;
+
 const items = await Promise.all(
-  photos.map(async (p) => {
+  ordered.map(async (p) => {
     const w = p.image.width;
     const large = await getImage({ src: p.image, width: Math.min(2400, w), format: 'webp' });
     return {
@@ -45,7 +64,7 @@ const items = await Promise.all(
 <section class:list={['gallery', layout]} data-gallery aria-label={label}>
   {
     items.map((p, i) => (
-      <figure class:list={['item', { 'is-film': p.category === 'film' }]}>
+      <figure class="item">
         <a
           class="frame"
           href={p.large.src}
@@ -67,12 +86,14 @@ const items = await Promise.all(
             decoding="async"
           />
           <span class="visually-hidden">Open {p.title} full screen</span>
+          {variant === 'default' && (
+            <span class="overlay" aria-hidden="true">
+              {showCategory && <span class="cat">{categoryLabel[p.category]}</span>}
+              <span class="title">{p.title}</span>
+              {(p.filmSim || p.exif) && <span class="meta">{p.filmSim ?? p.exif}</span>}
+            </span>
+          )}
         </a>
-        {variant === 'default' && p.category === 'film' && (
-          <figcaption>
-            <span class="t">Film{p.filmSim && ` · ${p.filmSim}`}</span>
-          </figcaption>
-        )}
         {variant === 'film' && (
           <figcaption>
             <span class="t">{p.title}</span>
@@ -91,7 +112,8 @@ const items = await Promise.all(
     margin: 0;
   }
 
-  /* VSCO-style masonry via CSS columns: 2 across on phones, 3 on laptops, 4 on big screens. */
+  /* Masonry via CSS columns (like 500px's editors' picks): 2 across on phones, 3 on larger
+     screens, generous gaps, square corners, nothing cropped. */
   .grid {
     columns: 2;
     column-gap: var(--gap);
@@ -99,11 +121,6 @@ const items = await Promise.all(
   @media (min-width: 900px) {
     .grid {
       columns: 3;
-    }
-  }
-  @media (min-width: 1400px) {
-    .grid {
-      columns: 4;
     }
   }
 
@@ -123,28 +140,60 @@ const items = await Promise.all(
   .frame :global(img) {
     width: 100%;
     height: 100%;
-    transition:
-      opacity 0.25s ease,
-      transform 0.5s ease;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-  .frame::after {
-    content: '';
+
+  /* Hover overlay: a soft gradient with the title and camera settings. */
+  .overlay {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 2px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
+    display: grid;
+    gap: 2px;
+    padding: 48px 16px 14px;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0));
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .cat {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .title {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .meta {
+    color: rgb(255 255 255 / 0.75);
+    font-size: 12px;
   }
   @media (hover: hover) {
-    .frame:hover :global(img) {
-      opacity: 0.9;
+    .frame:hover .overlay,
+    .frame:focus-visible .overlay {
+      opacity: 1;
     }
-    .frame:hover::after {
-      transform: scaleX(1);
+    .frame:hover :global(img) {
+      transform: scale(1.02);
+    }
+  }
+  /* On a mixed feed, phones show the category label permanently (there's no hover). */
+  @media (hover: none) {
+    .overlay:not(:has(.cat)) {
+      display: none;
+    }
+    .overlay:has(.cat) {
+      opacity: 1;
+      padding: 28px 10px 8px;
+      background: linear-gradient(to top, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0));
+    }
+    .overlay:has(.cat) :is(.title, .meta) {
+      display: none;
     }
   }
 
@@ -177,18 +226,13 @@ const items = await Promise.all(
     margin-bottom: var(--print-gap);
   }
   .film-2 .frame,
-  .film-3 .frame,
-  .is-film .frame {
+  .film-3 .frame {
     /* Photo sits inside a thin cream border, like a print. The padding box keeps the image uncropped. */
     padding: 4px;
     border: 1px solid var(--film-frame);
     background-origin: content-box;
     background-clip: content-box;
     box-sizing: content-box;
-  }
-  .film-2 .frame::after,
-  .film-3 .frame::after {
-    display: none;
   }
   @media (min-width: 900px) {
     .film-2 .frame,

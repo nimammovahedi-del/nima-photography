@@ -7,47 +7,49 @@
   --lavender: #c0b8c3;
   --grey-green: #798984;
 
-  --bg: #161a19; /* deep grey-green */
-  --bg-raised: #1c2120;
-  --text: var(--cream);
-  --muted: #a3a89f; /* 7.2:1 on --bg */
-  --line: #2a302e;
-  --accent: var(--sage); /* highlights, active states */
-  --accent-deep: var(--grey-green); /* rules, hovers, pressed */
-  --accent-soft: rgb(164 189 186 / 0.12);
-  --on-accent: #161a19; /* text on a sage background */
+  /* 500px-style neutral near-black, with the palette used as small accents */
+  --bg: #0b0b0b;
+  --bg-raised: #151515;
+  --card: #1c1c1c;
+  --text: #f7f7f5;
+  --muted: #9b9b9b; /* 7:1 on --bg */
+  --line: #262626;
+  --accent: var(--sage); /* active states, small highlights */
+  --accent-deep: var(--grey-green);
+  --accent-soft: rgb(164 189 186 / 0.1);
+  --on-accent: #0b0b0b;
 
-  /* Maps — dark sea, lighter muted land, no bright outline */
-  --sea: #0f1312;
-  --sea-light: #1a201f;
-  --land: #333d3a;
-  --land-edge: #121615;
-  --land-dim: #262e2c; /* other countries while zoomed into one */
-  --graticule: #181d1c;
-  --rim: var(--line);
+  /* Maps — nearly the page colour so the globe melts into it */
+  --sea: #0e0e0e;
+  --sea-light: #151515;
+  --land: #232323;
+  --land-edge: #0b0b0b;
+  --land-dim: #1a1a1a; /* other countries while zoomed into one */
+  --graticule: #141414;
+  --rim: transparent;
   --visited: var(--tan);
   --visited-hover: #c8bb95;
-  --visited-soft: rgb(176 162 124 / 0.34);
-  --visited-dim: #575042;
-  --label-bg: rgb(22 26 25 / 0.9);
+  --visited-soft: rgb(176 162 124 / 0.3);
+  --visited-dim: #4a4436;
+  --label-bg: rgb(11 11 11 / 0.88);
 
-  --film-bg: #1b1914;
-  --film-text: var(--cream);
+  --film-bg: #100f0d;
+  --film-text: #f2efe6;
   --film-muted: #b3ab97;
   --film-frame: var(--tan);
 
-  --gutter: 14px;
-  --gap: 6px;
+  --gutter: 16px;
+  --gap: 8px;
   --max: 1440px;
-  --font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Roboto, Arial,
-    sans-serif;
+  --font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Roboto,
+    Arial, sans-serif;
   color-scheme: dark;
 }
 
 @media (min-width: 768px) {
   :root {
     --gutter: 32px;
-    --gap: 16px;
+    --gap: 24px;
   }
 }
 
@@ -199,7 +201,7 @@ body.film {
   --bg: var(--film-bg);
   --text: var(--film-text);
   --muted: var(--film-muted);
-  --line: #2e2a22;
+  --line: #2a2620;
   --accent: var(--tan);
 }
 

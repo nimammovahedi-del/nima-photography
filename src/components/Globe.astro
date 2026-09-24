@@ -51,8 +51,8 @@ const config = {
   <svg class="map" viewBox={`0 0 ${S} ${S}`} role="img" aria-label="Globe with the countries I've photographed highlighted">
     <defs>
       <radialGradient id="globe-shade" cx="35%" cy="30%" r="75%">
-        <stop offset="0" stop-color="#1a201f"></stop>
-        <stop offset="1" stop-color="#0f1312"></stop>
+        <stop offset="0" stop-color="#151515"></stop>
+        <stop offset="1" stop-color="#0b0b0b"></stop>
       </radialGradient>
     </defs>
     <circle class="sphere" cx={S / 2} cy={S / 2} r={base}></circle>
@@ -64,7 +64,6 @@ const config = {
   </svg>
   <div class="pins"></div>
   <div class="tip" role="tooltip" hidden><strong></strong><span></span></div>
-  <p class="hint" aria-hidden="true">Drag to rotate · click a country</p>
 </div>
 
 <script>
@@ -93,24 +92,12 @@ const config = {
   .globe :global(.sphere) {
     fill: url(#globe-shade);
   }
-  .hint {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: 0;
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
+  /* Fade the globe's edge into the page so it sits quietly behind the content. */
+  .globe {
+    -webkit-mask-image: radial-gradient(circle closest-side, #000 62%, transparent 100%);
+    mask-image: radial-gradient(circle closest-side, #000 62%, transparent 100%);
   }
-  .globe:global(.live) .hint {
-    opacity: 0.85;
-  }
-  .globe:global(.dragging) .hint {
-    opacity: 0;
+  .globe :global(.land path) {
+    stroke-width: 0.4;
   }
 </style>

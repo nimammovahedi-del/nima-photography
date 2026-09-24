@@ -49,7 +49,8 @@ npm run dev      # open http://localhost:4321 — the page updates as you edit
    - **country / city** make the photo appear under **Places → that country / city** too, whichever tab
      it lives in. So the Barbican shot above shows in Architecture → Brutalism *and* Places → England →
      London.
-   - **cover: true** picks the thumbnail shown for its country on the Places list.
+   - **featured: true** adds the photo to the mixed feed on the landing page (the feed alternates
+     between tabs automatically, so mark a few from each — including a film shot or two).
    - The **order in this file is the order on the page**.
    - **alt** describes the photo for people using screen readers. Please always fill it in.
    - Camera, lens, aperture, shutter speed and ISO are **read from the photo's EXIF automatically** and

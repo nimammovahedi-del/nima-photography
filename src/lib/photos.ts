@@ -19,7 +19,7 @@ export interface Photo {
   sub?: string;
   country?: string;
   city?: string;
-  cover: boolean;
+  featured: boolean;
   blur: string; // tiny base64 image shown while the real one loads
   exif?: string; // e.g. "Canon EOS R6 · 35mm · ƒ/2.8 · 1/250s · ISO 100"
 }
@@ -32,7 +32,7 @@ interface Entry {
   sub?: string;
   country?: string;
   city?: string;
-  cover?: boolean;
+  featured?: boolean;
 }
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
@@ -115,7 +115,7 @@ async function load(): Promise<Photo[]> {
         sub: entry?.sub,
         country: entry?.country,
         city: entry?.city,
-        cover: entry?.cover ?? false,
+        featured: entry?.featured ?? false,
         blur: `data:image/webp;base64,${blurBuf.toString('base64')}`,
         exif: formatExif(exif),
       } satisfies Photo;
@@ -138,12 +138,6 @@ export async function getCategory(slug: CategorySlug) {
   return (await getPhotos()).filter((p) => p.category === slug);
 }
 
-/** The photo used on a tab's landing-page button: `cover: true`, else the first photo. */
-export async function getCover(slug: CategorySlug) {
-  const list = await getCategory(slug);
-  return list.find((p) => p.cover) ?? list[0];
-}
-
 export async function getPhoto(id: string) {
   return (await getPhotos()).find((p) => p.id === id);
 }
@@ -153,4 +147,18 @@ export async function getPlace(country: string, city?: string) {
   return (await getPhotos()).filter(
     (p) => p.country === country && (!city || p.city === city),
   );
+}
+
+/**
+ * Photos marked `featured: true`, dealt out one category at a time
+ * (Architecture, Places, Nature, …) so the landing-page feed feels mixed.
+ */
+export async function getFeatured() {
+  const featured = (await getPhotos()).filter((p) => p.featured);
+  const piles = categories.map((c) => featured.filter((p) => p.category === c.slug));
+  const mixed: Photo[] = [];
+  for (let i = 0; mixed.length < featured.length; i++) {
+    for (const pile of piles) if (pile[i]) mixed.push(pile[i]);
+  }
+  return mixed;
 }
