@@ -4,15 +4,16 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Gallery from '../../../components/Gallery.astro';
 import SubTabs from '../../../components/SubTabs.astro';
-import { site, slugify, sortedPlaces } from '../../../site.config';
+import CountryMap from '../../../components/CountryMap.astro';
+import { site, sortedPlaces } from '../../../site.config';
 import { getPlace } from '../../../lib/photos';
 
 export function getStaticPaths() {
   return sortedPlaces.flatMap((p) => [
     { params: { country: p.slug, city: undefined }, props: { place: p, city: undefined } },
     ...p.cities.map((c) => ({
-      params: { country: p.slug, city: slugify(c) },
-      props: { place: p, city: c as string },
+      params: { country: p.slug, city: c.slug },
+      props: { place: p, city: c.name },
     })),
   ]);
 }
@@ -25,9 +26,9 @@ const base = `/places/${place.slug}`;
 const tabs = [
   { label: 'All', href: base, count: all.length },
   ...place.cities.map((c) => ({
-    label: c,
-    href: `${base}/${slugify(c)}`,
-    count: all.filter((p) => p.city === c).length,
+    label: c.name,
+    href: `${base}/${c.slug}`,
+    count: all.filter((p) => p.city === c.name).length,
   })),
 ];
 ---
@@ -40,6 +41,7 @@ const tabs = [
     <a class="back" href="/places"><span aria-hidden="true">←</span> All places</a>
     <h1>{place.name}</h1>
   </header>
+  <CountryMap place={place} active={city} />
   {place.cities.length > 0 && <SubTabs items={tabs} label={`Cities in ${place.name}`} />}
   {
     photos.length ? (

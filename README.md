@@ -49,8 +49,7 @@ npm run dev      # open http://localhost:4321 — the page updates as you edit
    - **country / city** make the photo appear under **Places → that country / city** too, whichever tab
      it lives in. So the Barbican shot above shows in Architecture → Brutalism *and* Places → England →
      London.
-   - **cover: true** picks the photo shown on that tab's button on the landing page (otherwise the
-     first photo is used).
+   - **cover: true** picks the thumbnail shown for its country on the Places list.
    - The **order in this file is the order on the page**.
    - **alt** describes the photo for people using screen readers. Please always fill it in.
    - Camera, lens, aperture, shutter speed and ISO are **read from the photo's EXIF automatically** and
@@ -67,10 +66,28 @@ All of these live in `src/site.config.ts`:
 
 - **Sub-tabs** — the `subs` list under each tab, e.g. add `'Baroque'` to Architecture. They're always
   shown A–Z.
-- **Countries on the map / Places** — the `places` list. Add a country with its cities and it lights
-  up orange on the map, gets its own page, and slots into the A–Z list automatically. `map` must match
-  the country's name in the map data (usually just its name; the US is `United States of America`).
-- **About / Contact button photos** — `covers`.
+- **Countries on the globe / Places** — the `places` list. Each country has a `region` (Americas,
+  Europe or Africa — the globe's headers) and its cities with real coordinates:
+
+  ```ts
+  {
+    name: 'Italy', map: 'Italy', region: 'Europe',
+    cities: [{ name: 'Rome', lon: 12.50, lat: 41.90 }],
+  },
+  ```
+
+  Add one and it lights up orange on the globe, appears under its region, gets its own page with an
+  animated city map, and slots into the A–Z Places list. To find coordinates, right-click the spot in
+  Google Maps — it shows *latitude, longitude*; here they go the other way round (`lon`, then `lat`).
+  `map` must match the country's name in the map data (usually just its name; the US is
+  `United States of America`).
+- **New region?** Add it to `regions` in the same file.
+
+## The globe
+
+On the landing page, visitors can **drag** to spin the globe, **pinch or two-finger scroll** (trackpad)
+to zoom, and click a highlighted country (or pick one from the list) to fly in to its city pins.
+Zooming back out returns to the whole globe. On phones: swipe sideways to spin, pinch to zoom.
 
 ## Change text and settings
 
@@ -111,11 +128,12 @@ The form already sends to `https://formspree.io/f/mjykrzlz`.
 ```
 src/
   photos/<category>/    your images
-  data/photos.yaml      titles, alt text, sub-tabs, places, film sims, covers
-  site.config.ts        name, intro, sub-tabs, countries & cities, contact
+  data/photos.yaml      titles, alt text, sub-tabs, places, film sims
+  site.config.ts        name, intro, sub-tabs, regions, countries & cities, contact
   pages/                one file per page (sub-tab and country pages are generated)
-  components/           Gallery (grid), Lightbox, Nav, SubTabs, WorldMap
+  components/           Gallery, Lightbox, Nav, SubTabs, Globe, CountryMap, Illustration
+  scripts/globe.ts      the interactive globe (loads when it scrolls into view)
   lib/photos.ts         reads photos, EXIF and blur previews at build time
-  lib/world.ts          draws the world map at build time
+  lib/world.ts          country outlines for the globe and maps (build time)
   styles/global.css     colours, spacing, film theme
 ```

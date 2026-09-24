@@ -1,14 +1,13 @@
-// Builds the world map's SVG paths at build time (no map library ships to the browser).
-import { geoEqualEarth, geoPath, geoArea } from 'd3-geo';
+// Country shapes for the globe and the country maps. Runs at build time only.
+import { geoArea } from 'd3-geo';
 import { feature } from 'topojson-client';
 import polygonClipping, { type MultiPolygon, type Polygon } from 'polygon-clipping';
-import world from 'world-atlas/countries-110m.json';
-import type { Feature, FeatureCollection, Geometry, MultiPolygon as GeoMulti } from 'geojson';
+import world110 from 'world-atlas/countries-110m.json';
+import world50 from 'world-atlas/countries-50m.json';
+import type { Feature, FeatureCollection, Geometry, MultiPolygon as GeoMulti, Position } from 'geojson';
+export { mainland, countryView, layoutLabels } from './geo-shared';
 
-export const WIDTH = 1000;
-export const HEIGHT = 500;
-
-type Country = Feature<Geometry, { name: string }>;
+export type Country = Feature<Geometry, { name: string }>;
 
 // The map data has the UK as one country. Split Great Britain along approximate
 // England–Scotland and England–Wales borders (lon, lat) so each can be its own region.
@@ -25,27 +24,28 @@ const WALES_CUT: Polygon = [[
 
 /** polygon-clipping winds rings the opposite way to d3-geo; flip them back. */
 function toGeo(mp: MultiPolygon): GeoMulti {
-  const geom: GeoMulti = {
+  const flipped: GeoMulti = {
     type: 'MultiPolygon',
     coordinates: mp.map((poly) => poly.map((ring) => [...ring].reverse())),
   };
-  // Safety net: a wrongly wound polygon covers almost the whole globe.
-  if (geoArea(geom) > 2 * Math.PI) {
-    geom.coordinates = mp as GeoMulti['coordinates'];
-  }
-  return geom;
+  // A wrongly wound polygon covers almost the whole globe — keep whichever winding is small.
+  return geoArea(flipped) > 2 * Math.PI ? { type: 'MultiPolygon', coordinates: mp } : flipped;
 }
 
 function splitUK(uk: Country): Country[] {
-  const polys = (uk.geometry as GeoMulti).coordinates as unknown as Polygon[];
-  // Great Britain is the polygon furthest east; the rest is Northern Ireland.
-  const centreLon = (p: Polygon) => p[0].reduce((s, c) => s + c[0], 0) / p[0].length;
-  const gb = polys.reduce((a, b) => (centreLon(a) > centreLon(b) ? a : b));
-  const rest = polys.filter((p) => p !== gb);
-
-  const scotland = polygonClipping.intersection(gb, SCOTLAND_CUT);
-  const wales = polygonClipping.intersection(gb, WALES_CUT);
-  const england = polygonClipping.difference(gb, SCOTLAND_CUT, WALES_CUT);
+  const g = uk.geometry as GeoMulti;
+  const polys = g.coordinates as unknown as Polygon[];
+  const centre = (p: Polygon) => {
+    const r = p[0];
+    return [r.reduce((s, c) => s + c[0], 0) / r.length, r.reduce((s, c) => s + c[1], 0) / r.length];
+  };
+  // Northern Ireland sits on the island of Ireland, west of 5.3°W between 54° and 55.4°N.
+  const isNI = (p: Polygon) => {
+    const [lon, lat] = centre(p);
+    return lon < -5.3 && lat > 54 && lat < 55.4;
+  };
+  const britain = polys.filter((p) => !isNI(p));
+  const ni = polys.filter(isNI);
 
   const make = (name: string, mp: MultiPolygon): Country => ({
     type: 'Feature',
@@ -53,45 +53,54 @@ function splitUK(uk: Country): Country[] {
     geometry: toGeo(mp),
   });
   return [
-    make('England', england),
-    make('Scotland', scotland),
-    make('Wales', wales),
-    make('Northern Ireland', rest.map((p) => p) as MultiPolygon),
+    make('England', polygonClipping.difference(britain, SCOTLAND_CUT, WALES_CUT)),
+    make('Scotland', polygonClipping.intersection(britain, SCOTLAND_CUT)),
+    make('Wales', polygonClipping.intersection(britain, WALES_CUT)),
+    make('Northern Ireland', ni),
   ];
 }
 
-const all = (
-  feature(world as any, (world as any).objects.countries) as unknown as FeatureCollection<
+function load(topology: any): Country[] {
+  const fc = feature(topology, topology.objects.countries) as unknown as FeatureCollection<
     Geometry,
     { name: string }
-  >
-).features.filter((f) => f.properties.name !== 'Antarctica');
+  >;
+  return fc.features
+    .filter((f) => f.properties.name !== 'Antarctica' && f.geometry)
+    .flatMap((f) => (f.properties.name === 'United Kingdom' ? splitUK(f) : [f]));
+}
 
-const countries: Country[] = all.flatMap((f) =>
-  f.properties.name === 'United Kingdom' ? splitUK(f) : [f],
-);
+/** Low detail — the whole world, for the globe. */
+export const countries = load(world110);
 
-const projection = geoEqualEarth().fitExtent(
-  [
-    [4, 4],
-    [WIDTH - 4, HEIGHT - 4],
-  ],
-  { type: 'FeatureCollection', features: countries } as FeatureCollection,
-);
-const path = geoPath(projection).digits(1);
+let detailed: Country[] | undefined;
+/** High detail — for zoomed-in country views. */
+export const detailedCountries = () => (detailed ??= load(world50));
 
-export const shapes = countries.map((c) => ({ name: c.properties.name, d: path(c) ?? '' }));
+export const findCountry = (name: string, list = countries) =>
+  list.find((c) => c.properties.name === name);
 
-/** A viewBox string framing a lon/lat box — used for the World / Europe / Americas buttons. */
-export function frame(west: number, south: number, east: number, north: number) {
-  const [x0, y0] = projection([west, north])!;
-  const [x1, y1] = projection([east, south])!;
-  // Keep the map's 2:1 shape so nothing is stretched.
-  let w = x1 - x0;
-  let h = y1 - y0;
-  const cx = x0 + w / 2;
-  const cy = y0 + h / 2;
-  if (w / h > WIDTH / HEIGHT) h = (w * HEIGHT) / WIDTH;
-  else w = (h * WIDTH) / HEIGHT;
-  return [cx - w / 2, cy - h / 2, w, h].map((n) => Math.round(n * 10) / 10).join(' ');
+/** Round coordinates so the JSON sent to the browser stays small. */
+export function roundGeometry(g: Geometry, digits: number): Geometry {
+  const f = 10 ** digits;
+  const pt = (p: Position) => [Math.round(p[0] * f) / f, Math.round(p[1] * f) / f];
+  const ring = (r: Position[]) => {
+    const out = r.map(pt).filter((p, i, a) => i === 0 || p[0] !== a[i - 1][0] || p[1] !== a[i - 1][1]);
+    const [f0, l0] = [out[0], out[out.length - 1]];
+    if (f0 && (f0[0] !== l0[0] || f0[1] !== l0[1])) out.push(f0); // keep the ring closed
+    return out;
+  };
+  // Rounding can collapse tiny islands and lakes into nothing — drop those.
+  const polygon = (p: Position[][]) => {
+    const rings = p.map(ring);
+    return rings[0]?.length >= 4 ? rings.filter((r) => r.length >= 4) : null;
+  };
+  if (g.type === 'Polygon') {
+    return { type: 'Polygon', coordinates: polygon(g.coordinates) ?? [] };
+  }
+  if (g.type === 'MultiPolygon') {
+    const polys = g.coordinates.map(polygon).filter((p): p is Position[][] => !!p);
+    return { type: 'MultiPolygon', coordinates: polys };
+  }
+  return g;
 }

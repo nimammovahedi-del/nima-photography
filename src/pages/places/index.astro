@@ -2,7 +2,7 @@
 // A→Z list of countries, each with its cities A→Z.
 import { Picture } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { site, slugify, sortedPlaces } from '../../site.config';
+import { site, sortedPlaces } from '../../site.config';
 import { getPlace } from '../../lib/photos';
 
 const rows = await Promise.all(
@@ -11,7 +11,7 @@ const rows = await Promise.all(
     return {
       ...p,
       count: photos.length,
-      cover: photos.find((x) => x.category === 'places') ?? photos[0],
+      cover: photos.find((x) => x.cover) ?? photos.find((x) => x.category === 'places') ?? photos[0],
     };
   }),
 );
@@ -54,7 +54,7 @@ const rows = await Promise.all(
               <ul class="cities">
                 {p.cities.map((c) => (
                   <li>
-                    <a href={`/places/${p.slug}/${slugify(c)}`}>{c}</a>
+                    <a href={`/places/${p.slug}/${c.slug}`}>{c.name}</a>
                   </li>
                 ))}
               </ul>

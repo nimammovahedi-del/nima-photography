@@ -1,0 +1,247 @@
+---
+// Zoom-in map of one country with a pin for each city. Drawn at build time; animated with CSS.
+import { geoGraticule10, geoPath } from 'd3-geo';
+import type { SortedPlace } from '../site.config';
+import { countryView, detailedCountries, findCountry } from '../lib/world';
+
+interface Props {
+  place: SortedPlace;
+  /** Highlight this city's pin (on a city page). */
+  active?: string;
+}
+
+const { place, active } = Astro.props;
+const W = 800;
+const H = 500;
+
+const detail = findCountry(place.map, detailedCountries()) ?? findCountry(place.map)!;
+const pins = place.cities.map((c) => [c.lon, c.lat] as [number, number]);
+const { projection } = countryView(detail.geometry, pins, W, H, pins.length ? 56 : 40);
+projection.clipExtent([
+  [0, 0],
+  [W, H],
+]);
+const path = geoPath(projection).digits(1);
+
+// Neighbouring countries for context (only the parts in frame are kept).
+const neighbours = detailedCountries()
+  .filter((c) => c.properties.name !== place.map)
+  .map((c) => path(c))
+  .filter((d): d is string => !!d);
+const shape = path(detail) ?? '';
+const [cx, cy] = projection.translate();
+const sphereR = projection.scale();
+
+const cityPins = place.cities.map((c) => {
+  const [x, y] = projection([c.lon, c.lat])!;
+  return { ...c, x: (x / W) * 100, y: (y / H) * 100 };
+});
+---
+
+<figure class="country-map" data-country-map>
+  <div class="frame" style={`aspect-ratio:${W}/${H}`}>
+    <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
+      <circle class="sea" cx={cx} cy={cy} r={sphereR} />
+      <path class="graticule" d={path(geoGraticule10()) ?? ''} />
+      <g class="neighbours">{neighbours.map((d) => <path d={d} />)}</g>
+      <path class="shape" d={shape} pathLength="1" />
+    </svg>
+    <div class="pins">
+      {
+        cityPins.map((c, i) => (
+          <a
+            class:list={['pin', { active: c.name === active }]}
+            href={`/places/${place.slug}/${c.slug}`}
+            style={`left:${c.x}%;top:${c.y}%;--i:${i}`}
+            data-side="right"
+            aria-current={c.name === active ? 'page' : undefined}
+          >
+            <span class="dot" aria-hidden="true" />
+            <span class="label">{c.name}</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+  <figcaption class="visually-hidden">
+    Map of {place.name}{place.cities.length > 0 && ` showing ${place.cities.map((c) => c.name).join(', ')}`}.
+  </figcaption>
+</figure>
+
+<script>
+  import { layoutLabels } from '../lib/geo-shared';
+
+  // Flip labels left/up/down where they'd overlap, based on the map's actual size.
+  document.querySelectorAll<HTMLElement>('[data-country-map] .frame').forEach((frame) => {
+    const layout = () => {
+      const pins = [...frame.querySelectorAll<HTMLElement>('.pin')];
+      if (!pins.length) return;
+      const w = frame.clientWidth;
+      const h = frame.clientHeight;
+      const pts = pins.map((p) => {
+        const label = p.querySelector<HTMLElement>('.label')!;
+        return {
+          x: (parseFloat(p.style.left) / 100) * w,
+          y: (parseFloat(p.style.top) / 100) * h,
+          w: label.offsetWidth,
+          h: label.offsetHeight,
+        };
+      });
+      layoutLabels(pts, { width: w, height: h }).forEach((s, i) => (pins[i].dataset.side = s));
+    };
+    layout();
+    new ResizeObserver(layout).observe(frame);
+  });
+</script>
+
+<style>
+  .country-map {
+    max-width: 960px;
+    margin: 0 0 28px;
+  }
+  .frame {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+    border: 1px solid var(--line);
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation: zoom-in 1.3s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    transform-origin: 50% 50%;
+  }
+  @keyframes zoom-in {
+    from {
+      transform: scale(0.35);
+      opacity: 0;
+    }
+    35% {
+      opacity: 1;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  .sea {
+    fill: #131313;
+  }
+  .graticule {
+    fill: none;
+    stroke: #1d1d1d;
+    stroke-width: 0.6;
+  }
+  .neighbours path {
+    fill: #222;
+    stroke: #131313;
+    stroke-width: 0.6;
+  }
+  .shape {
+    fill: rgb(217 119 87 / 0.28);
+    stroke: var(--accent);
+    stroke-width: 1.3;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    animation: draw 1.6s 0.3s ease-out both;
+  }
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 1;
+      fill-opacity: 0;
+    }
+    to {
+      stroke-dashoffset: 0;
+      fill-opacity: 1;
+    }
+  }
+
+  .pins {
+    position: absolute;
+    inset: 0;
+  }
+  .pin {
+    position: absolute;
+    width: 0;
+    height: 0;
+    color: var(--text);
+    text-decoration: none;
+    animation: pin-in 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+    animation-delay: calc(1.1s + var(--i) * 90ms);
+  }
+  @keyframes pin-in {
+    from {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .dot {
+    position: absolute;
+    left: -6px;
+    top: -6px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--bg);
+    border-radius: 50%;
+    background: var(--accent);
+    transition: transform 0.2s ease;
+  }
+  .label {
+    position: absolute;
+    top: 0;
+    padding: 2px 7px;
+    background: rgb(14 14 14 / 0.85);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+  }
+  [data-side='right'] .label {
+    left: 9px;
+    transform: translateY(-50%);
+  }
+  [data-side='left'] .label {
+    right: 9px;
+    transform: translateY(-50%);
+  }
+  [data-side='up'] .label {
+    bottom: 9px;
+    top: auto;
+    transform: translateX(-50%);
+  }
+  [data-side='down'] .label {
+    top: 9px;
+    transform: translateX(-50%);
+  }
+  .pin:hover .dot,
+  .pin:focus-visible .dot {
+    transform: scale(1.35);
+  }
+  .pin:hover .label,
+  .pin:focus-visible .label,
+  .pin.active .label {
+    color: var(--accent);
+  }
+  .pin.active .dot {
+    transform: scale(1.4);
+    box-shadow: 0 0 0 4px rgb(217 119 87 / 0.3);
+  }
+  /* On a city page, the other pins step back a little. */
+  .pins:has(.active) .pin:not(.active) :is(.dot, .label) {
+    opacity: 0.65;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    svg,
+    .shape,
+    .pin {
+      animation: none;
+    }
+  }
+</style>

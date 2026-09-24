@@ -92,7 +92,7 @@ async function load(): Promise<Photo[]> {
         const place = places.find((p) => p.name === entry.country);
         if (entry.country && !place)
           console.warn(`[photos] ${id}: country "${entry.country}" isn't in site.config.ts.`);
-        if (entry.city && !(place?.cities as readonly string[] | undefined)?.includes(entry.city))
+        if (entry.city && !place?.cities.some((c) => c.name === entry.city))
           console.warn(`[photos] ${id}: city "${entry.city}" isn't listed under ${entry.country}.`);
       }
 
