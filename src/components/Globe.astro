@@ -1,7 +1,7 @@
 ---
 // The landing page's large globe. Drag to spin, pinch/scroll to zoom. Clicking a country flies
-// in to it, drops its city pins, then glides into that country's page (the map there picks up
-// where the globe left off). A still picture is drawn at build time so it shows instantly.
+// in until it fills the screen, drops its city pins, then opens that country's page — whose map
+// starts full-screen and zooms back out into place (see CountryMap.astro). A still picture is drawn at build time so it shows instantly.
 import '../styles/map.css';
 import { geoGraticule10, geoOrthographic, geoPath } from 'd3-geo';
 import { sortedPlaces } from '../site.config';
@@ -76,10 +76,16 @@ const config = {
         if (going) return;
         going = true;
         root.classList.add('travelling');
-        // 1) fly in to the country, 2) let the pins land, 3) glide into its page.
-        await engine.showCountry(p);
-        await wait(650);
-        root.style.setProperty('view-transition-name', 'country-map');
+        // 1) the globe grows to fill the screen as it flies in, 2) the pins land,
+        // 3) on to the country's page, whose map zooms back out into place.
+        // The globe grows into a square covering the window; frame the country to the part
+        // that's actually on screen.
+        const cover = Math.max(innerWidth, innerHeight);
+        await engine.showCountry(p, {
+          width: (cfg.width * innerWidth) / cover,
+          height: (cfg.height * innerHeight) / cover,
+        });
+        await wait(550);
         try {
           sessionStorage.setItem('from-globe', '1');
         } catch {}
@@ -91,7 +97,6 @@ const config = {
       if (!e.persisted) return;
       going = false;
       root.classList.remove('travelling');
-      root.style.removeProperty('view-transition-name');
       engine.reset();
     });
   });

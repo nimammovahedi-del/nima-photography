@@ -247,13 +247,19 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     if (mine === request && cfg.regionLabels) setMarkers(countryMarkers(name));
   }
 
-  async function showCountry(place: MapPlace) {
+  /**
+   * Fly in to a country. `fit` is the part of the map (in map units) that will actually be on
+   * screen, if it's smaller than the whole map — e.g. a wide window showing a square globe.
+   */
+  async function showCountry(place: MapPlace, fit?: { width: number; height: number }) {
     const mine = ++request;
     if (tip) tip.hidden = true;
     const detailReady = loadDetail().then((d) => void (detail = d));
     const pins = place.cities.map((c) => [c.lon, c.lat] as [number, number]);
-    const pad = Math.min(W, H) * (place.cities.length ? 0.16 : 0.2);
-    const v = countryView(shapeOf(place).g, pins, W, H, pad);
+    const fw = fit?.width ?? W;
+    const fh = fit?.height ?? H;
+    const pad = Math.min(fw, fh) * (place.cities.length ? 0.16 : 0.2);
+    const v = countryView(shapeOf(place).g, pins, fw, fh, pad);
     focused = place;
     region = place.region;
     focusScale = Math.min(v.scale, MAX_SCALE);
