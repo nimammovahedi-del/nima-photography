@@ -17,12 +17,14 @@
   --accent-soft: rgb(164 189 186 / 0.12);
   --on-accent: #161a19; /* text on a sage background */
 
-  /* Maps */
-  --sea: #111514;
-  --sea-light: #1a201e;
-  --land: #272e2c;
-  --land-edge: #131716;
-  --graticule: #1d2321;
+  /* Maps — a dark teal sea (deepened sage) so the globe stands off the background */
+  --sea: #1f3331;
+  --sea-light: #2a4644;
+  --land: #36423f;
+  --land-edge: #1a2927;
+  --land-dim: #2c3735; /* other countries while zoomed into one */
+  --graticule: #26403e;
+  --rim: rgb(164 189 186 / 0.28);
   --visited: var(--tan);
   --visited-hover: #c8bb95;
   --visited-soft: rgb(176 162 124 / 0.34);
