@@ -16,7 +16,12 @@
       children: 'a.frame',
       pswpModule: () => import('photoswipe'),
       bgOpacity: 1,
-      showHideAnimationType: 'fade',
+      // Open by growing from the photo you tapped (and shrink back into it on close), so the
+      // motion shows where the image came from. Photos are never cropped, so the zoom lines up.
+      showHideAnimationType: 'zoom',
+      showAnimationDuration: 300,
+      hideAnimationDuration: 250,
+      easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
       imageClickAction: 'close',
       tapAction: 'toggle-controls',
       wheelToZoom: false,
@@ -94,6 +99,10 @@
     --pswp-icon-color: var(--text);
     --pswp-icon-color-secondary: var(--bg);
     font-family: var(--font);
+  }
+  /* "3 / 22" keeps steady as it counts. */
+  .pswp__counter {
+    font-variant-numeric: tabular-nums;
   }
   .pswp__custom-caption {
     position: absolute;

@@ -81,13 +81,19 @@ const path = Astro.url.pathname.replace(/\/$/, '');
     text-transform: uppercase;
     text-decoration: none;
     white-space: nowrap;
-    transition: color 0.15s ease;
+    transition: color 150ms ease;
   }
   a:hover {
     color: var(--text);
   }
   a[aria-current='page'] {
     color: var(--text);
+  }
+  /* Touchscreens: a full 44px-tall tap target. */
+  @media (pointer: coarse) {
+    a {
+      padding: 14px 0 15px;
+    }
   }
   a[aria-current='page']::after {
     content: '';
@@ -99,6 +105,7 @@ const path = Astro.url.pathname.replace(/\/$/, '');
     background: var(--accent);
   }
   .count {
+    font-variant-numeric: tabular-nums;
     color: var(--muted);
     font-size: 10px;
     letter-spacing: 0.04em;

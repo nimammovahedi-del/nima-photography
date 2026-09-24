@@ -195,14 +195,11 @@ const config = {
     stage.hidden = false;
     document.documentElement.classList.add('explorer-open');
     if (!reduceMotion()) {
-      stage.animate([{ clipPath: insetFor(panel) }, { clipPath: 'inset(0px 0px 0px 0px)' }], {
-        duration: 650,
-        easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
-      });
-      view.animate([{ transform: 'scale(0.82)', opacity: 0.6 }, { transform: 'none', opacity: 1 }], {
-        duration: 900,
-        easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
-      });
+      // The panel opens out to fill the screen (drawer-style curve) while the map settles in
+      // from 96% — small enough to stay smooth, big enough to read as "zooming in".
+      const open = { duration: 480, easing: 'cubic-bezier(0.32, 0.72, 0, 1)' };
+      stage.animate([{ clipPath: insetFor(panel) }, { clipPath: 'inset(0px 0px 0px 0px)' }], open);
+      view.animate([{ transform: 'scale(0.96)' }, { transform: 'none' }], open);
     }
     backBtn.focus({ preventScroll: true });
     if (!fromHistory) {
@@ -280,10 +277,17 @@ const config = {
     if (!engine || closing) return;
     closing = true;
     if (!reduceMotion() && openPanel) {
-      await stage.animate(
+      // Closing is quicker than opening (the system responding, not the user deciding).
+      const shut = { duration: 320, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' };
+      view.animate([{ opacity: 1 }, { opacity: 0.4 }], { ...shut, fill: 'forwards' });
+      const anim = stage.animate(
         [{ clipPath: 'inset(0px 0px 0px 0px)' }, { clipPath: insetFor(openPanel) }],
-        { duration: 450, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
-      ).finished;
+        shut,
+      );
+      // Browsers pause animations in background tabs; never let closing wait on that.
+      await Promise.race([anim.finished, new Promise((r) => setTimeout(r, shut.duration + 80))]);
+      anim.cancel();
+      view.getAnimations().forEach((a) => a.cancel());
     }
     stage.hidden = true;
     document.documentElement.classList.remove('explorer-open');
@@ -347,9 +351,8 @@ const config = {
     font: inherit;
     text-align: left;
     cursor: pointer;
-    transition: border-color 0.25s ease;
+    transition: border-color 200ms ease;
   }
-  .panel:hover,
   .panel:focus-visible {
     border-color: var(--accent-deep);
   }
@@ -357,10 +360,6 @@ const config = {
     position: absolute;
     inset: 0;
     cursor: pointer;
-    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .panel:hover .snap {
-    transform: scale(1.04);
   }
   .snap :global(path.elsewhere) {
     fill: #d8cdae;
@@ -384,6 +383,7 @@ const config = {
     translate: 0 -50%;
   }
   .name {
+    text-wrap: balance;
     font-size: clamp(28px, 5vw, 48px);
     font-weight: 300;
     letter-spacing: -0.01em;
@@ -410,18 +410,30 @@ const config = {
     font-size: 11px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    transition: background 0.2s ease;
-  }
-  .panel:hover .cta {
-    background: var(--accent);
-    color: var(--on-accent);
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      transform 160ms var(--ease-out);
   }
   .arrow {
     display: inline-block;
-    transition: transform 0.2s ease;
+    transition: transform 160ms var(--ease-out);
   }
-  .panel:hover .arrow {
-    transform: translateX(3px);
+  /* Hover only for real mouse pointers; a press gives a small tactile dip everywhere. */
+  @media (hover: hover) and (pointer: fine) {
+    .panel:hover {
+      border-color: var(--accent-deep);
+    }
+    .panel:hover .cta {
+      background: var(--accent);
+      color: var(--on-accent);
+    }
+    .panel:hover .arrow {
+      transform: translateX(3px);
+    }
+  }
+  .panel:active .cta {
+    transform: scale(0.96);
   }
 
   /* ── Full-screen stage ── */
@@ -465,10 +477,17 @@ const config = {
     letter-spacing: 0.12em;
     text-transform: uppercase;
     cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease,
+      transform 160ms var(--ease-out);
   }
-  .back:hover {
+  .back:focus-visible {
     border-color: var(--accent-deep);
     color: var(--accent);
+  }
+  .back:active {
+    transform: scale(0.96);
   }
   h2 {
     margin: 0;
@@ -484,8 +503,17 @@ const config = {
     font-size: 14px;
     text-decoration: none;
   }
-  .all:hover {
-    color: var(--text);
+  .all {
+    transition: color 150ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .back:hover {
+      border-color: var(--accent-deep);
+      color: var(--accent);
+    }
+    .all:hover {
+      color: var(--text);
+    }
   }
   .footer {
     position: absolute;
@@ -525,12 +553,25 @@ const config = {
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease,
+      transform 160ms var(--ease-out);
   }
-  .chips :global(button:hover),
-  .chips :global(a:hover),
   .chips :global(:focus-visible) {
     border-color: var(--accent-deep);
     color: var(--accent);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .chips :global(button:hover),
+    .chips :global(a:hover) {
+      border-color: var(--accent-deep);
+      color: var(--accent);
+    }
+  }
+  .chips :global(button:active),
+  .chips :global(a:active) {
+    transform: scale(0.96);
   }
   .chips :global(a.city)::before {
     content: '';

@@ -135,7 +135,11 @@ const items = await Promise.all(
   .frame :global(img) {
     width: 100%;
     height: 100%;
-    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  /* A hairline edge so photos read cleanly against the dark page (neutral white at 10%, inset). */
+  .grid .frame :global(img) {
+    outline: 1px solid oklch(1 0 0 / 0.1);
+    outline-offset: -1px;
   }
 
   /* Hover overlay: a soft gradient with the title and camera settings. */
@@ -150,7 +154,7 @@ const items = await Promise.all(
     background: linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0));
     color: #fff;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 200ms var(--ease-out);
     pointer-events: none;
   }
   .title {
@@ -161,13 +165,12 @@ const items = await Promise.all(
     color: rgb(255 255 255 / 0.75);
     font-size: 12px;
   }
-  @media (hover: hover) {
-    .frame:hover .overlay,
-    .frame:focus-visible .overlay {
+  .frame:focus-visible .overlay {
+    opacity: 1;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .frame:hover .overlay {
       opacity: 1;
-    }
-    .frame:hover :global(img) {
-      transform: scale(1.02);
     }
   }
   /* Touchscreens have no hover, so the overlay stays out of the way. */

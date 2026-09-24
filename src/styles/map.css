@@ -34,17 +34,14 @@
   stroke-width: 0.5;
   stroke-linejoin: round;
   transition:
-    fill 0.6s ease,
-    stroke 0.6s ease;
+    fill 300ms ease,
+    stroke 300ms ease;
 }
 .map-ui .land path.visited {
   fill: var(--visited);
   stroke: var(--visited-edge);
   stroke-width: 0.8;
   cursor: pointer;
-}
-.map-ui .land path.visited:hover {
-  fill: var(--visited-hover);
 }
 /* Zoomed into a country: everything else steps back. */
 .map-ui.focus .land path {
@@ -79,13 +76,13 @@
   display: none;
 }
 .map-ui .pins.in .pin {
-  animation: pin-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both;
-  animation-delay: calc(var(--i) * 60ms);
+  animation: pin-in 300ms var(--ease-out) both;
+  animation-delay: calc(var(--i) * 40ms);
 }
 @keyframes pin-in {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-6px) scale(0.92);
   }
   to {
     opacity: 1;
@@ -101,27 +98,7 @@
   border: 2px solid var(--bg);
   border-radius: 50%;
   background: var(--accent);
-  transition: transform 0.2s ease;
-}
-.map-ui .pin.city .dot::after {
-  content: '';
-  position: absolute;
-  inset: -9px;
-  border: 1px solid var(--accent);
-  border-radius: 50%;
-  opacity: 0;
-  animation: pin-pulse 2.4s ease-out infinite;
-  animation-delay: calc(var(--i) * 180ms);
-}
-@keyframes pin-pulse {
-  0% {
-    transform: scale(0.4);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1.4);
-    opacity: 0;
-  }
+  transition: transform 160ms var(--ease-out);
 }
 .map-ui .pin .label {
   position: absolute;
@@ -132,7 +109,7 @@
   letter-spacing: 0.02em;
   line-height: 1.35;
   white-space: nowrap;
-  transition: color 0.15s ease;
+  transition: color 150ms ease;
 }
 /* Country names in a region view: small caps-style, khaki dot. */
 .map-ui .pin.country .dot {
@@ -164,15 +141,28 @@
   top: 11px;
   transform: translateX(-50%);
 }
-.map-ui .pin:hover .dot,
 .map-ui .pin:focus-visible .dot,
 .map-ui .pin.hot .dot {
   transform: scale(1.3);
 }
-.map-ui .pin:hover .label,
 .map-ui .pin:focus-visible .label,
 .map-ui .pin.hot .label {
   color: var(--accent);
+}
+/* Hover motion only for real mouse pointers (a tap would otherwise leave a sticky hover). */
+@media (hover: hover) and (pointer: fine) {
+  .map-ui .pin:hover .dot {
+    transform: scale(1.3);
+  }
+  .map-ui .pin:hover .label {
+    color: var(--accent);
+  }
+  .map-ui .land path.visited:hover {
+    fill: var(--visited-hover);
+  }
+}
+.map-ui .pin:active .dot {
+  transform: scale(0.96);
 }
 
 /* ── Hover tooltip ── */
@@ -203,13 +193,14 @@
   color: var(--muted);
 }
 
+/* Reduced motion: pins simply fade in. */
 @media (prefers-reduced-motion: reduce) {
-  .map-ui .pins.in .pin,
-  .map-ui .pin.city .dot::after {
-    animation: none;
-    opacity: 1;
+  .map-ui .pins.in .pin {
+    animation: pin-fade 200ms ease both;
   }
-  .map-ui .pin.city .dot::after {
-    opacity: 0;
+  @keyframes pin-fade {
+    from {
+      opacity: 0;
+    }
   }
 }

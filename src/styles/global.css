@@ -42,6 +42,11 @@
   --gutter: 16px;
   --gap: 8px;
   --max: 1440px;
+  /* Motion — strong custom curves (built-in CSS easings are too weak) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* entering / exiting, UI feedback */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* moving on screen */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* panels opening out */
+
   --font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Roboto,
     Arial, sans-serif;
   color-scheme: dark;
@@ -72,6 +77,16 @@ body {
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
 }
 
 img {
@@ -170,13 +185,18 @@ a.accent:hover {
 }
 
 /* ── Page transitions ─────────────────────────
-   A soft crossfade between pages (supported browsers only). */
+   A quick, soft crossfade between pages (supported browsers only). The top bar is its own
+   transition group (see Nav.astro) so it stays put instead of blinking out and back in. */
 @view-transition {
   navigation: auto;
 }
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.3s;
+  animation-duration: 0.2s;
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-group(site-header) {
+  animation: none;
 }
 @media (prefers-reduced-motion: reduce) {
   @view-transition {
