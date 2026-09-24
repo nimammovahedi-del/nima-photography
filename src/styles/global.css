@@ -17,14 +17,14 @@
   --accent-soft: rgb(164 189 186 / 0.12);
   --on-accent: #161a19; /* text on a sage background */
 
-  /* Maps — a dark green-grey sea close to the background, teal land */
-  --sea: #212927;
-  --sea-light: #29332f;
-  --land: #2d4644;
-  --land-edge: #1c2523;
-  --land-dim: #273a38; /* other countries while zoomed into one */
-  --graticule: #29322f;
-  --rim: rgb(164 189 186 / 0.28);
+  /* Maps — low contrast: a sea just darker than the page, land a muted green-grey a step brighter */
+  --sea: #131716;
+  --sea-light: #1b2120;
+  --land: #2b3533;
+  --land-edge: #151a19;
+  --land-dim: #232b29; /* other countries while zoomed into one */
+  --graticule: #1b2120;
+  --rim: rgb(164 189 186 / 0.16);
   --visited: var(--tan);
   --visited-hover: #c8bb95;
   --visited-soft: rgb(176 162 124 / 0.34);
