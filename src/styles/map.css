@@ -21,7 +21,7 @@
 .map-ui .rim {
   fill: none;
   stroke: var(--rim);
-  stroke-width: 1.2;
+  stroke-width: 1;
 }
 .map-ui .graticule {
   fill: none;
