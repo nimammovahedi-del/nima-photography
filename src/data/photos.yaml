@@ -62,6 +62,106 @@
   city: New York
 
 # ── Places ──
+- file: places/weymouth-01.jpg
+  title: Lifeguards on the Sands
+  alt: Lifeguards in red hauling an inflatable rescue boat across Weymouth beach, a Ferris wheel and the seafront behind
+  country: England
+  city: Weymouth
+- file: places/weymouth-02.jpg
+  title: Seafront Funfair
+  alt: A striped helter-skelter and a Ferris wheel on Weymouth seafront, beside a white railing and a red lifebuoy
+  country: England
+  city: Weymouth
+- file: places/weymouth-03.jpg
+  title: Masts in the Marina
+  alt: Rows of moored sailing yachts with tall masts in Weymouth harbour under a clear blue sky
+  country: England
+  city: Weymouth
+- file: places/weymouth-04.jpg
+  title: Yacht at Rest
+  alt: A single white yacht moored in the harbour, with colourful quayside houses across the water
+  country: England
+  city: Weymouth
+- file: places/weymouth-05.jpg
+  title: Lifeboat Station
+  alt: The orange RNLI lifeboat moored in front of brick terraces, its colours reflected in the harbour
+  country: England
+  city: Weymouth
+- file: places/weymouth-06.jpg
+  title: Harbour Afternoon
+  alt: A sailing boat crossing the harbour past painted houses, with a Ferris wheel in the distance
+  country: England
+  city: Weymouth
+- file: places/weymouth-07.jpg
+  title: Into the Sun
+  alt: A moored boat silhouetted against a low evening sun over Weymouth harbour
+  country: England
+  city: Weymouth
+- file: places/weymouth-08.jpg
+  title: Evening Moorings
+  alt: A small motorboat at its mooring in calm water as the marina glows in the evening light
+  country: England
+  city: Weymouth
+- file: places/weymouth-09.jpg
+  title: Sunset Promenade
+  alt: People walking along the seafront promenade towards a setting sun between tall terraced houses
+  country: England
+  city: Weymouth
+- file: places/weymouth-10.jpg
+  title: Pastel Quayside
+  alt: Brightly painted terraced houses along the quay, with boats and market stalls by the water
+  country: England
+  city: Weymouth
+- file: places/weymouth-11.jpg
+  title: Rowing the Harbour
+  alt: A green rowing boat out on the harbour, the town bridge and crowded quayside in the distance
+  country: England
+  city: Weymouth
+- file: places/weymouth-12.jpg
+  title: Clifftop Gardens
+  alt: Palms and flowering plants in a terraced garden below a modern building, under a bright blue sky
+  country: England
+  city: Weymouth
+- file: places/weymouth-13.jpg
+  title: White Tower
+  alt: A tall white tower rising behind bare branches and hedgerow, with clouds drifting overhead
+  country: England
+  city: Weymouth
+- file: places/weymouth-14.jpg
+  title: Path to the Sea
+  alt: A sandy path framed by green trees, opening onto a long curving beach and a distant headland
+  country: England
+  city: Weymouth
+- file: places/weymouth-15.jpg
+  title: Grazing Fields
+  alt: Cows grazing on open green fields beneath a grey, overcast sky
+  country: England
+  city: Weymouth
+- file: places/weymouth-16.jpg
+  title: Coast Path
+  alt: Grassy downland sloping towards the sea, with chalk cliffs and a monument far along the coast
+  country: England
+  city: Weymouth
+- file: places/weymouth-17.jpg
+  title: Clifftop Track
+  alt: A chalky farm track running along green clifftops towards white cliffs and the sea
+  country: England
+  city: Weymouth
+- file: places/weymouth-18.jpg
+  title: Chalk Cliffs
+  alt: White chalk cliffs curving down to a narrow beach and a sea stack in calm blue water
+  country: England
+  city: Weymouth
+- file: places/weymouth-19.jpg
+  title: Rolling Hills
+  alt: Green rolling fields and a distant farmhouse, seen through bare branches
+  country: England
+  city: Weymouth
+- file: places/weymouth-20.jpg
+  title: Through the Pines
+  alt: Pine trunks framing a view over sunlit green fields and hills
+  country: England
+  city: Weymouth
 - file: places/placeholder-01.jpg
   title: Cairo
   alt: Placeholder image — replace with a description of the photo
@@ -193,10 +293,20 @@
   title: Birds Study
   alt: Placeholder image — replace with a description of the photo
   sub: Birds
-  country: England
-  city: Weymouth
 
 # ── Film ──
+- file: film/weymouth-arch.jpg
+  title: Under the Arch
+  alt: A sepia view through a dark railway arch to a white cottage and a quiet lane beyond
+  filmSim: Sepia
+  country: England
+  city: Weymouth
+- file: film/weymouth-beach.jpg
+  title: Beach Flags
+  alt: A sandy beach with a roped path, an orange lifeguard sign and people on the shore beneath scattered clouds
+  filmSim: Astia
+  country: England
+  city: Weymouth
 - file: film/placeholder-01.jpg
   title: Film Study 1
   alt: Placeholder image — replace with a description of the photo
