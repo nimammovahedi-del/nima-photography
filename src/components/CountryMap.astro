@@ -126,21 +126,21 @@ const cityPins = place.cities.map((c) => {
     }
   }
   .sea {
-    fill: #131313;
+    fill: var(--sea);
   }
   .graticule {
     fill: none;
-    stroke: #1d1d1d;
+    stroke: var(--graticule);
     stroke-width: 0.6;
   }
   .neighbours path {
-    fill: #222;
-    stroke: #131313;
+    fill: var(--land);
+    stroke: var(--land-edge);
     stroke-width: 0.6;
   }
   .shape {
-    fill: rgb(217 119 87 / 0.28);
-    stroke: var(--accent);
+    fill: var(--visited-soft);
+    stroke: var(--visited);
     stroke-width: 1.3;
     stroke-linejoin: round;
     stroke-dasharray: 1;
@@ -182,10 +182,10 @@ const cityPins = place.cities.map((c) => {
   }
   .dot {
     position: absolute;
-    left: -6px;
-    top: -6px;
-    width: 12px;
-    height: 12px;
+    left: -7px;
+    top: -7px;
+    width: 14px;
+    height: 14px;
     border: 2px solid var(--bg);
     border-radius: 50%;
     background: var(--accent);
@@ -194,29 +194,29 @@ const cityPins = place.cities.map((c) => {
   .label {
     position: absolute;
     top: 0;
-    padding: 2px 7px;
-    background: rgb(14 14 14 / 0.85);
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    line-height: 1.3;
+    padding: 3px 9px;
+    background: var(--label-bg);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    line-height: 1.35;
     white-space: nowrap;
     transition: color 0.15s ease;
   }
   [data-side='right'] .label {
-    left: 9px;
+    left: 11px;
     transform: translateY(-50%);
   }
   [data-side='left'] .label {
-    right: 9px;
+    right: 11px;
     transform: translateY(-50%);
   }
   [data-side='up'] .label {
-    bottom: 9px;
+    bottom: 11px;
     top: auto;
     transform: translateX(-50%);
   }
   [data-side='down'] .label {
-    top: 9px;
+    top: 11px;
     transform: translateX(-50%);
   }
   .pin:hover .dot,
@@ -230,7 +230,7 @@ const cityPins = place.cities.map((c) => {
   }
   .pin.active .dot {
     transform: scale(1.4);
-    box-shadow: 0 0 0 4px rgb(217 119 87 / 0.3);
+    box-shadow: 0 0 0 4px var(--accent-soft);
   }
   /* On a city page, the other pins step back a little. */
   .pins:has(.active) .pin:not(.active) :is(.dot, .label) {

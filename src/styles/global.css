@@ -1,17 +1,38 @@
 :root {
-  --bg: #0e0e0e;
-  --bg-raised: #161616;
-  --text: #e9e7e3;
-  --muted: #9c9a96; /* 7.1:1 on --bg */
-  --line: #2a2a2a;
-  --accent: #d97757; /* Claude orange — highlights, active states */
-  --accent-deep: #b4532f; /* darker orange — rules, hovers, pressed */
-  --accent-soft: rgb(217 119 87 / 0.14);
+  /* Palette */
+  --cream: #e5e4d8;
+  --sage: #a4bdba;
+  --khaki: #968867;
+  --tan: #b0a27c; /* khaki, lifted a little so it stands out on the dark green */
+  --lavender: #c0b8c3;
+  --grey-green: #798984;
 
-  --film-bg: #15120f;
-  --film-text: #ece3d3;
-  --film-muted: #a89d8c;
-  --film-frame: #d9ccb4;
+  --bg: #161a19; /* deep grey-green */
+  --bg-raised: #1c2120;
+  --text: var(--cream);
+  --muted: #a3a89f; /* 7.2:1 on --bg */
+  --line: #2a302e;
+  --accent: var(--sage); /* highlights, active states */
+  --accent-deep: var(--grey-green); /* rules, hovers, pressed */
+  --accent-soft: rgb(164 189 186 / 0.12);
+  --on-accent: #161a19; /* text on a sage background */
+
+  /* Maps */
+  --sea: #111514;
+  --sea-light: #1a201e;
+  --land: #272e2c;
+  --land-edge: #131716;
+  --graticule: #1d2321;
+  --visited: var(--tan);
+  --visited-hover: #c8bb95;
+  --visited-soft: rgb(176 162 124 / 0.34);
+  --visited-dim: #575042;
+  --label-bg: rgb(22 26 25 / 0.9);
+
+  --film-bg: #1b1914;
+  --film-text: var(--cream);
+  --film-muted: #b3ab97;
+  --film-frame: var(--tan);
 
   --gutter: 14px;
   --gap: 6px;
@@ -143,12 +164,41 @@ a.accent:hover {
   text-transform: uppercase;
 }
 
+/* ── Page transitions ─────────────────────────
+   Your name glides from the landing page to the top of About (supported browsers only;
+   others just open the page normally). */
+@view-transition {
+  navigation: auto;
+}
+.site-name {
+  view-transition-name: site-name;
+  margin: 0 0 14px;
+  font-size: clamp(32px, 8vw, 56px);
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+::view-transition-group(site-name) {
+  animation-duration: 0.65s;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+}
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
 /* ── Film theme ─────────────────────────────── */
 body.film {
   --bg: var(--film-bg);
   --text: var(--film-text);
   --muted: var(--film-muted);
-  --line: #2c2620;
+  --line: #2e2a22;
+  --accent: var(--tan);
 }
 
 /* Subtle grain, drawn with an SVG noise filter (no image download). */

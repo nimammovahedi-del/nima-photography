@@ -1,0 +1,541 @@
+---
+// Places explorer: three stacked region "snapshots" (Americas, Europe, Africa).
+// Click one and it opens out to fill the screen as a live map with its countries labelled;
+// click a country to zoom in to its city pins. Zooming out (pinch / two-finger scroll, the back
+// button, Esc or the browser's Back) steps back a level, and finally returns to the snapshots.
+import '../styles/map.css';
+import { geoCentroid, geoGraticule10, geoOrthographic, geoPath } from 'd3-geo';
+import type { Geometry } from 'geojson';
+import { regions, slugify, sortedPlaces } from '../site.config';
+import { countries, findCountry, mainland } from '../lib/world';
+
+// Wide strip (about the shape of a panel on a laptop). The region is framed at the right-hand end,
+// clear of the caption; on narrower screens the strip is cropped from the left (xMax…slice).
+const W = 1600;
+const H = 350;
+const BOX: [[number, number], [number, number]] = [
+  [W - H * 2.2, H * 0.1],
+  [W - H * 0.15, H * 0.9],
+];
+const visited = new Set(sortedPlaces.map((p) => p.map));
+
+const snapshots = regions.map((r) => {
+  const inRegion = sortedPlaces.filter((p) => p.region === r);
+  const mine = new Set(inRegion.map((p) => p.map));
+  const target = {
+    type: 'GeometryCollection',
+    geometries: inRegion.map((p) => mainland(findCountry(p.map)!.geometry)),
+  } as Geometry;
+  // Turn the globe to face the region, then fit it into the frame.
+  const [lon, lat] = geoCentroid(target);
+  const projection = geoOrthographic().rotate([-lon, -lat]).fitExtent(BOX, target);
+  projection.clipExtent([
+    [0, 0],
+    [W, H],
+  ]);
+  const path = geoPath(projection).digits(1);
+  const shapes = countries
+    .map((c) => {
+      const n = c.properties.name;
+      return { d: path(c) ?? '', cls: mine.has(n) ? 'visited' : visited.has(n) ? 'elsewhere' : '' };
+    })
+    .filter((s) => s.d)
+    .sort((a, b) => Number(!!a.cls) - Number(!!b.cls));
+  return {
+    name: r,
+    slug: slugify(r),
+    places: inRegion,
+    sphere: { cx: projection.translate()[0], cy: projection.translate()[1], r: projection.scale() },
+    graticule: path(geoGraticule10()) ?? '',
+    shapes,
+  };
+});
+
+const config = {
+  places: sortedPlaces.map((p) => ({
+    name: p.name,
+    map: p.map,
+    slug: p.slug,
+    region: p.region,
+    cities: p.cities.map((c) => ({ name: c.name, slug: c.slug, lon: c.lon, lat: c.lat })),
+  })),
+};
+---
+
+<div class="explorer" data-explorer data-config={JSON.stringify(config)}>
+  <ul class="panels">
+    {
+      snapshots.map((s) => (
+        <li>
+          <button type="button" class="panel map-ui" data-region={s.name} data-slug={s.slug}>
+            <svg class="map snap" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+              <circle class="sphere" cx={s.sphere.cx} cy={s.sphere.cy} r={s.sphere.r} />
+              <path class="graticule" d={s.graticule} />
+              <g class="land">
+                {s.shapes.map((c) => (
+                  <path class={c.cls || undefined} d={c.d} />
+                ))}
+              </g>
+            </svg>
+            <span class="caption">
+              <span class="name">{s.name}</span>
+              <span class="count">
+                {s.places.length} {s.places.length === 1 ? 'country' : 'countries'}
+              </span>
+              <span class="list">{s.places.map((p) => p.name).join(' · ')}</span>
+              <span class="cta" aria-hidden="true">
+                Explore <span class="arrow">→</span>
+              </span>
+            </span>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+
+  <!-- Full-screen live map, shown when a region is opened. -->
+  <div class="stage" role="dialog" aria-modal="true" aria-labelledby="stage-title" hidden>
+    <div class="view map-ui">
+      <svg class="map">
+        <circle class="sphere"></circle>
+        <path class="graticule"></path>
+        <g class="land"></g>
+      </svg>
+      <div class="pins"></div>
+      <div class="tip" role="tooltip" hidden><strong></strong><span></span></div>
+    </div>
+
+    <header class="bar">
+      <button type="button" class="back">
+        <span aria-hidden="true">←</span> <span class="back-label">All regions</span>
+      </button>
+      <h2 id="stage-title">
+        <span class="t-region"></span><span class="t-country"></span>
+      </h2>
+      <a class="all" href="/places" hidden></a>
+    </header>
+
+    <div class="footer">
+      <p class="hint">Drag to rotate · pinch or two-finger scroll to zoom · zoom out to go back</p>
+      <ul class="chips"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  import type { MapConfig, MapPlace } from '../scripts/globe';
+
+  type Engine = Awaited<ReturnType<typeof import('../scripts/globe').createMap>>;
+
+  const root = document.querySelector<HTMLElement>('[data-explorer]')!;
+  const { places } = JSON.parse(root.dataset.config!) as { places: MapPlace[] };
+  const stage = root.querySelector<HTMLElement>('.stage')!;
+  const view = stage.querySelector<HTMLElement>('.view')!;
+  const svg = view.querySelector<SVGSVGElement>('svg.map')!;
+  const backBtn = stage.querySelector<HTMLButtonElement>('.back')!;
+  const backLabel = stage.querySelector<HTMLElement>('.back-label')!;
+  const tRegion = stage.querySelector<HTMLElement>('.t-region')!;
+  const tCountry = stage.querySelector<HTMLElement>('.t-country')!;
+  const allLink = stage.querySelector<HTMLAnchorElement>('.all')!;
+  const chips = stage.querySelector<HTMLUListElement>('.chips')!;
+  const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let engine: Engine | undefined;
+  let openPanel: HTMLElement | undefined;
+  let region: string | undefined;
+  let country: MapPlace | undefined;
+  let pushed = false;
+  let closing = false;
+
+  const engineModule = () => import('../scripts/globe');
+  // Warm up the map code and data as soon as the page is idle.
+  (window.requestIdleCallback ?? setTimeout)(() => engineModule());
+
+  const insetFor = (el: Element) => {
+    const r = el.getBoundingClientRect();
+    return `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px)`;
+  };
+
+  async function open(panel: HTMLElement, fromHistory = false) {
+    if (engine || closing) return;
+    const name = panel.dataset.region!;
+    openPanel = panel;
+    region = name;
+    country = undefined;
+
+    // The live map matches the screen's shape.
+    const W = 1000;
+    const H = Math.round((1000 * innerHeight) / innerWidth);
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+    const m = await engineModule();
+    renderRegionUI();
+
+    const cfg: MapConfig = {
+      width: W,
+      height: H,
+      places,
+      start: { center: [0, 20], scale: Math.min(W, H) / 2 },
+      minScale: Math.min(W, H) * 0.3,
+      regionLabels: true,
+      touchVertical: true,
+    };
+    engine = await m.createMap(view, cfg, {
+      onCountryClick: (p) => openCountry(p),
+      onLeaveCountry: () => {
+        country = undefined;
+        renderRegionUI();
+      },
+      onZoomOutOfRegion: () => close(),
+    });
+    // Jump to the region, then reveal: the panel opens up to fill the screen as the view glides in.
+    engine.showRegion(name, 0);
+    stage.hidden = false;
+    document.documentElement.classList.add('explorer-open');
+    if (!reduceMotion()) {
+      stage.animate([{ clipPath: insetFor(panel) }, { clipPath: 'inset(0px 0px 0px 0px)' }], {
+        duration: 650,
+        easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
+      });
+      view.animate([{ transform: 'scale(0.82)', opacity: 0.6 }, { transform: 'none', opacity: 1 }], {
+        duration: 900,
+        easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
+      });
+    }
+    backBtn.focus({ preventScroll: true });
+    if (!fromHistory) {
+      history.pushState({ explorer: panel.dataset.slug }, '', `#${panel.dataset.slug}`);
+      pushed = true;
+    }
+  }
+
+  function renderRegionUI() {
+    tRegion.textContent = region ?? '';
+    tCountry.textContent = '';
+    backLabel.textContent = 'All regions';
+    allLink.hidden = true;
+    chips.replaceChildren(
+      ...places
+        .filter((p) => p.region === region)
+        .map((p) => {
+          const li = document.createElement('li');
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.textContent = p.name;
+          b.addEventListener('click', () => openCountry(p));
+          b.addEventListener('mouseenter', () => engine?.highlight(p.name));
+          b.addEventListener('mouseleave', () => engine?.highlight(null));
+          li.append(b);
+          return li;
+        }),
+    );
+  }
+
+  function renderCountryUI(p: MapPlace) {
+    tRegion.textContent = `${p.region} / `;
+    tCountry.textContent = p.name;
+    backLabel.textContent = p.region;
+    allLink.hidden = false;
+    allLink.href = `/places/${p.slug}`;
+    allLink.textContent = `All photos from ${p.name} →`;
+    chips.replaceChildren(
+      ...p.cities.map((c) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `/places/${p.slug}/${c.slug}`;
+        a.className = 'city';
+        a.textContent = c.name;
+        a.addEventListener('mouseenter', () => engine?.highlight(c.name));
+        a.addEventListener('mouseleave', () => engine?.highlight(null));
+        li.append(a);
+        return li;
+      }),
+    );
+  }
+
+  function openCountry(p: MapPlace) {
+    country = p;
+    renderCountryUI(p);
+    engine?.showCountry(p);
+  }
+
+  function back() {
+    if (country && region) {
+      country = undefined;
+      renderRegionUI();
+      engine?.showRegion(region);
+    } else {
+      close();
+    }
+  }
+
+  async function close(fromHistory = false) {
+    if (!engine || closing) return;
+    closing = true;
+    if (!reduceMotion() && openPanel) {
+      await stage.animate(
+        [{ clipPath: 'inset(0px 0px 0px 0px)' }, { clipPath: insetFor(openPanel) }],
+        { duration: 450, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+      ).finished;
+    }
+    stage.hidden = true;
+    document.documentElement.classList.remove('explorer-open');
+    engine.destroy();
+    engine = undefined;
+    view.classList.remove('focus', 'live');
+    view.querySelector('.pins')!.replaceChildren();
+    openPanel?.focus({ preventScroll: true });
+    closing = false;
+    if (pushed && !fromHistory) {
+      pushed = false;
+      history.back();
+    }
+    pushed = false;
+  }
+
+  root.querySelectorAll<HTMLElement>('.panel').forEach((p) => p.addEventListener('click', () => open(p)));
+  backBtn.addEventListener('click', back);
+  stage.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') back();
+  });
+  window.addEventListener('popstate', () => {
+    if (engine) {
+      pushed = false;
+      close(true);
+    } else {
+      const panel = root.querySelector<HTMLElement>(`.panel[data-slug="${location.hash.slice(1)}"]`);
+      if (panel) open(panel, true);
+    }
+  });
+
+  // Open straight into a region from a link like /places#europe.
+  const linked = root.querySelector<HTMLElement>(`.panel[data-slug="${location.hash.slice(1)}"]`);
+  if (linked) {
+    history.replaceState({ explorer: linked.dataset.slug }, '');
+    open(linked, true);
+  }
+</script>
+
+<style>
+  .panels {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .panel {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: clamp(180px, 25vh, 300px);
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--sea);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.25s ease;
+  }
+  .panel:hover,
+  .panel:focus-visible {
+    border-color: var(--accent-deep);
+  }
+  .snap {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .panel:hover .snap {
+    transform: scale(1.04);
+  }
+  .snap :global(path.elsewhere) {
+    fill: var(--visited-dim);
+  }
+  .panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(90deg, rgb(22 26 25 / 0.92), rgb(22 26 25 / 0.35) 45%, transparent 70%);
+    pointer-events: none;
+  }
+  .caption {
+    position: absolute;
+    left: clamp(18px, 4vw, 40px);
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    gap: 4px;
+    max-width: min(60%, 420px);
+    translate: 0 -50%;
+  }
+  .name {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+  }
+  .count {
+    color: var(--accent);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .list {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  @media (max-width: 600px) {
+    .list {
+      display: none;
+    }
+  }
+  .cta {
+    justify-self: start;
+    margin-top: 12px;
+    padding: 7px 14px;
+    border: 1px solid var(--accent-deep);
+    background: var(--label-bg);
+    color: var(--accent);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition: background 0.2s ease;
+  }
+  .panel:hover .cta {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .panel:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  /* ── Full-screen stage ── */
+  .stage {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: var(--sea);
+  }
+  .stage[hidden] {
+    display: none;
+  }
+  :global(html.explorer-open) {
+    overflow: hidden;
+  }
+  .view {
+    position: absolute;
+    inset: 0;
+    touch-action: none;
+  }
+  .bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 24px;
+    padding: 14px var(--gutter);
+    background: linear-gradient(to bottom, rgb(17 21 20 / 0.95), rgb(17 21 20 / 0));
+  }
+  .back {
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    background: var(--label-bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .back:hover {
+    border-color: var(--accent-deep);
+    color: var(--accent);
+  }
+  h2 {
+    margin: 0;
+    font-size: clamp(22px, 3.2vw, 32px);
+    font-weight: 300;
+  }
+  .t-region {
+    color: var(--muted);
+  }
+  .all {
+    margin-left: auto;
+    color: var(--accent);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .all:hover {
+    color: var(--text);
+  }
+  .footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    padding: 28px var(--gutter) max(16px, env(safe-area-inset-bottom));
+    background: linear-gradient(to top, rgb(17 21 20 / 0.95), rgb(17 21 20 / 0));
+    pointer-events: none;
+  }
+  .hint {
+    margin: 0 0 10px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+  .chips {
+    display: flex;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+    pointer-events: auto;
+  }
+  .chips :global(button),
+  .chips :global(a) {
+    display: block;
+    padding: 9px 16px;
+    border: 1px solid var(--line);
+    background: var(--label-bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 15px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .chips :global(button:hover),
+  .chips :global(a:hover),
+  .chips :global(:focus-visible) {
+    border-color: var(--accent-deep);
+    color: var(--accent);
+  }
+  .chips :global(a.city)::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    vertical-align: 1px;
+  }
+</style>

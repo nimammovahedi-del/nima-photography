@@ -27,12 +27,8 @@ const pages = [
   <section class="hero">
     <div class="intro">
       <p class="eyebrow">Photography</p>
-      <h1>{site.name}</h1>
+      <h1 class="site-name"><a href="/about" title="About me">{site.name}</a></h1>
       <p class="lede">{site.intro}</p>
-      <p class="where">
-        Photographed in <strong>{places.length} countries</strong> — the ones glowing orange.
-        <a class="accent" href="/places">Explore places <span aria-hidden="true">→</span></a>
-      </p>
     </div>
     <div class="globe">
       <Globe mode="compact" />
@@ -111,31 +107,31 @@ const pages = [
   .intro {
     max-width: 34rem;
   }
-  .where {
-    margin: 24px 0 0;
-    color: var(--muted);
-    font-size: 14px;
-  }
-  .where strong {
-    color: var(--text);
-    font-weight: 500;
-  }
-  .where a {
-    display: inline-block;
-    margin-left: 4px;
+  .site-name a {
+    position: relative;
+    color: inherit;
     text-decoration: none;
+  }
+  .site-name a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .site-name a:hover::after,
+  .site-name a:focus-visible::after {
+    transform: scaleX(1);
   }
   .globe {
     width: 100%;
     max-width: 480px;
     margin: 0 auto;
-  }
-  .hero h1 {
-    margin: 0 0 14px;
-    font-size: clamp(32px, 8vw, 56px);
-    font-weight: 300;
-    letter-spacing: -0.015em;
-    line-height: 1.05;
   }
   .lede {
     margin: 0;
@@ -198,7 +194,7 @@ const pages = [
     align-items: center;
     padding: 28px 16px 22px;
     border: 1px solid var(--line);
-    background: linear-gradient(180deg, #131313, #101010);
+    background: linear-gradient(180deg, var(--bg-raised), var(--bg));
     color: var(--text);
     text-align: center;
     text-decoration: none;
@@ -209,7 +205,7 @@ const pages = [
   .tile:hover,
   .tile:focus-visible {
     border-color: var(--accent-deep);
-    background: linear-gradient(180deg, rgb(217 119 87 / 0.1), #101010 70%);
+    background: linear-gradient(180deg, var(--accent-soft), var(--bg) 70%);
   }
   .tile :global(.illus) {
     width: min(112px, 70%);
@@ -246,7 +242,7 @@ const pages = [
   .film .tile {
     border-color: var(--film-frame);
     background: var(--film-bg);
-    box-shadow: inset 0 0 0 5px var(--film-bg), inset 0 0 0 6px rgb(217 204 180 / 0.35);
+    box-shadow: inset 0 0 0 5px var(--film-bg), inset 0 0 0 6px rgb(176 162 124 / 0.45);
   }
   .film .tile :global(.illus) {
     stroke: var(--film-text);

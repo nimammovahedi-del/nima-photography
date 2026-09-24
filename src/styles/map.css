@@ -1,0 +1,210 @@
+/* Shared styles for the interactive maps (landing globe and Places explorer).
+   Global rather than component-scoped because the map script creates these elements. */
+
+.map-ui {
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.map-ui svg.map {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+.map-ui.dragging svg.map {
+  cursor: grabbing;
+}
+.map-ui .sphere {
+  fill: var(--sea);
+}
+.map-ui .rim {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.map-ui .graticule {
+  fill: none;
+  stroke: var(--graticule);
+  stroke-width: 0.6;
+}
+.map-ui .land path {
+  fill: var(--land);
+  stroke: var(--land-edge);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+  transition: fill 0.4s ease;
+}
+.map-ui .land path.visited {
+  fill: var(--visited);
+  cursor: pointer;
+}
+.map-ui .land path.visited:hover {
+  fill: var(--visited-hover);
+}
+/* Zoomed into a country: everything else steps back. */
+.map-ui.focus .land path {
+  fill: #222826;
+}
+.map-ui.focus .land path.visited {
+  fill: var(--visited-dim);
+}
+.map-ui.focus .land path.focused {
+  fill: var(--visited-soft);
+  stroke: var(--visited);
+  stroke-width: 1.3;
+}
+
+/* ── Markers (city pins and country names) ── */
+.map-ui .pins {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.map-ui .pin {
+  position: absolute;
+  width: 0;
+  height: 0;
+  color: var(--text);
+  text-decoration: none;
+  pointer-events: auto;
+  opacity: 0;
+}
+.map-ui .pin[hidden] {
+  display: none;
+}
+.map-ui .pins.in .pin {
+  animation: pin-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  animation-delay: calc(var(--i) * 60ms);
+}
+@keyframes pin-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.map-ui .pin .dot {
+  position: absolute;
+  left: -7px;
+  top: -7px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform 0.2s ease;
+}
+.map-ui .pin.city .dot::after {
+  content: '';
+  position: absolute;
+  inset: -9px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  opacity: 0;
+  animation: pin-pulse 2.4s ease-out infinite;
+  animation-delay: calc(var(--i) * 180ms);
+}
+@keyframes pin-pulse {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+.map-ui .pin .label {
+  position: absolute;
+  top: 0;
+  padding: 3px 9px;
+  background: var(--label-bg);
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+/* Country names in a region view: small caps-style, khaki dot. */
+.map-ui .pin.country .dot {
+  left: -5px;
+  top: -5px;
+  width: 10px;
+  height: 10px;
+  background: var(--cream);
+}
+.map-ui .pin.country .label {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.map-ui .pin[data-side='right'] .label {
+  left: 11px;
+  transform: translateY(-50%);
+}
+.map-ui .pin[data-side='left'] .label {
+  right: 11px;
+  transform: translateY(-50%);
+}
+.map-ui .pin[data-side='up'] .label {
+  bottom: 11px;
+  top: auto;
+  transform: translateX(-50%);
+}
+.map-ui .pin[data-side='down'] .label {
+  top: 11px;
+  transform: translateX(-50%);
+}
+.map-ui .pin:hover .dot,
+.map-ui .pin:focus-visible .dot,
+.map-ui .pin.hot .dot {
+  transform: scale(1.3);
+}
+.map-ui .pin:hover .label,
+.map-ui .pin:focus-visible .label,
+.map-ui .pin.hot .label {
+  color: var(--accent);
+}
+
+/* ── Hover tooltip ── */
+.map-ui .tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: grid;
+  gap: 2px;
+  max-width: 260px;
+  padding: 8px 12px;
+  border-left: 2px solid var(--visited);
+  background: var(--label-bg);
+  font-size: 13px;
+  line-height: 1.4;
+  pointer-events: none;
+  translate: -50% calc(-100% - 14px);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.4);
+}
+.map-ui .tip[hidden] {
+  display: none;
+}
+.map-ui .tip strong {
+  font-weight: 500;
+}
+.map-ui .tip span {
+  color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-ui .pins.in .pin,
+  .map-ui .pin.city .dot::after {
+    animation: none;
+    opacity: 1;
+  }
+  .map-ui .pin.city .dot::after {
+    opacity: 0;
+  }
+}

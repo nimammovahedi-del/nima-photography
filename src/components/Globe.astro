@@ -1,48 +1,30 @@
 ---
-// Landing-page globe. Region headers spin it; clicking a country zooms in to its city pins.
-// A still picture of the globe is drawn at build time so something shows instantly; the
-// interactive version (src/scripts/globe.ts) loads when the globe scrolls into view.
+// Compact landing-page globe: drag to spin, click a country to open its page.
+// A still picture is drawn at build time so something shows instantly; the interactive
+// version (src/scripts/globe.ts) loads when the globe scrolls into view.
+import '../styles/map.css';
 import { geoGraticule10, geoOrthographic, geoPath } from 'd3-geo';
 import type { Geometry } from 'geojson';
-import { regions, sortedPlaces } from '../site.config';
+import { sortedPlaces } from '../site.config';
 import { countries, countryView, findCountry, mainland } from '../lib/world';
-
-interface Props {
-  /**
-   * 'full'    — region headers, country list and zoom-in to city pins (Places page).
-   * 'compact' — just the globe; clicking a country opens its page (landing page).
-   */
-  mode?: 'full' | 'compact';
-}
-const { mode = 'full' } = Astro.props;
-const full = mode === 'full';
 
 const S = 600;
 const base = S / 2 - 14; // radius at which the whole globe fits, with a little breathing room
-const INITIAL = 'Europe';
 
-// Each region's view frames the countries you've visited there.
-const views = Object.fromEntries(
-  regions.map((r) => {
-    const shapes = sortedPlaces
-      .filter((p) => p.region === r)
-      .map((p) => mainland(findCountry(p.map)!.geometry));
-    const v = countryView({ type: 'GeometryCollection', geometries: shapes } as Geometry, [], S, S, S * 0.12);
-    // Show the whole globe, turned to face the region.
-    return [r, { center: v.center, scale: base }];
-  }),
-);
+// Start turned towards Europe (where most of the countries are), whole globe visible.
+const europe = sortedPlaces
+  .filter((p) => p.region === 'Europe')
+  .map((p) => mainland(findCountry(p.map)!.geometry));
+const { center } = countryView({ type: 'GeometryCollection', geometries: europe } as Geometry, [], S, S, 60);
 
-// Still picture for the initial view.
-const start = views[INITIAL];
 const projection = geoOrthographic()
   .translate([S / 2, S / 2])
   .clipExtent([
     [0, 0],
     [S, S],
   ])
-  .rotate([-start.center[0], -start.center[1]])
-  .scale(start.scale);
+  .rotate([-center[0], -center[1]])
+  .scale(base);
 const path = geoPath(projection).digits(1);
 const visited = new Set(sortedPlaces.map((p) => p.map));
 const still = countries
@@ -51,10 +33,10 @@ const still = countries
   .sort((a, b) => Number(a.visited) - Number(b.visited));
 
 const config = {
-  size: S,
-  base,
-  views,
-  initial: INITIAL,
+  width: S,
+  height: S,
+  start: { center, scale: base },
+  minScale: base * 0.85,
   places: sortedPlaces.map((p) => ({
     name: p.name,
     map: p.map,
@@ -65,311 +47,57 @@ const config = {
 };
 ---
 
-<div class:list={['globe-wrap', mode]} data-globe data-mode={mode} data-config={JSON.stringify(config)}>
-  {
-    full && (
-      <div class="regions" role="group" aria-label="Regions">
-        {regions.map((r) => (
-          <button type="button" data-region={r} aria-pressed={r === INITIAL ? 'true' : 'false'}>
-            {r}
-            <span class="n">{sortedPlaces.filter((p) => p.region === r).length}</span>
-          </button>
-        ))}
-      </div>
-    )
-  }
-
-  <div class="stage">
-    <div class="globe-box">
-      <svg class="globe" viewBox={`0 0 ${S} ${S}`} role="img" aria-label="Globe with the countries I've photographed highlighted in orange">
-        <defs>
-          <radialGradient id="globe-shade" cx="35%" cy="30%" r="75%">
-            <stop offset="0" stop-color="#1c1c1c" />
-            <stop offset="1" stop-color="#101010" />
-          </radialGradient>
-        </defs>
-        <circle class="sphere" cx={S / 2} cy={S / 2} r={start.scale} />
-        <path class="graticule" d={path(geoGraticule10()) ?? ''} />
-        <g class="land">
-          {still.map((c) => <path class:list={{ visited: c.visited }} d={c.d} />)}
-        </g>
-        <circle class="rim" cx={S / 2} cy={S / 2} r={start.scale} />
-      </svg>
-      <div class="pins"></div>
-      <div class="tip" role="tooltip" hidden><strong></strong><span></span></div>
-      <p class="hint" aria-hidden="true">
-        {full ? 'Drag to rotate · pinch or two-finger scroll to zoom' : 'Drag to rotate · click a country'}
-      </p>
-    </div>
-
-    {
-      full && (
-    <div class="panel">
-      {
-        regions.map((r) => (
-          <section class="region" data-list={r} aria-label={`Countries in ${r}`}>
-            <h2>{r}</h2>
-            <ul>
-              {sortedPlaces
-                .filter((p) => p.region === r)
-                .map((p) => (
-                  <li>
-                    <a href={`/places/${p.slug}`} data-country={p.name}>
-                      <span>{p.name}</span>
-                      <span class="meta">
-                        {p.cities.length > 0 && `${p.cities.length} ${p.cities.length === 1 ? 'place' : 'places'}`}
-                        <span aria-hidden="true" class="arrow">→</span>
-                      </span>
-                    </a>
-                  </li>
-                ))}
-            </ul>
-          </section>
-        ))
-      }
-
-      <section class="country" hidden aria-live="polite">
-        <button type="button" class="back"><span aria-hidden="true">←</span> <span class="back-label">Back</span></button>
-        <h2></h2>
-        <ul class="cities"></ul>
-        <a class="all accent" href="#"></a>
-      </section>
-    </div>
-      )
-    }
-  </div>
+<div class="globe map-ui" data-globe data-config={JSON.stringify(config)}>
+  <svg class="map" viewBox={`0 0 ${S} ${S}`} role="img" aria-label="Globe with the countries I've photographed highlighted">
+    <defs>
+      <radialGradient id="globe-shade" cx="35%" cy="30%" r="75%">
+        <stop offset="0" stop-color="#1f2624"></stop>
+        <stop offset="1" stop-color="#111514"></stop>
+      </radialGradient>
+    </defs>
+    <circle class="sphere" cx={S / 2} cy={S / 2} r={base}></circle>
+    <path class="graticule" d={path(geoGraticule10()) ?? ''}></path>
+    <g class="land">
+      {still.map((c) => <path class:list={{ visited: c.visited }} d={c.d} />)}
+    </g>
+    <circle class="rim" cx={S / 2} cy={S / 2} r={base}></circle>
+  </svg>
+  <div class="pins"></div>
+  <div class="tip" role="tooltip" hidden><strong></strong><span></span></div>
+  <p class="hint" aria-hidden="true">Drag to rotate · click a country</p>
 </div>
 
 <script>
-  import type { GlobeConfig, GlobePlace } from '../scripts/globe';
+  import type { MapConfig } from '../scripts/globe';
 
   const root = document.querySelector<HTMLElement>('[data-globe]')!;
-  const cfg: GlobeConfig = JSON.parse(root.dataset.config!);
-  const regionButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-region]')];
-  const lists = [...root.querySelectorAll<HTMLElement>('[data-list]')];
-  const full = root.dataset.mode === 'full';
-  let region = cfg.initial;
-
-  // Load the interactive globe once (when it's about to scroll into view, or on first click).
-  type Globe = Awaited<ReturnType<typeof import('../scripts/globe').createGlobe>>;
-  let globe: Promise<Globe> | undefined;
-  const ensureGlobe = () =>
-    (globe ??= import('../scripts/globe').then((m) =>
-      m.createGlobe(root, cfg, {
-        // Compact globe: a click simply opens the country's page.
-        onCountryClick: (p) => (full ? openCountry(p) : location.assign(`/places/${p.slug}`)),
-        onLeaveCountry: (p) => showList(p.region),
-      }),
-    ));
+  const cfg: MapConfig = JSON.parse(root.dataset.config!);
   new IntersectionObserver(
     (entries, io) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        io.disconnect();
-        ensureGlobe();
-      }
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      import('../scripts/globe').then((m) =>
+        m.createMap(root, cfg, { onCountryClick: (p) => location.assign(`/places/${p.slug}`) }),
+      );
     },
     { rootMargin: '300px' },
   ).observe(root);
-
-  function showList(name: string) {
-    if (!full) return;
-    region = name;
-    regionButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.region === name)));
-    lists.forEach((l) => (l.hidden = l.dataset.list !== name));
-    root.querySelector<HTMLElement>('.country')!.hidden = true;
-  }
-
-  async function selectRegion(name: string) {
-    showList(name);
-    (await ensureGlobe()).showRegion(name);
-  }
-
-  async function openCountry(p: GlobePlace) {
-    const countryPanel = root.querySelector<HTMLElement>('.country')!;
-    showList(p.region);
-    lists.forEach((l) => (l.hidden = true));
-    countryPanel.hidden = false;
-    countryPanel.querySelector('.back-label')!.textContent = p.region;
-    countryPanel.querySelector('h2')!.textContent = p.name;
-    const ul = countryPanel.querySelector('.cities')!;
-    ul.replaceChildren(
-      ...p.cities.map((c) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = `/places/${p.slug}/${c.slug}`;
-        a.dataset.city = c.name;
-        a.innerHTML = `<span class="pin-icon" aria-hidden="true"></span>${c.name}`;
-        li.append(a);
-        return li;
-      }),
-    );
-    const all = countryPanel.querySelector<HTMLAnchorElement>('.all')!;
-    all.href = `/places/${p.slug}`;
-    all.textContent = `All photos from ${p.name} →`;
-    const g = await ensureGlobe();
-    ul.querySelectorAll<HTMLElement>('a').forEach((a) => {
-      a.addEventListener('mouseenter', () => g.highlightCity(a.dataset.city!));
-      a.addEventListener('mouseleave', () => g.highlightCity(null));
-      a.addEventListener('focus', () => g.highlightCity(a.dataset.city!));
-      a.addEventListener('blur', () => g.highlightCity(null));
-    });
-    await g.showCountry(p);
-  }
-
-  const countryPanel = root.querySelector<HTMLElement>('.country');
-  regionButtons.forEach((b) => b.addEventListener('click', () => selectRegion(b.dataset.region!)));
-  root.querySelectorAll<HTMLAnchorElement>('[data-country]').forEach((a) =>
-    a.addEventListener('click', (e) => {
-      if (e.metaKey || e.ctrlKey || e.shiftKey) return; // let "open in new tab" work
-      e.preventDefault();
-      openCountry(cfg.places.find((p) => p.name === a.dataset.country)!);
-    }),
-  );
-  countryPanel?.querySelector('.back')!.addEventListener('click', () => selectRegion(region));
-  root.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && countryPanel && !countryPanel.hidden) selectRegion(region);
-  });
-
-  showList(region);
 </script>
 
 <style>
-  .globe-wrap {
-    --globe-max: 600px;
-  }
-  .compact {
-    --globe-max: 480px;
-  }
-  .compact .stage {
-    display: block;
-  }
-
-  /* ── Region headers ── */
-  .regions {
-    display: flex;
-    gap: 28px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid var(--line);
-  }
-  .regions button {
-    position: relative;
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    padding: 12px 0 13px;
-    border: 0;
-    background: none;
-    color: var(--muted);
-    font: inherit;
-    font-size: 13px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-  .regions button:hover {
-    color: var(--text);
-  }
-  .regions button[aria-pressed='true'] {
-    color: var(--text);
-  }
-  .regions button[aria-pressed='true']::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -1px;
-    height: 2px;
-    background: var(--accent);
-  }
-  .n {
-    color: var(--muted);
-    font-size: 10px;
-    letter-spacing: 0.04em;
-  }
-  [aria-pressed='true'] .n {
-    color: var(--accent);
-  }
-
-  /* ── Layout: globe + panel ── */
-  .stage {
-    display: grid;
-    gap: 8px 48px;
-    align-items: center;
-  }
-  @media (min-width: 900px) {
-    .stage {
-      grid-template-columns: minmax(0, var(--globe-max)) minmax(240px, 1fr);
-    }
-  }
-
-  .globe-box {
-    position: relative;
+  .globe {
     width: 100%;
-    max-width: var(--globe-max);
-    margin: 0 auto;
     aspect-ratio: 1;
-    overflow: hidden;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  svg {
-    display: block;
-    width: 100%;
-    height: 100%;
     touch-action: pan-y; /* sideways drags spin the globe; vertical ones scroll the page */
-    cursor: grab;
   }
-  :global(.dragging) svg {
-    cursor: grabbing;
-  }
-
-  .sphere {
+  .globe :global(.sphere) {
     fill: url(#globe-shade);
   }
-  .rim {
-    fill: none;
-    stroke: #2c2c2c;
-    stroke-width: 1;
-  }
-  .graticule {
-    fill: none;
-    stroke: #1f1f1f;
-    stroke-width: 0.6;
-  }
-  .land :global(path) {
-    fill: #2b2b2b;
-    stroke: #121212;
-    stroke-width: 0.5;
-    stroke-linejoin: round;
-    transition:
-      fill 0.4s ease,
-      opacity 0.4s ease;
-  }
-  .land :global(path.visited) {
-    fill: var(--accent);
-    cursor: pointer;
-  }
-  .land :global(path.visited:hover) {
-    fill: #f0a07e;
-  }
-  /* Zoomed into a country: everything else steps back. */
-  :global(.focus) .land :global(path) {
-    fill: #222;
-  }
-  :global(.focus) .land :global(path.visited) {
-    fill: #5a3a2e;
-  }
-  :global(.focus) .land :global(path.focused) {
-    fill: rgb(217 119 87 / 0.32);
-    stroke: var(--accent);
-    stroke-width: 1.2;
-  }
-
   .hint {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 4px;
+    bottom: 0;
     margin: 0;
     color: var(--muted);
     font-size: 11px;
@@ -379,237 +107,10 @@ const config = {
     transition: opacity 0.4s ease;
     pointer-events: none;
   }
-  :global(.live) .hint {
-    opacity: 0.8;
+  .globe:global(.live) .hint {
+    opacity: 0.85;
   }
-  :global(.dragging) .hint {
+  .globe:global(.dragging) .hint {
     opacity: 0;
-  }
-
-  /* ── City pins ── */
-  .pins {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-  .pins :global(.pin) {
-    position: absolute;
-    width: 0;
-    height: 0;
-    color: var(--text);
-    text-decoration: none;
-    pointer-events: auto;
-    opacity: 0;
-  }
-  .pins:global(.in) :global(.pin) {
-    animation: pin-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both;
-    animation-delay: calc(var(--i) * 70ms);
-  }
-  @keyframes pin-in {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-  .pins :global(.dot) {
-    position: absolute;
-    left: -6px;
-    top: -6px;
-    width: 12px;
-    height: 12px;
-    border: 2px solid var(--bg);
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 0 rgb(217 119 87 / 0.6);
-    transition: transform 0.2s ease;
-  }
-  .pins :global(.dot)::after {
-    content: '';
-    position: absolute;
-    inset: -8px;
-    border: 1px solid var(--accent);
-    border-radius: 50%;
-    opacity: 0;
-    animation: pulse 2.4s ease-out infinite;
-    animation-delay: calc(var(--i) * 180ms);
-  }
-  @keyframes pulse {
-    0% {
-      transform: scale(0.4);
-      opacity: 0.8;
-    }
-    100% {
-      transform: scale(1.4);
-      opacity: 0;
-    }
-  }
-  .pins :global(.label) {
-    position: absolute;
-    top: 0;
-    padding: 2px 7px;
-    background: rgb(14 14 14 / 0.85);
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    line-height: 1.3;
-    white-space: nowrap;
-    transition: color 0.15s ease;
-  }
-  .pins :global([data-side='right'] .label) {
-    left: 9px;
-    transform: translateY(-50%);
-  }
-  .pins :global([data-side='left'] .label) {
-    right: 9px;
-    transform: translateY(-50%);
-  }
-  .pins :global([data-side='up'] .label) {
-    bottom: 9px;
-    top: auto;
-    transform: translateX(-50%);
-  }
-  .pins :global([data-side='down'] .label) {
-    top: 9px;
-    transform: translateX(-50%);
-  }
-  .pins :global(.pin:hover .dot),
-  .pins :global(.pin:focus-visible .dot),
-  .pins :global(.pin.hot .dot) {
-    transform: scale(1.35);
-  }
-  .pins :global(.pin:hover .label),
-  .pins :global(.pin:focus-visible .label),
-  .pins :global(.pin.hot .label) {
-    color: var(--accent);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .pins :global(.dot)::after {
-      animation: none;
-    }
-  }
-
-  .tip {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    display: grid;
-    gap: 2px;
-    max-width: 240px;
-    padding: 8px 12px;
-    border-left: 2px solid var(--accent);
-    background: rgb(20 20 20 / 0.94);
-    font-size: 12px;
-    line-height: 1.4;
-    pointer-events: none;
-    translate: -50% calc(-100% - 14px);
-    box-shadow: 0 6px 24px rgb(0 0 0 / 0.4);
-  }
-  .tip[hidden] {
-    display: none;
-  }
-  .tip strong {
-    font-weight: 500;
-  }
-  .tip span {
-    color: var(--muted);
-  }
-
-  /* ── Side panel ── */
-  .panel {
-    min-height: 220px;
-  }
-  .panel h2 {
-    margin: 0 0 12px;
-    font-size: clamp(26px, 4vw, 34px);
-    font-weight: 300;
-    letter-spacing: -0.01em;
-  }
-  .panel ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .region a {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 16px;
-    padding: 11px 0;
-    border-bottom: 1px solid var(--line);
-    color: var(--text);
-    text-decoration: none;
-    font-size: 16px;
-  }
-  .region li:first-child a {
-    border-top: 1px solid var(--line);
-  }
-  .meta {
-    display: flex;
-    gap: 12px;
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  .arrow {
-    color: var(--accent);
-    transition: transform 0.2s ease;
-  }
-  .region a:hover {
-    color: var(--accent);
-  }
-  .region a:hover .arrow {
-    transform: translateX(3px);
-  }
-
-  .back {
-    margin: 0 0 14px;
-    padding: 6px 0;
-    border: 0;
-    background: none;
-    color: var(--muted);
-    font: inherit;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-  .back:hover {
-    color: var(--accent);
-  }
-  .cities {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 20px;
-    margin-bottom: 20px !important;
-  }
-  .cities :global(a) {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--line);
-    color: var(--text);
-    text-decoration: none;
-  }
-  .cities :global(a:hover),
-  .cities :global(a:focus-visible) {
-    color: var(--accent);
-  }
-  .cities :global(.pin-icon) {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    flex: none;
-  }
-  .all {
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    text-decoration: none;
   }
 </style>

@@ -1,15 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config';
 ---
 
 <BaseLayout title="About">
-  <header class="page-head">
-    <h1>About</h1>
+  <header class="about-head">
+    <p class="eyebrow">About</p>
+    <h1 class="site-name">{site.name}</h1>
   </header>
   <div class="prose">
     <!-- Replace this text with your own bio. -->
     <p>
-      I'm Nima, a photographer drawn to the lines of buildings, the rhythm of cities, open
+      I'm Nima, a photographer drawn to the lines of buildings, the character of places, open
       landscapes and the animals that share them.
     </p>
     <p>
@@ -21,3 +23,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </p>
   </div>
 </BaseLayout>
+
+<style>
+  .about-head {
+    padding: 60px 0 12px;
+  }
+  @media (min-width: 900px) {
+    .about-head {
+      padding-top: 24px;
+    }
+  }
+  .prose p {
+    font-size: 17px;
+    line-height: 1.7;
+  }
+</style>

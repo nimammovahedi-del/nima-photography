@@ -87,12 +87,19 @@ All of these live in `src/site.config.ts`:
 
 - **Landing page** — a compact globe beside the intro. Drag to spin it; clicking a highlighted country
   opens that country's page.
-- **Places page** — the full explorer: Americas / Europe / Africa headers turn the globe to that
-  region and list its countries; **pinch or two-finger scroll** (trackpad) zooms; clicking a country
-  flies in to its city pins, and zooming back out returns to the whole globe. On phones: swipe
-  sideways to spin, pinch to zoom.
+- **Places page** — three stacked region panels (Americas, Europe, Africa). Click one and it opens
+  out to a full-screen map with its countries labelled; click a country to zoom in to its city pins.
+  **Pinch or two-finger scroll** (trackpad) zooms; zooming out — or the back button, Esc, or the
+  browser's Back — steps back a level, and finally returns to the three panels. Links like
+  `/places#europe` open a region directly. A small A–Z index sits underneath.
 
-Both use the same component, `src/components/Globe.astro` (`mode="compact"` on the landing page).
+The landing globe is `src/components/Globe.astro`, the Places explorer is
+`src/components/RegionExplorer.astro`; both run on `src/scripts/globe.ts`.
+
+## Colours
+
+All colours are defined once at the top of `src/styles/global.css` (the palette: cream, sage,
+khaki/tan, lavender, grey-green). Change a value there and it updates everywhere.
 
 ## Change text and settings
 
