@@ -1,0 +1,159 @@
+---
+// A→Z list of countries, each with its cities A→Z.
+import { Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site, slugify, sortedPlaces } from '../../site.config';
+import { getPlace } from '../../lib/photos';
+
+const rows = await Promise.all(
+  sortedPlaces.map(async (p) => {
+    const photos = await getPlace(p.name);
+    return {
+      ...p,
+      count: photos.length,
+      cover: photos.find((x) => x.category === 'places') ?? photos[0],
+    };
+  }),
+);
+---
+
+<BaseLayout title="Places" description={`Photographs from ${sortedPlaces.length} countries by ${site.name}.`}>
+  <header class="page-head">
+    <h1>Places</h1>
+    <p>{sortedPlaces.length} countries, A–Z. Pick a country, or jump straight to a city.</p>
+  </header>
+
+  <ol class="places">
+    {
+      rows.map((p) => (
+        <li>
+          <a class="thumb" href={`/places/${p.slug}`} tabindex="-1" aria-hidden="true">
+            {p.cover ? (
+              <Picture
+                src={p.cover.image}
+                alt=""
+                formats={['avif', 'webp']}
+                widths={[160, 320]}
+                sizes="96px"
+                loading="lazy"
+                decoding="async"
+                style={`background-image:url(${p.cover.blur})`}
+              />
+            ) : (
+              <span class="no-photo">{p.name.slice(0, 1)}</span>
+            )}
+          </a>
+          <div class="text">
+            <h2>
+              <a href={`/places/${p.slug}`}>{p.name}</a>
+              <span class="count">
+                {p.count} {p.count === 1 ? 'photo' : 'photos'}
+              </span>
+            </h2>
+            {p.cities.length > 0 && (
+              <ul class="cities">
+                {p.cities.map((c) => (
+                  <li>
+                    <a href={`/places/${p.slug}/${slugify(c)}`}>{c}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</BaseLayout>
+
+<style>
+  .places {
+    display: grid;
+    gap: 0 48px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 900px) {
+    .places {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .places > li {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .thumb {
+    flex: none;
+    display: block;
+    width: 64px;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--bg-raised);
+    text-decoration: none;
+  }
+  @media (min-width: 768px) {
+    .thumb {
+      width: 80px;
+    }
+  }
+  .thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-size: cover;
+  }
+  .no-photo {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    color: var(--accent-deep);
+    font-size: 22px;
+    font-weight: 300;
+  }
+  .text {
+    min-width: 0;
+    padding-top: 2px;
+  }
+  h2 {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    margin: 0;
+    font-size: 19px;
+    font-weight: 400;
+  }
+  h2 a {
+    text-decoration: none;
+  }
+  h2 a:hover,
+  .places > li:hover h2 a {
+    color: var(--accent);
+  }
+  .count {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .cities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 14px;
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+  }
+  .cities a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .cities a:hover {
+    color: var(--accent);
+  }
+</style>

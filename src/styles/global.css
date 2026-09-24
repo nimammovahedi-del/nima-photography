@@ -4,15 +4,17 @@
   --text: #e9e7e3;
   --muted: #9c9a96; /* 7.1:1 on --bg */
   --line: #2a2a2a;
-  --accent: #e9e7e3;
+  --accent: #d97757; /* Claude orange — highlights, active states */
+  --accent-deep: #b4532f; /* darker orange — rules, hovers, pressed */
+  --accent-soft: rgb(217 119 87 / 0.14);
 
   --film-bg: #15120f;
   --film-text: #ece3d3;
   --film-muted: #a89d8c;
   --film-frame: #d9ccb4;
 
-  --gutter: 16px;
-  --gap: 12px;
+  --gutter: 14px;
+  --gap: 6px;
   --max: 1440px;
   --font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Roboto, Arial,
     sans-serif;
@@ -22,7 +24,7 @@
 @media (min-width: 768px) {
   :root {
     --gutter: 32px;
-    --gap: 20px;
+    --gap: 16px;
   }
 }
 
@@ -91,14 +93,23 @@ main {
 }
 
 .page-head {
-  padding: 40px 0 32px;
+  padding: 36px 0 20px;
 }
 .page-head h1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin: 0;
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.24em;
   text-transform: uppercase;
+}
+.page-head h1::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: var(--accent);
 }
 .page-head p {
   margin: 8px 0 0;
@@ -112,6 +123,25 @@ main {
 .prose p {
   color: var(--muted);
 }
+.prose a,
+a.accent {
+  color: var(--accent);
+  text-decoration-color: var(--accent-deep);
+  text-underline-offset: 3px;
+}
+.prose a:hover,
+a.accent:hover {
+  color: var(--text);
+}
+
+.eyebrow {
+  margin: 0 0 14px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
 
 /* ── Film theme ─────────────────────────────── */
 body.film {
@@ -119,7 +149,6 @@ body.film {
   --text: var(--film-text);
   --muted: var(--film-muted);
   --line: #2c2620;
-  --accent: var(--film-frame);
 }
 
 /* Subtle grain, drawn with an SVG noise filter (no image download). */

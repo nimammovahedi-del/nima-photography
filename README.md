@@ -13,10 +13,10 @@ npm run dev      # open http://localhost:4321 — the page updates as you edit
 
 1. **Drop the image into the right folder** under `src/photos/`:
 
-   | Folder | Page |
+   | Folder | Tab |
    |---|---|
    | `architecture/` | Architecture |
-   | `cities/` | Cities |
+   | `places/` | Places (street scenes, cityscapes, anything that's mainly "about the place") |
    | `nature/` | Nature |
    | `animals/` | Animals |
    | `film/` | Film |
@@ -27,37 +27,54 @@ npm run dev      # open http://localhost:4321 — the page updates as you edit
 2. **Add an entry to `src/data/photos.yaml`:**
 
    ```yaml
-   # Digital photo
-   - file: cities/harbor-dusk.jpg
-     title: Harbor at Dusk
-     alt: Fishing boats moored under a pink evening sky
-     featured: true          # optional — also show it on the home page
+   # Digital photo, in a sub-tab, tagged with where it was taken
+   - file: architecture/barbican.jpg
+     title: Barbican Towers
+     alt: Concrete balconies of the Barbican estate against a pale sky
+     sub: Brutalism
+     country: England
+     city: London
 
    # Film photo — add the film simulation name
    - file: film/corner-cafe.jpg
      title: Corner Café
      alt: A small café on a street corner, morning light on the awning
      filmSim: Classic Chrome
+     country: Portugal
+     city: Lisbon
    ```
 
+   - **sub** puts the photo in a sub-tab (Architecture → Brutalism, Nature → Coast, …). Leave it out and
+     the photo only shows under **All**.
+   - **country / city** make the photo appear under **Places → that country / city** too, whichever tab
+     it lives in. So the Barbican shot above shows in Architecture → Brutalism *and* Places → England →
+     London.
+   - **cover: true** picks the photo shown on that tab's button on the landing page (otherwise the
+     first photo is used).
    - The **order in this file is the order on the page**.
    - **alt** describes the photo for people using screen readers. Please always fill it in.
    - Camera, lens, aperture, shutter speed and ISO are **read from the photo's EXIF automatically** and
-     shown in the lightbox (ⓘ button). If you export without metadata, that line is simply hidden.
-   - Forgot the entry? The photo still appears, using its file name as the title, and the build prints a
-     warning.
+     shown in the lightbox (ⓘ button).
+   - A typo in `sub`, `country` or `city`? The build prints a warning telling you which photo.
 
 3. **Remove a photo:** delete the file and its entry.
 
 To replace the placeholders, delete the `placeholder-*.jpg` files and their entries in `photos.yaml`.
 
-**The home page** shows every photo marked `featured: true`. Keep one or two film shots featured so
-visitors discover the Film section. **The Film page** is a single centred column and switches to two
-columns on desktop once it has 12+ photos.
+## Sub-tabs, countries and cities
+
+All of these live in `src/site.config.ts`:
+
+- **Sub-tabs** — the `subs` list under each tab, e.g. add `'Baroque'` to Architecture. They're always
+  shown A–Z.
+- **Countries on the map / Places** — the `places` list. Add a country with its cities and it lights
+  up orange on the map, gets its own page, and slots into the A–Z list automatically. `map` must match
+  the country's name in the map data (usually just its name; the US is `United States of America`).
+- **About / Contact button photos** — `covers`.
 
 ## Change text and settings
 
-- `src/site.config.ts` — your name, the home-page intro, Formspree address, optional public
+- `src/site.config.ts` — your name, the landing-page intro, Formspree address, optional public
   email/Instagram link.
 - `src/pages/about.astro` — your bio.
 
@@ -94,10 +111,11 @@ The form already sends to `https://formspree.io/f/mjykrzlz`.
 ```
 src/
   photos/<category>/    your images
-  data/photos.yaml      titles, alt text, film sims, featured
-  site.config.ts        name, intro, contact settings
-  pages/                one file per page
-  components/           Gallery (grid), Lightbox, Nav
+  data/photos.yaml      titles, alt text, sub-tabs, places, film sims, covers
+  site.config.ts        name, intro, sub-tabs, countries & cities, contact
+  pages/                one file per page (sub-tab and country pages are generated)
+  components/           Gallery (grid), Lightbox, Nav, SubTabs, WorldMap
   lib/photos.ts         reads photos, EXIF and blur previews at build time
+  lib/world.ts          draws the world map at build time
   styles/global.css     colours, spacing, film theme
 ```

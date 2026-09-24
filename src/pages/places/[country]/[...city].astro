@@ -1,0 +1,69 @@
+---
+// /places/egypt        → every photo from Egypt (from any tab)
+// /places/egypt/cairo  → just Cairo
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Gallery from '../../../components/Gallery.astro';
+import SubTabs from '../../../components/SubTabs.astro';
+import { site, slugify, sortedPlaces } from '../../../site.config';
+import { getPlace } from '../../../lib/photos';
+
+export function getStaticPaths() {
+  return sortedPlaces.flatMap((p) => [
+    { params: { country: p.slug, city: undefined }, props: { place: p, city: undefined } },
+    ...p.cities.map((c) => ({
+      params: { country: p.slug, city: slugify(c) },
+      props: { place: p, city: c as string },
+    })),
+  ]);
+}
+
+const { place, city } = Astro.props;
+const all = await getPlace(place.name);
+const photos = city ? all.filter((p) => p.city === city) : all;
+const base = `/places/${place.slug}`;
+
+const tabs = [
+  { label: 'All', href: base, count: all.length },
+  ...place.cities.map((c) => ({
+    label: c,
+    href: `${base}/${slugify(c)}`,
+    count: all.filter((p) => p.city === c).length,
+  })),
+];
+---
+
+<BaseLayout
+  title={city ? `${city}, ${place.name}` : place.name}
+  description={`Photographs from ${city ? `${city}, ` : ''}${place.name} by ${site.name}.`}
+>
+  <header class="page-head">
+    <a class="back" href="/places"><span aria-hidden="true">←</span> All places</a>
+    <h1>{place.name}</h1>
+  </header>
+  {place.cities.length > 0 && <SubTabs items={tabs} label={`Cities in ${place.name}`} />}
+  {
+    photos.length ? (
+      <Gallery photos={photos} label={`Photographs from ${city ?? place.name}`} />
+    ) : (
+      <p class="empty">Photos from {city ?? place.name} are on their way.</p>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--accent);
+  }
+  .empty {
+    padding: 48px 0;
+    color: var(--muted);
+  }
+</style>

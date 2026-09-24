@@ -1,0 +1,122 @@
+---
+// Row of sub-tabs, e.g. All · Brutalism · Gothic … Scrolls sideways on phones.
+interface Props {
+  items: { label: string; href: string; count?: number }[];
+  label: string;
+}
+
+const { items, label } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<nav class="subtabs" aria-label={label}>
+  <ul>
+    {
+      items.map((t) => (
+        <li>
+          <a
+            href={t.href}
+            aria-current={path === t.href ? 'page' : undefined}
+            class:list={{ empty: t.count === 0 }}
+          >
+            {t.label}
+            {t.count !== undefined && <span class="count">{t.count}</span>}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<script>
+  // Keep the active tab in view when the row is scrolled sideways on a phone.
+  const active = document.querySelector<HTMLElement>('.subtabs [aria-current="page"]');
+  const row = active?.closest('ul');
+  if (active && row) {
+    row.scrollLeft = active.offsetLeft - row.clientWidth / 2 + active.offsetWidth / 2;
+  }
+</script>
+
+<style>
+  .subtabs {
+    position: relative;
+    margin: 0 calc(var(--gutter) * -1) 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  /* Fade on the right hints that the row scrolls. */
+  .subtabs::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 1px;
+    width: 32px;
+    background: linear-gradient(to right, transparent, var(--bg));
+    pointer-events: none;
+  }
+  ul {
+    display: flex;
+    gap: 22px;
+    margin: 0;
+    padding: 0 var(--gutter);
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  ul::-webkit-scrollbar {
+    display: none;
+  }
+  li:last-child {
+    padding-right: 24px;
+  }
+  a {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 12px 0 13px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+  }
+  a:hover {
+    color: var(--text);
+  }
+  a.empty {
+    opacity: 0.6;
+  }
+  a[aria-current='page'] {
+    color: var(--text);
+  }
+  a[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--accent);
+  }
+  .count {
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  a[aria-current='page'] .count {
+    color: var(--accent);
+  }
+  @media (min-width: 768px) {
+    .subtabs {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    ul {
+      padding: 0;
+      gap: 28px;
+    }
+  }
+</style>

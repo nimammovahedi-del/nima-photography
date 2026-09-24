@@ -1,66 +1,309 @@
 ---
+import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Gallery from '../components/Gallery.astro';
-import { categories, site } from '../site.config';
-import { getFeatured } from '../lib/photos';
+import WorldMap from '../components/WorldMap.astro';
+import { categories, places, site } from '../site.config';
+import { getCategory, getCover, getPhoto } from '../lib/photos';
 
-const featured = await getFeatured();
+const tabs = await Promise.all(
+  categories.map(async (c) => ({
+    href: `/${c.slug}`,
+    label: c.label,
+    film: c.slug === 'film',
+    note:
+      c.slug === 'places'
+        ? `${places.length} countries`
+        : `${(await getCategory(c.slug)).length} photographs`,
+    cover: await getCover(c.slug),
+  })),
+);
+
+const pages = [
+  { href: '/about', label: 'About', note: 'The photographer', cover: await getPhoto(site.covers.about) },
+  { href: '/contact', label: 'Contact', note: 'Prints, commissions, hello', cover: await getPhoto(site.covers.contact) },
+];
 ---
 
 <BaseLayout>
-  <section class="intro">
+  <section class="hero">
+    <p class="eyebrow">Photography</p>
     <h1>{site.name}</h1>
-    <p>{site.intro}</p>
+    <p class="lede">{site.intro}</p>
   </section>
 
-  <h2 class="visually-hidden">Selected work</h2>
-  <Gallery photos={featured} label="Selected photographs" />
+  <section class="where" aria-labelledby="where-title">
+    <div class="section-head">
+      <h2 id="where-title">Where I've photographed</h2>
+      <a class="accent" href="/places">All {places.length} countries <span aria-hidden="true">→</span></a>
+    </div>
+    <WorldMap />
+  </section>
 
-  <nav class="explore" aria-label="Collections">
-    {
-      categories.map((c) => (
-        <a href={`/${c.slug}`} class:list={{ film: c.slug === 'film' }}>
-          {c.label} <span aria-hidden="true">→</span>
-        </a>
-      ))
-    }
-  </nav>
+  <section aria-labelledby="explore-title">
+    <div class="section-head">
+      <h2 id="explore-title">Explore</h2>
+    </div>
+    <ul class="tabs">
+      {
+        tabs.map((t, i) => (
+          <li class:list={{ film: t.film }}>
+            <a class="card" href={t.href}>
+              <span class="img">
+                {t.cover && (
+                  <Picture
+                    src={t.cover.image}
+                    alt=""
+                    formats={['avif', 'webp']}
+                    widths={[360, 540, 720, 1080]}
+                    sizes={t.film ? '(min-width: 900px) 19vw, 100vw' : '(min-width: 900px) 19vw, 50vw'}
+                    loading={i < 2 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    style={`background-image:url(${t.cover.blur})`}
+                  />
+                )}
+              </span>
+              <span class="label">
+                <span class="name">{t.label}</span>
+                <span class="note">{t.note}</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <ul class="pages">
+      {
+        pages.map((p) => (
+          <li>
+            <a class="card wide" href={p.href}>
+              <span class="img">
+                {p.cover && (
+                  <Picture
+                    src={p.cover.image}
+                    alt=""
+                    formats={['avif', 'webp']}
+                    widths={[480, 720, 1080]}
+                    sizes="(min-width: 768px) 48vw, 100vw"
+                    loading="lazy"
+                    decoding="async"
+                    style={`background-image:url(${p.cover.blur})`}
+                  />
+                )}
+              </span>
+              <span class="label">
+                <span class="name">{p.label}</span>
+                <span class="note">{p.note}</span>
+              </span>
+              <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 </BaseLayout>
 
 <style>
-  .intro {
-    max-width: 36rem;
-    padding: 48px 0 40px;
+  .hero {
+    max-width: 38rem;
+    padding: 44px 0 32px;
   }
-  .intro h1 {
-    margin: 0 0 12px;
-    font-size: clamp(28px, 7vw, 44px);
+  .hero h1 {
+    margin: 0 0 14px;
+    font-size: clamp(32px, 8vw, 56px);
     font-weight: 300;
-    letter-spacing: -0.01em;
-    line-height: 1.15;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
   }
-  .intro p {
+  .lede {
     margin: 0;
     color: var(--muted);
   }
-  .explore {
+
+  section + section {
+    margin-top: 56px;
+  }
+  .section-head {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px 28px;
-    padding-top: 40px;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .section-head h2 {
+    margin: 0;
     font-size: 12px;
-    letter-spacing: 0.16em;
+    font-weight: 500;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
   }
-  .explore a {
+  .section-head a {
+    font-size: 12px;
+    letter-spacing: 0.08em;
     text-decoration: none;
-    color: var(--muted);
-    padding: 6px 0;
   }
-  .explore a:hover {
-    color: var(--text);
+
+  /* ── Tab buttons ───────────────── */
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
-  .explore .film {
-    color: var(--film-frame);
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+  }
+  .tabs .film {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 900px) {
+    .tabs {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    .tabs .film {
+      grid-column: auto;
+    }
+  }
+
+  .card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--bg-raised);
+    text-decoration: none;
+    isolation: isolate;
+  }
+  .img {
+    display: block;
+    aspect-ratio: 4 / 5;
+  }
+  .film .img {
+    aspect-ratio: 16 / 9;
+  }
+  @media (min-width: 900px) {
+    .film .img {
+      aspect-ratio: 4 / 5;
+    }
+  }
+  .img :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-size: cover;
+    transition: transform 0.6s ease;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0) 55%);
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .card:hover::after,
+  .card:focus-visible::after {
+    transform: scaleX(1);
+  }
+  .card:hover .img :global(img) {
+    transform: scale(1.04);
+  }
+  .label {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 12px;
+    z-index: 2;
+    display: grid;
+    gap: 2px;
+  }
+  .name {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .note {
+    color: rgb(255 255 255 / 0.7);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+  .card:hover .note {
+    color: var(--accent);
+  }
+
+  /* Film card: framed like a print, warm tone */
+  .film .card {
+    padding: 5px;
+    border: 1px solid var(--film-frame);
+    background: var(--film-bg);
+  }
+  .film .card::before {
+    inset: 5px;
+  }
+  .film .label {
+    left: 19px;
+    bottom: 17px;
+  }
+
+  /* ── About / Contact ───────────── */
+  .pages {
+    display: grid;
+    gap: var(--gap);
+    margin-top: var(--gap);
+  }
+  @media (min-width: 768px) {
+    .pages {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .wide .img {
+    aspect-ratio: 3 / 1;
+  }
+  @media (min-width: 768px) {
+    .wide .img {
+      aspect-ratio: 5 / 2;
+    }
+  }
+  .wide::before {
+    background: linear-gradient(to right, rgb(0 0 0 / 0.75), rgb(0 0 0 / 0.1) 70%);
+  }
+  .wide .label {
+    top: 50%;
+    bottom: auto;
+    translate: 0 -50%;
+    left: 20px;
+  }
+  .wide .name {
+    font-size: 15px;
+  }
+  .arrow {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    z-index: 2;
+    translate: 0 -50%;
+    color: var(--accent);
+    font-size: 20px;
+    transition: transform 0.25s ease;
+  }
+  .wide:hover .arrow {
+    transform: translateX(4px);
   }
 </style>

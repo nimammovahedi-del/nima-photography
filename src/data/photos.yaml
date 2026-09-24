@@ -1,90 +1,204 @@
 # One entry per photo. Order here = order on the page.
 #
-#   file:     path inside src/photos/ (the folder sets the category)
+#   file:     path inside src/photos/ (the folder sets the main tab)
 #   title:    shown in captions
 #   alt:      describes the photo for screen readers — please always fill this in
+#   sub:      sub-tab, e.g. Brutalism (Architecture), Coast (Nature), Birds (Animals)
+#             — the list of sub-tabs lives in src/site.config.ts
+#   country:  where it was taken (must match a country in site.config.ts) — the photo
+#   city:     then also appears under Places → that country / city, whatever its tab
 #   filmSim:  film photos only, e.g. Classic Chrome, Kodak Portra 400
-#   featured: true to include on the home page
+#   cover:    true = use as this tab's photo on the landing-page buttons
 #
 # Camera settings are read from the photo's EXIF automatically.
 
 # ── Architecture ──
 - file: architecture/placeholder-01.jpg
-  title: Architecture Study 1
+  title: Ancient Study
   alt: Placeholder image — replace with a description of the photo
-  featured: true
+  sub: Ancient
+  country: Egypt
+  city: Luxor
+  cover: true
 - file: architecture/placeholder-02.jpg
-  title: Architecture Study 2
+  title: Brutalism Study
   alt: Placeholder image — replace with a description of the photo
+  sub: Brutalism
+  country: England
+  city: London
 - file: architecture/placeholder-03.jpg
-  title: Architecture Study 3
+  title: Gothic Study
   alt: Placeholder image — replace with a description of the photo
+  sub: Gothic
+  country: England
+  city: York
 - file: architecture/placeholder-04.jpg
-  title: Architecture Study 4
+  title: Greek & Roman Revival Study
   alt: Placeholder image — replace with a description of the photo
+  sub: Greek & Roman Revival
+  country: England
+  city: Bath
 - file: architecture/placeholder-05.jpg
-  title: Architecture Study 5
+  title: Islamic Study
   alt: Placeholder image — replace with a description of the photo
+  sub: Islamic
+  country: Morocco
+  city: Fez
+- file: architecture/placeholder-06.jpg
+  title: Modern Study
+  alt: Placeholder image — replace with a description of the photo
+  sub: Modern
+  country: Germany
+  city: Berlin
+- file: architecture/placeholder-07.jpg
+  title: Victorian Study
+  alt: Placeholder image — replace with a description of the photo
+  sub: Victorian
+  country: England
+  city: London
+- file: architecture/placeholder-08.jpg
+  title: Art Deco Study
+  alt: Placeholder image — replace with a description of the photo
+  sub: Art Deco
+  country: United States
+  city: New York
 
-# ── Cities ──
-- file: cities/placeholder-01.jpg
-  title: Cities Study 1
+# ── Places ──
+- file: places/placeholder-01.jpg
+  title: Cairo
   alt: Placeholder image — replace with a description of the photo
-  featured: true
-- file: cities/placeholder-02.jpg
-  title: Cities Study 2
+  country: Egypt
+  city: Cairo
+  cover: true
+- file: places/placeholder-02.jpg
+  title: London
   alt: Placeholder image — replace with a description of the photo
-  featured: true
-- file: cities/placeholder-03.jpg
-  title: Cities Study 3
+  country: England
+  city: London
+- file: places/placeholder-03.jpg
+  title: Oslo
   alt: Placeholder image — replace with a description of the photo
-- file: cities/placeholder-04.jpg
-  title: Cities Study 4
+  country: Norway
+  city: Oslo
+- file: places/placeholder-04.jpg
+  title: Lisbon
   alt: Placeholder image — replace with a description of the photo
-- file: cities/placeholder-05.jpg
-  title: Cities Study 5
+  country: Portugal
+  city: Lisbon
+- file: places/placeholder-05.jpg
+  title: Edinburgh
   alt: Placeholder image — replace with a description of the photo
+  country: Scotland
+  city: Edinburgh
+- file: places/placeholder-06.jpg
+  title: Kilkenny
+  alt: Placeholder image — replace with a description of the photo
+  country: Ireland
+  city: Kilkenny
+- file: places/placeholder-07.jpg
+  title: Marrakesh
+  alt: Placeholder image — replace with a description of the photo
+  country: Morocco
+  city: Marrakesh
+- file: places/placeholder-08.jpg
+  title: New York
+  alt: Placeholder image — replace with a description of the photo
+  country: United States
+  city: New York
+- file: places/placeholder-09.jpg
+  title: Berlin
+  alt: Placeholder image — replace with a description of the photo
+  country: Germany
+  city: Berlin
+- file: places/placeholder-10.jpg
+  title: Costa Rica
+  alt: Placeholder image — replace with a description of the photo
+  country: Costa Rica
+- file: places/placeholder-11.jpg
+  title: Bath
+  alt: Placeholder image — replace with a description of the photo
+  country: England
+  city: Bath
+- file: places/placeholder-12.jpg
+  title: Finland
+  alt: Placeholder image — replace with a description of the photo
+  country: Finland
 
 # ── Nature ──
 - file: nature/placeholder-01.jpg
-  title: Nature Study 1
+  title: Coast Study
   alt: Placeholder image — replace with a description of the photo
-  featured: true
+  sub: Coast
+  country: Ireland
+  city: Dingle
+  cover: true
 - file: nature/placeholder-02.jpg
-  title: Nature Study 2
+  title: Desert Study
   alt: Placeholder image — replace with a description of the photo
+  sub: Desert
+  country: United States
+  city: Palm Desert
 - file: nature/placeholder-03.jpg
-  title: Nature Study 3
+  title: Forest Study
   alt: Placeholder image — replace with a description of the photo
-  featured: true
+  sub: Forest
+  country: England
+  city: New Forest
 - file: nature/placeholder-04.jpg
-  title: Nature Study 4
+  title: Lakes & Rivers Study
   alt: Placeholder image — replace with a description of the photo
+  sub: Lakes & Rivers
+  country: Norway
+  city: Bergen
 - file: nature/placeholder-05.jpg
-  title: Nature Study 5
+  title: Mountains Study
   alt: Placeholder image — replace with a description of the photo
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+- file: nature/placeholder-06.jpg
+  title: Coast Study
+  alt: Placeholder image — replace with a description of the photo
+  sub: Coast
+  country: Portugal
+  city: Sintra
 
 # ── Animals ──
 - file: animals/placeholder-01.jpg
-  title: Animals Study 1
+  title: Birds Study
   alt: Placeholder image — replace with a description of the photo
-  featured: true
+  sub: Birds
+  country: Costa Rica
+  cover: true
 - file: animals/placeholder-02.jpg
-  title: Animals Study 2
+  title: Marine Study
   alt: Placeholder image — replace with a description of the photo
+  sub: Marine
+  country: Panama
 - file: animals/placeholder-03.jpg
-  title: Animals Study 3
+  title: Pets Study
   alt: Placeholder image — replace with a description of the photo
+  sub: Pets
+  country: Morocco
+  city: Rabat
 - file: animals/placeholder-04.jpg
-  title: Animals Study 4
+  title: Wildlife Study
   alt: Placeholder image — replace with a description of the photo
+  sub: Wildlife
+  country: Costa Rica
+- file: animals/placeholder-05.jpg
+  title: Birds Study
+  alt: Placeholder image — replace with a description of the photo
+  sub: Birds
+  country: England
+  city: Weymouth
 
 # ── Film ──
 - file: film/placeholder-01.jpg
   title: Film Study 1
   alt: Placeholder image — replace with a description of the photo
   filmSim: Classic Chrome
-  featured: true
+  cover: true
 - file: film/placeholder-02.jpg
   title: Film Study 2
   alt: Placeholder image — replace with a description of the photo
@@ -93,7 +207,6 @@
   title: Film Study 3
   alt: Placeholder image — replace with a description of the photo
   filmSim: Nostalgic Neg
-  featured: true
 - file: film/placeholder-04.jpg
   title: Film Study 4
   alt: Placeholder image — replace with a description of the photo

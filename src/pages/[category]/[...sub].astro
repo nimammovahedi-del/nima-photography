@@ -1,0 +1,61 @@
+---
+// Subject pages with sub-tabs:
+//   /architecture            → All
+//   /architecture/brutalism  → one sub-tab
+// (Same for /nature and /animals. Places and Film have their own pages.)
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Gallery from '../../components/Gallery.astro';
+import SubTabs from '../../components/SubTabs.astro';
+import { categories, slugify, sortedSubs, site } from '../../site.config';
+import { getCategory } from '../../lib/photos';
+
+export function getStaticPaths() {
+  return categories
+    .filter((c) => c.slug !== 'places' && c.slug !== 'film')
+    .flatMap((c) => [
+      { params: { category: c.slug, sub: undefined }, props: { category: c, sub: undefined } },
+      ...c.subs.map((s) => ({
+        params: { category: c.slug, sub: slugify(s) },
+        props: { category: c, sub: s as string },
+      })),
+    ]);
+}
+
+const { category, sub } = Astro.props;
+const all = await getCategory(category.slug);
+const photos = sub ? all.filter((p) => p.sub === sub) : all;
+const base = `/${category.slug}`;
+
+const tabs = [
+  { label: 'All', href: base, count: all.length },
+  ...sortedSubs(category.subs).map((s) => ({
+    label: s,
+    href: `${base}/${slugify(s)}`,
+    count: all.filter((p) => p.sub === s).length,
+  })),
+];
+---
+
+<BaseLayout
+  title={sub ? `${sub} — ${category.label}` : category.label}
+  description={`${sub ?? category.label} photography by ${site.name}.`}
+>
+  <header class="page-head">
+    <h1>{category.label}</h1>
+  </header>
+  <SubTabs items={tabs} label={`${category.label} categories`} />
+  {
+    photos.length ? (
+      <Gallery photos={photos} label={`${sub ?? category.label} photographs`} />
+    ) : (
+      <p class="empty">No {sub} photos yet — check back soon.</p>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .empty {
+    padding: 48px 0;
+    color: var(--muted);
+  }
+</style>

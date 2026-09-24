@@ -6,7 +6,7 @@ import path from 'node:path';
 import exifr from 'exifr';
 import { load as parseYaml } from 'js-yaml';
 import sharp from 'sharp';
-import { categories, type CategorySlug } from '../site.config';
+import { categories, places, type CategorySlug } from '../site.config';
 import metadataSource from '../data/photos.yaml?raw';
 
 export interface Photo {
@@ -16,7 +16,10 @@ export interface Photo {
   title: string;
   alt: string;
   filmSim?: string;
-  featured: boolean;
+  sub?: string;
+  country?: string;
+  city?: string;
+  cover: boolean;
   blur: string; // tiny base64 image shown while the real one loads
   exif?: string; // e.g. "Canon EOS R6 · 35mm · ƒ/2.8 · 1/250s · ISO 100"
 }
@@ -26,7 +29,10 @@ interface Entry {
   title?: string;
   alt?: string;
   filmSim?: string;
-  featured?: boolean;
+  sub?: string;
+  country?: string;
+  city?: string;
+  cover?: boolean;
 }
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
@@ -78,7 +84,17 @@ async function load(): Promise<Photo[]> {
 
       const entry = byFile.get(id);
       if (!entry) console.warn(`[photos] ${id} has no entry in photos.yaml — using defaults.`);
-      else if (!entry.alt) console.warn(`[photos] ${id} is missing alt text.`);
+      else {
+        if (!entry.alt) console.warn(`[photos] ${id} is missing alt text.`);
+        const subs: readonly string[] = categories.find((c) => c.slug === category)!.subs;
+        if (entry.sub && !subs.includes(entry.sub))
+          console.warn(`[photos] ${id}: sub "${entry.sub}" isn't listed for ${category} in site.config.ts.`);
+        const place = places.find((p) => p.name === entry.country);
+        if (entry.country && !place)
+          console.warn(`[photos] ${id}: country "${entry.country}" isn't in site.config.ts.`);
+        if (entry.city && !(place?.cities as readonly string[] | undefined)?.includes(entry.city))
+          console.warn(`[photos] ${id}: city "${entry.city}" isn't listed under ${entry.country}.`);
+      }
 
       const file = await readFile(path.join(process.cwd(), key));
       const [exif, blurBuf] = await Promise.all([
@@ -96,7 +112,10 @@ async function load(): Promise<Photo[]> {
         title,
         alt: entry?.alt ?? title,
         filmSim: entry?.filmSim,
-        featured: entry?.featured ?? false,
+        sub: entry?.sub,
+        country: entry?.country,
+        city: entry?.city,
+        cover: entry?.cover ?? false,
         blur: `data:image/webp;base64,${blurBuf.toString('base64')}`,
         exif: formatExif(exif),
       } satisfies Photo;
@@ -119,6 +138,19 @@ export async function getCategory(slug: CategorySlug) {
   return (await getPhotos()).filter((p) => p.category === slug);
 }
 
-export async function getFeatured() {
-  return (await getPhotos()).filter((p) => p.featured);
+/** The photo used on a tab's landing-page button: `cover: true`, else the first photo. */
+export async function getCover(slug: CategorySlug) {
+  const list = await getCategory(slug);
+  return list.find((p) => p.cover) ?? list[0];
+}
+
+export async function getPhoto(id: string) {
+  return (await getPhotos()).find((p) => p.id === id);
+}
+
+/** Every photo taken in a country (from any tab), optionally narrowed to one city. */
+export async function getPlace(country: string, city?: string) {
+  return (await getPhotos()).filter(
+    (p) => p.country === country && (!city || p.city === city),
+  );
 }
