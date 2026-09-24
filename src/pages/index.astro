@@ -25,17 +25,18 @@ const pages = [
 
 <BaseLayout>
   <section class="hero">
-    <p class="eyebrow">Photography</p>
-    <h1>{site.name}</h1>
-    <p class="lede">{site.intro}</p>
-  </section>
-
-  <section class="where" aria-labelledby="where-title">
-    <div class="section-head">
-      <h2 id="where-title">Where I've photographed</h2>
-      <a class="accent" href="/places">All {places.length} countries <span aria-hidden="true">→</span></a>
+    <div class="intro">
+      <p class="eyebrow">Photography</p>
+      <h1>{site.name}</h1>
+      <p class="lede">{site.intro}</p>
+      <p class="where">
+        Photographed in <strong>{places.length} countries</strong> — the ones glowing orange.
+        <a class="accent" href="/places">Explore places <span aria-hidden="true">→</span></a>
+      </p>
     </div>
-    <Globe />
+    <div class="globe">
+      <Globe mode="compact" />
+    </div>
   </section>
 
   <section aria-labelledby="explore-title" data-explore>
@@ -96,8 +97,38 @@ const pages = [
 
 <style>
   .hero {
-    max-width: 38rem;
-    padding: 44px 0 28px;
+    display: grid;
+    gap: 8px 48px;
+    align-items: center;
+    padding: 36px 0 8px;
+  }
+  @media (min-width: 900px) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 480px);
+      padding-top: 24px;
+    }
+  }
+  .intro {
+    max-width: 34rem;
+  }
+  .where {
+    margin: 24px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .where strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .where a {
+    display: inline-block;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+  .globe {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
   }
   .hero h1 {
     margin: 0 0 14px;

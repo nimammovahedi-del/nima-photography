@@ -85,9 +85,14 @@ All of these live in `src/site.config.ts`:
 
 ## The globe
 
-On the landing page, visitors can **drag** to spin the globe, **pinch or two-finger scroll** (trackpad)
-to zoom, and click a highlighted country (or pick one from the list) to fly in to its city pins.
-Zooming back out returns to the whole globe. On phones: swipe sideways to spin, pinch to zoom.
+- **Landing page** — a compact globe beside the intro. Drag to spin it; clicking a highlighted country
+  opens that country's page.
+- **Places page** — the full explorer: Americas / Europe / Africa headers turn the globe to that
+  region and list its countries; **pinch or two-finger scroll** (trackpad) zooms; clicking a country
+  flies in to its city pins, and zooming back out returns to the whole globe. On phones: swipe
+  sideways to spin, pinch to zoom.
+
+Both use the same component, `src/components/Globe.astro` (`mode="compact"` on the landing page).
 
 ## Change text and settings
 

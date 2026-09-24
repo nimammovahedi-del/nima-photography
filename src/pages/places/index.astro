@@ -2,6 +2,7 @@
 // A→Z list of countries, each with its cities A→Z.
 import { Picture } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Globe from '../../components/Globe.astro';
 import { site, sortedPlaces } from '../../site.config';
 import { getPlace } from '../../lib/photos';
 
@@ -20,8 +21,12 @@ const rows = await Promise.all(
 <BaseLayout title="Places" description={`Photographs from ${sortedPlaces.length} countries by ${site.name}.`}>
   <header class="page-head">
     <h1>Places</h1>
-    <p>{sortedPlaces.length} countries, A–Z. Pick a country, or jump straight to a city.</p>
+    <p>{sortedPlaces.length} countries. Spin the globe, pick a region, or jump straight to a city below.</p>
   </header>
+
+  <Globe />
+
+  <h2 class="list-title">All countries, A–Z</h2>
 
   <ol class="places">
     {
@@ -67,6 +72,15 @@ const rows = await Promise.all(
 </BaseLayout>
 
 <style>
+  .list-title {
+    margin: 56px 0 4px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
   .places {
     display: grid;
     gap: 0 48px;

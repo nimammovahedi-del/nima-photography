@@ -7,6 +7,16 @@ import type { Geometry } from 'geojson';
 import { regions, sortedPlaces } from '../site.config';
 import { countries, countryView, findCountry, mainland } from '../lib/world';
 
+interface Props {
+  /**
+   * 'full'    — region headers, country list and zoom-in to city pins (Places page).
+   * 'compact' — just the globe; clicking a country opens its page (landing page).
+   */
+  mode?: 'full' | 'compact';
+}
+const { mode = 'full' } = Astro.props;
+const full = mode === 'full';
+
 const S = 600;
 const base = S / 2 - 14; // radius at which the whole globe fits, with a little breathing room
 const INITIAL = 'Europe';
@@ -55,17 +65,19 @@ const config = {
 };
 ---
 
-<div class="globe-wrap" data-globe data-config={JSON.stringify(config)}>
-  <div class="regions" role="group" aria-label="Regions">
-    {
-      regions.map((r) => (
-        <button type="button" data-region={r} aria-pressed={r === INITIAL ? 'true' : 'false'}>
-          {r}
-          <span class="n">{sortedPlaces.filter((p) => p.region === r).length}</span>
-        </button>
-      ))
-    }
-  </div>
+<div class:list={['globe-wrap', mode]} data-globe data-mode={mode} data-config={JSON.stringify(config)}>
+  {
+    full && (
+      <div class="regions" role="group" aria-label="Regions">
+        {regions.map((r) => (
+          <button type="button" data-region={r} aria-pressed={r === INITIAL ? 'true' : 'false'}>
+            {r}
+            <span class="n">{sortedPlaces.filter((p) => p.region === r).length}</span>
+          </button>
+        ))}
+      </div>
+    )
+  }
 
   <div class="stage">
     <div class="globe-box">
@@ -85,9 +97,13 @@ const config = {
       </svg>
       <div class="pins"></div>
       <div class="tip" role="tooltip" hidden><strong></strong><span></span></div>
-      <p class="hint" aria-hidden="true">Drag to rotate · pinch or two-finger scroll to zoom</p>
+      <p class="hint" aria-hidden="true">
+        {full ? 'Drag to rotate · pinch or two-finger scroll to zoom' : 'Drag to rotate · click a country'}
+      </p>
     </div>
 
+    {
+      full && (
     <div class="panel">
       {
         regions.map((r) => (
@@ -119,6 +135,8 @@ const config = {
         <a class="all accent" href="#"></a>
       </section>
     </div>
+      )
+    }
   </div>
 </div>
 
@@ -129,7 +147,7 @@ const config = {
   const cfg: GlobeConfig = JSON.parse(root.dataset.config!);
   const regionButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-region]')];
   const lists = [...root.querySelectorAll<HTMLElement>('[data-list]')];
-  const countryPanel = root.querySelector<HTMLElement>('.country')!;
+  const full = root.dataset.mode === 'full';
   let region = cfg.initial;
 
   // Load the interactive globe once (when it's about to scroll into view, or on first click).
@@ -138,7 +156,8 @@ const config = {
   const ensureGlobe = () =>
     (globe ??= import('../scripts/globe').then((m) =>
       m.createGlobe(root, cfg, {
-        onCountryClick: (p) => openCountry(p),
+        // Compact globe: a click simply opens the country's page.
+        onCountryClick: (p) => (full ? openCountry(p) : location.assign(`/places/${p.slug}`)),
         onLeaveCountry: (p) => showList(p.region),
       }),
     ));
@@ -153,10 +172,11 @@ const config = {
   ).observe(root);
 
   function showList(name: string) {
+    if (!full) return;
     region = name;
     regionButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.region === name)));
     lists.forEach((l) => (l.hidden = l.dataset.list !== name));
-    countryPanel.hidden = true;
+    root.querySelector<HTMLElement>('.country')!.hidden = true;
   }
 
   async function selectRegion(name: string) {
@@ -165,6 +185,7 @@ const config = {
   }
 
   async function openCountry(p: GlobePlace) {
+    const countryPanel = root.querySelector<HTMLElement>('.country')!;
     showList(p.region);
     lists.forEach((l) => (l.hidden = true));
     countryPanel.hidden = false;
@@ -195,6 +216,7 @@ const config = {
     await g.showCountry(p);
   }
 
+  const countryPanel = root.querySelector<HTMLElement>('.country');
   regionButtons.forEach((b) => b.addEventListener('click', () => selectRegion(b.dataset.region!)));
   root.querySelectorAll<HTMLAnchorElement>('[data-country]').forEach((a) =>
     a.addEventListener('click', (e) => {
@@ -203,9 +225,9 @@ const config = {
       openCountry(cfg.places.find((p) => p.name === a.dataset.country)!);
     }),
   );
-  countryPanel.querySelector('.back')!.addEventListener('click', () => selectRegion(region));
+  countryPanel?.querySelector('.back')!.addEventListener('click', () => selectRegion(region));
   root.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !countryPanel.hidden) selectRegion(region);
+    if (e.key === 'Escape' && countryPanel && !countryPanel.hidden) selectRegion(region);
   });
 
   showList(region);
@@ -214,6 +236,12 @@ const config = {
 <style>
   .globe-wrap {
     --globe-max: 600px;
+  }
+  .compact {
+    --globe-max: 480px;
+  }
+  .compact .stage {
+    display: block;
   }
 
   /* ── Region headers ── */
