@@ -1,14 +1,15 @@
 ---
 import { categories, site } from '../site.config';
 
+// Places is the home page, so it comes first and its tab points to "/".
 const links = [
-  ...categories.map((c) => ({ href: `/${c.slug}`, label: c.label })),
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
-];
+  ...categories.filter((c) => c.slug === 'places'),
+  ...categories.filter((c) => c.slug !== 'places'),
+].map((c) => ({ href: c.slug === 'places' ? '/' : `/${c.slug}`, label: c.label }));
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-// A section stays highlighted on its sub-pages too (e.g. /architecture/brutalism).
-const isCurrent = (href: string) => path === href || path.startsWith(href + '/');
+// A section stays highlighted on its sub-pages too (e.g. /architecture/brutalism, /places/egypt).
+const isCurrent = (href: string) =>
+  href === '/' ? path === '/' || path.startsWith('/places') : path === href || path.startsWith(href + '/');
 ---
 
 <header class="site-header">
@@ -58,7 +59,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + '/')
     }
   });
   // Close if the viewport grows past the mobile breakpoint while open.
-  matchMedia('(min-width: 1024px)').addEventListener('change', () => setOpen(false));
+  matchMedia('(min-width: 900px)').addEventListener('change', () => setOpen(false));
 </script>
 
 <style>
@@ -73,7 +74,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + '/')
     max-width: var(--max);
     margin: 0 auto;
     padding: 0 var(--gutter);
-    height: 60px;
+    height: 72px;
     border-bottom: 1px solid var(--line);
     background: color-mix(in srgb, var(--bg) 92%, transparent);
     backdrop-filter: blur(8px);
@@ -86,9 +87,9 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + '/')
     gap: 10px;
     position: relative;
     z-index: 2;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     text-decoration: none;
     white-space: nowrap;
@@ -155,7 +156,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + '/')
   }
 
   /* Mobile: full-screen overlay */
-  @media (max-width: 1023px) {
+  @media (max-width: 899px) {
     .menu {
       position: fixed;
       inset: 0;
@@ -185,19 +186,19 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + '/')
   }
 
   /* Desktop: inline links */
-  @media (min-width: 1024px) {
+  @media (min-width: 900px) {
     .menu-toggle {
       display: none;
     }
     .menu ul {
       display: flex;
-      gap: 28px;
+      gap: 36px;
     }
     .menu a {
       position: relative;
       padding: 6px 0;
-      font-size: 12px;
-      letter-spacing: 0.16em;
+      font-size: 14px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
     }
     .menu a[aria-current='page']::after {
@@ -206,7 +207,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + '/')
       left: 0;
       right: 0.16em;
       bottom: -2px;
-      height: 1px;
+      height: 2px;
       background: var(--accent);
     }
   }

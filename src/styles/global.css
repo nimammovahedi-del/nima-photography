@@ -170,28 +170,14 @@ a.accent:hover {
 }
 
 /* ── Page transitions ─────────────────────────
-   Your name glides from the landing page to the top of About (supported browsers only;
-   others just open the page normally). */
+   A soft crossfade between pages (supported browsers only). */
 @view-transition {
   navigation: auto;
 }
-.site-name {
-  view-transition-name: site-name;
-  margin: 0 0 14px;
-  font-size: clamp(32px, 8vw, 56px);
-  font-weight: 300;
-  letter-spacing: -0.015em;
-  line-height: 1.05;
-}
-::view-transition-group(site-name) {
-  animation-duration: 0.65s;
-  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
-}
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.35s;
+  animation-duration: 0.3s;
 }
-
 @media (prefers-reduced-motion: reduce) {
   @view-transition {
     navigation: none;

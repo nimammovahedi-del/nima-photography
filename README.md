@@ -82,20 +82,15 @@ All of these live in `src/site.config.ts`:
   `United States of America`).
 - **New region?** Add it to `regions` in the same file.
 
-## The globe
+## The home page
 
-- **Landing page** — one full-window screen: your name and intro on the left, a large globe cut off
-  by the right edge (rising from the bottom on phones). Drag to spin, pinch or two-finger scroll to
-  zoom. Clicking a country flies in to it, drops its city pins, then glides into its page. The
-  **Menu** button slides the tab list in beside the intro without covering the globe.
-- **Places page** — three stacked region panels (Americas, Europe, Africa). Click one and it opens
-  out to a full-screen map with its countries labelled; click a country to zoom in to its city pins.
-  **Pinch or two-finger scroll** (trackpad) zooms; zooming out — or the back button, Esc, or the
-  browser's Back — steps back a level, and finally returns to the three panels. Links like
-  `/places#europe` open a region directly. A small A–Z index sits underneath.
+The home page is the Places explorer: three stacked region panels (Americas, Europe, Africa). Click
+one and it opens out to a full-screen map with its countries labelled; click a country to zoom in to
+its city pins. **Pinch or two-finger scroll** (trackpad) zooms; zooming out — or the back button,
+Esc, or the browser's Back — steps back a level, and finally returns to the three panels. Links like
+`/#europe` open a region directly, and `/places` redirects home. A small A–Z index sits underneath.
 
-The landing globe is `src/components/Globe.astro`, the Places explorer is
-`src/components/RegionExplorer.astro`; both run on `src/scripts/globe.ts`.
+The explorer is `src/components/RegionExplorer.astro`; the map engine is `src/scripts/globe.ts`.
 
 ## Colours
 
@@ -104,9 +99,7 @@ khaki/tan, lavender, grey-green). Change a value there and it updates everywhere
 
 ## Change text and settings
 
-- `src/site.config.ts` — your name, the landing-page intro, Formspree address, optional public
-  email/Instagram link.
-- `src/pages/about.astro` — your bio.
+- `src/site.config.ts` — your name and the short intro used in search results and link previews.
 
 ## Publish changes
 
@@ -129,20 +122,13 @@ Want to check it first? Run `npm run build && npm run preview` to see the exact 
 4. Your site is live at `https://<project-name>.vercel.app`. Put that address in `astro.config.mjs`
    (`site:`) so links shared on social media point to the right place.
 
-### Formspree (contact form)
-The form already sends to `https://formspree.io/f/mjykrzlz`.
-1. Confirm your email address with Formspree (check your inbox after creating the form).
-2. Send yourself a test message from the live site — the first submission may ask you to confirm.
-3. Optional: in the Formspree dashboard, add your Vercel address under **Settings → Restrict to domain**
-   to block spam sent from elsewhere.
-
 ## Project layout
 
 ```
 src/
   photos/<category>/    your images
   data/photos.yaml      titles, alt text, sub-tabs, places, film sims
-  site.config.ts        name, intro, sub-tabs, regions, countries & cities, contact
+  site.config.ts        name, intro, sub-tabs, regions, countries & cities
   pages/                one file per page (sub-tab and country pages are generated)
   components/           Gallery, Lightbox, Nav, SubTabs, Globe, CountryMap, Illustration
   scripts/globe.ts      the interactive globe (loads when it scrolls into view)

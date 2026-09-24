@@ -7,11 +7,9 @@ interface Props {
   title?: string;
   description?: string;
   film?: boolean;
-  /** false = no top nav or footer (the landing page brings its own menu). */
-  chrome?: boolean;
 }
 
-const { title, description = site.intro, film = false, chrome = true } = Astro.props;
+const { title, description = site.intro, film = false } = Astro.props;
 const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -37,24 +35,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
   </head>
-  <body class:list={{ film, bare: !chrome }}>
+  <body class:list={{ film }}>
     <a class="skip-link" href="#main">Skip to content</a>
-    {chrome && <Nav />}
+    <Nav />
     <main id="main">
       <slot />
     </main>
-    {
-      chrome && (
-        <footer>
-          <p>© {new Date().getFullYear()} {site.name}</p>
-          <nav aria-label="Footer">
-            <a href="/places">Places</a>
-            <a href="/about">About</a>
-            <a href="/contact">Contact</a>
-          </nav>
-        </footer>
-      )
-    }
+    <footer>
+      <p>© {new Date().getFullYear()} {site.name}</p>
+    </footer>
   </body>
 </html>
 
@@ -86,16 +75,5 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   }
   footer p {
     margin: 0;
-  }
-  footer nav {
-    display: flex;
-    gap: 20px;
-  }
-  footer a {
-    color: var(--muted);
-    text-decoration: none;
-  }
-  footer a:hover {
-    color: var(--accent);
   }
 </style>

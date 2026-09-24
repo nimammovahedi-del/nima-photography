@@ -38,16 +38,6 @@ const cityPins = place.cities.map((c) => {
 });
 ---
 
-<script is:inline>
-  // Arriving from the landing globe (which already zoomed in)? Skip this map's own intro.
-  try {
-    if (sessionStorage.getItem('from-globe')) {
-      sessionStorage.removeItem('from-globe');
-      document.documentElement.classList.add('from-globe');
-    }
-  } catch {}
-</script>
-
 <figure class="country-map" data-country-map>
   <div class="frame" style={`aspect-ratio:${W}/${H}`}>
     <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
@@ -77,44 +67,6 @@ const cityPins = place.cities.map((c) => {
     Map of {place.name}{place.cities.length > 0 && ` showing ${place.cities.map((c) => c.name).join(', ')}`}.
   </figcaption>
 </figure>
-
-<script is:inline>
-  // Arriving from the landing globe (which ended with the country filling the screen): start this
-  // map full-screen too, then zoom it back out into its place while the rest of the page fades in.
-  (function () {
-    var html = document.documentElement;
-    if (!html.classList.contains('from-globe')) return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var frame = document.currentScript.previousElementSibling.querySelector('.frame');
-    var r = frame.getBoundingClientRect();
-    var s = Math.max(innerWidth / r.width, innerHeight / r.height);
-    var dx = innerWidth / 2 - (r.left + r.width / 2);
-    var dy = innerHeight / 2 - (r.top + r.height / 2);
-    var ease = 'cubic-bezier(0.45, 0, 0.2, 1)';
-    frame.style.zIndex = '20';
-    frame
-      .animate(
-        [
-          { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')', borderColor: 'transparent' },
-          { transform: 'none' },
-        ],
-        { duration: 950, easing: ease },
-      )
-      .finished.then(function () {
-        frame.style.zIndex = '';
-      });
-    // Everything else on the page fades in as the map settles.
-    var main = frame.closest('main');
-    var others = [].slice.call(main.children).filter(function (el) {
-      return !el.contains(frame);
-    });
-    var header = document.querySelector('.site-header');
-    if (header) others.push(header);
-    others.forEach(function (el) {
-      el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: 550, easing: 'ease', fill: 'backwards' });
-    });
-  })();
-</script>
 
 <script>
   import { layoutLabels } from '../lib/geo-shared';
@@ -292,12 +244,5 @@ const cityPins = place.cities.map((c) => {
     .pin {
       animation: none;
     }
-  }
-  :global(html.from-globe) svg,
-  :global(html.from-globe) .shape {
-    animation: none;
-  }
-  :global(html.from-globe) .pin {
-    animation-delay: calc(0.9s + var(--i) * 70ms);
   }
 </style>

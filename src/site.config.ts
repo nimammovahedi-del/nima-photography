@@ -4,9 +4,6 @@ export const site = {
   tagline: 'Photography',
   intro:
     'Architecture, places, landscapes and animals — mostly on a Canon EOS, with a smaller body of work in film simulation.',
-  email: '', // optional public email shown on Contact — leave empty to hide
-  instagram: '', // e.g. 'https://instagram.com/yourname' — leave empty to hide
-  formspreeEndpoint: 'https://formspree.io/f/mjykrzlz',
 };
 
 // Sub-tabs for each subject. Add or rename freely — they're shown alphabetically.

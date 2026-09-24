@@ -1,423 +1,91 @@
 ---
-// Landing page: one full-window screen. Name and intro on the left, a large globe cut off by
-// the right edge (rising from the bottom on phones). The ☰ button slides the tab list in beside
-// the intro — it doesn't cover or freeze the page, so the globe stays usable.
+// Home page: the Places explorer — three region panels to open and explore (Americas, Europe,
+// Africa), plus a compact A–Z index of every country and city at the bottom.
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Globe from '../components/Globe.astro';
-import { categories, site } from '../site.config';
-
-const links = [
-  ...categories.map((c) => ({ href: `/${c.slug}`, label: c.label })),
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
-];
+import RegionExplorer from '../components/RegionExplorer.astro';
+import { site, sortedPlaces } from '../site.config';
 ---
 
-<BaseLayout chrome={false}>
-  <div class="home" data-home>
-    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="home-menu">
-      <span class="bars" aria-hidden="true"></span>
-      <span class="menu-label">Menu</span>
-    </button>
+<BaseLayout description={`${site.intro} Photographs from ${sortedPlaces.length} countries.`}>
+  <h1 class="visually-hidden">{site.name} — photographs from {sortedPlaces.length} countries</h1>
 
-    <nav id="home-menu" class="drawer" aria-label="Main" inert>
-      <ul>
-        {
-          links.map((l, i) => (
-            <li style={`--i:${i}`}>
-              <a href={l.href}>{l.label}</a>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="copy">© {new Date().getFullYear()} {site.name}</p>
-    </nav>
+  <RegionExplorer />
 
-    <section class="intro">
-      <p class="eyebrow">Photography</p>
-      <h1 class="site-name"><a href="/about" title="About me">{site.name}</a></h1>
-      <p class="lede">{site.intro}</p>
-      <p class="hint">Spin the globe · click a country to travel there</p>
-    </section>
-
-    <div class="globe-side">
-      <Globe />
-    </div>
-  </div>
+  <section class="index" aria-labelledby="index-title">
+    <h2 id="index-title">Index</h2>
+    <ul>
+      {
+        sortedPlaces.map((p) => (
+          <li>
+            <a class="country" href={`/places/${p.slug}`}>{p.name}</a>
+            {p.cities.length > 0 && (
+              <span class="cities">
+                {p.cities.map((c, i) => (
+                  <>
+                    {i > 0 && ' · '}
+                    <a href={`/places/${p.slug}/${c.slug}`}>{c.name}</a>
+                  </>
+                ))}
+              </span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 </BaseLayout>
 
-<script>
-  const home = document.querySelector<HTMLElement>('[data-home]')!;
-  const btn = home.querySelector<HTMLButtonElement>('.menu-btn')!;
-  const label = btn.querySelector<HTMLElement>('.menu-label')!;
-  const drawer = home.querySelector<HTMLElement>('.drawer')!;
-
-  const intro = home.querySelector<HTMLElement>('.intro')!;
-
-  // Phones: the globe sits just below wherever the intro ends (which moves when the menu opens).
-  const placeGlobe = () =>
-    home.style.setProperty('--below-intro', `${Math.round(intro.getBoundingClientRect().bottom)}px`);
-  placeGlobe();
-  addEventListener('resize', placeGlobe);
-  document.fonts?.ready.then(placeGlobe);
-  drawer.addEventListener('transitionend', (e) => {
-    if (e.target === drawer) placeGlobe();
-  });
-
-  function setOpen(open: boolean) {
-    home.classList.toggle('menu-open', open);
-    btn.setAttribute('aria-expanded', String(open));
-    label.textContent = open ? 'Close' : 'Menu';
-    drawer.inert = !open; // closed menu links can't be tabbed to
-    if (open) drawer.querySelector('a')?.focus({ preventScroll: true });
-  }
-  btn.addEventListener('click', () => setOpen(!home.classList.contains('menu-open')));
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && home.classList.contains('menu-open')) {
-      setOpen(false);
-      btn.focus();
-    }
-  });
-</script>
-
 <style>
-  /* The landing page is exactly one screen. */
-  :global(body.bare) {
-    overflow: hidden;
+  .index {
+    margin-top: 56px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
   }
-  :global(body.bare main) {
-    max-width: none;
+  h2 {
+    margin: 0 0 16px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  ul {
+    columns: 1;
+    column-gap: 40px;
+    margin: 0;
     padding: 0;
-  }
-
-  .home {
-    --drawer: 250px;
-    --globe: min(108svh, 70vw);
-    position: relative;
-    display: flex;
-    height: 100svh;
-    overflow: hidden;
-  }
-
-  /* ── Menu button ── */
-  .menu-btn {
-    position: absolute;
-    top: 22px;
-    left: var(--gutter);
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 0;
-    border: 0;
-    background: none;
-    color: var(--text);
-    font: inherit;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-  .bars,
-  .bars::before {
-    display: block;
-    width: 22px;
-    height: 1.5px;
-    background: currentColor;
-    transition: transform 0.3s ease;
-  }
-  .bars {
-    position: relative;
-  }
-  .bars::before {
-    content: '';
-    position: absolute;
-    top: 6px;
-  }
-  .menu-open .bars {
-    transform: translateY(3px) rotate(45deg);
-  }
-  .menu-open .bars::before {
-    transform: translateY(-6px) rotate(-90deg);
-  }
-  .menu-btn:hover {
-    color: var(--accent);
-  }
-
-  /* ── Slide-out tab list: grows from zero width and pushes the intro aside ── */
-  .drawer {
-    position: relative;
-    z-index: 3;
-    flex: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 0;
-    overflow: hidden;
-    border-right: 1px solid transparent;
-    transition:
-      width 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
-      border-color 0.5s ease;
-  }
-  .menu-open .drawer {
-    width: var(--drawer);
-    border-color: var(--line);
-  }
-  .drawer ul {
-    width: var(--drawer);
-    margin: 0;
-    padding: 0 var(--gutter);
     list-style: none;
+    font-size: 13px;
   }
-  .drawer li {
-    opacity: 0;
-    transform: translateX(-12px);
-    transition:
-      opacity 0.35s ease,
-      transform 0.35s ease;
+  @media (min-width: 640px) {
+    ul {
+      columns: 2;
+    }
   }
-  .menu-open .drawer li {
-    opacity: 1;
-    transform: none;
-    transition-delay: calc(0.12s + var(--i) * 40ms);
+  @media (min-width: 1024px) {
+    ul {
+      columns: 3;
+    }
   }
-  .drawer a {
-    display: block;
-    padding: 8px 0;
-    color: var(--muted);
-    font-size: 22px;
-    font-weight: 300;
+  li {
+    break-inside: avoid;
+    padding: 5px 0;
+  }
+  a {
     text-decoration: none;
-    transition: color 0.15s ease;
   }
-  .drawer a:hover,
-  .drawer a:focus-visible {
+  .country {
     color: var(--text);
   }
-  .drawer a::before {
-    content: '';
-    display: inline-block;
-    width: 0;
-    height: 1px;
-    margin-right: 0;
-    background: var(--accent);
-    vertical-align: middle;
-    transition:
-      width 0.25s ease,
-      margin 0.25s ease;
-  }
-  .drawer a:hover::before,
-  .drawer a:focus-visible::before {
-    width: 16px;
-    margin-right: 10px;
-  }
-  .copy {
-    position: absolute;
-    left: var(--gutter);
-    bottom: 22px;
-    width: var(--drawer);
-    margin: 0;
+  .cities {
+    margin-left: 8px;
     color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    white-space: nowrap;
+    font-size: 12px;
   }
-
-  /* ── Intro ── */
-  .intro {
-    position: relative;
-    z-index: 2;
-    align-self: center;
-    max-width: min(38rem, 44vw);
-    padding: 0 var(--gutter) 0 clamp(var(--gutter), 7vw, 120px);
-    animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  }
-  .lede {
-    margin: 0;
+  .cities a {
     color: var(--muted);
   }
-  .hint {
-    margin: 28px 0 0;
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-  .hint::before {
-    content: '';
-    display: inline-block;
-    width: 18px;
-    height: 1px;
-    margin-right: 10px;
-    background: var(--accent);
-    vertical-align: middle;
-  }
-  .site-name a {
-    position: relative;
-    color: inherit;
-    text-decoration: none;
-  }
-  .site-name a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 100%;
-    height: 1px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.35s ease;
-  }
-  .site-name a:hover::after,
-  .site-name a:focus-visible::after {
-    transform: scaleX(1);
-  }
-
-  /* ── The globe: a little over half visible, cut off by the right edge ── */
-  .globe-side {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    width: var(--globe);
-    translate: 35% -50%; /* about 65% of the globe shows */
-    animation: globe-in 1.4s 0.15s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-    transition:
-      translate 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
-      top 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
-      width 1.1s cubic-bezier(0.45, 0, 0.2, 1),
-      right 1.1s cubic-bezier(0.45, 0, 0.2, 1);
-  }
-  /* Menu open: the globe eases further right to make room. */
-  .menu-open .globe-side {
-    translate: 52% -50%;
-  }
-  /* Travelling to a country: the globe grows to fill the whole screen as it flies in, so the
-     country ends up full-screen — the country page then zooms back out from there. */
-  .home:has(:global(.travelling)) .globe-side {
-    right: 50%;
-    width: max(100vw, 100svh);
-    translate: 50% -50%;
-    transition:
-      width 1.1s cubic-bezier(0.45, 0, 0.2, 1),
-      right 1.1s cubic-bezier(0.45, 0, 0.2, 1),
-      translate 1.1s cubic-bezier(0.45, 0, 0.2, 1);
-  }
-  .home:has(:global(.travelling)) :is(.menu-btn, .drawer) {
-    opacity: 0;
-    transition: opacity 0.6s ease;
-    pointer-events: none;
-  }
-  /* (The intro uses an animation rather than a transition, since its entrance animation
-     would otherwise hold it visible.) */
-  .home:has(:global(.travelling)) .intro {
-    animation: fade-out 0.6s ease forwards;
-    pointer-events: none;
-  }
-  @keyframes fade-out {
-    to {
-      opacity: 0;
-    }
-  }
-  @keyframes globe-in {
-    from {
-      opacity: 0;
-      transform: translateX(6%) scale(0.96);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-  /* Movement only (no fade) so the text counts as painted straight away — keeps the page fast. */
-  @keyframes rise {
-    from {
-      transform: translateY(12px);
-    }
-    to {
-      transform: none;
-    }
-  }
-
-  /* ── Phones and narrow windows: intro on top, globe rising from the bottom ── */
-  @media (max-width: 899px) {
-    .home {
-      --globe: 140vw;
-      flex-direction: column;
-    }
-    .intro {
-      align-self: stretch;
-      max-width: none;
-      padding: 84px var(--gutter) 0;
-    }
-    .hint {
-      margin-top: 18px;
-    }
-    /* The menu opens downwards here, pushing the intro down rather than aside. */
-    .drawer {
-      width: auto;
-      max-height: 0;
-      justify-content: flex-start;
-      border-right: 0;
-      border-bottom: 1px solid transparent;
-      transition:
-        max-height 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
-        border-color 0.5s ease;
-    }
-    .menu-open .drawer {
-      width: auto;
-      max-height: 440px;
-      border-color: var(--line);
-    }
-    .drawer ul {
-      width: auto;
-      padding-top: 72px;
-      padding-bottom: 12px;
-    }
-    .drawer a {
-      padding: 6px 0;
-      font-size: 20px;
-    }
-    .copy {
-      display: none;
-    }
-    .menu-open .intro {
-      padding-top: 24px;
-    }
-    /* Sits just below the intro (measured by the script), with most of it above the bottom
-       edge so it's easy to use. When the menu opens it slides down after the list. */
-    .globe-side {
-      top: calc(var(--below-intro, 36svh) + 20px);
-      right: auto;
-      left: 50%;
-      translate: -50% 0;
-    }
-    .menu-open .globe-side {
-      translate: -50% 0;
-    }
-    .home:has(:global(.travelling)) .globe-side {
-      top: 50svh;
-      right: auto;
-      left: 50%;
-      width: max(100vw, 100svh);
-      translate: -50% -50%;
-    }
-    @keyframes globe-in {
-      from {
-        opacity: 0;
-        transform: translateY(8%) scale(0.96);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .intro,
-    .globe-side {
-      animation: none;
-    }
+  a:hover {
+    color: var(--accent);
   }
 </style>

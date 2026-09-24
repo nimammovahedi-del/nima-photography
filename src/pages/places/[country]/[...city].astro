@@ -38,7 +38,7 @@ const tabs = [
   description={`Photographs from ${city ? `${city}, ` : ''}${place.name} by ${site.name}.`}
 >
   <header class="page-head">
-    <a class="back" href="/places"><span aria-hidden="true">←</span> All places</a>
+    <a class="back" href="/"><span aria-hidden="true">←</span> All places</a>
     <h1>{place.name}</h1>
   </header>
   <CountryMap place={place} active={city} />
