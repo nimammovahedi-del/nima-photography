@@ -108,9 +108,10 @@
   country: Germany
   city: Berlin
 - file: places/placeholder-10.jpg
-  title: Costa Rica
+  title: Seattle
   alt: Placeholder image — replace with a description of the photo
-  country: Costa Rica
+  country: United States
+  city: Seattle
 - file: places/placeholder-11.jpg
   title: Bath
   alt: Placeholder image — replace with a description of the photo
@@ -120,6 +121,16 @@
   title: Finland
   alt: Placeholder image — replace with a description of the photo
   country: Finland
+- file: places/placeholder-13.jpg
+  title: Philadelphia
+  alt: Placeholder image — replace with a description of the photo
+  country: United States
+  city: Philadelphia
+- file: places/placeholder-14.jpg
+  title: Red Rock Canyon
+  alt: Placeholder image — replace with a description of the photo
+  country: United States
+  city: Red Rock Canyon
 
 # ── Nature ──
 - file: nature/placeholder-01.jpg
@@ -164,12 +175,10 @@
   title: Birds Study
   alt: Placeholder image — replace with a description of the photo
   sub: Birds
-  country: Costa Rica
 - file: animals/placeholder-02.jpg
   title: Marine Study
   alt: Placeholder image — replace with a description of the photo
   sub: Marine
-  country: Panama
 - file: animals/placeholder-03.jpg
   title: Pets Study
   alt: Placeholder image — replace with a description of the photo
@@ -180,7 +189,6 @@
   title: Wildlife Study
   alt: Placeholder image — replace with a description of the photo
   sub: Wildlife
-  country: Costa Rica
 - file: animals/placeholder-05.jpg
   title: Birds Study
   alt: Placeholder image — replace with a description of the photo

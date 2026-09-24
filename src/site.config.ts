@@ -30,14 +30,13 @@ export type CategorySlug = (typeof categories)[number]['slug'];
 // longitude/latitude so its pin lands in the right spot (look them up on Google Maps: right-click →
 // the numbers shown are lat, lon — note the order here is lon, lat).
 // A photo from any tab joins a place via `country:` (and optionally `city:`) in photos.yaml.
-export const regions = ['Americas', 'Europe', 'Africa'] as const;
+export const regions = ['America', 'Europe', 'Africa'] as const;
 
 type City = { name: string; lon: number; lat: number };
 type Place = { name: string; map: string; region: (typeof regions)[number]; cities: City[] };
 
 export const places: Place[] = [
   { name: 'Austria', map: 'Austria', region: 'Europe', cities: [] },
-  { name: 'Costa Rica', map: 'Costa Rica', region: 'Americas', cities: [] },
   {
     name: 'Egypt', map: 'Egypt', region: 'Africa',
     cities: [
@@ -92,7 +91,6 @@ export const places: Place[] = [
       { name: 'Oslo', lon: 10.75, lat: 59.91 },
     ],
   },
-  { name: 'Panama', map: 'Panama', region: 'Americas', cities: [] },
   {
     name: 'Portugal', map: 'Portugal', region: 'Europe',
     cities: [
@@ -110,11 +108,14 @@ export const places: Place[] = [
   },
   { name: 'Spain', map: 'Spain', region: 'Europe', cities: [] },
   {
-    name: 'United States', map: 'United States of America', region: 'Americas',
+    name: 'United States', map: 'United States of America', region: 'America',
     cities: [
       { name: 'New York', lon: -74.01, lat: 40.71 },
       { name: 'Orange County', lon: -117.83, lat: 33.72 },
       { name: 'Palm Desert', lon: -116.37, lat: 33.72 },
+      { name: 'Philadelphia', lon: -75.17, lat: 39.95 },
+      { name: 'Red Rock Canyon', lon: -115.43, lat: 36.13 }, // Nevada, west of Las Vegas
+      { name: 'Seattle', lon: -122.33, lat: 47.61 },
       { name: 'Washington DC', lon: -77.04, lat: 38.91 },
     ],
   },

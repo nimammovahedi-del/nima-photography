@@ -65,8 +65,8 @@ All of these live in `src/site.config.ts`:
 
 - **Sub-tabs** — the `subs` list under each tab, e.g. add `'Baroque'` to Architecture. They're always
   shown A–Z.
-- **Countries on the globe / Places** — the `places` list. Each country has a `region` (Americas,
-  Europe or Africa — the globe's headers) and its cities with real coordinates:
+- **Countries on the globe / Places** — the `places` list. Each country has a `region` (America,
+  Europe or Africa — the home page's panels) and its cities with real coordinates:
 
   ```ts
   {
@@ -84,7 +84,7 @@ All of these live in `src/site.config.ts`:
 
 ## The home page
 
-The home page is the Places explorer: three stacked region panels (Americas, Europe, Africa). Click
+The home page is the Places explorer: three stacked region panels (America, Europe, Africa). Click
 one and it opens out to a full-screen map with its countries labelled; click a country to zoom in to
 its city pins. **Pinch or two-finger scroll** (trackpad) zooms; zooming out — or the back button,
 Esc, or the browser's Back — steps back a level, and finally returns to the three panels. Links like

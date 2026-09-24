@@ -1,5 +1,5 @@
 ---
-// Places explorer: three stacked region "snapshots" (Americas, Europe, Africa).
+// Places explorer: three stacked region "snapshots" (America, Europe, Africa).
 // Click one and it opens out to fill the screen as a live map with its countries labelled;
 // click a country to zoom in to its city pins. Zooming out (pinch / two-finger scroll, the back
 // button, Esc or the browser's Back) steps back a level, and finally returns to the snapshots.
@@ -79,9 +79,6 @@ const config = {
             </svg>
             <span class="caption">
               <span class="name">{s.name}</span>
-              <span class="count">
-                {s.places.length} {s.places.length === 1 ? 'country' : 'countries'}
-              </span>
               <span class="list">{s.places.map((p) => p.name).join(' · ')}</span>
               <span class="cta" aria-hidden="true">
                 Explore <span class="arrow">→</span>
@@ -183,6 +180,8 @@ const config = {
     engine = await m.createMap(view, cfg, {
       onCountryClick: (p) => openCountry(p),
       onLeaveCountry: () => {
+        // A one-country region (America) has no region view to go back to — close instead.
+        if (soleCountry()) return close();
         country = undefined;
         renderRegionUI();
       },
@@ -190,6 +189,9 @@ const config = {
     });
     // Jump to the region, then reveal: the panel opens up to fill the screen as the view glides in.
     engine.showRegion(name, 0);
+    // A region with just one country (America) goes straight on to that country's city pins.
+    const only = soleCountry();
+    if (only) setTimeout(() => openCountry(only), 350);
     stage.hidden = false;
     document.documentElement.classList.add('explorer-open');
     if (!reduceMotion()) {
@@ -234,7 +236,7 @@ const config = {
   function renderCountryUI(p: MapPlace) {
     tRegion.textContent = `${p.region} / `;
     tCountry.textContent = p.name;
-    backLabel.textContent = p.region;
+    backLabel.textContent = soleCountry() ? 'All regions' : p.region;
     allLink.hidden = false;
     allLink.href = `/places/${p.slug}`;
     allLink.textContent = `All photos from ${p.name} →`;
@@ -259,8 +261,13 @@ const config = {
     engine?.showCountry(p);
   }
 
+  function soleCountry() {
+    const list = places.filter((p) => p.region === region);
+    return list.length === 1 ? list[0] : undefined;
+  }
+
   function back() {
-    if (country && region) {
+    if (country && region && !soleCountry()) {
       country = undefined;
       renderRegionUI();
       engine?.showRegion(region);
@@ -382,14 +389,8 @@ const config = {
     letter-spacing: -0.01em;
     line-height: 1.05;
   }
-  .count {
-    color: var(--accent);
-    font-size: 12px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
   .list {
-    margin-top: 6px;
+    margin-top: 4px;
     color: var(--muted);
     font-size: 13px;
     line-height: 1.5;
