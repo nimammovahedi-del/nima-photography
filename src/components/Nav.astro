@@ -15,17 +15,9 @@ const isCurrent = (href: string) =>
 <header class="site-header">
   <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>{site.name}</a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
-    <span class="visually-hidden">Menu</span>
-    <span class="bars" aria-hidden="true"></span>
-  </button>
-
-  <nav id="site-menu" class="menu" aria-label="Main">
+  <!-- Always visible: one bar on wide screens; on narrow ones the tabs sit in a row under the
+       name (swipe sideways if they don't all fit). -->
+  <nav class="menu" aria-label="Main">
     <ul>
       {
         links.map((l) => (
@@ -41,25 +33,12 @@ const isCurrent = (href: string) =>
 </header>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle')!;
-  const menu = document.getElementById('site-menu')!;
-
-  function setOpen(open: boolean) {
-    toggle.setAttribute('aria-expanded', String(open));
-    menu.classList.toggle('open', open);
-    document.documentElement.style.overflow = open ? 'hidden' : '';
-    if (open) menu.querySelector('a')?.focus();
+  // On a narrow screen, make sure the current tab is scrolled into view in the tab row.
+  const row = document.querySelector<HTMLElement>('.site-header .menu ul');
+  const current = row?.querySelector<HTMLElement>('[aria-current="page"]');
+  if (row && current && row.scrollWidth > row.clientWidth) {
+    row.scrollLeft = current.offsetLeft - row.clientWidth / 2 + current.offsetWidth / 2;
   }
-
-  toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && menu.classList.contains('open')) {
-      setOpen(false);
-      toggle.focus();
-    }
-  });
-  // Close if the viewport grows past the mobile breakpoint while open.
-  matchMedia('(min-width: 900px)').addEventListener('change', () => setOpen(false));
 </script>
 
 <style>
@@ -85,8 +64,6 @@ const isCurrent = (href: string) =>
     display: flex;
     align-items: center;
     gap: 10px;
-    position: relative;
-    z-index: 2;
     font-size: 15px;
     font-weight: 500;
     letter-spacing: 0.2em;
@@ -102,50 +79,23 @@ const isCurrent = (href: string) =>
     background: var(--accent);
   }
 
-  .menu-toggle {
-    position: relative;
-    z-index: 2;
-    width: 44px;
-    height: 44px;
-    margin-right: -10px;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: var(--text);
-    cursor: pointer;
-  }
-  .bars,
-  .bars::before {
-    position: absolute;
-    left: 11px;
-    width: 22px;
-    height: 1.5px;
-    background: currentColor;
-    transition: transform 0.2s ease;
-  }
-  .bars {
-    top: 18px;
-  }
-  .bars::before {
-    content: '';
-    left: 0;
-    top: 7px;
-  }
-  [aria-expanded='true'] .bars {
-    transform: translateY(3.5px) rotate(45deg);
-  }
-  [aria-expanded='true'] .bars::before {
-    transform: translateY(-7px) rotate(-90deg);
-  }
-
   .menu ul {
+    display: flex;
+    gap: 36px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   .menu a {
-    text-decoration: none;
+    position: relative;
+    display: block;
+    padding: 6px 0;
     color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
     transition: color 0.15s ease;
   }
   .menu a:hover {
@@ -154,61 +104,48 @@ const isCurrent = (href: string) =>
   .menu a[aria-current='page'] {
     color: var(--accent);
   }
-
-  /* Mobile: full-screen overlay */
-  @media (max-width: 899px) {
-    .menu {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      padding: 80px var(--gutter);
-      background: var(--bg);
-      visibility: hidden;
-      opacity: 0;
-      transition:
-        opacity 0.2s ease,
-        visibility 0.2s;
-    }
-    .menu.open {
-      visibility: visible;
-      opacity: 1;
-    }
-    .menu li + li {
-      margin-top: 14px;
-    }
-    .menu a {
-      font-size: 26px;
-      font-weight: 300;
-      letter-spacing: 0.02em;
-    }
+  .menu a[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0.14em;
+    bottom: -2px;
+    height: 2px;
+    background: var(--accent);
   }
 
-  /* Desktop: inline links */
-  @media (min-width: 900px) {
-    .menu-toggle {
-      display: none;
+  /* Narrow screens: name on top, all the tabs in a row underneath. */
+  @media (max-width: 759px) {
+    .site-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      height: auto;
+      padding-top: 14px;
+    }
+    .brand {
+      font-size: 14px;
+    }
+    .menu {
+      margin: 0 calc(var(--gutter) * -1);
     }
     .menu ul {
-      display: flex;
-      gap: 36px;
+      justify-content: space-between; /* spread across the width when they all fit */
+      gap: 14px;
+      padding: 8px var(--gutter) 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .menu ul::-webkit-scrollbar {
+      display: none;
     }
     .menu a {
-      position: relative;
-      padding: 6px 0;
-      font-size: 14px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+      padding: 8px 0; /* comfortable tap height */
+      font-size: 12.5px;
+      letter-spacing: 0.06em;
     }
     .menu a[aria-current='page']::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0.16em;
-      bottom: -2px;
-      height: 2px;
-      background: var(--accent);
+      bottom: 2px;
     }
   }
 </style>

@@ -99,7 +99,8 @@ khaki/tan, lavender, grey-green). Change a value there and it updates everywhere
 
 ## Change text and settings
 
-- `src/site.config.ts` — your name and the short intro used in search results and link previews.
+- `src/site.config.ts` — your name, the welcome line above the regions on the home page (`welcome`),
+  and the short intro used in search results and link previews (`intro`).
 
 ## Publish changes
 

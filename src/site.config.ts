@@ -4,6 +4,9 @@ export const site = {
   tagline: 'Photography',
   intro:
     'Architecture, places, landscapes and animals — mostly on a Canon EOS, with a smaller body of work in film simulation.',
+  // The welcome line on the home page, above the region panels.
+  welcome:
+    'I photograph buildings, cities, wild places and the animals in them, wherever I travel. Open a region below to wander the map country by country, or jump into a subject from the tabs above.',
 };
 
 // Sub-tabs for each subject. Add or rename freely — they're shown alphabetically.

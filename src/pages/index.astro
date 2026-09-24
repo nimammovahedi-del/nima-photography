@@ -7,7 +7,10 @@ import { site, sortedPlaces } from '../site.config';
 ---
 
 <BaseLayout description={`${site.intro} Photographs from ${sortedPlaces.length} countries.`}>
-  <h1 class="visually-hidden">{site.name} — photographs from {sortedPlaces.length} countries</h1>
+  <header class="welcome">
+    <h1 class="visually-hidden">{site.name} — photographs from {sortedPlaces.length} countries</h1>
+    <p>{site.welcome}</p>
+  </header>
 
   <RegionExplorer />
 
@@ -36,6 +39,17 @@ import { site, sortedPlaces } from '../site.config';
 </BaseLayout>
 
 <style>
+  .welcome {
+    max-width: 44rem;
+    padding: 40px 0 8px;
+  }
+  .welcome p {
+    margin: 0;
+    color: var(--muted);
+    font-size: clamp(16px, 1.6vw, 19px);
+    font-weight: 300;
+    line-height: 1.65;
+  }
   .index {
     margin-top: 56px;
     padding-top: 18px;
