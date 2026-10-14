@@ -301,7 +301,9 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       H,
       Math.min(W, H) * 0.14,
     );
-    return { center: v.center, scale: Math.min(v.scale, MAX_SCALE) };
+    // A region of one country (America) would just frame that country: show the continent around it.
+    const wide = geoms.length === 1 ? 0.4 : 1;
+    return { center: v.center, scale: Math.min(v.scale * wide, MAX_SCALE) };
   }
 
   async function showRegion(name: string, ms?: number) {
@@ -375,8 +377,14 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     if (focused && scale < focusScale * 0.5) {
       leaveCountry();
     } else if (!focused && region && hooks.onZoomOutOfRegion && !zoomedOut && scale < regionScale * 0.6) {
-      zoomedOut = true;
-      hooks.onZoomOutOfRegion();
+      if (regionFloor) {
+        // Just arrived by pinching out of a country page: that pinch stops here, at the region.
+        scale = regionScale * 0.6;
+        floorHit = true;
+      } else {
+        zoomedOut = true;
+        hooks.onZoomOutOfRegion();
+      }
     }
     draw();
   }
@@ -389,6 +397,13 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   let lastWheel = performance.now();
   let wheelArmed = false;
   let holdWheelUntil = 0;
+  // After arriving from a country page (see holdWheel), zooming out stops at the region until a
+  // fresh gesture starts once it has: one long or repeated pinch shouldn't fly past the region.
+  let regionFloor = false;
+  let floorHit = false;
+  const newGesture = () => {
+    if (floorHit) regionFloor = floorHit = false;
+  };
   svg.addEventListener(
     'wheel',
     (e) => {
@@ -397,6 +412,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       const gap = now - lastWheel;
       lastWheel = now;
       if (now < holdWheelUntil) return;
+      if (gap >= 400) newGesture();
       if (!wheelArmed) {
         if (gap < 250) return;
         wheelArmed = true;
@@ -408,6 +424,27 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     },
     { passive: false },
   );
+
+  // Safari reports a Mac trackpad pinch as gesture events rather than ctrl+wheel. (On iPhone and
+  // iPad the same pinch also arrives as two touches, handled below, so ignore it there.)
+  let gestureFrom = 0;
+  svg.addEventListener('gesturestart', (e) => {
+    e.preventDefault();
+    if (touches.size) return;
+    newGesture();
+    // A pinch still going from the country page that brought us here isn't meant for the globe.
+    gestureFrom = performance.now() < holdWheelUntil ? 0 : scale;
+  });
+  svg.addEventListener('gesturechange', (e) => {
+    e.preventDefault();
+    if (touches.size || !gestureFrom) return;
+    if (tip) tip.hidden = true;
+    setScale(gestureFrom * (e as unknown as { scale: number }).scale);
+  });
+  svg.addEventListener('gestureend', (e) => {
+    e.preventDefault();
+    gestureFrom = 0;
+  });
 
   // ── Drag to rotate (with momentum); two fingers pinch-zoom ──
   let drag: { x: number; y: number; c: [number, number]; moved: boolean; vx: number; t: number } | null =
@@ -426,6 +463,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     if (e.pointerType === 'touch') {
       touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (touches.size === 2) {
+        newGesture();
         drag = null; // second finger: switch from rotating to pinching
         pinch = { d: spread(), scale };
         return;
@@ -549,6 +587,8 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     lastWheel = performance.now();
     wheelArmed = false;
     holdWheelUntil = lastWheel + 1800;
+    regionFloor = true;
+    floorHit = false;
   }
 
   /**

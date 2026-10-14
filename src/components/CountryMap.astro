@@ -12,8 +12,8 @@ interface Props {
 }
 
 const { place, active } = Astro.props;
-// Pinching out of this map goes back to the region it belongs to on the home page; a region with
-// just this one country (America) goes back to its panel instead.
+// Pinching out of this map (or the region button above it) goes back to the region it belongs to
+// on the home page's globe.
 const regionSlug = slugify(place.region);
 const soleInRegion = sortedPlaces.filter((p) => p.region === place.region).length === 1;
 
@@ -132,7 +132,8 @@ const cityPins = place.cities.map((c) => {
     const [w, h] = [r.width * zoom, r.height * zoom];
     return { left: r.left + (r.width - w) / 2, top: r.top + (r.height - h) / 2, width: w, height: h };
   };
-  function noteLeaving(fig: HTMLElement, why: 'pinch' | 'leave', zoom = 1) {
+  // 'pinch' and 'button' go back out to the region; 'leave' (anything else, e.g. Back) to the country.
+  function noteLeaving(fig: HTMLElement, why: 'pinch' | 'button' | 'leave', zoom = 1) {
     const sole = fig.dataset.sole !== undefined;
     try {
       sessionStorage.setItem(
@@ -157,7 +158,8 @@ const cityPins = place.cities.map((c) => {
     }
     // Back to the home page may load it afresh rather than restoring it; leave it a note.
     addEventListener('pagehide', () => {
-      if (!document.documentElement.classList.contains('pinch-leaving')) noteLeaving(fig, 'leave');
+      const html = document.documentElement.classList;
+      if (!html.contains('pinch-leaving') && !html.contains('region-leaving')) noteLeaving(fig, 'leave');
     });
     layout(fig);
     new ResizeObserver(() => layout(fig)).observe(fig.querySelector('.frame')!);
@@ -166,6 +168,16 @@ const cityPins = place.cities.map((c) => {
     // The page switches cities in place (see places/[country]/[...city].astro).
     fig.addEventListener('city-change', () => layout(fig));
     pinchOut(fig);
+    // The region button next to "All places" makes the same move as pinching out, without the pinch.
+    document.querySelectorAll<HTMLAnchorElement>('a[data-to-region]').forEach((a) =>
+      a.addEventListener('click', (e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        e.preventDefault();
+        noteLeaving(fig, 'button');
+        document.documentElement.classList.add('region-leaving');
+        location.assign(a.href);
+      }),
+    );
   });
 
   // Pinch out on the map (two fingers on a trackpad or a phone) to step back out to the region
@@ -200,12 +212,11 @@ const cityPins = place.cities.map((c) => {
     function leave() {
       left = true;
       frame.classList.remove('pinching');
-      const sole = fig.dataset.sole !== undefined;
       const region = fig.dataset.region!;
       noteLeaving(fig, 'pinch', 0.4); // the home page's globe carries on from where this ends up
       document.documentElement.classList.add('pinch-leaving');
       show(0.4); // keeps shrinking as the page fades
-      setTimeout(() => location.assign(sole ? '/' : `/#${region}`), reduceMotion() ? 0 : 320);
+      setTimeout(() => location.assign(`/#${region}`), reduceMotion() ? 0 : 320);
     }
 
     // Trackpad pinch in Chrome, Firefox and Edge arrives as a wheel event with ctrlKey set.
@@ -275,7 +286,7 @@ const cityPins = place.cities.map((c) => {
     addEventListener('pageshow', (e) => {
       if (!e.persisted) return;
       left = false;
-      document.documentElement.classList.remove('pinch-leaving');
+      document.documentElement.classList.remove('pinch-leaving', 'region-leaving');
       frame.classList.remove('pinching');
       show(1);
     });

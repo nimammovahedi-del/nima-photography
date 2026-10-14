@@ -71,7 +71,7 @@ const config = {
   try {
     var note = JSON.parse(sessionStorage.getItem('strip-out') || '{}');
     var nav = performance.getEntriesByType('navigation')[0];
-    var back = note.why === 'pinch' || (nav && nav.type === 'back_forward');
+    var back = note.why === 'pinch' || note.why === 'button' || (nav && nav.type === 'back_forward');
     if (back && note.rect && location.hash && Date.now() - note.t < 8000) {
       document.documentElement.classList.add('strip-return');
     }
@@ -480,8 +480,8 @@ const config = {
     sessionStorage.removeItem('strip-out');
   } catch {}
   const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
-  const fresh =
-    Date.now() - (arrival.t ?? 0) < 8000 && (arrival.why === 'pinch' || nav?.type === 'back_forward');
+  const toRegion = arrival.why === 'pinch' || arrival.why === 'button';
+  const fresh = Date.now() - (arrival.t ?? 0) < 8000 && (toRegion || nav?.type === 'back_forward');
   const from = fresh ? places.find((p) => p.name === arrival.country) : undefined;
 
   const linked = root.querySelector<HTMLElement>(`.panel[data-slug="${location.hash.slice(1)}"]`);
@@ -489,7 +489,7 @@ const config = {
   if (linked) {
     history.replaceState({ explorer: linked.dataset.slug }, '');
     const onMap = from && arrival.rect && from.region === linked.dataset.region;
-    const to = arrival.why === 'pinch' ? 'region' : 'country';
+    const to = toRegion ? 'region' : 'country';
     open(linked, true, onMap ? { place: from, rect: arrival.rect!, to } : undefined).finally(uncover);
   } else {
     uncover();

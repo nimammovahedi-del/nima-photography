@@ -5,7 +5,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Gallery from '../../../components/Gallery.astro';
 import SubTabs from '../../../components/SubTabs.astro';
 import CountryMap from '../../../components/CountryMap.astro';
-import { site, sortedPlaces } from '../../../site.config';
+import { site, slugify, sortedPlaces } from '../../../site.config';
 import { getPlace } from '../../../lib/photos';
 
 export function getStaticPaths() {
@@ -22,6 +22,10 @@ const { place, city } = Astro.props;
 const all = await getPlace(place.name);
 const photos = city ? all.filter((p) => p.city === city) : all;
 const base = `/places/${place.slug}`;
+// Back out to this country's region on the home page's globe (see CountryMap). A region of one
+// country (America) gets no button: pinching out of the map still goes there.
+const regionHref = `/#${slugify(place.region)}`;
+const ownRegion = sortedPlaces.filter((p) => p.region === place.region).length > 1;
 
 const tabs = [
   { label: 'All', href: base, count: all.length },
@@ -39,7 +43,16 @@ const tabs = [
 >
   <div class="place" data-place={base}>
     <header class="page-head">
-      <a class="back" href="/"><span aria-hidden="true">←</span> All places</a>
+      <nav class="crumbs" aria-label="Back to">
+        <a class="back" href="/"><span aria-hidden="true">←</span> All places</a>
+        {
+          ownRegion && (
+            <a class="back" href={regionHref} data-to-region>
+              <span aria-hidden="true">←</span> {place.region}
+            </a>
+          )
+        }
+      </nav>
       <h1>
         <a class="h-country" href={base}>{place.name}</a>
         <span class="h-city" hidden={!city}>
@@ -198,15 +211,22 @@ const tabs = [
 </script>
 
 <style>
-  .back {
-    display: inline-block;
+  /* "← All places" and "← Europe", side by side on the left, bright enough to read as links. */
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
     margin-bottom: 14px;
-    color: var(--muted);
+  }
+  .back {
+    color: #d6d6d3; /* a step brighter than --muted, still quieter than the heading */
     font-size: 12px;
     letter-spacing: 0.1em;
     text-decoration: none;
+    transition: color 160ms ease;
   }
-  .back:hover {
+  .back:hover,
+  .back:focus-visible {
     color: var(--accent);
   }
   /* "EGYPT / LUXOR": the country, then the selected city in the accent colour. */
