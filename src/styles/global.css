@@ -237,3 +237,21 @@ html.pinch-leaving .place > :not(.country-map) {
   opacity: 0;
   transition: opacity 260ms ease;
 }
+/* Arriving from the home page's globe, which has just shrunk into this page's map: the map is
+   already in place, so everything around it eases in. */
+html.map-arrived :is(main > :not(.place), footer),
+html.map-arrived .place > :not(.country-map) {
+  animation: arrive 380ms 40ms var(--ease-out) both;
+}
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.map-arrived :is(main > :not(.place), footer),
+  html.map-arrived .place > :not(.country-map) {
+    animation: none;
+  }
+}

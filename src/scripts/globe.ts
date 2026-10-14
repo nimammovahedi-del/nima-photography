@@ -1,6 +1,14 @@
 // Interactive globe/map engine used by the landing-page globe and the Places explorer.
 // Loaded only when needed. Draws into an existing <svg> (which carries the component's styles).
-import { geoCentroid, geoDistance, geoGraticule10, geoInterpolate, geoOrthographic, geoPath } from 'd3-geo';
+import {
+  geoCentroid,
+  geoDistance,
+  geoGraticule10,
+  geoInterpolate,
+  geoOrthographic,
+  geoPath,
+  geoStream,
+} from 'd3-geo';
 import type { Geometry } from 'geojson';
 import { countryView, layoutLabels, mainland } from '../lib/geo-shared';
 
@@ -10,10 +18,14 @@ export interface MapPlace {
   slug: string;
   region: string;
   cities: { name: string; slug: string; lon: number; lat: number }[];
+  /** The camera of the map strip on this country's pages (see lib/strip.ts). */
+  strip: { center: [number, number]; x: number; y: number; scale: number };
 }
 export interface MapView {
   center: [number, number];
   scale: number;
+  /** Where on the map (from its middle, in map units) the centre sits; usually the middle itself. */
+  shift?: [number, number];
 }
 export interface MapConfig {
   width: number;
@@ -61,6 +73,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   const byMap = new Map(cfg.places.map((p) => [p.map, p]));
   let center: [number, number] = [...cfg.start.center];
   let scale = cfg.start.scale;
+  let shift: [number, number] = [0, 0];
   let focused: MapPlace | null = null;
   let region: string | null = null;
   let regionScale = 0;
@@ -88,7 +101,19 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       el.setAttribute('class', 'visited');
       el.dataset.name = place.name;
     }
-    return { ...c, el, place };
+    // A cap (centre + angular radius) around each country, so the ones out of view can be
+    // skipped while drawing — most of the world is off screen once you zoom in.
+    const mid = geoCentroid(c.g);
+    let reach = 0;
+    geoStream(c.g, {
+      point: (x: number, y: number) => void (reach = Math.max(reach, geoDistance(mid, [x, y]))),
+      lineStart() {},
+      lineEnd() {},
+      polygonStart() {},
+      polygonEnd() {},
+      sphere() {},
+    });
+    return { ...c, el, place, mid, reach, drawn: true };
   });
   land.replaceChildren(
     ...shapes.filter((s) => !s.place).map((s) => s.el),
@@ -97,17 +122,38 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   const shapeOf = (p: MapPlace) => shapes.find((s) => s.place === p)!;
 
   function draw() {
-    projection.rotate([-center[0], -center[1]]).scale(scale);
+    const [ox, oy] = [W / 2 + shift[0], H / 2 + shift[1]];
+    projection.rotate([-center[0], -center[1]]).scale(scale).translate([ox, oy]);
     for (const c of [sphere, rim]) {
       if (!c) continue;
-      c.setAttribute('cx', String(W / 2));
-      c.setAttribute('cy', String(H / 2));
+      c.setAttribute('cx', String(ox));
+      c.setAttribute('cy', String(oy));
       c.setAttribute('r', String(scale));
     }
     grat.setAttribute('d', path(graticule) ?? '');
+    // How far from the centre (as an angle on the globe) the corners of the frame reach.
+    const corner = Math.hypot(W / 2 + Math.abs(shift[0]), H / 2 + Math.abs(shift[1]));
+    const view = corner >= scale ? Math.PI / 2 : Math.asin(corner / scale);
+    // Zoomed into a country, everything else steps back — until the country is turned out of view
+    // (say, dragging from America over to Europe), when the others light up again.
+    if (focused) {
+      const f = shapeOf(focused);
+      const inView = geoDistance(center, f.mid) < view;
+      root.classList.toggle('focus', inView);
+      if (inView && tip) tip.hidden = true;
+    }
     for (const s of shapes) {
-      const g = focused && s.place === focused && detail?.[s.n] ? detail[s.n]! : s.g;
+      if (geoDistance(center, s.mid) - s.reach > view + 0.02) {
+        if (s.drawn) s.el.setAttribute('d', '');
+        s.drawn = false;
+        continue;
+      }
+      // The detailed outline only shows once you're close; further out it looks the same as the
+      // light one and costs far more to draw on every frame of a flight.
+      const near = focusScale && scale > focusScale * 0.45;
+      const g = near && focused && s.place === focused && detail?.[s.n] ? detail[s.n]! : s.g;
       s.el.setAttribute('d', path(g as any) ?? '');
+      s.drawn = true;
     }
     placeMarkers();
   }
@@ -119,14 +165,17 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     cancelAnimationFrame(anim);
     finishFlight?.();
     stopSpin();
+    const toShift = to.shift ?? [0, 0];
     if (reduceMotion() || msOverride === 0) {
       center = to.center;
       scale = to.scale;
+      shift = toShift;
       draw();
       return Promise.resolve();
     }
     const from = [...center] as [number, number];
     const fromScale = scale;
+    const fromShift = shift;
     const interp = geoInterpolate(from, to.center);
     const dist = (geoDistance(from, to.center) * 180) / Math.PI;
     const zoom = Math.abs(Math.log(to.scale / fromScale));
@@ -140,6 +189,10 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
         const t = Math.min((now - t0) / ms, 1);
         const e = ease(t);
         center = interp(e) as [number, number];
+        shift = [
+          fromShift[0] + (toShift[0] - fromShift[0]) * e,
+          fromShift[1] + (toShift[1] - fromShift[1]) * e,
+        ];
         scale =
           Math.exp(Math.log(fromScale) + (Math.log(to.scale) - Math.log(fromScale)) * e) *
           (1 - dip * Math.sin(Math.PI * t));
@@ -161,9 +214,11 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     place?: MapPlace;
   };
   let markers: Marker[] = [];
+  let sizes: ({ w: number; h: number } | undefined)[] = [];
 
   function setMarkers(list: Marker[]) {
     markers = list;
+    sizes = [];
     pinLayer.replaceChildren(
       ...list.map((m, i) => {
         const a = document.createElement('a');
@@ -189,20 +244,34 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     pinLayer.classList.add('in');
   }
 
+  /** Screen pixels per map unit, and where the map's corner sits, for the svg's "slice" fit. */
+  function fit() {
+    const [cw, ch] = [svg.clientWidth, svg.clientHeight];
+    const k = Math.max(cw / W, ch / H);
+    return { k, ox: (cw - W * k) / 2, oy: (ch - H * k) / 2 };
+  }
+
   function placeMarkers() {
     const els = [...pinLayer.children] as HTMLElement[];
     if (!markers.length || els.length !== markers.length) return;
-    const px = svg.clientWidth / W;
+    // Where the drawing actually sits in the frame: it fills it, cropped ("slice"), even when the
+    // window has changed shape since the map opened — pins must follow it exactly.
+    const { k: px, ox, oy } = fit();
     const visible: number[] = [];
     const pts = markers.map((m, i) => {
       const [x, y] = projection([m.lon, m.lat])!;
       const el = els[i];
       el.hidden = geoDistance([m.lon, m.lat], center) > Math.PI / 2 - 0.05; // round the back
       if (!el.hidden) visible.push(i);
-      el.style.left = `${(x / W) * 100}%`;
-      el.style.top = `${(y / H) * 100}%`;
-      const label = el.querySelector<HTMLElement>('.label')!;
-      return { x: x * px, y: y * px, w: label.offsetWidth, h: label.offsetHeight || 20 };
+      el.style.left = `${ox + x * px}px`;
+      el.style.top = `${oy + y * px}px`;
+      // Label sizes never change while a set of pins is up; measure once instead of every frame.
+      const size = (sizes[i] ??= (() => {
+        const label = el.querySelector<HTMLElement>('.label')!;
+        if (el.hidden || !label.offsetWidth) return undefined;
+        return { w: label.offsetWidth, h: label.offsetHeight || 20 };
+      })());
+      return { x: ox + x * px, y: oy + y * px, w: size?.w ?? 0, h: size?.h ?? 20 };
     });
     const sides = layoutLabels(
       visible.map((i) => pts[i]),
@@ -248,25 +317,22 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   }
 
   /**
-   * Fly in to a country. `fit` is the part of the map (in map units) that will actually be on
-   * screen, if it's smaller than the whole map — e.g. a wide window showing a square globe.
+   * Fly in to a country (taking `ms`, if given, rather than a time to suit the distance).
    */
-  async function showCountry(place: MapPlace, fit?: { width: number; height: number }) {
+  async function showCountry(place: MapPlace, ms?: number) {
     const mine = ++request;
     if (tip) tip.hidden = true;
     const detailReady = loadDetail().then((d) => void (detail = d));
     const pins = place.cities.map((c) => [c.lon, c.lat] as [number, number]);
-    const fw = fit?.width ?? W;
-    const fh = fit?.height ?? H;
-    const pad = Math.min(fw, fh) * (place.cities.length ? 0.16 : 0.2);
-    const v = countryView(shapeOf(place).g, pins, fw, fh, pad);
+    const pad = Math.min(W, H) * (place.cities.length ? 0.16 : 0.2);
+    const v = countryView(shapeOf(place).g, pins, W, H, pad);
     focused = place;
     region = place.region;
     focusScale = Math.min(v.scale, MAX_SCALE);
     root.classList.add('focus');
     shapes.forEach((s) => s.el.classList.toggle('focused', s.place === place));
     setMarkers([]);
-    await Promise.all([flyTo({ center: v.center, scale: focusScale }), detailReady]);
+    await Promise.all([flyTo({ center: v.center, scale: focusScale }, ms), detailReady]);
     if (mine !== request) return;
     draw();
     setMarkers(
@@ -350,7 +416,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   let pinch: { d: number; scale: number } | null = null;
   let spin = 0;
   const stopSpin = () => cancelAnimationFrame(spin);
-  const degPerPx = () => ((W / svg.clientWidth) * 180) / (Math.PI * scale);
+  const degPerPx = () => 180 / (Math.PI * scale * fit().k);
   const spread = () => {
     const [a, b] = [...touches.values()];
     return Math.hypot(a.x - b.x, a.y - b.y);
@@ -439,10 +505,13 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   // ── Tooltip on hover (mouse only) ──
   if (tip) {
     svg.addEventListener('pointermove', (e) => {
-      if (drag?.moved || focused || e.pointerType !== 'mouse') return;
+      // No tooltips while zoomed into a country — unless it has been turned out of view, when the
+      // rest of the world is back to normal (see draw).
+      const inCountry = focused && root.classList.contains('focus');
+      if (drag?.moved || inCountry || e.pointerType !== 'mouse') return;
       const target = (e.target as Element).closest('path.visited') as SVGPathElement | null;
-      if (!target) return void (tip.hidden = true);
-      const place = cfg.places.find((p) => p.name === target.dataset.name)!;
+      const place = target && cfg.places.find((p) => p.name === target.dataset.name);
+      if (!place || place === focused) return void (tip.hidden = true);
       tip.querySelector('strong')!.textContent = place.name;
       tip.querySelector('span')!.textContent = place.cities.length
         ? place.cities.map((c) => c.name).join(' · ')
@@ -454,7 +523,10 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     svg.addEventListener('pointerleave', () => (tip.hidden = true));
   }
 
-  const resize = new ResizeObserver(() => placeMarkers());
+  const resize = new ResizeObserver(() => {
+    sizes = []; // fonts may have changed size with the window
+    placeMarkers();
+  });
   resize.observe(svg);
 
   draw();
@@ -472,26 +544,38 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     flyTo(cfg.start, 0);
   }
 
-  /** Jump (no flight) to the view a country's own page shows, e.g. to zoom back out from it. */
-  function jumpToCountry(place: MapPlace) {
-    request++;
-    const pins = place.cities.map((c) => [c.lon, c.lat] as [number, number]);
-    const pad = Math.min(W, H) * (place.cities.length ? 0.16 : 0.2);
-    const v = countryView(shapeOf(place).g, pins, W, H, pad);
-    unfocus();
-    setMarkers([]);
-    flyTo({ center: v.center, scale: Math.min(v.scale, MAX_SCALE) }, 0);
-    // The pinch that brought the visitor here may still be going; don't let it stop the flight
-    // out (wheel input waits for a pause, as on opening).
+  /** Ignore wheel input until a pause, e.g. while the pinch that opened this map may still be going. */
+  function holdWheel() {
     lastWheel = performance.now();
     wheelArmed = false;
     holdWheelUntil = lastWheel + 1800;
   }
 
+  /**
+   * Fly to (or, with ms 0, jump to) any view with `place` highlighted and no pins — e.g. to line
+   * the globe up with a country page's map strip on the way to or from that page.
+   */
+  function frame(view: MapView, place: MapPlace, ms?: number) {
+    request++;
+    if (tip) tip.hidden = true;
+    const pins = place.cities.map((c) => [c.lon, c.lat] as [number, number]);
+    const pad = Math.min(W, H) * (place.cities.length ? 0.16 : 0.2);
+    focusScale = Math.min(countryView(shapeOf(place).g, pins, W, H, pad).scale, MAX_SCALE);
+    focused = place;
+    region = place.region;
+    regionScale = regionView(place.region).scale; // for zooming out past the region later
+    zoomedOut = false;
+    root.classList.add('focus');
+    shapes.forEach((s) => s.el.classList.toggle('focused', s.place === place));
+    setMarkers([]);
+    return flyTo(view, ms);
+  }
+
   return {
+    frame,
     showRegion,
     showCountry,
-    jumpToCountry,
+    holdWheel,
     highlight,
     regionView,
     reset,

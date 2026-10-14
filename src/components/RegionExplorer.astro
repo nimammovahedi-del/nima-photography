@@ -8,6 +8,7 @@ import { geoCentroid, geoGraticule10, geoOrthographic, geoPath } from 'd3-geo';
 import type { Geometry } from 'geojson';
 import { regions, slugify, sortedPlaces } from '../site.config';
 import { countries, findCountry, mainland } from '../lib/world';
+import { STRIP_H, STRIP_W, stripView } from '../lib/strip';
 
 // Wide strip (about the shape of a panel on a laptop). The region is framed at the right-hand end,
 // clear of the caption; on narrower screens the strip is cropped from the left (xMax…slice).
@@ -58,9 +59,24 @@ const config = {
     slug: p.slug,
     region: p.region,
     cities: p.cities.map((c) => ({ name: c.name, slug: c.slug, lon: c.lon, lat: c.lat })),
+    strip: stripView(p),
   })),
+  stripSize: [STRIP_W, STRIP_H],
 };
 ---
+
+<script is:inline>
+  // Coming back to a region from a country page's map strip (see the arrival code below): the map
+  // takes a moment to load, so cover the page in the meantime rather than flashing it.
+  try {
+    var note = JSON.parse(sessionStorage.getItem('strip-out') || '{}');
+    var nav = performance.getEntriesByType('navigation')[0];
+    var back = note.why === 'pinch' || (nav && nav.type === 'back_forward');
+    if (back && note.rect && location.hash && Date.now() - note.t < 8000) {
+      document.documentElement.classList.add('strip-return');
+    }
+  } catch (e) {}
+</script>
 
 <div class="explorer" data-explorer data-config={JSON.stringify(config)}>
   <ul class="panels">
@@ -93,7 +109,7 @@ const config = {
   <!-- Full-screen live map, shown when a region is opened. -->
   <div class="stage" role="dialog" aria-modal="true" aria-labelledby="stage-title" hidden>
     <div class="view map-ui">
-      <svg class="map">
+      <svg class="map" preserveAspectRatio="xMidYMid slice">
         <circle class="sphere"></circle>
         <path class="graticule"></path>
         <g class="land"></g>
@@ -120,12 +136,16 @@ const config = {
 </div>
 
 <script>
-  import type { MapConfig, MapPlace } from '../scripts/globe';
+  import type { MapConfig, MapPlace, MapView } from '../scripts/globe';
 
   type Engine = Awaited<ReturnType<typeof import('../scripts/globe').createMap>>;
+  type Arrival = { place: MapPlace; rect: Rect; to: 'country' | 'region' };
 
   const root = document.querySelector<HTMLElement>('[data-explorer]')!;
-  const { places } = JSON.parse(root.dataset.config!) as { places: MapPlace[] };
+  const { places, stripSize } = JSON.parse(root.dataset.config!) as {
+    places: MapPlace[];
+    stripSize: [number, number];
+  };
   const stage = root.querySelector<HTMLElement>('.stage')!;
   const view = stage.querySelector<HTMLElement>('.view')!;
   const svg = view.querySelector<SVGSVGElement>('svg.map')!;
@@ -154,18 +174,18 @@ const config = {
     return `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px)`;
   };
 
-  async function open(panel: HTMLElement, fromHistory = false, fromCountry?: MapPlace) {
+  async function open(panel: HTMLElement, fromHistory = false, fromStrip?: Arrival) {
     // A second click while the map is still loading must not start a second map.
     if (engine || closing || opening) return;
     opening = true;
     try {
-      await openStage(panel, fromHistory, fromCountry);
+      await openStage(panel, fromHistory, fromStrip);
     } finally {
       opening = false;
     }
   }
 
-  async function openStage(panel: HTMLElement, fromHistory: boolean, fromCountry?: MapPlace) {
+  async function openStage(panel: HTMLElement, fromHistory: boolean, fromStrip?: Arrival) {
     const name = panel.dataset.region!;
     openPanel = panel;
     region = name;
@@ -198,15 +218,13 @@ const config = {
       },
       onZoomOutOfRegion: () => close(),
     });
-    if (fromCountry) {
-      // Arriving by pinching out of a country's page: start where that page's map was and
-      // pull back out to the whole region.
-      engine.jumpToCountry(fromCountry);
+    if (fromStrip) {
+      // Arriving from a country page's map strip: start inside the strip and open back out.
       stage.hidden = false;
       document.documentElement.classList.add('explorer-open');
-      if (!reduceMotion()) stage.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' });
       backBtn.focus({ preventScroll: true });
-      engine.showRegion(name);
+      if (fromStrip.to === 'region') engine.holdWheel(); // the pinch that brought us here may still be going
+      comeBack(fromStrip.place, fromStrip.rect, fromStrip.to);
       return;
     }
     // Jump to the region, then reveal: the panel opens up to fill the screen as the view glides in.
@@ -317,6 +335,8 @@ const config = {
       view.getAnimations().forEach((a) => a.cancel());
     }
     stage.hidden = true;
+    stage.classList.remove('handing-off');
+    handedOff = undefined;
     document.documentElement.classList.remove('explorer-open');
     engine.destroy();
     engine = undefined;
@@ -330,6 +350,111 @@ const config = {
     }
     pushed = false;
   }
+
+  // ── Handing over to a country or city page's map strip, and back ──
+  // Going to a country or city page, the globe shrinks into the strip at the top of that page,
+  // turning as it goes to show exactly what the strip shows, so the new page simply carries on from
+  // it. Coming back (Back, or pinching out of the strip) plays the same move in reverse.
+  type Rect = { left: number; top: number; width: number; height: number };
+  const [STRIP_W, STRIP_H] = stripSize;
+  const HAND_OFF_MS = 620;
+  const COME_BACK_MS = 700;
+  // The camera's own easing (see globe.ts), so the frame and the map inside it move as one.
+  const IN_OUT = 'cubic-bezier(0.65, 0, 0.35, 1)';
+  let handedOff: { place: MapPlace; rect: Rect } | undefined;
+
+  /** Where the strip sits on its page: as last measured there at this window size, or worked out. */
+  function stripRect(): Rect {
+    try {
+      const m = JSON.parse(localStorage.getItem('strip-rect') ?? 'null');
+      if (m && m.vw === innerWidth && m.vh === innerHeight) return m.rect;
+    } catch {}
+    const phone = innerWidth <= 640;
+    const gutter = innerWidth >= 768 ? 32 : 16;
+    const width = Math.min(innerWidth - 2 * gutter, 1376);
+    const height = phone ? width * 0.75 : Math.min(380, Math.max(240, innerHeight * 0.38));
+    return { left: (innerWidth - width) / 2, top: phone ? 209 : 189, width, height };
+  }
+
+  /** The globe camera that shows exactly what the strip shows, inside `r` on screen. */
+  function stripCamera(p: MapPlace, r: Rect): MapView {
+    const s = p.strip;
+    const k = Math.max(r.width / STRIP_W, r.height / STRIP_H); // the strip crops its drawing to fit
+    const x = r.left + (r.width - STRIP_W * k) / 2 + s.x * k;
+    const y = r.top + (r.height - STRIP_H * k) / 2 + s.y * k;
+    // The live map fills the screen the same way (see the svg's preserveAspectRatio).
+    const { width: W, height: H } = svg.viewBox.baseVal;
+    const m = Math.max(innerWidth / W, innerHeight / H); // pixels per map unit
+    return {
+      center: s.center,
+      scale: (s.scale * k) / m,
+      shift: [(x - (innerWidth - W * m) / 2) / m - W / 2, (y - (innerHeight - H * m) / 2) / m - H / 2],
+    };
+  }
+
+  const insetOf = (r: Rect) =>
+    `inset(${r.top}px ${innerWidth - r.left - r.width}px ${innerHeight - r.top - r.height}px ${r.left}px)`;
+
+  async function handOff(a: HTMLAnchorElement) {
+    const slug = new URL(a.href).pathname.split('/')[2];
+    const place = places.find((p) => p.slug === slug);
+    if (handedOff) return; // already on its way
+    if (!engine || !place) return location.assign(a.href);
+    const rect = stripRect();
+    handedOff = { place, rect };
+    stage.classList.add('handing-off');
+    view.animate([{ clipPath: 'inset(0px 0px 0px 0px)' }, { clipPath: insetOf(rect) }], {
+      duration: HAND_OFF_MS,
+      easing: IN_OUT,
+      fill: 'forwards',
+    });
+    await Promise.race([
+      engine.frame(stripCamera(place, rect), place, HAND_OFF_MS),
+      new Promise((r) => setTimeout(r, HAND_OFF_MS + 100)), // background tabs pause animations
+    ]);
+    try {
+      sessionStorage.setItem('map-handoff', String(Date.now()));
+    } catch {}
+    location.assign(a.href);
+  }
+
+  /** Start in the strip (where a country page left off) and open back out to the full map. */
+  function comeBack(place: MapPlace, rect: Rect, to: 'country' | 'region') {
+    if (!engine) return;
+    handedOff = undefined;
+    engine.frame(stripCamera(place, rect), place, 0);
+    // Its bars and colours ease back in (CSS transitions) once the strip-like first frame is up.
+    stage.classList.add('handing-off', 'instant');
+    requestAnimationFrame(() => requestAnimationFrame(() => stage.classList.remove('handing-off', 'instant')));
+    view.getAnimations().forEach((a) => a.cancel());
+    const ms = to === 'country' ? COME_BACK_MS : COME_BACK_MS + 250;
+    if (!reduceMotion()) {
+      view.animate([{ clipPath: insetOf(rect) }, { clipPath: 'inset(0px 0px 0px 0px)' }], {
+        duration: ms,
+        easing: IN_OUT,
+      });
+    }
+    if (to === 'country') {
+      country = place;
+      renderCountryUI(place);
+      engine.showCountry(place, ms);
+    } else {
+      engine.showRegion(place.region, ms);
+    }
+  }
+
+  if (!reduceMotion()) {
+    stage.addEventListener('click', (e) => {
+      const a = (e.target as Element).closest?.('a[href^="/places/"]') as HTMLAnchorElement | null;
+      if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      handOff(a);
+    });
+  }
+  // Back from that page may bring this one back exactly as it was left: shrunk into the strip.
+  addEventListener('pageshow', (e) => {
+    if (e.persisted && handedOff) comeBack(handedOff.place, handedOff.rect, 'country');
+  });
 
   root.querySelectorAll<HTMLElement>('.panel').forEach((p) => p.addEventListener('click', () => open(p)));
   backBtn.addEventListener('click', back);
@@ -347,20 +472,29 @@ const config = {
   });
 
   // Open straight into a region from a link like /places#europe.
-  // Pinching out of a country's page lands here; the page leaves a short note saying where from.
-  let arrival: { country?: string; panel?: string; t?: number } = {};
+  // A country page leaves a short note when it's left for this one (by pinching out of its map, or
+  // with Back when this page has to load afresh), so the map can carry on from its strip.
+  let arrival: { country?: string; panel?: string; rect?: Rect; why?: string; t?: number } = {};
   try {
-    arrival = JSON.parse(sessionStorage.getItem('pinch-out') ?? '{}');
-    sessionStorage.removeItem('pinch-out');
+    arrival = JSON.parse(sessionStorage.getItem('strip-out') ?? '{}');
+    sessionStorage.removeItem('strip-out');
   } catch {}
-  const fresh = Date.now() - (arrival.t ?? 0) < 8000;
+  const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+  const fresh =
+    Date.now() - (arrival.t ?? 0) < 8000 && (arrival.why === 'pinch' || nav?.type === 'back_forward');
+  const from = fresh ? places.find((p) => p.name === arrival.country) : undefined;
 
   const linked = root.querySelector<HTMLElement>(`.panel[data-slug="${location.hash.slice(1)}"]`);
+  const uncover = () => document.documentElement.classList.remove('strip-return');
   if (linked) {
     history.replaceState({ explorer: linked.dataset.slug }, '');
-    const from = fresh ? places.find((p) => p.name === arrival.country) : undefined;
-    open(linked, true, from);
-  } else if (fresh && arrival.panel) {
+    const onMap = from && arrival.rect && from.region === linked.dataset.region;
+    const to = arrival.why === 'pinch' ? 'region' : 'country';
+    open(linked, true, onMap ? { place: from, rect: arrival.rect!, to } : undefined).finally(uncover);
+  } else {
+    uncover();
+  }
+  if (!linked && from && arrival.panel) {
     // A one-country region (America) has no wider map: return to its panel instead.
     const panel = root.querySelector<HTMLElement>(`.panel[data-slug="${arrival.panel}"]`);
     panel?.scrollIntoView({ block: 'center' });
@@ -492,6 +626,42 @@ const config = {
   }
   .stage[hidden] {
     display: none;
+  }
+  /* Shrinking into (or opening out of) a country page's map strip: the screen around the map
+     takes on the page's colour, and the map's own controls step aside. */
+  .stage {
+    transition: background-color 420ms ease;
+  }
+  .stage :is(.bar, .footer, .pins) {
+    transition: opacity 260ms ease;
+  }
+  .stage.handing-off {
+    background: var(--bg);
+  }
+  :global(html.strip-return) .stage[hidden] {
+    display: block;
+    background: var(--bg);
+  }
+  :global(html.strip-return) .stage[hidden] > * {
+    visibility: hidden;
+  }
+  .stage.handing-off :is(.bar, .footer, .pins) {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* …and its neighbours take the strip's plainer colouring. */
+  .stage.handing-off :global(.land path.visited:not(.focused)) {
+    fill: var(--land-dim);
+  }
+  .stage.handing-off :global(.land path.focused) {
+    fill: var(--visited-soft); /* not its hover white, though the pointer's still over it */
+  }
+  .stage.handing-off .view {
+    pointer-events: none;
+  }
+  .stage.instant,
+  .stage.instant :global(.land path) {
+    transition: none;
   }
   :global(html.explorer-open) {
     overflow: hidden;
