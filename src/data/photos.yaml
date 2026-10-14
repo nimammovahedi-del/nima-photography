@@ -34,8 +34,6 @@
   title: Greek & Roman Revival Study
   alt: Placeholder image — replace with a description of the photo
   sub: Greek & Roman Revival
-  country: England
-  city: Bath
 - file: architecture/placeholder-05.jpg
   title: Islamic Study
   alt: Placeholder image — replace with a description of the photo
@@ -232,19 +230,15 @@
   alt: Pedestrians crossing in front of the domed Guildhall, a bus waiting and Bath Abbey at the end of the street
   country: England
   city: Bath
-- file: places/yosemite-01.jpg
-  title: Red Sky at Dusk
-  alt: Bands of deep red and purple sunset cloud above the black silhouettes of pine trees
-  country: United States
-  city: Yosemite
-- file: places/yosemite-02.jpg
-  title: Blue Hour Pines
-  alt: Pink-edged clouds in a blue dusk sky above the silhouettes of pine trees
-  country: United States
-  city: Yosemite
 - file: places/yosemite-03.jpg
   title: Valley in Evening Light
   alt: Yosemite Valley from above in golden evening light, El Capitan's sheer face on the right and granite spires on the left
+  country: United States
+  city: Yosemite
+- file: film/yosemite-shadows.jpg
+  title: Shadows on the Granite
+  alt: A sepia view down Yosemite Valley to El Capitan, the shadows of people cast across the granite in the foreground
+  filmSim: Sepia
   country: United States
   city: Yosemite
 - file: places/yosemite-04.jpg
@@ -252,9 +246,39 @@
   alt: Jagged granite spires catching warm low sun above a dark pine forest, hazy foothills beyond
   country: United States
   city: Yosemite
+- file: film/yosemite-half-dome.jpg
+  title: Half Dome
+  alt: A black-and-white view of Half Dome rising above dark pines under a bright hazy sky
+  filmSim: Monochrome
+  country: United States
+  city: Yosemite
+- file: film/yosemite-hiker.jpg
+  title: Toward Half Dome
+  alt: A sepia view of a hiker with a backpack walking across bare granite toward Half Dome
+  filmSim: Sepia
+  country: United States
+  city: Yosemite
 - file: places/yosemite-05.jpg
   title: The Overlook
   alt: Tiny figures beside a railing on a sheer clifftop overlook, a forested granite canyon wall across the gap
+  country: United States
+  city: Yosemite
+- file: film/yosemite-ledge.jpg
+  title: On the Ledge
+  alt: A sepia view of two hikers, one seated and one standing, on a rock ledge facing a vast granite wall
+  filmSim: Sepia
+  country: United States
+  city: Yosemite
+- file: film/yosemite-high-country.jpg
+  title: High Country
+  alt: A black-and-white panorama of Half Dome and layered mountain ridges beyond a line of pines, a sun flare on the right
+  filmSim: Monochrome
+  country: United States
+  city: Yosemite
+- file: film/yosemite-outcrop.jpg
+  title: Three on the Outcrop
+  alt: A sepia view of three hikers resting on a rocky outcrop, dwarfed by a granite mountainside dotted with trees
+  filmSim: Sepia
   country: United States
   city: Yosemite
 - file: places/yosemite-06.jpg
@@ -262,11 +286,383 @@
   alt: A granite peak rising behind tall pines blurred by motion, bright clouds overhead
   country: United States
   city: Yosemite
+- file: film/yosemite-snag.jpg
+  title: The Snag
+  alt: A sepia view of a broken dead tree trunk standing among tall firs against a plain sky
+  filmSim: Sepia
+  country: United States
+  city: Yosemite
 - file: places/yosemite-07.jpg
   title: Meadow and Half Dome
   alt: Golden meadow grass swaying in front of a dark pine forest, Half Dome peeking between the slopes under a blue sky
   country: United States
   city: Yosemite
+- file: film/yosemite-valley-floor.jpg
+  title: Half Dome from the Valley
+  alt: A sepia view of Half Dome's sheer face towering over pines and a meadow on the valley floor
+  filmSim: Sepia
+  country: United States
+  city: Yosemite
+- file: places/yosemite-02.jpg
+  title: Blue Hour Pines
+  alt: Pink-edged clouds in a blue dusk sky above the silhouettes of pine trees
+  country: United States
+  city: Yosemite
+- file: places/yosemite-01.jpg
+  title: Red Sky at Dusk
+  alt: Bands of deep red and purple sunset cloud above the black silhouettes of pine trees
+  country: United States
+  city: Yosemite
+- file: places/cork-02.jpg
+  title: Harbour Terrace
+  alt: A terrace of pastel-painted houses on the waterfront seen over slate rooftops, the harbour and docks beyond
+  country: Ireland
+  city: Cork
+- file: places/cork-03.jpg
+  title: Deck of Cards
+  alt: A steep row of gabled houses in pastel blues, yellows and greens stepping up a hill above grey rooftops and chimneys
+  country: Ireland
+  city: Cork
+- file: places/cork-05.jpg
+  title: Cathedral Front
+  alt: Looking up at a Gothic cathedral front with a large rose window and spired turrets, sunlight flaring over the roof
+  country: Ireland
+  city: Cork
+- file: places/cork-01.jpg
+  title: Crossing the Harbour
+  alt: A small boat leaving a white wake across a wide grey harbour, brightly painted shopfronts and rooftops below
+  country: Ireland
+  city: Cork
+- file: places/cork-06.jpg
+  title: Rose Window
+  alt: A cathedral interior looking up to a glowing rose window above the organ pipes beneath a dark timber roof
+  country: Ireland
+  city: Cork
+- file: places/cork-04.jpg
+  title: Painted Gables
+  alt: A wide view of pastel gabled houses climbing a hillside among slate roofs and chimney pots under a cloudy sky
+  country: Ireland
+  city: Cork
+- file: places/dingle-16.jpg
+  title: Three Sisters
+  alt: A sandy cove with turquoise water below green fields, three pointed headlands rising along the horizon
+  country: Ireland
+  city: Dingle
+- file: places/dingle-07.jpg
+  title: Under the Cloud
+  alt: Stone cottages on a green hillside above a cliff edge, low cloud hiding the top of the slope
+  country: Ireland
+  city: Dingle
+- file: places/dingle-03.jpg
+  title: Gull on the Rocks
+  alt: A white gull perched on jagged, lichen-covered rocks high above a bright turquoise sea
+  country: Ireland
+  city: Dingle
+- file: places/dingle-11.jpg
+  title: Islands Offshore
+  alt: Rocky islets trailing off a headland into a calm blue sea, a long island under cloud on the horizon
+  country: Ireland
+  city: Dingle
+- file: places/dingle-05.jpg
+  title: Cove Below the Farms
+  alt: A sandy cove with breaking waves beneath green cliffs, white farmhouses scattered across the hillside in mist
+  country: Ireland
+  city: Dingle
+- file: places/dingle-17.jpg
+  title: Blue Van
+  alt: A blue campervan parked on a grassy hillside beneath a rolling bank of cloud
+  country: Ireland
+  city: Dingle
+- file: places/dingle-01.jpg
+  title: Low Tide
+  alt: Seaweed scattered across wet blue tidal flats, a headland fading into mist on the far side of the bay
+  country: Ireland
+  city: Dingle
+- file: places/dingle-15.jpg
+  title: Patchwork Fields
+  alt: A patchwork of green fields and cottages stretching to a bay, mountains wrapped in cloud beyond
+  country: Ireland
+  city: Dingle
+- file: places/dingle-13.jpg
+  title: Sea Cliffs
+  alt: Dark sea cliffs and a rocky stack rising from a calm sea under pink-tinged cloud, a small boat passing between them
+  country: Ireland
+  city: Dingle
+- file: places/dingle-12.jpg
+  title: The Path Down
+  alt: Two walkers on a grassy path leading down to white farm buildings, fog lying low over the hills
+  country: Ireland
+  city: Dingle
+- file: places/dingle-04.jpg
+  title: Sleeping Giant
+  alt: A grassy rock islet in a grey sea with a jagged headland silhouetted in the haze behind
+  country: Ireland
+  city: Dingle
+- file: places/dingle-08.jpg
+  title: Slipway Cove
+  alt: Waves rolling into a cove below dark cliffs, a road sign on the beach path and farms on the green slopes above
+  country: Ireland
+  city: Dingle
+- file: places/dingle-02.jpg
+  title: Alone on the Strand
+  alt: A lone figure standing far out on a vast wet beach under a pale lilac sky
+  country: Ireland
+  city: Dingle
+- file: places/dingle-10.jpg
+  title: Stone Walls
+  alt: Green fields divided by stone walls on a hillside with grazing cattle, a yellowish mist over the ridge
+  country: Ireland
+  city: Dingle
+- file: places/dingle-06.jpg
+  title: One Surfer
+  alt: A single surfer far out in a dark blue sea as a line of white surf rolls in, a headland under heavy cloud
+  country: Ireland
+  city: Dingle
+- file: places/dingle-14.jpg
+  title: Summit Figure
+  alt: A tiny figure standing on top of a rocky, grass-covered hill beneath a pale overcast sky
+  country: Ireland
+  city: Dingle
+- file: places/dingle-09.jpg
+  title: Green Hill
+  alt: A rounded green hill crossed by field boundaries under a grey-blue sky
+  country: Ireland
+  city: Dingle
+- file: places/dublin-04.jpg
+  title: The Campanile
+  alt: The stone bell tower of Trinity College in shadow beneath dark clouds and a patch of blue sky, an iron lamp post beside it
+  country: Ireland
+  city: Dublin
+- file: places/dublin-03.jpg
+  title: Earth in the Long Room
+  alt: A giant illuminated globe of the Earth hanging in a dark library hall above a crowd of visitors and a row of marble busts
+  country: Ireland
+  city: Dublin
+- file: places/dublin-05.jpg
+  title: Red Brick and a Gull
+  alt: A long red-brick terrace with white sash windows receding down a street as a gull flies overhead
+  country: Ireland
+  city: Dublin
+- file: places/dublin-07.jpg
+  title: Cranes at the Port
+  alt: A red cargo ship and dock cranes across still, pink-tinted water under a sky of scattered cloud
+  country: Ireland
+  city: Dublin
+- file: places/dublin-01.jpg
+  title: Glass Arcade
+  alt: The white iron and glass roof of a shopping arcade with a large clock, balconies and a staircase below
+  country: Ireland
+  city: Dublin
+- file: places/dublin-06.jpg
+  title: Temple Bar Flags
+  alt: A row of flags hanging over a busy pub-lined street, a concrete tower block behind
+  country: Ireland
+  city: Dublin
+- file: places/dublin-09.jpg
+  title: Blue Harbour
+  alt: Cargo ships and cranes reflected in vivid blue harbour water under bright white clouds
+  country: Ireland
+  city: Dublin
+- file: places/dublin-02.jpg
+  title: Globe in Sepia
+  alt: A sepia close view of a giant globe of the Earth suspended beneath the vaulted ceiling of an old library
+  country: Ireland
+  city: Dublin
+- file: places/dublin-08.jpg
+  title: Harbour Mouth
+  alt: Calm water reflecting a cloudy sky between two lines of docked ships and cranes, wild grasses in the foreground
+  country: Ireland
+  city: Dublin
+- file: places/galway-10.jpg
+  title: Abbey on the Lake
+  alt: A grey castellated abbey at the foot of a steep green mountainside, seen across a dark lake fringed with leaves
+  country: Ireland
+  city: Galway
+- file: places/galway-01.jpg
+  title: Horned Ewe
+  alt: A shaggy black-faced sheep with curled horns standing in long grass, looking at the camera
+  country: Ireland
+  city: Galway
+- file: places/galway-02.jpg
+  title: Lake and Scree
+  alt: A rocky grey mountain rising above a dark band of forest and a wind-ruffled lake under storm clouds
+  country: Ireland
+  city: Galway
+- file: places/galway-05.jpg
+  title: Watching from the Rushes
+  alt: A black-faced sheep with red-marked fleece staring out from tall green rushes
+  country: Ireland
+  city: Galway
+- file: places/galway-08.jpg
+  title: Road Through Connemara
+  alt: An empty road curving past telegraph poles toward a lake and a dark, bare mountain
+  country: Ireland
+  city: Galway
+- file: places/galway-11.jpg
+  title: Daisies
+  alt: A dense spread of pink and white daisies with yellow centres
+  country: Ireland
+  city: Galway
+- file: places/galway-07.jpg
+  title: Windblown Fleece
+  alt: A side view of a horned black-faced sheep, its long white fleece streaked with red and blown by the wind
+  country: Ireland
+  city: Galway
+- file: places/galway-03.jpg
+  title: Cottage Under the Hill
+  alt: A white cottage among trees at the foot of a vast green mountainside under a grey sky
+  country: Ireland
+  city: Galway
+- file: places/galway-04.jpg
+  title: Peering Through
+  alt: A black-faced sheep looking straight ahead through tall rushes, another sheep half hidden behind it
+  country: Ireland
+  city: Galway
+- file: places/galway-09.jpg
+  title: Stone Chapel
+  alt: A sepia view of a small stone church with a pointed spire beside a dark tree
+  country: Ireland
+  city: Galway
+- file: places/galway-06.jpg
+  title: In Profile
+  alt: A black-faced sheep in profile among rushes and brambles, red dye marking its woolly fleece
+  country: Ireland
+  city: Galway
+- file: places/killarney-03.jpg
+  title: Lakes in the Valley
+  alt: A chain of blue lakes winding through a wooded valley between mountains, golden moorland in the foreground
+  country: Ireland
+  city: Killarney
+- file: places/killarney-09.jpg
+  title: The Manor House
+  alt: A sandstone Victorian mansion with tall gables and chimneys beside clipped hedges and dark yews under a blue sky
+  country: Ireland
+  city: Killarney
+- file: places/killarney-08.jpg
+  title: Across the Lawn
+  alt: A line of cyclists and a horse-drawn jaunting car crossing a wide lawn in front of dark woodland
+  country: Ireland
+  city: Killarney
+- file: places/killarney-16.jpg
+  title: Lough and Mountains
+  alt: A blue lake with a wooded island beneath green mountains and a band of white cloud, a wooden fence in the foreground
+  country: Ireland
+  city: Killarney
+- file: places/killarney-13.jpg
+  title: Inside the Glasshouse
+  alt: White curved ironwork and glass arching over lush plants and orange flowers inside a Victorian glasshouse
+  country: Ireland
+  city: Killarney
+- file: places/killarney-01.jpg
+  title: Green Peak
+  alt: A steep, pointed green hill rising above a mountain road under a streaked blue sky
+  country: Ireland
+  city: Killarney
+- file: places/killarney-14.jpg
+  title: The Castle
+  alt: A stone tower house castle with battlements beside a lake shore, people and bicycles resting on the grass
+  country: Ireland
+  city: Killarney
+- file: places/killarney-02.jpg
+  title: Sheep on the Crag
+  alt: Two sheep perched on a rocky outcrop on a steep, bright green hillside
+  country: Ireland
+  city: Killarney
+- file: places/killarney-06.jpg
+  title: Reeds at the Lake Edge
+  alt: Tall green reeds at the edge of a still lake with a broad mountain beyond, framed by trees
+  country: Ireland
+  city: Killarney
+- file: places/killarney-12.jpg
+  title: Bee on Chives
+  alt: A bee feeding on a purple chive flower among green stems and other round blooms
+  country: Ireland
+  city: Killarney
+- file: places/killarney-07.jpg
+  title: Walk to the House
+  alt: A lone walker crossing a broad striped lawn toward a distant gabled mansion under a heavy sky
+  country: Ireland
+  city: Killarney
+- file: places/killarney-04.jpg
+  title: Moorland View
+  alt: Rough green moorland falling away to woods and a blue lake beneath dark mountains and wispy cloud
+  country: Ireland
+  city: Killarney
+- file: places/killarney-10.jpg
+  title: Glasshouse in the Garden
+  alt: A curved Victorian glasshouse at the edge of a lawn with clipped topiary, tall pines behind
+  country: Ireland
+  city: Killarney
+- file: places/killarney-05.jpg
+  title: Meadow and Wood
+  alt: A wide meadow of long grass tinged red in front of a dense wooded hillside topped with conifers
+  country: Ireland
+  city: Killarney
+- file: places/killarney-11.jpg
+  title: Blossom
+  alt: A close view of clusters of tiny pink and white blossoms against a soft green background
+  country: Ireland
+  city: Killarney
+- file: places/killarney-15.jpg
+  title: Pines at Dusk
+  alt: A line of dark pines across a field with blue mountain peaks and long clouds behind
+  country: Ireland
+  city: Killarney
+- file: places/killarney-17.jpg
+  title: House in the Field
+  alt: A dark-roofed house with dormer windows standing alone in a golden field beneath billowing clouds
+  country: Ireland
+  city: Killarney
+- file: places/helsinki-05.jpg
+  title: Helsinki Cathedral
+  alt: The white neoclassical cathedral with green domes at the top of its broad stone steps under a blue sky
+  country: Finland
+  city: Helsinki
+- file: places/helsinki-04.jpg
+  title: Market Square Traffic
+  alt: Cars waiting at lights beside orange market tents, the red-brick Uspenski Cathedral rising on its hill behind
+  country: Finland
+  city: Helsinki
+- file: places/helsinki-07.jpg
+  title: Café Ceiling
+  alt: A warm-lit café with white pipes and globe lamps hanging from a high ceiling, people gathered at the counter
+  country: Finland
+  city: Helsinki
+- file: places/helsinki-01.jpg
+  title: Uspenski Cathedral
+  alt: The red-brick Uspenski Cathedral with green roofs and gold onion domes on a hill against a deep blue sky
+  country: Finland
+  city: Helsinki
+- file: places/helsinki-03.jpg
+  title: Dome at the End of the Street
+  alt: A quiet street in low evening light with pale stone buildings, a green cathedral dome at its far end
+  country: Finland
+  city: Helsinki
+- file: places/helsinki-08.jpg
+  title: Signs and a Spire
+  alt: A stack of red and yellow traffic signs beside a street leading to a brick church tower with a slender green spire
+  country: Finland
+  city: Helsinki
+- file: places/helsinki-10.jpg
+  title: Villa on the Island
+  alt: A white villa with a red turret among bare trees on a rocky island, seen across rippling blue water
+  country: Finland
+  city: Helsinki
+- file: places/helsinki-02.jpg
+  title: Copper Spire
+  alt: Looking up at a red-brick church tower with a green and gold copper spire catching the light
+  country: Finland
+  city: Helsinki
+- file: places/helsinki-09.jpg
+  title: Park Crossroads
+  alt: A blue cycle and footpath sign beneath street-name blades in a park, a row of grand apartment buildings beyond
+  country: Finland
+  city: Helsinki
+- file: places/helsinki-06.jpg
+  title: Cathedral in Evening Light
+  alt: The white cathedral with green domes glowing in warm evening light above the dark steps of the square
+  country: Finland
+  city: Helsinki
 - file: places/placeholder-01.jpg
   title: Cairo
   alt: Placeholder image — replace with a description of the photo
@@ -317,15 +713,6 @@
   alt: Placeholder image — replace with a description of the photo
   country: United States
   city: Seattle
-- file: places/placeholder-11.jpg
-  title: Bath
-  alt: Placeholder image — replace with a description of the photo
-  country: England
-  city: Bath
-- file: places/placeholder-12.jpg
-  title: Finland
-  alt: Placeholder image — replace with a description of the photo
-  country: Finland
 - file: places/placeholder-13.jpg
   title: Philadelphia
   alt: Placeholder image — replace with a description of the photo
@@ -342,8 +729,6 @@
   title: Coast Study
   alt: Placeholder image — replace with a description of the photo
   sub: Coast
-  country: Ireland
-  city: Dingle
 - file: nature/placeholder-02.jpg
   title: Desert Study
   alt: Placeholder image — replace with a description of the photo
@@ -412,54 +797,6 @@
   filmSim: Astia
   country: England
   city: Weymouth
-- file: film/yosemite-half-dome.jpg
-  title: Half Dome
-  alt: A black-and-white view of Half Dome rising above dark pines under a bright hazy sky
-  filmSim: Monochrome
-  country: United States
-  city: Yosemite
-- file: film/yosemite-high-country.jpg
-  title: High Country
-  alt: A black-and-white panorama of Half Dome and layered mountain ridges beyond a line of pines, a sun flare on the right
-  filmSim: Monochrome
-  country: United States
-  city: Yosemite
-- file: film/yosemite-shadows.jpg
-  title: Shadows on the Granite
-  alt: A sepia view down Yosemite Valley to El Capitan, the shadows of people cast across the granite in the foreground
-  filmSim: Sepia
-  country: United States
-  city: Yosemite
-- file: film/yosemite-hiker.jpg
-  title: Toward Half Dome
-  alt: A sepia view of a hiker with a backpack walking across bare granite toward Half Dome
-  filmSim: Sepia
-  country: United States
-  city: Yosemite
-- file: film/yosemite-snag.jpg
-  title: The Snag
-  alt: A sepia view of a broken dead tree trunk standing among tall firs against a plain sky
-  filmSim: Sepia
-  country: United States
-  city: Yosemite
-- file: film/yosemite-ledge.jpg
-  title: On the Ledge
-  alt: A sepia view of two hikers, one seated and one standing, on a rock ledge facing a vast granite wall
-  filmSim: Sepia
-  country: United States
-  city: Yosemite
-- file: film/yosemite-outcrop.jpg
-  title: Three on the Outcrop
-  alt: A sepia view of three hikers resting on a rocky outcrop, dwarfed by a granite mountainside dotted with trees
-  filmSim: Sepia
-  country: United States
-  city: Yosemite
-- file: film/yosemite-valley-floor.jpg
-  title: Half Dome from the Valley
-  alt: A sepia view of Half Dome's sheer face towering over pines and a meadow on the valley floor
-  filmSim: Sepia
-  country: United States
-  city: Yosemite
 - file: film/placeholder-01.jpg
   title: Film Study 1
   alt: Placeholder image — replace with a description of the photo
