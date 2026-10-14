@@ -19,6 +19,7 @@ export interface Photo {
   sub?: string;
   country?: string;
   city?: string;
+  tags: string[];
   blur: string; // tiny base64 image shown while the real one loads
   exif?: string; // e.g. "Canon EOS R6 · 35mm · ƒ/2.8 · 1/250s · ISO 100"
 }
@@ -31,6 +32,7 @@ interface Entry {
   sub?: string;
   country?: string;
   city?: string;
+  tags?: string[];
 }
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
@@ -113,6 +115,7 @@ async function load(): Promise<Photo[]> {
         sub: entry?.sub,
         country: entry?.country,
         city: entry?.city,
+        tags: entry?.tags ?? [],
         blur: `data:image/webp;base64,${blurBuf.toString('base64')}`,
         exif: formatExif(exif),
       } satisfies Photo;

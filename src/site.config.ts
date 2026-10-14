@@ -15,11 +15,18 @@ export const categories = [
   {
     slug: 'architecture',
     label: 'Architecture',
-    subs: ['Ancient', 'Art Deco', 'Brutalism', 'Gothic', 'Greek & Roman Revival', 'Islamic', 'Modern', 'Victorian'],
+    subs: [
+      'Castles & Country Houses',
+      'Churches & Cathedrals',
+      'Colourful Terraces',
+      'Georgian & Classical',
+      'Modern',
+      'Victorian & Glasshouses',
+    ],
   },
   { slug: 'places', label: 'Places', subs: [] },
-  { slug: 'nature', label: 'Nature', subs: ['Coast', 'Desert', 'Forest', 'Lakes & Rivers', 'Mountains'] },
-  { slug: 'animals', label: 'Animals', subs: ['Birds', 'Marine', 'Pets', 'Wildlife'] },
+  { slug: 'nature', label: 'Nature', subs: ['Coast', 'Countryside', 'Flowers', 'Forest', 'Lakes & Rivers', 'Mountains'] },
+  { slug: 'animals', label: 'Animals', subs: ['Birds', 'Farm Animals'] },
   { slug: 'film', label: 'Film', subs: [] },
 ] as const satisfies readonly { slug: string; label: string; subs: readonly string[] }[];
 
