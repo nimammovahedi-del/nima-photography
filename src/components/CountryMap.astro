@@ -2,7 +2,8 @@
 // Zoom-in map of one country with a pin for each city. Drawn at build time; animated with CSS.
 import { geoGraticule10, geoPath } from 'd3-geo';
 import { slugify, sortedPlaces, type SortedPlace } from '../site.config';
-import { countryView, detailedCountries, findCountry } from '../lib/world';
+import { detailedCountries } from '../lib/world';
+import { STRIP_H, STRIP_W, stripProjection } from '../lib/strip';
 
 interface Props {
   place: SortedPlace;
@@ -16,24 +17,9 @@ const { place, active } = Astro.props;
 const regionSlug = slugify(place.region);
 const soleInRegion = sortedPlaces.filter((p) => p.region === place.region).length === 1;
 
-// A wide strip rather than a big rectangle, so the photos below are in view straight away.
-// The drawing is wider and taller than any screen shows: the frame crops it to its own shape
-// (preserveAspectRatio "slice"), and the country is fitted into a central box that stays in view
-// from a 4:3 phone up to a wide desktop strip.
-const W = 1600;
-const H = 640;
-const BOX_W = 860;
-const BOX_H = 390;
-
-const detail = findCountry(place.map, detailedCountries()) ?? findCountry(place.map)!;
-const pins = place.cities.map((c) => [c.lon, c.lat] as [number, number]);
-const { projection } = countryView(detail.geometry, pins, BOX_W, BOX_H, pins.length ? 30 : 20);
-const [tx, ty] = projection.translate();
-projection.translate([tx + (W - BOX_W) / 2, ty + (H - BOX_H) / 2]);
-projection.clipExtent([
-  [0, 0],
-  [W, H],
-]);
+const W = STRIP_W;
+const H = STRIP_H;
+const { detail, projection } = stripProjection(place);
 const path = geoPath(projection).digits(1);
 
 // Neighbouring countries for context (only the parts in frame are kept).
@@ -59,6 +45,11 @@ const cityPins = place.cities.map((c) => {
     if (from && from.origin === location.origin && from.pathname.replace(/\/$/, '').indexOf(countryPath) === 0) {
       document.documentElement.classList.add('map-settled');
     }
+    // Arriving from the home page's globe, which has just shrunk into this very map: it's already
+    // in place, so only the rest of the page needs to arrive.
+    var handoff = Number(sessionStorage.getItem('map-handoff'));
+    sessionStorage.removeItem('map-handoff');
+    if (Date.now() - handoff < 4000) document.documentElement.classList.add('map-settled', 'map-arrived');
   } catch (e) {}
 </script>
 
@@ -134,7 +125,40 @@ const cityPins = place.cities.map((c) => {
     frame.classList.add('placed');
   }
 
+  // Where the strip sits on screen, and a note for the home page when it's left for there, so the
+  // globe can shrink into it (and grow back out of it) exactly (see RegionExplorer).
+  const rectOf = (el: Element, zoom = 1) => {
+    const r = el.getBoundingClientRect();
+    const [w, h] = [r.width * zoom, r.height * zoom];
+    return { left: r.left + (r.width - w) / 2, top: r.top + (r.height - h) / 2, width: w, height: h };
+  };
+  function noteLeaving(fig: HTMLElement, why: 'pinch' | 'leave', zoom = 1) {
+    const sole = fig.dataset.sole !== undefined;
+    try {
+      sessionStorage.setItem(
+        'strip-out',
+        JSON.stringify({
+          country: fig.dataset.country,
+          panel: sole ? fig.dataset.region : undefined,
+          rect: rectOf(fig.querySelector('.frame')!, zoom),
+          why,
+          t: Date.now(),
+        }),
+      );
+    } catch {}
+  }
+
   document.querySelectorAll<HTMLElement>('[data-country-map]').forEach((fig) => {
+    if (scrollY === 0) {
+      try {
+        const rect = rectOf(fig.querySelector('.frame')!);
+        localStorage.setItem('strip-rect', JSON.stringify({ vw: innerWidth, vh: innerHeight, rect }));
+      } catch {}
+    }
+    // Back to the home page may load it afresh rather than restoring it; leave it a note.
+    addEventListener('pagehide', () => {
+      if (!document.documentElement.classList.contains('pinch-leaving')) noteLeaving(fig, 'leave');
+    });
     layout(fig);
     new ResizeObserver(() => layout(fig)).observe(fig.querySelector('.frame')!);
     // Fonts arriving can change label widths.
@@ -178,12 +202,7 @@ const cityPins = place.cities.map((c) => {
       frame.classList.remove('pinching');
       const sole = fig.dataset.sole !== undefined;
       const region = fig.dataset.region!;
-      try {
-        sessionStorage.setItem(
-          'pinch-out',
-          JSON.stringify({ country: fig.dataset.country, panel: sole ? region : undefined, t: Date.now() }),
-        );
-      } catch {}
+      noteLeaving(fig, 'pinch', 0.4); // the home page's globe carries on from where this ends up
       document.documentElement.classList.add('pinch-leaving');
       show(0.4); // keeps shrinking as the page fades
       setTimeout(() => location.assign(sole ? '/' : `/#${region}`), reduceMotion() ? 0 : 320);
@@ -474,6 +493,15 @@ const cityPins = place.cities.map((c) => {
   :global(html.map-settled) .shape,
   :global(html.map-settled) .pin {
     animation: none;
+  }
+  /* Arriving from the home page's globe (already shrunk to this map): only the pins fade in. */
+  :global(html.map-arrived) .pin {
+    animation: pin-fade 320ms 60ms ease both;
+  }
+  @keyframes pin-fade {
+    from {
+      opacity: 0;
+    }
   }
   /* Reduced motion: keep a gentle fade, drop the movement. */
   @media (prefers-reduced-motion: reduce) {
