@@ -368,6 +368,9 @@ const cityPins = place.cities.map((c) => {
   .frame svg,
   .frame .pins {
     transition: transform 380ms var(--ease-out);
+    /* Kept on their own layers so a pinch scales the drawn map rather than redrawing its
+       detailed outlines on every frame (Germany's and Norway's are heavy). */
+    will-change: transform;
   }
   .frame.pinching svg,
   .frame.pinching .pins {
