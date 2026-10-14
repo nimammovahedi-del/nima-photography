@@ -1,7 +1,7 @@
 ---
 // Zoom-in map of one country with a pin for each city. Drawn at build time; animated with CSS.
 import { geoGraticule10, geoPath } from 'd3-geo';
-import type { SortedPlace } from '../site.config';
+import { slugify, sortedPlaces, type SortedPlace } from '../site.config';
 import { countryView, detailedCountries, findCountry } from '../lib/world';
 
 interface Props {
@@ -11,6 +11,10 @@ interface Props {
 }
 
 const { place, active } = Astro.props;
+// Pinching out of this map goes back to the region it belongs to on the home page; a region with
+// just this one country (America) goes back to its panel instead.
+const regionSlug = slugify(place.region);
+const soleInRegion = sortedPlaces.filter((p) => p.region === place.region).length === 1;
 
 // A wide strip rather than a big rectangle, so the photos below are in view straight away.
 // The drawing is wider and taller than any screen shows: the frame crops it to its own shape
@@ -58,7 +62,15 @@ const cityPins = place.cities.map((c) => {
   } catch (e) {}
 </script>
 
-<figure class="country-map" data-country-map data-w={W} data-h={H}>
+<figure
+  class="country-map"
+  data-country-map
+  data-w={W}
+  data-h={H}
+  data-country={place.name}
+  data-region={regionSlug}
+  data-sole={soleInRegion ? '' : undefined}
+>
   <div class="frame">
     <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <circle class="sea" cx={cx} cy={cy} r={sphereR} />
@@ -129,7 +141,126 @@ const cityPins = place.cities.map((c) => {
     document.fonts?.ready.then(() => layout(fig));
     // The page switches cities in place (see places/[country]/[...city].astro).
     fig.addEventListener('city-change', () => layout(fig));
+    pinchOut(fig);
   });
+
+  // Pinch out on the map (two fingers on a trackpad or a phone) to step back out to the region
+  // on the home page. The map follows the fingers; let go before it has shrunk far enough and it
+  // springs back. A plain two-finger scroll still scrolls the page.
+  function pinchOut(fig: HTMLElement) {
+    const frame = fig.querySelector<HTMLElement>('.frame')!;
+    const layers = [...frame.querySelectorAll<HTMLElement | SVGElement>('svg, .pins')];
+    const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const LEAVE_AT = 0.8;
+    let zoom = 1;
+    let left = false;
+    let settle = 0;
+
+    const show = (z: number) => {
+      zoom = z;
+      layers.forEach((el) => (el.style.transform = z === 1 ? '' : `scale(${z})`));
+      frame.style.setProperty('--pinch', String(Math.min(1, Math.max(0, (1 - z) / (1 - LEAVE_AT)))));
+    };
+    const follow = (z: number) => {
+      if (left) return;
+      frame.classList.add('pinching');
+      show(Math.min(1.06, Math.max(0.5, z)));
+      if (zoom <= LEAVE_AT) leave();
+    };
+    const release = () => {
+      if (left) return;
+      frame.classList.remove('pinching');
+      show(1); // springs back (CSS transition)
+    };
+
+    function leave() {
+      left = true;
+      frame.classList.remove('pinching');
+      const sole = fig.dataset.sole !== undefined;
+      const region = fig.dataset.region!;
+      try {
+        sessionStorage.setItem(
+          'pinch-out',
+          JSON.stringify({ country: fig.dataset.country, panel: sole ? region : undefined, t: Date.now() }),
+        );
+      } catch {}
+      document.documentElement.classList.add('pinch-leaving');
+      show(0.4); // keeps shrinking as the page fades
+      setTimeout(() => location.assign(sole ? '/' : `/#${region}`), reduceMotion() ? 0 : 320);
+    }
+
+    // Trackpad pinch in Chrome, Firefox and Edge arrives as a wheel event with ctrlKey set.
+    frame.addEventListener(
+      'wheel',
+      (e) => {
+        if (!e.ctrlKey || inGesture) return; // ordinary scrolling: leave it to the page
+        e.preventDefault(); // and stop the browser zooming the whole page
+        follow(zoom * Math.exp(-e.deltaY * 0.01));
+        clearTimeout(settle);
+        settle = window.setTimeout(release, 180);
+      },
+      { passive: false },
+    );
+
+    // Safari (Mac trackpad, iPhone and iPad) reports pinches as gesture events.
+    const safariGestures = 'GestureEvent' in window;
+    let start = 1;
+    let inGesture = false;
+    frame.addEventListener('gesturestart', (e) => {
+      e.preventDefault();
+      inGesture = true;
+      start = zoom;
+    });
+    frame.addEventListener('gesturechange', (e) => {
+      e.preventDefault();
+      follow(start * (e as unknown as { scale: number }).scale);
+    });
+    frame.addEventListener('gestureend', (e) => {
+      e.preventDefault();
+      inGesture = false;
+      release();
+    });
+
+    // Other phones: two fingers on the map.
+    if (!safariGestures) {
+      let spread0 = 0;
+      const spread = (t: TouchList) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+      frame.addEventListener(
+        'touchstart',
+        (e) => {
+          if (e.touches.length === 2) {
+            spread0 = spread(e.touches);
+            start = zoom;
+          }
+        },
+        { passive: true },
+      );
+      frame.addEventListener(
+        'touchmove',
+        (e) => {
+          if (e.touches.length !== 2 || !spread0) return;
+          e.preventDefault();
+          follow((start * spread(e.touches)) / spread0);
+        },
+        { passive: false },
+      );
+      frame.addEventListener('touchend', (e) => {
+        if (spread0 && e.touches.length < 2) {
+          spread0 = 0;
+          release();
+        }
+      });
+    }
+
+    // Coming back with the Back button can restore this page exactly as it was left.
+    addEventListener('pageshow', (e) => {
+      if (!e.persisted) return;
+      left = false;
+      document.documentElement.classList.remove('pinch-leaving');
+      frame.classList.remove('pinching');
+      show(1);
+    });
+  }
 </script>
 
 <style>
@@ -139,6 +270,8 @@ const cityPins = place.cities.map((c) => {
   /* A full-width strip, short enough that the city tabs and first photos show without scrolling. */
   .frame {
     position: relative;
+    /* One-finger swipes still scroll the page; two-finger pinches are ours (see pinchOut). */
+    touch-action: pan-x pan-y;
     height: clamp(240px, 38vh, 380px);
     overflow: hidden;
     background: var(--bg);
@@ -200,6 +333,25 @@ const cityPins = place.cities.map((c) => {
   .pins {
     position: absolute;
     inset: 0;
+  }
+  /* Pinching out: the map follows the fingers, then springs back or carries on out. */
+  .frame svg,
+  .frame .pins {
+    transition: transform 380ms var(--ease-out);
+  }
+  .frame.pinching svg,
+  .frame.pinching .pins {
+    transition: none;
+  }
+  .frame .pins {
+    opacity: calc(1 - var(--pinch, 0) * 0.8);
+  }
+  :global(html.pinch-leaving) .frame svg,
+  :global(html.pinch-leaving) .frame .pins {
+    transition:
+      transform 320ms var(--ease-in-out),
+      opacity 320ms ease;
+    opacity: 0;
   }
   /* Pins are positioned by script once the frame's size is known. */
   .frame:not(.placed) .pins {
