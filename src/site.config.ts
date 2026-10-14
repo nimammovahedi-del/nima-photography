@@ -58,7 +58,10 @@ export const places: Place[] = [
     ],
   },
   { name: 'Estonia', map: 'Estonia', region: 'Europe', cities: [] },
-  { name: 'Finland', map: 'Finland', region: 'Europe', cities: [] },
+  {
+    name: 'Finland', map: 'Finland', region: 'Europe',
+    cities: [{ name: 'Helsinki', lon: 24.94, lat: 60.17 }],
+  },
   {
     name: 'Germany', map: 'Germany', region: 'Europe',
     cities: [
@@ -70,7 +73,10 @@ export const places: Place[] = [
     name: 'Ireland', map: 'Ireland', region: 'Europe',
     cities: [
       { name: 'Clifden', lon: -10.02, lat: 53.49 },
+      { name: 'Cork', lon: -8.47, lat: 51.9 },
       { name: 'Dingle', lon: -10.27, lat: 52.14 },
+      { name: 'Dublin', lon: -6.26, lat: 53.35 },
+      { name: 'Galway', lon: -9.05, lat: 53.27 },
       { name: 'Kilkenny', lon: -7.25, lat: 52.65 },
       { name: 'Killarney', lon: -9.51, lat: 52.06 },
     ],
