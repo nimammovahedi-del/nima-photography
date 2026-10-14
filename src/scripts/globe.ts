@@ -138,7 +138,9 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     // (say, dragging from America over to Europe), when the others light up again.
     if (focused) {
       const f = shapeOf(focused);
-      root.classList.toggle('focus', geoDistance(center, f.mid) < view);
+      const inView = geoDistance(center, f.mid) < view;
+      root.classList.toggle('focus', inView);
+      if (inView && tip) tip.hidden = true;
     }
     for (const s of shapes) {
       if (geoDistance(center, s.mid) - s.reach > view + 0.02) {
@@ -503,10 +505,13 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   // ── Tooltip on hover (mouse only) ──
   if (tip) {
     svg.addEventListener('pointermove', (e) => {
-      if (drag?.moved || focused || e.pointerType !== 'mouse') return;
+      // No tooltips while zoomed into a country — unless it has been turned out of view, when the
+      // rest of the world is back to normal (see draw).
+      const inCountry = focused && root.classList.contains('focus');
+      if (drag?.moved || inCountry || e.pointerType !== 'mouse') return;
       const target = (e.target as Element).closest('path.visited') as SVGPathElement | null;
-      if (!target) return void (tip.hidden = true);
-      const place = cfg.places.find((p) => p.name === target.dataset.name)!;
+      const place = target && cfg.places.find((p) => p.name === target.dataset.name);
+      if (!place || place === focused) return void (tip.hidden = true);
       tip.querySelector('strong')!.textContent = place.name;
       tip.querySelector('span')!.textContent = place.cities.length
         ? place.cities.map((c) => c.name).join(' · ')
