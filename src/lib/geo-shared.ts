@@ -54,11 +54,16 @@ export type Side = 'right' | 'left' | 'up' | 'down';
 /**
  * Chooses which side of each pin its label sits on so labels don't overlap.
  * Coordinates and sizes are in pixels.
+ *
+ * `first` pins are placed before the rest (e.g. the selected city, so it always gets a label).
+ * With `hideOverlaps`, a label that would collide on every side gets 'none' instead of being
+ * forced on top of its neighbour.
  */
 export function layoutLabels(
   pins: { x: number; y: number; w: number; h: number }[],
   bounds: { width: number; height: number },
-): Side[] {
+  opts: { first?: number[]; hideOverlaps?: boolean } = {},
+): (Side | 'none')[] {
   const GAP = 9;
   const placed: { x0: number; y0: number; x1: number; y1: number }[] = [];
   const boxFor = (p: (typeof pins)[number], side: Side) => {
@@ -73,22 +78,33 @@ export function layoutLabels(
         return { x0: p.x - p.w / 2, y0: p.y + GAP, x1: p.x + p.w / 2, y1: p.y + GAP + p.h };
     }
   };
-  const hits = (b: ReturnType<typeof boxFor>) =>
+  const hits = (b: ReturnType<typeof boxFor>, self: number) =>
     b.x0 < 0 ||
     b.x1 > bounds.width ||
     b.y0 < 0 ||
     b.y1 > bounds.height ||
     placed.some((o) => b.x0 < o.x1 && b.x1 > o.x0 && b.y0 < o.y1 && b.y1 > o.y0) ||
     // don't cover another pin's dot
-    pins.some((q) => q.x > b.x0 - 4 && q.x < b.x1 + 4 && q.y > b.y0 - 4 && q.y < b.y1 + 4);
+    pins.some((q, j) => j !== self && q.x > b.x0 - 4 && q.x < b.x1 + 4 && q.y > b.y0 - 4 && q.y < b.y1 + 4);
 
-  // Place pins left-to-right so neighbours negotiate sensibly.
-  const order = pins.map((_, i) => i).sort((a, b) => pins[a].x - pins[b].x);
-  const sides: Side[] = new Array(pins.length).fill('right');
+  // Place pins left-to-right so neighbours negotiate sensibly (priority pins first).
+  const first = opts.first ?? [];
+  const order = [
+    ...first,
+    ...pins
+      .map((_, i) => i)
+      .filter((i) => !first.includes(i))
+      .sort((a, b) => pins[a].x - pins[b].x),
+  ];
+  const sides: (Side | 'none')[] = new Array(pins.length).fill('right');
   for (const i of order) {
     const p = pins[i];
-    const choice =
-      (['right', 'left', 'up', 'down'] as Side[]).find((s) => !hits(boxFor(p, s))) ?? 'right';
+    const free = (['right', 'left', 'up', 'down'] as Side[]).find((s) => !hits(boxFor(p, s), i));
+    if (!free && opts.hideOverlaps && !first.includes(i)) {
+      sides[i] = 'none';
+      continue;
+    }
+    const choice = free ?? 'right';
     sides[i] = choice;
     placed.push(boxFor(p, choice));
   }

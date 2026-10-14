@@ -11,12 +11,21 @@ interface Props {
 }
 
 const { place, active } = Astro.props;
-const W = 800;
-const H = 500;
+
+// A wide strip rather than a big rectangle, so the photos below are in view straight away.
+// The drawing is wider and taller than any screen shows: the frame crops it to its own shape
+// (preserveAspectRatio "slice"), and the country is fitted into a central box that stays in view
+// from a 4:3 phone up to a wide desktop strip.
+const W = 1600;
+const H = 640;
+const BOX_W = 860;
+const BOX_H = 390;
 
 const detail = findCountry(place.map, detailedCountries()) ?? findCountry(place.map)!;
 const pins = place.cities.map((c) => [c.lon, c.lat] as [number, number]);
-const { projection } = countryView(detail.geometry, pins, W, H, pins.length ? 56 : 40);
+const { projection } = countryView(detail.geometry, pins, BOX_W, BOX_H, pins.length ? 30 : 20);
+const [tx, ty] = projection.translate();
+projection.translate([tx + (W - BOX_W) / 2, ty + (H - BOX_H) / 2]);
 projection.clipExtent([
   [0, 0],
   [W, H],
@@ -34,7 +43,7 @@ const sphereR = projection.scale();
 
 const cityPins = place.cities.map((c) => {
   const [x, y] = projection([c.lon, c.lat])!;
-  return { ...c, x: (x / W) * 100, y: (y / H) * 100 };
+  return { ...c, x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
 });
 ---
 
@@ -49,9 +58,9 @@ const cityPins = place.cities.map((c) => {
   } catch (e) {}
 </script>
 
-<figure class="country-map" data-country-map>
-  <div class="frame" style={`aspect-ratio:${W}/${H}`}>
-    <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
+<figure class="country-map" data-country-map data-w={W} data-h={H}>
+  <div class="frame">
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <circle class="sea" cx={cx} cy={cy} r={sphereR} />
       <path class="graticule" d={path(geoGraticule10()) ?? ''} />
       <g class="neighbours">{neighbours.map((d) => <path d={d} />)}</g>
@@ -61,9 +70,12 @@ const cityPins = place.cities.map((c) => {
       {
         cityPins.map((c, i) => (
           <a
-            class:list={['pin', { active: c.name === active }]}
+            class:list={['pin', { active: c.name === active, pulse: c.name === active }]}
             href={`/places/${place.slug}/${c.slug}`}
-            style={`left:${c.x}%;top:${c.y}%;--i:${i}`}
+            data-x={c.x}
+            data-y={c.y}
+            data-city={c.name}
+            style={`--i:${i}`}
             data-side="right"
             aria-current={c.name === active ? 'page' : undefined}
           >
@@ -82,39 +94,62 @@ const cityPins = place.cities.map((c) => {
 <script>
   import { layoutLabels } from '../lib/geo-shared';
 
-  // Flip labels left/up/down where they'd overlap, based on the map's actual size.
-  document.querySelectorAll<HTMLElement>('[data-country-map] .frame').forEach((frame) => {
-    const layout = () => {
-      const pins = [...frame.querySelectorAll<HTMLElement>('.pin')];
-      if (!pins.length) return;
-      const w = frame.clientWidth;
-      const h = frame.clientHeight;
-      const pts = pins.map((p) => {
-        const label = p.querySelector<HTMLElement>('.label')!;
-        return {
-          x: (parseFloat(p.style.left) / 100) * w,
-          y: (parseFloat(p.style.top) / 100) * h,
-          w: label.offsetWidth,
-          h: label.offsetHeight,
-        };
-      });
-      layoutLabels(pts, { width: w, height: h }).forEach((s, i) => (pins[i].dataset.side = s));
-    };
-    layout();
-    new ResizeObserver(layout).observe(frame);
+  // Place the pins over the cropped drawing, then choose label sides so they don't overlap.
+  // The selected city is placed first so it always keeps its label; on a crowded map the other
+  // labels that can't fit step aside (they show on hover or focus).
+  function layout(fig: HTMLElement) {
+    const frame = fig.querySelector<HTMLElement>('.frame')!;
+    const pins = [...frame.querySelectorAll<HTMLElement>('.pin')];
+    const W = Number(fig.dataset.w);
+    const H = Number(fig.dataset.h);
+    const w = frame.clientWidth;
+    const h = frame.clientHeight;
+    if (!w || !h) return;
+    const k = Math.max(w / W, h / H);
+    const ox = (w - W * k) / 2;
+    const oy = (h - H * k) / 2;
+    const pts = pins.map((p) => {
+      const x = ox + Number(p.dataset.x) * k;
+      const y = oy + Number(p.dataset.y) * k;
+      p.style.left = `${x}px`;
+      p.style.top = `${y}px`;
+      const label = p.querySelector<HTMLElement>('.label')!;
+      return { x, y, w: label.offsetWidth, h: label.offsetHeight };
+    });
+    const first = pins.flatMap((p, i) => (p.classList.contains('active') ? [i] : []));
+    layoutLabels(pts, { width: w, height: h }, { first, hideOverlaps: true }).forEach(
+      (s, i) => (pins[i].dataset.side = s),
+    );
+    frame.classList.add('placed');
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-country-map]').forEach((fig) => {
+    layout(fig);
+    new ResizeObserver(() => layout(fig)).observe(fig.querySelector('.frame')!);
+    // Fonts arriving can change label widths.
+    document.fonts?.ready.then(() => layout(fig));
+    // The page switches cities in place (see places/[country]/[...city].astro).
+    fig.addEventListener('city-change', () => layout(fig));
   });
 </script>
 
 <style>
   .country-map {
-    max-width: 960px;
-    margin: 0 0 28px;
+    margin: 0 0 20px;
   }
+  /* A full-width strip, short enough that the city tabs and first photos show without scrolling. */
   .frame {
     position: relative;
+    height: clamp(240px, 38vh, 380px);
     overflow: hidden;
     background: var(--bg);
     border: 1px solid var(--line);
+  }
+  @media (max-width: 640px) {
+    .frame {
+      height: auto;
+      aspect-ratio: 4 / 3;
+    }
   }
   svg {
     display: block;
@@ -167,6 +202,10 @@ const cityPins = place.cities.map((c) => {
     position: absolute;
     inset: 0;
   }
+  /* Pins are positioned by script once the frame's size is known. */
+  .frame:not(.placed) .pins {
+    visibility: hidden;
+  }
   .pin {
     position: absolute;
     width: 0;
@@ -191,18 +230,44 @@ const cityPins = place.cities.map((c) => {
     border: 2px solid var(--bg);
     border-radius: 50%;
     background: var(--accent);
-    transition: transform 160ms var(--ease-out);
+    transition:
+      transform 220ms var(--ease-out),
+      background-color 220ms ease,
+      box-shadow 220ms ease;
   }
   .label {
     position: absolute;
     top: 0;
     padding: 3px 9px;
     background: var(--label-bg);
-    font-size: 15px;
+    font-size: 14px;
     letter-spacing: 0.02em;
     line-height: 1.35;
     white-space: nowrap;
-    transition: color 150ms ease;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease;
+    border-left: 2px solid transparent;
+  }
+  @media (max-width: 640px) {
+    .label {
+      padding: 2px 7px;
+      font-size: 12px;
+    }
+  }
+  /* No room for this label without covering another: show it only on hover or focus. */
+  [data-side='none'] .label {
+    left: 11px;
+    transform: translateY(-50%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+  }
+  .pin[data-side='none']:is(:hover, :focus-visible) {
+    z-index: 2;
+  }
+  .pin[data-side='none']:is(:hover, :focus-visible) .label {
+    opacity: 1;
   }
   [data-side='right'] .label {
     left: 11px;
@@ -240,13 +305,45 @@ const cityPins = place.cities.map((c) => {
   .pin:active .dot {
     transform: scale(0.96);
   }
-  .pin.active .dot {
-    transform: scale(1.4);
-    box-shadow: 0 0 0 4px var(--accent-soft);
+  /* The selected city: a larger pin with a halo, and its name in the accent colour. */
+  .pin.active {
+    z-index: 1;
   }
-  /* On a city page, the other pins step back a little. */
-  .pins:has(.active) .pin:not(.active) :is(.dot, .label) {
-    opacity: 0.65;
+  .pin.active .dot {
+    transform: scale(1.45);
+    box-shadow:
+      0 0 0 3px var(--bg),
+      0 0 0 7px rgb(164 189 186 / 0.35);
+  }
+  .pin.active .label {
+    border-left-color: var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .pin.active.pulse .dot::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    animation: pulse 1100ms var(--ease-out) 2;
+  }
+  @keyframes pulse {
+    from {
+      transform: scale(1);
+      opacity: 0.9;
+    }
+    to {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+  /* On a city page, the other pins step back (by colour, so their labels stay solid). */
+  .pins:has(.active) .pin:not(.active) .dot {
+    background: var(--accent-deep);
+  }
+  .pins:has(.active) .pin:not(.active) .label {
+    color: var(--muted);
   }
 
   /* Switching city tabs within the same country: no entrance replay. */
@@ -261,6 +358,9 @@ const cityPins = place.cities.map((c) => {
     .shape,
     .pin {
       animation: fade 200ms ease both;
+    }
+    .pin.active.pulse .dot::after {
+      display: none;
     }
     @keyframes fade {
       from {

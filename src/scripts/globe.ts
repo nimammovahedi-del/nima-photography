@@ -315,10 +315,24 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     draw();
   }
 
+  // A Mac trackpad keeps sending scroll events for a moment after the fingers lift ("momentum").
+  // If the map opens while that is still happening — e.g. scrolling down the page and clicking
+  // America — those leftover events would zoom the new map straight back out and close it before
+  // the cities appear. So ignore wheel input until there has been a short pause: a real zoom
+  // gesture always starts after one.
+  let lastWheel = performance.now();
+  let wheelArmed = false;
   svg.addEventListener(
     'wheel',
     (e) => {
       e.preventDefault(); // keep the page still while zooming the map
+      const now = performance.now();
+      const gap = now - lastWheel;
+      lastWheel = now;
+      if (!wheelArmed) {
+        if (gap < 250) return;
+        wheelArmed = true;
+      }
       if (tip) tip.hidden = true;
       const speed = e.ctrlKey ? 0.012 : 0.0025; // pinch arrives as ctrl+wheel
       const delta = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
