@@ -1,8 +1,8 @@
 // Country shapes for the globe and the country maps. Runs at build time only.
 import { geoArea } from 'd3-geo';
 import { feature } from 'topojson-client';
+import { filter, filterWeight, presimplify, quantile, simplify, sphericalRingArea } from 'topojson-simplify';
 import polygonClipping, { type MultiPolygon, type Polygon } from 'polygon-clipping';
-import world110 from 'world-atlas/countries-110m.json';
 import world50 from 'world-atlas/countries-50m.json';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon as GeoMulti, Position } from 'geojson';
 export { mainland, countryView, layoutLabels } from './geo-shared';
@@ -70,8 +70,20 @@ function load(topology: any): Country[] {
     .flatMap((f) => (f.properties.name === 'United Kingdom' ? splitUK(f) : [f]));
 }
 
+// The globe's outlines: Natural Earth's 1:50m countries, thinned to about twice the points of its
+// 1:110m set. Thinning the shared borders once (as topology) keeps neighbours meeting exactly, and
+// starting from 1:50m keeps coastlines recognisable where 1:110m turns them into rough polygons.
+const GLOBE_DETAIL = 0.12; // keep about the most significant 20% of 1:50m's points
+const SMALLEST_ISLAND = 3e-5; // of the globe's surface in steradians: about 400 km²
+function globeTopology() {
+  const t = presimplify(structuredClone(world50) as any);
+  const thin = simplify(t, quantile(t, GLOBE_DETAIL));
+  // Specks of islands too small to see from the globe only cost drawing time.
+  return filter(thin, filterWeight(thin, SMALLEST_ISLAND, sphericalRingArea));
+}
+
 /** Low detail — the whole world, for the globe. */
-export const countries = load(world110);
+export const countries = load(globeTopology());
 
 let detailed: Country[] | undefined;
 /** High detail — for zoomed-in country views. */
