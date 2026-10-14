@@ -1,7 +1,7 @@
 // Lays out the cover tiles on a category landing page (e.g. /architecture) as a mosaic:
 // landscape covers span two columns, portrait covers are one column wide and either a square
-// (one row) or tall (two rows), with no gaps in the middle of the grid (a part-filled last row is
-// fine; it fills in as subcategories are added). Runs at build time.
+// (one row) or tall (two rows), with no gaps in the middle of the grid (open space along the
+// bottom is fine; it fills in as subcategories are added). Runs at build time.
 
 export type Shape = 'landscape' | 'portrait';
 export interface Tile {
@@ -50,11 +50,16 @@ function place(sizes: { w: number; h: number }[], cols: number) {
           return { col: c + 1, row: r + 1, w, h };
         }
   });
-  // Gaps after the last tile (end of the grid) are fine; gaps before it are holes.
-  const cells = grid.flatMap((row) => Array.from({ length: cols }, (_, x) => !!row[x]));
-  const end = cells.lastIndexOf(true) + 1;
-  const holes = cells.slice(0, end).filter((c) => !c).length;
-  return { tiles, holes, trailing: cells.length - end, rows: grid.length };
+  // Open space along the bottom edge of the grid is fine (it fills in as subcategories are
+  // added); an empty cell with a tile somewhere below it is a hole in the middle.
+  let holes = 0;
+  let open = 0;
+  for (let x = 0; x < cols; x++) {
+    let bottom = -1;
+    grid.forEach((row, y) => row[x] && (bottom = y));
+    for (let y = 0; y < grid.length; y++) if (!grid[y][x]) y < bottom ? holes++ : open++;
+  }
+  return { tiles, holes, trailing: open, rows: grid.length };
 }
 
 function search(shapes: Shape[], cols: number) {
