@@ -117,6 +117,7 @@ export const places: Place[] = [
       { name: 'Red Rock Canyon', lon: -115.43, lat: 36.13 }, // Nevada, west of Las Vegas
       { name: 'Seattle', lon: -122.33, lat: 47.61 },
       { name: 'Washington DC', lon: -77.04, lat: 38.91 },
+      { name: 'Yosemite', lon: -119.57, lat: 37.74 }, // Yosemite Valley, California
     ],
   },
 ];

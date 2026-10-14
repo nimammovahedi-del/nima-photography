@@ -162,6 +162,111 @@
   alt: Pine trunks framing a view over sunlit green fields and hills
   country: England
   city: Weymouth
+- file: places/bath-01.jpg
+  title: Abbey Through the Arch
+  alt: Bath Abbey's tower seen beneath a carved stone arch, two people walking past a balustraded wall in the sun
+  country: England
+  city: Bath
+- file: places/bath-02.jpg
+  title: Guildhall and Abbey
+  alt: The columned stone front of the Guildhall with an iron street lamp, Bath Abbey rising beyond it
+  country: England
+  city: Bath
+- file: places/bath-03.jpg
+  title: Corner of the Terrace
+  alt: A curved Georgian corner house of honey-coloured stone with iron balconies, a church tower behind
+  country: England
+  city: Bath
+- file: places/bath-04.jpg
+  title: Raised Terrace
+  alt: A long terrace of Georgian townhouses with tall chimneys climbing a hill above a raised stone pavement
+  country: England
+  city: Bath
+- file: places/bath-05.jpg
+  title: Yellow Car on the Hill
+  alt: A yellow car coming down a curving hill road past a tall stone corner building and a large tree
+  country: England
+  city: Bath
+- file: places/bath-06.jpg
+  title: Parked on the Slope
+  alt: An old silver saloon parked on a steep, narrow lane between a stone wall and leafy trees
+  country: England
+  city: Bath
+- file: places/bath-07.jpg
+  title: The Circus
+  alt: The curving, three-tiered columned terrace of the Circus sweeping round behind black iron railings
+  country: England
+  city: Bath
+- file: places/bath-08.jpg
+  title: Defender at the Circus
+  alt: A green Land Rover and a grey coupé parked below the columned façade of the Circus as a man in a white hat walks by
+  country: England
+  city: Bath
+- file: places/bath-09.jpg
+  title: Royal Crescent
+  alt: The long sweep of the Royal Crescent curving away over its lawn, iron railings in the foreground
+  country: England
+  city: Bath
+- file: places/bath-10.jpg
+  title: Lawn Below the Terrace
+  alt: Sunbathers on a wide green lawn below a row of Georgian townhouses, long wild grass in the foreground
+  country: England
+  city: Bath
+- file: places/bath-11.jpg
+  title: Crescent Façade
+  alt: The columned front of the Royal Crescent with cars parked along the lawn's edge under a hazy sky
+  country: England
+  city: Bath
+- file: places/bath-12.jpg
+  title: Summer on the Lawn
+  alt: People lying on the grass in a park, framed by dark tree branches and a line of iron railings, townhouses beyond
+  country: England
+  city: Bath
+- file: places/bath-13.jpg
+  title: Street Corner
+  alt: People chatting beside parked bicycles in front of a large Georgian corner building, hanging flower baskets nearby
+  country: England
+  city: Bath
+- file: places/bath-14.jpg
+  title: High Street Crossing
+  alt: Pedestrians crossing in front of the domed Guildhall, a bus waiting and Bath Abbey at the end of the street
+  country: England
+  city: Bath
+- file: places/yosemite-01.jpg
+  title: Red Sky at Dusk
+  alt: Bands of deep red and purple sunset cloud above the black silhouettes of pine trees
+  country: United States
+  city: Yosemite
+- file: places/yosemite-02.jpg
+  title: Blue Hour Pines
+  alt: Pink-edged clouds in a blue dusk sky above the silhouettes of pine trees
+  country: United States
+  city: Yosemite
+- file: places/yosemite-03.jpg
+  title: Valley in Evening Light
+  alt: Yosemite Valley from above in golden evening light, El Capitan's sheer face on the right and granite spires on the left
+  country: United States
+  city: Yosemite
+- file: places/yosemite-04.jpg
+  title: Granite Spires
+  alt: Jagged granite spires catching warm low sun above a dark pine forest, hazy foothills beyond
+  country: United States
+  city: Yosemite
+- file: places/yosemite-05.jpg
+  title: The Overlook
+  alt: Tiny figures beside a railing on a sheer clifftop overlook, a forested granite canyon wall across the gap
+  country: United States
+  city: Yosemite
+- file: places/yosemite-06.jpg
+  title: From the Road
+  alt: A granite peak rising behind tall pines blurred by motion, bright clouds overhead
+  country: United States
+  city: Yosemite
+- file: places/yosemite-07.jpg
+  title: Meadow and Half Dome
+  alt: Golden meadow grass swaying in front of a dark pine forest, Half Dome peeking between the slopes under a blue sky
+  country: United States
+  city: Yosemite
 - file: places/placeholder-01.jpg
   title: Cairo
   alt: Placeholder image — replace with a description of the photo
@@ -307,6 +412,54 @@
   filmSim: Astia
   country: England
   city: Weymouth
+- file: film/yosemite-half-dome.jpg
+  title: Half Dome
+  alt: A black-and-white view of Half Dome rising above dark pines under a bright hazy sky
+  filmSim: Monochrome
+  country: United States
+  city: Yosemite
+- file: film/yosemite-high-country.jpg
+  title: High Country
+  alt: A black-and-white panorama of Half Dome and layered mountain ridges beyond a line of pines, a sun flare on the right
+  filmSim: Monochrome
+  country: United States
+  city: Yosemite
+- file: film/yosemite-shadows.jpg
+  title: Shadows on the Granite
+  alt: A sepia view down Yosemite Valley to El Capitan, the shadows of people cast across the granite in the foreground
+  filmSim: Sepia
+  country: United States
+  city: Yosemite
+- file: film/yosemite-hiker.jpg
+  title: Toward Half Dome
+  alt: A sepia view of a hiker with a backpack walking across bare granite toward Half Dome
+  filmSim: Sepia
+  country: United States
+  city: Yosemite
+- file: film/yosemite-snag.jpg
+  title: The Snag
+  alt: A sepia view of a broken dead tree trunk standing among tall firs against a plain sky
+  filmSim: Sepia
+  country: United States
+  city: Yosemite
+- file: film/yosemite-ledge.jpg
+  title: On the Ledge
+  alt: A sepia view of two hikers, one seated and one standing, on a rock ledge facing a vast granite wall
+  filmSim: Sepia
+  country: United States
+  city: Yosemite
+- file: film/yosemite-outcrop.jpg
+  title: Three on the Outcrop
+  alt: A sepia view of three hikers resting on a rocky outcrop, dwarfed by a granite mountainside dotted with trees
+  filmSim: Sepia
+  country: United States
+  city: Yosemite
+- file: film/yosemite-valley-floor.jpg
+  title: Half Dome from the Valley
+  alt: A sepia view of Half Dome's sheer face towering over pines and a meadow on the valley floor
+  filmSim: Sepia
+  country: United States
+  city: Yosemite
 - file: film/placeholder-01.jpg
   title: Film Study 1
   alt: Placeholder image — replace with a description of the photo
