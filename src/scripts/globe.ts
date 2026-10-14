@@ -134,6 +134,12 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     // How far from the centre (as an angle on the globe) the corners of the frame reach.
     const corner = Math.hypot(W / 2 + Math.abs(shift[0]), H / 2 + Math.abs(shift[1]));
     const view = corner >= scale ? Math.PI / 2 : Math.asin(corner / scale);
+    // Zoomed into a country, everything else steps back — until the country is turned out of view
+    // (say, dragging from America over to Europe), when the others light up again.
+    if (focused) {
+      const f = shapeOf(focused);
+      root.classList.toggle('focus', geoDistance(center, f.mid) < view);
+    }
     for (const s of shapes) {
       if (geoDistance(center, s.mid) - s.reach > view + 0.02) {
         if (s.drawn) s.el.setAttribute('d', '');
@@ -236,25 +242,34 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     pinLayer.classList.add('in');
   }
 
+  /** Screen pixels per map unit, and where the map's corner sits, for the svg's "slice" fit. */
+  function fit() {
+    const [cw, ch] = [svg.clientWidth, svg.clientHeight];
+    const k = Math.max(cw / W, ch / H);
+    return { k, ox: (cw - W * k) / 2, oy: (ch - H * k) / 2 };
+  }
+
   function placeMarkers() {
     const els = [...pinLayer.children] as HTMLElement[];
     if (!markers.length || els.length !== markers.length) return;
-    const px = svg.clientWidth / W;
+    // Where the drawing actually sits in the frame: it fills it, cropped ("slice"), even when the
+    // window has changed shape since the map opened — pins must follow it exactly.
+    const { k: px, ox, oy } = fit();
     const visible: number[] = [];
     const pts = markers.map((m, i) => {
       const [x, y] = projection([m.lon, m.lat])!;
       const el = els[i];
       el.hidden = geoDistance([m.lon, m.lat], center) > Math.PI / 2 - 0.05; // round the back
       if (!el.hidden) visible.push(i);
-      el.style.left = `${(x / W) * 100}%`;
-      el.style.top = `${(y / H) * 100}%`;
+      el.style.left = `${ox + x * px}px`;
+      el.style.top = `${oy + y * px}px`;
       // Label sizes never change while a set of pins is up; measure once instead of every frame.
       const size = (sizes[i] ??= (() => {
         const label = el.querySelector<HTMLElement>('.label')!;
         if (el.hidden || !label.offsetWidth) return undefined;
         return { w: label.offsetWidth, h: label.offsetHeight || 20 };
       })());
-      return { x: x * px, y: y * px, w: size?.w ?? 0, h: size?.h ?? 20 };
+      return { x: ox + x * px, y: oy + y * px, w: size?.w ?? 0, h: size?.h ?? 20 };
     });
     const sides = layoutLabels(
       visible.map((i) => pts[i]),
@@ -399,7 +414,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   let pinch: { d: number; scale: number } | null = null;
   let spin = 0;
   const stopSpin = () => cancelAnimationFrame(spin);
-  const degPerPx = () => ((W / svg.clientWidth) * 180) / (Math.PI * scale);
+  const degPerPx = () => 180 / (Math.PI * scale * fit().k);
   const spread = () => {
     const [a, b] = [...touches.values()];
     return Math.hypot(a.x - b.x, a.y - b.y);

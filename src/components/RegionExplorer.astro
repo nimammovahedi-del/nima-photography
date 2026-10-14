@@ -109,7 +109,7 @@ const config = {
   <!-- Full-screen live map, shown when a region is opened. -->
   <div class="stage" role="dialog" aria-modal="true" aria-labelledby="stage-title" hidden>
     <div class="view map-ui">
-      <svg class="map">
+      <svg class="map" preserveAspectRatio="xMidYMid slice">
         <circle class="sphere"></circle>
         <path class="graticule"></path>
         <g class="land"></g>
@@ -380,13 +380,15 @@ const config = {
   function stripCamera(p: MapPlace, r: Rect): MapView {
     const s = p.strip;
     const k = Math.max(r.width / STRIP_W, r.height / STRIP_H); // the strip crops its drawing to fit
-    const u = 1000 / innerWidth; // map units per pixel (the live map is 1000 units wide)
     const x = r.left + (r.width - STRIP_W * k) / 2 + s.x * k;
     const y = r.top + (r.height - STRIP_H * k) / 2 + s.y * k;
+    // The live map fills the screen the same way (see the svg's preserveAspectRatio).
+    const { width: W, height: H } = svg.viewBox.baseVal;
+    const m = Math.max(innerWidth / W, innerHeight / H); // pixels per map unit
     return {
       center: s.center,
-      scale: s.scale * k * u,
-      shift: [(x - innerWidth / 2) * u, (y - innerHeight / 2) * u],
+      scale: (s.scale * k) / m,
+      shift: [(x - (innerWidth - W * m) / 2) / m - W / 2, (y - (innerHeight - H * m) / 2) / m - H / 2],
     };
   }
 
