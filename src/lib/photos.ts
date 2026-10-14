@@ -17,6 +17,7 @@ export interface Photo {
   alt: string;
   filmSim?: string;
   sub?: string;
+  cover?: boolean; // the subcategory's cover photo on its subject's landing page
   country?: string;
   city?: string;
   tags: string[];
@@ -30,6 +31,7 @@ interface Entry {
   alt?: string;
   filmSim?: string;
   sub?: string;
+  cover?: boolean;
   country?: string;
   city?: string;
   tags?: string[];
@@ -113,6 +115,7 @@ async function load(): Promise<Photo[]> {
         alt: entry?.alt ?? title,
         filmSim: entry?.filmSim,
         sub: entry?.sub,
+        cover: entry?.cover,
         country: entry?.country,
         city: entry?.city,
         tags: entry?.tags ?? [],

@@ -1,0 +1,158 @@
+---
+// The landing page of a subject (e.g. /architecture): one cover photo per subcategory, laid out
+// as a mosaic (wide photos span two columns, tall ones one column). Each tile links to that
+// subcategory's own page. Covers are the photos marked `cover: true` in photos.yaml.
+import { Picture } from 'astro:assets';
+import type { Photo } from '../lib/photos';
+import { mosaic, type Shape } from '../lib/mosaic';
+
+interface Props {
+  items: { label: string; href: string; count: number; cover: Photo }[];
+  label: string;
+}
+
+const { items, label } = Astro.props;
+const shapes: Shape[] = items.map(({ cover }) =>
+  cover.image.width >= cover.image.height ? 'landscape' : 'portrait',
+);
+// Separate layouts for phones (2 columns) and larger screens (3 columns).
+const two = mosaic(shapes, 2);
+const three = mosaic(shapes, 3);
+const area = (t: { col: number; row: number; w: number; h: number }) =>
+  `${t.row} / ${t.col} / span ${t.h} / span ${t.w}`;
+---
+
+<ul class="mosaic" aria-label={label}>
+  {
+    items.map((s, i) => (
+      <li style={`--area-2:${area(two[i])};--area-3:${area(three[i])}`}>
+        <a href={s.href} class="tile" style={`background-image:url(${s.cover.blur})`}>
+          <Picture
+            src={s.cover.image}
+            alt={s.cover.alt}
+            formats={['avif', 'webp']}
+            widths={[480, 720, 960, 1280, 1600]}
+            sizes={three[i].w > 1 ? '(min-width: 900px) 66vw, 100vw' : '(min-width: 900px) 33vw, 50vw'}
+            loading={i < 3 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+          <span class="caption">
+            <span class="name">{s.label}</span>
+            <span class="count">
+              {s.count} {s.count === 1 ? 'photo' : 'photos'}
+              <span class="arrow" aria-hidden="true">→</span>
+            </span>
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .mosaic {
+    --cell: calc((min(100vw, var(--max)) - 2 * var(--gutter) - var(--gap)) / 2);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: var(--cell);
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .mosaic li {
+    grid-area: var(--area-2);
+    min-width: 0;
+  }
+  @media (min-width: 900px) {
+    .mosaic {
+      /* Rows a little shorter than the columns are wide, so tall tiles don't run off the screen. */
+      --cell: calc((min(100vw, var(--max)) - 2 * var(--gutter) - 2 * var(--gap)) / 3 * 0.8);
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .mosaic li {
+      grid-area: var(--area-3);
+    }
+  }
+
+  .tile {
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-raised);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    text-decoration: none;
+  }
+  .tile :global(picture),
+  .tile :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+  .tile :global(img) {
+    object-fit: cover;
+    transition:
+      transform 700ms var(--ease-out),
+      filter 300ms var(--ease-out);
+  }
+
+  /* Name and count sit on a soft gradient at the bottom, always visible. */
+  .caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+    padding: 64px 16px 14px;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.7), rgb(0 0 0 / 0));
+  }
+  .name {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 8px rgb(0 0 0 / 0.4);
+  }
+  .count {
+    display: inline-flex;
+    gap: 8px;
+    color: rgb(255 255 255 / 0.78);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+  .arrow {
+    transition: transform 300ms var(--ease-out);
+  }
+  @media (min-width: 768px) {
+    .caption {
+      padding: 96px 24px 20px;
+    }
+    .name {
+      font-size: 20px;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .tile:hover :global(img) {
+      transform: scale(1.03);
+      filter: brightness(1.06);
+    }
+    .tile:hover .arrow {
+      transform: translateX(4px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile :global(img),
+    .arrow {
+      transition: none;
+    }
+  }
+</style>
