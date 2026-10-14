@@ -154,18 +154,18 @@ const config = {
     return `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px)`;
   };
 
-  async function open(panel: HTMLElement, fromHistory = false) {
+  async function open(panel: HTMLElement, fromHistory = false, fromCountry?: MapPlace) {
     // A second click while the map is still loading must not start a second map.
     if (engine || closing || opening) return;
     opening = true;
     try {
-      await openStage(panel, fromHistory);
+      await openStage(panel, fromHistory, fromCountry);
     } finally {
       opening = false;
     }
   }
 
-  async function openStage(panel: HTMLElement, fromHistory: boolean) {
+  async function openStage(panel: HTMLElement, fromHistory: boolean, fromCountry?: MapPlace) {
     const name = panel.dataset.region!;
     openPanel = panel;
     region = name;
@@ -198,6 +198,17 @@ const config = {
       },
       onZoomOutOfRegion: () => close(),
     });
+    if (fromCountry) {
+      // Arriving by pinching out of a country's page: start where that page's map was and
+      // pull back out to the whole region.
+      engine.jumpToCountry(fromCountry);
+      stage.hidden = false;
+      document.documentElement.classList.add('explorer-open');
+      if (!reduceMotion()) stage.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' });
+      backBtn.focus({ preventScroll: true });
+      engine.showRegion(name);
+      return;
+    }
     // Jump to the region, then reveal: the panel opens up to fill the screen as the view glides in.
     engine.showRegion(name, 0);
     // A region with just one country (America) goes straight on to that country's city pins.
@@ -336,10 +347,30 @@ const config = {
   });
 
   // Open straight into a region from a link like /places#europe.
+  // Pinching out of a country's page lands here; the page leaves a short note saying where from.
+  let arrival: { country?: string; panel?: string; t?: number } = {};
+  try {
+    arrival = JSON.parse(sessionStorage.getItem('pinch-out') ?? '{}');
+    sessionStorage.removeItem('pinch-out');
+  } catch {}
+  const fresh = Date.now() - (arrival.t ?? 0) < 8000;
+
   const linked = root.querySelector<HTMLElement>(`.panel[data-slug="${location.hash.slice(1)}"]`);
   if (linked) {
     history.replaceState({ explorer: linked.dataset.slug }, '');
-    open(linked, true);
+    const from = fresh ? places.find((p) => p.name === arrival.country) : undefined;
+    open(linked, true, from);
+  } else if (fresh && arrival.panel) {
+    // A one-country region (America) has no wider map: return to its panel instead.
+    const panel = root.querySelector<HTMLElement>(`.panel[data-slug="${arrival.panel}"]`);
+    panel?.scrollIntoView({ block: 'center' });
+    panel?.focus({ preventScroll: true });
+    if (panel && !reduceMotion()) {
+      panel.animate([{ opacity: 0, transform: 'scale(1.03)' }, { opacity: 1, transform: 'none' }], {
+        duration: 360,
+        easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+      });
+    }
   }
 </script>
 

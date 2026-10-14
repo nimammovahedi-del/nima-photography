@@ -322,6 +322,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   // gesture always starts after one.
   let lastWheel = performance.now();
   let wheelArmed = false;
+  let holdWheelUntil = 0;
   svg.addEventListener(
     'wheel',
     (e) => {
@@ -329,6 +330,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       const now = performance.now();
       const gap = now - lastWheel;
       lastWheel = now;
+      if (now < holdWheelUntil) return;
       if (!wheelArmed) {
         if (gap < 250) return;
         wheelArmed = true;
@@ -470,9 +472,26 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     flyTo(cfg.start, 0);
   }
 
+  /** Jump (no flight) to the view a country's own page shows, e.g. to zoom back out from it. */
+  function jumpToCountry(place: MapPlace) {
+    request++;
+    const pins = place.cities.map((c) => [c.lon, c.lat] as [number, number]);
+    const pad = Math.min(W, H) * (place.cities.length ? 0.16 : 0.2);
+    const v = countryView(shapeOf(place).g, pins, W, H, pad);
+    unfocus();
+    setMarkers([]);
+    flyTo({ center: v.center, scale: Math.min(v.scale, MAX_SCALE) }, 0);
+    // The pinch that brought the visitor here may still be going; don't let it stop the flight
+    // out (wheel input waits for a pause, as on opening).
+    lastWheel = performance.now();
+    wheelArmed = false;
+    holdWheelUntil = lastWheel + 1800;
+  }
+
   return {
     showRegion,
     showCountry,
+    jumpToCountry,
     highlight,
     regionView,
     reset,

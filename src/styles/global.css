@@ -229,3 +229,11 @@ body.film::after {
     scroll-behavior: smooth;
   }
 }
+
+/* Pinching out of a country's map: everything around the map fades as the page hands over to
+   the home page's region map (see CountryMap.astro). */
+html.pinch-leaving :is(.site-header, main > :not(.place), footer),
+html.pinch-leaving .place > :not(.country-map) {
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
