@@ -10,7 +10,9 @@
   const esc = (s = '') =>
     s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
-  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((gallery) => {
+  function init(gallery: HTMLElement) {
+    if (gallery.dataset.lightbox) return;
+    gallery.dataset.lightbox = 'ready';
     const lightbox = new PhotoSwipeLightbox({
       gallery,
       children: 'a.frame',
@@ -90,7 +92,12 @@
     });
 
     lightbox.init();
-  });
+  }
+
+  const initAll = () => document.querySelectorAll<HTMLElement>('[data-gallery]').forEach(init);
+  initAll();
+  // A page that swaps in a new gallery without reloading (switching cities) asks for this.
+  window.addEventListener('galleries:refresh', initAll);
 </script>
 
 <style is:global>

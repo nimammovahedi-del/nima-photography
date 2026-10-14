@@ -143,6 +143,7 @@ const config = {
   let country: MapPlace | undefined;
   let pushed = false;
   let closing = false;
+  let opening = false;
 
   const engineModule = () => import('../scripts/globe');
   // Warm up the map code and data as soon as the page is idle.
@@ -154,7 +155,17 @@ const config = {
   };
 
   async function open(panel: HTMLElement, fromHistory = false) {
-    if (engine || closing) return;
+    // A second click while the map is still loading must not start a second map.
+    if (engine || closing || opening) return;
+    opening = true;
+    try {
+      await openStage(panel, fromHistory);
+    } finally {
+      opening = false;
+    }
+  }
+
+  async function openStage(panel: HTMLElement, fromHistory: boolean) {
     const name = panel.dataset.region!;
     openPanel = panel;
     region = name;
@@ -191,7 +202,12 @@ const config = {
     engine.showRegion(name, 0);
     // A region with just one country (America) goes straight on to that country's city pins.
     const only = soleCountry();
-    if (only) setTimeout(() => openCountry(only), 350);
+    if (only) {
+      const opened = engine;
+      setTimeout(() => {
+        if (engine === opened && region === name && !country) openCountry(only);
+      }, 350);
+    }
     stage.hidden = false;
     document.documentElement.classList.add('explorer-open');
     if (!reduceMotion()) {
@@ -329,7 +345,7 @@ const config = {
 
 <style>
   .explorer {
-    padding-top: 24px;
+    padding-top: 20px;
   }
   .panels {
     display: grid;

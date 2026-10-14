@@ -37,20 +37,165 @@ const tabs = [
   title={city ? `${city}, ${place.name}` : place.name}
   description={`Photographs from ${city ? `${city}, ` : ''}${place.name} by ${site.name}.`}
 >
-  <header class="page-head">
-    <a class="back" href="/"><span aria-hidden="true">←</span> All places</a>
-    <h1>{place.name}</h1>
-  </header>
-  <CountryMap place={place} active={city} />
-  {place.cities.length > 0 && <SubTabs items={tabs} label={`Cities in ${place.name}`} />}
-  {
-    photos.length ? (
-      <Gallery photos={photos} label={`Photographs from ${city ?? place.name}`} />
-    ) : (
-      <p class="empty">Photos from {city ?? place.name} are on their way.</p>
-    )
-  }
+  <div class="place" data-place={base}>
+    <header class="page-head">
+      <a class="back" href="/"><span aria-hidden="true">←</span> All places</a>
+      <h1>
+        <a class="h-country" href={base}>{place.name}</a>
+        <span class="h-city" hidden={!city}>
+          <span class="sep" aria-hidden="true">/</span>
+          <span class="h-name">{city}</span>
+        </span>
+      </h1>
+    </header>
+    <CountryMap place={place} active={city} />
+    {place.cities.length > 0 && <SubTabs items={tabs} label={`Cities in ${place.name}`} />}
+    <div class="photos" data-place-photos>
+      {
+        photos.length ? (
+          <Gallery photos={photos} label={`Photographs from ${city ?? place.name}`} />
+        ) : (
+          <p class="empty">Photos from {city ?? place.name} are on their way.</p>
+        )
+      }
+    </div>
+  </div>
 </BaseLayout>
+
+<script>
+  // Switching between a country's cities (the tabs, the map pins, the country name) happens in
+  // place: the map highlight, heading and tabs change at once, and the photos cross-fade in.
+  // The address bar and Back button still work as if each city were its own page. Clicking
+  // quickly through several cities is safe: only the last one clicked is shown.
+  const root = document.querySelector<HTMLElement>('[data-place]');
+  if (root) {
+    const base = root.dataset.place!;
+    const fig = root.querySelector<HTMLElement>('[data-country-map]');
+    const heading = root.querySelector<HTMLElement>('.page-head h1')!;
+    const cityWrap = heading.querySelector<HTMLElement>('.h-city')!;
+    const cityName = heading.querySelector<HTMLElement>('.h-name')!;
+    const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clean = (path: string) => path.replace(/\/$/, '') || '/';
+    const ours = (a: HTMLAnchorElement) =>
+      a.origin === location.origin && (clean(a.pathname) === base || clean(a.pathname).startsWith(`${base}/`));
+
+    // Each city page is fetched once and kept, so going back and forth is instant.
+    const pages = new Map<string, Promise<Document>>();
+    const load = (path: string) => {
+      let page = pages.get(path);
+      if (!page) {
+        page = fetch(path)
+          .then((r) => {
+            if (!r.ok) throw new Error(String(r.status));
+            return r.text();
+          })
+          .then((html) => new DOMParser().parseFromString(html, 'text/html'));
+        page.catch(() => pages.delete(path));
+        pages.set(path, page);
+      }
+      return page;
+    };
+    pages.set(clean(location.pathname), Promise.resolve(document.cloneNode(true) as Document));
+
+    // Instant feedback: tabs, map pins and heading follow the click straight away.
+    function select(path: string) {
+      const tabs = [...root!.querySelectorAll<HTMLAnchorElement>('.subtabs a')];
+      tabs.forEach((t) => {
+        const on = clean(t.pathname) === path;
+        if (on) t.setAttribute('aria-current', 'page');
+        else t.removeAttribute('aria-current');
+        if (on) {
+          const row = t.closest('ul')!;
+          row.scrollTo({
+            left: t.offsetLeft - row.clientWidth / 2 + t.offsetWidth / 2,
+            behavior: reduceMotion() ? 'auto' : 'smooth',
+          });
+        }
+      });
+      let name = '';
+      fig?.querySelectorAll<HTMLAnchorElement>('.pin').forEach((pin) => {
+        const on = clean(pin.pathname) === path;
+        if (on) name = pin.dataset.city ?? '';
+        pin.classList.toggle('active', on);
+        pin.classList.remove('pulse');
+        if (on) {
+          void pin.offsetWidth; // restart the pulse
+          pin.classList.add('pulse');
+          pin.setAttribute('aria-current', 'page');
+        } else pin.removeAttribute('aria-current');
+      });
+      cityName.textContent = name;
+      cityWrap.hidden = !name;
+      fig?.dispatchEvent(new Event('city-change'));
+    }
+
+    let latest = 0;
+    async function go(path: string, push: boolean) {
+      const mine = ++latest;
+      select(path);
+      if (push) history.pushState({ place: path }, '', path);
+      const current = root!.querySelector<HTMLElement>('[data-place-photos]')!;
+      // Hold the page's height while the photos change, so nothing below jumps.
+      current.style.minHeight = `${current.offsetHeight}px`;
+      current.classList.add('leaving');
+      const fadeOut = new Promise((r) => setTimeout(r, reduceMotion() ? 0 : 140));
+      let doc: Document;
+      try {
+        [doc] = await Promise.all([load(path), fadeOut]);
+      } catch {
+        if (mine === latest) location.href = path; // offline or similar: fall back to a normal visit
+        return;
+      }
+      if (mine !== latest) return; // a newer click took over
+      const next = doc.querySelector<HTMLElement>('[data-place-photos]');
+      if (!next) return void (location.href = path);
+      const fresh = document.importNode(next, true);
+      fresh.classList.remove('leaving');
+      fresh.classList.add('entering');
+      fresh.querySelectorAll<HTMLElement>('[data-lightbox]').forEach((g) => delete g.dataset.lightbox);
+      fresh.style.minHeight = current.style.minHeight;
+      current.replaceWith(fresh);
+      document.title = doc.title;
+      window.dispatchEvent(new Event('galleries:refresh'));
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          fresh.classList.remove('entering');
+          // Let the new photos set the height once they are in.
+          setTimeout(() => (fresh.style.minHeight = ''), 400);
+        }),
+      );
+    }
+
+    const linkFrom = (e: Event) => {
+      const a = (e.target as Element).closest?.('a');
+      return a instanceof HTMLAnchorElement && ours(a) && root!.contains(a) && !a.closest('.photos')
+        ? a
+        : null;
+    };
+    root.addEventListener('click', (e) => {
+      const a = linkFrom(e);
+      if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
+        return;
+      e.preventDefault();
+      const path = clean(a.pathname);
+      if (path !== clean(location.pathname)) go(path, true);
+    });
+    // Start fetching as soon as a pointer heads for a tab or pin.
+    const warm = (e: Event) => {
+      const a = linkFrom(e);
+      if (a) load(clean(a.pathname)).catch(() => {});
+    };
+    root.addEventListener('pointerover', warm);
+    root.addEventListener('focusin', warm);
+    root.addEventListener('touchstart', warm, { passive: true });
+
+    history.replaceState({ ...(history.state ?? {}), place: clean(location.pathname) }, '');
+    window.addEventListener('popstate', () => {
+      const path = clean(location.pathname);
+      if (path === base || path.startsWith(`${base}/`)) go(path, false);
+    });
+  }
+</script>
 
 <style>
   .back {
@@ -64,8 +209,58 @@ const tabs = [
   .back:hover {
     color: var(--accent);
   }
+  /* "EGYPT / LUXOR": the country, then the selected city in the accent colour. */
+  .page-head h1 {
+    flex-wrap: wrap;
+    font-size: 15px;
+  }
+  .h-country {
+    color: inherit;
+    text-decoration: none;
+  }
+  .h-country:hover {
+    color: var(--accent);
+  }
+  .h-city {
+    display: inline-flex;
+    gap: 12px;
+    color: var(--accent);
+    animation: h-in 260ms var(--ease-out);
+  }
+  .h-city[hidden] {
+    display: none;
+  }
+  .sep {
+    color: var(--muted);
+  }
+  @keyframes h-in {
+    from {
+      opacity: 0;
+      transform: translateX(-4px);
+    }
+  }
+  .photos {
+    transition: opacity 220ms var(--ease-out);
+  }
+  .photos.leaving {
+    opacity: 0;
+    transition-duration: 140ms;
+  }
+  .photos.entering {
+    opacity: 0;
+    transition: none;
+  }
   .empty {
     padding: 48px 0;
     color: var(--muted);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .photos,
+    .photos.leaving {
+      transition: none;
+    }
+    .h-city {
+      animation: none;
+    }
   }
 </style>
