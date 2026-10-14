@@ -1,6 +1,6 @@
 // Interactive globe/map engine used by the landing-page globe and the Places explorer.
 // Loaded only when needed. Draws into an existing <svg> (which carries the component's styles).
-import { geoCentroid, geoDistance, geoGraticule10, geoInterpolate, geoOrthographic, geoPath } from 'd3-geo';
+import { geoCentroid, geoDistance, geoGraticule10, geoInterpolate, geoOrthographic, geoPath, geoStream } from 'd3-geo';
 import type { Geometry } from 'geojson';
 import { countryView, layoutLabels, mainland } from '../lib/geo-shared';
 
@@ -88,7 +88,19 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       el.setAttribute('class', 'visited');
       el.dataset.name = place.name;
     }
-    return { ...c, el, place };
+    // A cap (centre + angular radius) around each country, so the ones out of view can be
+    // skipped while drawing — most of the world is off screen once you zoom in.
+    const mid = geoCentroid(c.g);
+    let reach = 0;
+    geoStream(c.g, {
+      point: (x: number, y: number) => void (reach = Math.max(reach, geoDistance(mid, [x, y]))),
+      lineStart() {},
+      lineEnd() {},
+      polygonStart() {},
+      polygonEnd() {},
+      sphere() {},
+    });
+    return { ...c, el, place, mid, reach, drawn: true };
   });
   land.replaceChildren(
     ...shapes.filter((s) => !s.place).map((s) => s.el),
@@ -105,9 +117,18 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       c.setAttribute('r', String(scale));
     }
     grat.setAttribute('d', path(graticule) ?? '');
+    // How far from the centre (as an angle on the globe) the corners of the frame reach.
+    const corner = Math.hypot(W, H) / 2;
+    const view = corner >= scale ? Math.PI / 2 : Math.asin(corner / scale);
     for (const s of shapes) {
+      if (geoDistance(center, s.mid) - s.reach > view + 0.02) {
+        if (s.drawn) s.el.setAttribute('d', '');
+        s.drawn = false;
+        continue;
+      }
       const g = focused && s.place === focused && detail?.[s.n] ? detail[s.n]! : s.g;
       s.el.setAttribute('d', path(g as any) ?? '');
+      s.drawn = true;
     }
     placeMarkers();
   }
@@ -161,9 +182,11 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     place?: MapPlace;
   };
   let markers: Marker[] = [];
+  let sizes: ({ w: number; h: number } | undefined)[] = [];
 
   function setMarkers(list: Marker[]) {
     markers = list;
+    sizes = [];
     pinLayer.replaceChildren(
       ...list.map((m, i) => {
         const a = document.createElement('a');
@@ -201,8 +224,12 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       if (!el.hidden) visible.push(i);
       el.style.left = `${(x / W) * 100}%`;
       el.style.top = `${(y / H) * 100}%`;
-      const label = el.querySelector<HTMLElement>('.label')!;
-      return { x: x * px, y: y * px, w: label.offsetWidth, h: label.offsetHeight || 20 };
+      // Label sizes never change while a set of pins is up; measure once instead of every frame.
+      const size = (sizes[i] ??= (() => {
+        const label = el.querySelector<HTMLElement>('.label')!;
+        return el.hidden || !label.offsetWidth ? undefined : { w: label.offsetWidth, h: label.offsetHeight || 20 };
+      })());
+      return { x: x * px, y: y * px, w: size?.w ?? 0, h: size?.h ?? 20 };
     });
     const sides = layoutLabels(
       visible.map((i) => pts[i]),
@@ -454,7 +481,10 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     svg.addEventListener('pointerleave', () => (tip.hidden = true));
   }
 
-  const resize = new ResizeObserver(() => placeMarkers());
+  const resize = new ResizeObserver(() => {
+    sizes = []; // fonts may have changed size with the window
+    placeMarkers();
+  });
   resize.observe(svg);
 
   draw();
