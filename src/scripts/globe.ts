@@ -364,7 +364,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       }
     }
     if (e.button !== 0) return;
-    cancelAnimationFrame(anim);
+    // A plain click while the camera is flying leaves the flight alone (see onMove).
     stopSpin();
     drag = { x: e.clientX, y: e.clientY, c: [...center], moved: false, vx: 0, t: performance.now() };
   };
@@ -376,6 +376,11 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     const dy = e.clientY - drag.y;
     if (!drag.moved && Math.hypot(dx, dy) < 4) return;
     if (!drag.moved) {
+      // Dragging mid-flight takes over from the flight. That must also count as the flight
+      // finishing, or whatever was waiting for it (a country's city pins) would never appear.
+      cancelAnimationFrame(anim);
+      finishFlight?.();
+      drag.c = [...center];
       drag.moved = true;
       root.classList.add('dragging');
       if (tip) tip.hidden = true;

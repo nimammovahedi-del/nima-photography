@@ -76,7 +76,6 @@ const cityPins = place.cities.map((c) => {
             data-y={c.y}
             data-city={c.name}
             style={`--i:${i}`}
-            data-side="right"
             aria-current={c.name === active ? 'page' : undefined}
           >
             <span class="dot" aria-hidden="true" />
@@ -92,11 +91,10 @@ const cityPins = place.cities.map((c) => {
 </figure>
 
 <script>
-  import { layoutLabels } from '../lib/geo-shared';
+  import { placeLabels } from '../lib/geo-shared';
 
-  // Place the pins over the cropped drawing, then choose label sides so they don't overlap.
-  // The selected city is placed first so it always keeps its label; on a crowded map the other
-  // labels that can't fit step aside (they show on hover or focus).
+  // Place the pins over the cropped drawing, then find each label a spot clear of the others.
+  // The selected city is placed first so its label sits right beside its pin.
   function layout(fig: HTMLElement) {
     const frame = fig.querySelector<HTMLElement>('.frame')!;
     const pins = [...frame.querySelectorAll<HTMLElement>('.pin')];
@@ -117,9 +115,10 @@ const cityPins = place.cities.map((c) => {
       return { x, y, w: label.offsetWidth, h: label.offsetHeight };
     });
     const first = pins.flatMap((p, i) => (p.classList.contains('active') ? [i] : []));
-    layoutLabels(pts, { width: w, height: h }, { first, hideOverlaps: true }).forEach(
-      (s, i) => (pins[i].dataset.side = s),
-    );
+    placeLabels(pts, { width: w, height: h }, { first }).forEach(({ dx, dy }, i) => {
+      pins[i].style.setProperty('--lx', `${dx}px`);
+      pins[i].style.setProperty('--ly', `${dy}px`);
+    });
     frame.classList.add('placed');
   }
 
@@ -235,9 +234,11 @@ const cityPins = place.cities.map((c) => {
       background-color 220ms ease,
       box-shadow 220ms ease;
   }
+  /* Each label's spot beside its pin is worked out by the script above. */
   .label {
     position: absolute;
-    top: 0;
+    left: var(--lx, 9px);
+    top: var(--ly, -0.7em);
     padding: 3px 9px;
     background: var(--label-bg);
     font-size: 14px;
@@ -255,37 +256,7 @@ const cityPins = place.cities.map((c) => {
       font-size: 12px;
     }
   }
-  /* No room for this label without covering another: show it only on hover or focus. */
-  [data-side='none'] .label {
-    left: 11px;
-    transform: translateY(-50%);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 150ms ease;
-  }
-  .pin[data-side='none']:is(:hover, :focus-visible) {
-    z-index: 2;
-  }
-  .pin[data-side='none']:is(:hover, :focus-visible) .label {
-    opacity: 1;
-  }
-  [data-side='right'] .label {
-    left: 11px;
-    transform: translateY(-50%);
-  }
-  [data-side='left'] .label {
-    right: 11px;
-    transform: translateY(-50%);
-  }
-  [data-side='up'] .label {
-    bottom: 11px;
-    top: auto;
-    transform: translateX(-50%);
-  }
-  [data-side='down'] .label {
-    top: 11px;
-    transform: translateX(-50%);
-  }
+
   .pin:focus-visible .dot {
     transform: scale(1.3);
   }
