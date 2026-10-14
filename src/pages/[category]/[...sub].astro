@@ -1,54 +1,95 @@
 ---
-// Subject pages with sub-tabs:
-//   /architecture            → All
-//   /architecture/brutalism  → one sub-tab
+// Subject pages:
+//   /architecture            → landing page: one cover photo per subcategory
+//   /architecture/brutalism  → every photo in one subcategory, with sub-tabs to switch
+//   /architecture/all        → every photo in the subject
 // (Same for /nature and /animals. Places and Film have their own pages.)
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Gallery from '../../components/Gallery.astro';
 import SubTabs from '../../components/SubTabs.astro';
+import SubcategoryMosaic from '../../components/SubcategoryMosaic.astro';
 import { categories, slugify, sortedSubs, site } from '../../site.config';
 import { getCategory } from '../../lib/photos';
+
+// getStaticPaths can't see this (Astro hoists it), so it spells 'all' out too.
+const ALL = 'all';
 
 export function getStaticPaths() {
   return categories
     .filter((c) => c.slug !== 'places' && c.slug !== 'film')
     .flatMap((c) => [
-      { params: { category: c.slug, sub: undefined }, props: { category: c, sub: undefined } },
+      { params: { category: c.slug, sub: undefined }, props: { category: c, view: 'landing' } },
+      { params: { category: c.slug, sub: 'all' }, props: { category: c, view: 'all' } },
       ...c.subs.map((s) => ({
         params: { category: c.slug, sub: slugify(s) },
-        props: { category: c, sub: s as string },
+        props: { category: c, view: s as string },
       })),
     ]);
 }
 
-const { category, sub } = Astro.props;
+const { category, view } = Astro.props;
 const all = await getCategory(category.slug);
-const photos = sub ? all.filter((p) => p.sub === sub) : all;
 const base = `/${category.slug}`;
+const inSub = (s: string) => all.filter((p) => p.sub === s);
+
+// Landing page tiles: subcategories with photos, each with its cover (or first photo).
+const subs = sortedSubs(category.subs)
+  .map((s) => ({ s, photos: inSub(s) }))
+  .filter(({ photos }) => photos.length > 0)
+  .map(({ s, photos }) => ({
+    label: s,
+    href: `${base}/${slugify(s)}`,
+    count: photos.length,
+    cover: photos.find((p) => p.cover) ?? photos[0],
+  }));
+
+const sub = view === 'landing' || view === 'all' ? undefined : view;
+const photos = sub ? inSub(sub) : all;
 
 const tabs = [
-  { label: 'All', href: base, count: all.length },
+  { label: 'All', href: `${base}/${ALL}`, count: all.length },
   ...sortedSubs(category.subs).map((s) => ({
     label: s,
     href: `${base}/${slugify(s)}`,
-    count: all.filter((p) => p.sub === s).length,
+    count: inSub(s).length,
   })),
 ];
+const heading = sub ?? (view === 'all' ? 'All photos' : category.label);
 ---
 
 <BaseLayout
-  title={sub ? `${sub} — ${category.label}` : category.label}
+  title={view === 'landing' ? category.label : `${heading} — ${category.label}`}
   description={`${sub ?? category.label} photography by ${site.name}.`}
 >
-  <header class="page-head">
-    <h1>{category.label}</h1>
-  </header>
-  <SubTabs items={tabs} label={`${category.label} categories`} />
   {
-    photos.length ? (
-      <Gallery photos={photos} label={`${sub ?? category.label} photographs`} />
+    view === 'landing' ? (
+      <>
+        <header class="page-head">
+          <h1>{category.label}</h1>
+        </header>
+        <SubcategoryMosaic items={subs} label={`${category.label} categories`} />
+        <p class="all-link">
+          <a href={`${base}/${ALL}`}>
+            All {category.label.toLowerCase()} photos <span class="n">{all.length}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </p>
+      </>
     ) : (
-      <p class="empty">No {sub} photos yet — check back soon.</p>
+      <>
+        <header class="page-head">
+          <a class="crumb" href={base}>
+            <span aria-hidden="true">←</span> {category.label}
+          </a>
+          <h1>{heading}</h1>
+        </header>
+        <SubTabs items={tabs} label={`${category.label} categories`} />
+        {photos.length ? (
+          <Gallery photos={photos} label={`${heading} photographs`} />
+        ) : (
+          <p class="empty">No {sub} photos yet — check back soon.</p>
+        )}
+      </>
     )
   }
 </BaseLayout>
@@ -57,5 +98,47 @@ const tabs = [
   .empty {
     padding: 48px 0;
     color: var(--muted);
+  }
+  .crumb {
+    display: inline-flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+  .crumb:hover {
+    color: var(--text);
+  }
+  .all-link {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0 0;
+  }
+  .all-link a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 14px 22px;
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease;
+  }
+  .all-link a:hover {
+    border-color: var(--accent);
+  }
+  .all-link .n {
+    color: var(--muted);
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
   }
 </style>

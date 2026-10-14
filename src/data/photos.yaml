@@ -5,6 +5,8 @@
 #   alt:      describes the photo for screen readers — please always fill this in
 #   sub:      sub-tab, e.g. Georgian & Classical (Architecture), Coast (Nature), Birds (Animals)
 #             — the list of sub-tabs lives in src/site.config.ts
+#   cover:    true on one photo per sub-tab makes it that sub-tab's cover on the subject's
+#             landing page (e.g. /architecture); without one, the sub-tab's first photo is used
 #   country:  where it was taken (must match a country in site.config.ts) — the photo
 #   city:     then also appears under Places → that country / city, whatever its tab
 #   filmSim:  film photos only, e.g. Classic Chrome, Kodak Portra 400
@@ -196,6 +198,7 @@
   title: Royal Crescent
   alt: The long sweep of the Royal Crescent curving away over its lawn, iron railings in the foreground
   sub: Georgian & Classical
+  cover: true
   country: England
   city: Bath
   tags: [royal crescent, georgian, crescent, lawn]
@@ -269,6 +272,7 @@
   title: The Overlook
   alt: Tiny figures beside a railing on a sheer clifftop overlook, a forested granite canyon wall across the gap
   sub: Mountains
+  cover: true
   country: United States
   city: Yosemite
   tags: [overlook, cliff, granite, valley, people]
@@ -330,6 +334,7 @@
   title: Red Sky at Dusk
   alt: Bands of deep red and purple sunset cloud above the black silhouettes of pine trees
   sub: Forest
+  cover: true
   country: United States
   city: Yosemite
   tags: [sunset, red sky, pines, silhouette]
@@ -371,6 +376,7 @@
   title: Painted Gables
   alt: A wide view of pastel gabled houses climbing a hillside among slate roofs and chimney pots under a cloudy sky
   sub: Colourful Terraces
+  cover: true
   country: Ireland
   city: Cork
   tags: [deck of cards, colourful houses, gables, rooftops]
@@ -378,6 +384,7 @@
   title: Three Sisters
   alt: A sandy cove with turquoise water below green fields, three pointed headlands rising along the horizon
   sub: Coast
+  cover: true
   country: Ireland
   city: Dingle
   tags: [three sisters, coast, beach, headlands]
@@ -385,6 +392,7 @@
   title: Under the Cloud
   alt: Stone cottages on a green hillside above a cliff edge, low cloud hiding the top of the slope
   sub: Countryside
+  cover: true
   country: Ireland
   city: Dingle
   tags: [farmhouses, fields, low cloud, coast]
@@ -392,6 +400,7 @@
   title: Gull on the Rocks
   alt: A white gull perched on jagged, lichen-covered rocks high above a bright turquoise sea
   sub: Birds
+  cover: true
   country: Ireland
   city: Dingle
   tags: [gull, bird, rocks, sea]
@@ -515,6 +524,7 @@
   title: Glass Arcade
   alt: The white iron and glass roof of a shopping arcade with a large clock, balconies and a staircase below
   sub: Victorian & Glasshouses
+  cover: true
   country: Ireland
   city: Dublin
   tags: [arcade, glass roof, ironwork, shopping centre, interior]
@@ -553,6 +563,7 @@
   title: Horned Ewe
   alt: A shaggy black-faced sheep with curled horns standing in long grass, looking at the camera
   sub: Farm Animals
+  cover: true
   country: Ireland
   city: Galway
   tags: [sheep, ewe, horns, grass]
@@ -581,6 +592,7 @@
   title: Daisies
   alt: A dense spread of pink and white daisies with yellow centres
   sub: Flowers
+  cover: true
   country: Ireland
   city: Galway
   tags: [daisies, flowers, pink, close-up]
@@ -629,6 +641,7 @@
   title: The Manor House
   alt: A sandstone Victorian mansion with tall gables and chimneys beside clipped hedges and dark yews under a blue sky
   sub: Castles & Country Houses
+  cover: true
   country: Ireland
   city: Killarney
   tags: [muckross house, manor, tudor revival, gables]
@@ -642,6 +655,7 @@
   title: Lough and Mountains
   alt: A blue lake with a wooded island beneath green mountains and a band of white cloud, a wooden fence in the foreground
   sub: Lakes & Rivers
+  cover: true
   country: Ireland
   city: Killarney
   tags: [lough, lake, mountains, clouds]
@@ -748,6 +762,7 @@
   title: Café Ceiling
   alt: A warm-lit café with white pipes and globe lamps hanging from a high ceiling, people gathered at the counter
   sub: Modern
+  cover: true
   country: Finland
   city: Helsinki
   tags: [cafe, ceiling, ducts, lights, interior]
@@ -755,6 +770,7 @@
   title: Uspenski Cathedral
   alt: The red-brick Uspenski Cathedral with green roofs and gold onion domes on a hill against a deep blue sky
   sub: Churches & Cathedrals
+  cover: true
   country: Finland
   city: Helsinki
   tags: [uspenski cathedral, orthodox, red brick, domes]
