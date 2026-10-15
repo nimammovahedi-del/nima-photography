@@ -7,7 +7,7 @@ import '../styles/map.css';
 import { geoCentroid, geoGraticule10, geoOrthographic, geoPath } from 'd3-geo';
 import type { Geometry } from 'geojson';
 import { regions, slugify, sortedPlaces } from '../site.config';
-import { countries, findCountry, mainland } from '../lib/world';
+import { panelCountries, findCountry, mainland } from '../lib/world';
 import { STRIP_H, STRIP_W, stripView } from '../lib/strip';
 
 // Wide strip (about the shape of a panel on a laptop). The region is framed at the right-hand end,
@@ -25,7 +25,7 @@ const snapshots = regions.map((r) => {
   const mine = new Set(inRegion.map((p) => p.map));
   const target = {
     type: 'GeometryCollection',
-    geometries: inRegion.map((p) => mainland(findCountry(p.map)!.geometry)),
+    geometries: inRegion.map((p) => mainland(findCountry(p.map, panelCountries)!.geometry)),
   } as Geometry;
   // Turn the globe to face the region, then fit it into the frame.
   const [lon, lat] = geoCentroid(target);
@@ -35,7 +35,7 @@ const snapshots = regions.map((r) => {
     [W, H],
   ]);
   const path = geoPath(projection).digits(1);
-  const shapes = countries
+  const shapes = panelCountries
     .map((c) => {
       const n = c.properties.name;
       return { d: path(c) ?? '', cls: mine.has(n) ? 'visited' : visited.has(n) ? 'elsewhere' : '' };

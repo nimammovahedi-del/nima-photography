@@ -50,13 +50,11 @@ const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 
 const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Map data is fetched once per page, however many maps use it.
-let worldData: Promise<{ n: string; g: Geometry }[]> | undefined;
-let detailData: Promise<Record<string, Geometry | null>> | undefined;
+let worldData: Promise<{ n: string; g: Geometry; m?: Geometry }[]> | undefined;
+// The countries you've been to come at full detail in it (see lib/world.ts), so zooming in needs
+// nothing more — and their borders match their neighbours' exactly. While the globe moves, they're
+// drawn from a lighter outline ("m") that also matches its neighbours, so phones keep up.
 const loadWorld = () => (worldData ??= fetch('/map/world.json').then((r) => r.json()));
-const loadDetail = () =>
-  (detailData ??= fetch('/map/detail.json')
-    .then((r) => r.json())
-    .catch(() => ({})));
 
 export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHooks) {
   const svg = root.querySelector<SVGSVGElement>('svg.map')!;
@@ -68,7 +66,6 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   const MAX_SCALE = Math.min(W, H) * 40;
 
   const world = await loadWorld();
-  let detail: Record<string, Geometry | null> | undefined;
 
   const byMap = new Map(cfg.places.map((p) => [p.map, p]));
   let center: [number, number] = [...cfg.start.center];
@@ -125,6 +122,17 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   // (precision 0): at the world map's level of detail the difference can't be seen while moving,
   // and it saves about a fifth of each frame's work. The last frame is drawn smoothly again.
   let inFlight = false;
+  // Dragging or zooming by hand: the lighter outlines too, until the map has been still a moment.
+  let handMoving = false;
+  let settle = 0;
+  function moving() {
+    handMoving = true;
+    clearTimeout(settle);
+    settle = window.setTimeout(() => {
+      handMoving = false;
+      draw();
+    }, 150);
+  }
   // While the map shows through a window smaller than the screen (shrinking into, or growing out of,
   // a country page's map strip), only what's inside that window needs drawing. Screen pixels.
   let visibleArea: (() => { left: number; top: number; right: number; bottom: number } | null) | null =
@@ -174,11 +182,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
         s.drawn = false;
         continue;
       }
-      // The detailed outline only shows once you're close; further out it looks the same as the
-      // light one and costs far more to draw on every frame of a flight.
-      const near = focusScale && scale > focusScale * 0.45;
-      const g = near && focused && s.place === focused && detail?.[s.n] ? detail[s.n]! : s.g;
-      s.el.setAttribute('d', path(g as any) ?? '');
+      s.el.setAttribute('d', path(((inFlight || handMoving) && s.m) || (s.g as any)) ?? '');
       s.drawn = true;
     }
     placeMarkers();
@@ -354,7 +358,6 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
   async function showCountry(place: MapPlace, ms?: number) {
     const mine = ++request;
     if (tip) tip.hidden = true;
-    const detailReady = loadDetail().then((d) => void (detail = d));
     const pins = place.cities.map((c) => [c.lon, c.lat] as [number, number]);
     const pad = Math.min(W, H) * (place.cities.length ? 0.16 : 0.2);
     const v = countryView(shapeOf(place).g, pins, W, H, pad);
@@ -364,7 +367,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     root.classList.add('focus');
     shapes.forEach((s) => s.el.classList.toggle('focused', s.place === place));
     setMarkers([]);
-    await Promise.all([flyTo({ center: v.center, scale: focusScale }, ms), detailReady]);
+    await flyTo({ center: v.center, scale: focusScale }, ms);
     if (mine !== request) return;
     draw();
     setMarkers(
@@ -417,6 +420,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
         hooks.onZoomOutOfRegion();
       }
     }
+    moving();
     draw();
   }
 
@@ -532,6 +536,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
     drag.vx = (center[0] - lon) / Math.max(now - drag.t, 1);
     drag.t = now;
     center = [lon, lat];
+    moving();
     draw();
   };
   const endTouch = (e: PointerEvent) => {
@@ -557,6 +562,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       if (Math.abs(v) < 0.02) return;
       center = [center[0] + v, center[1]];
       v *= 0.94;
+      moving();
       draw();
       spin = requestAnimationFrame(coast);
     };
@@ -601,9 +607,6 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
 
   draw();
   root.classList.add('live');
-  // Fetch the detailed outlines quietly in the background, so zooming into a country is
-  // smooth from the first frame instead of swapping shapes at the end.
-  (window.requestIdleCallback ?? setTimeout)(() => loadDetail().then((d) => void (detail = d)));
 
   /** Back to the starting view, with no country selected. */
   function reset() {
