@@ -6,6 +6,7 @@ import {
   filterWeight,
   presimplify,
   quantile,
+  simplify,
   sphericalRingArea,
   sphericalTriangleArea,
 } from 'topojson-simplify';
@@ -122,6 +123,18 @@ export const countries = load(globeTopology(true));
  * alike, so neighbours still meet exactly.
  */
 export const movingCountries = load(globeTopology(false));
+
+/**
+ * The home page's region pictures: every country thinned alike to about a fifth of 1:50m's points,
+ * as they were drawn before the globe's visited countries got full detail.
+ */
+export const panelCountries = load(
+  (() => {
+    const t = presimplify(structuredClone(world50) as any);
+    const thin = simplify(t, quantile(t, 0.12));
+    return filter(thin, filterWeight(thin, SMALLEST_ISLAND, sphericalRingArea));
+  })(),
+);
 
 let detailed: Country[] | undefined;
 /** High detail — for zoomed-in country views. */
