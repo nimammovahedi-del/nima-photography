@@ -812,6 +812,543 @@
   country: Finland
   city: Helsinki
   tags: [helsinki cathedral, neoclassical, dome, evening light]
+- file: architecture/edinburgh-01.jpg
+  title: The Mound
+  alt: The columned National Gallery in front of the Gothic spires of New College under a heavy sky
+  sub: Georgian & Classical
+  country: Scotland
+  city: Edinburgh
+  tags: [gallery, columns, spires, old town]
+- file: architecture/edinburgh-02.jpg
+  title: Castle Rock
+  alt: Edinburgh Castle on its rock above dense green trees, a statue silhouetted beside the view
+  sub: Castles & Country Houses
+  country: Scotland
+  city: Edinburgh
+  tags: [castle, rock, trees, statue]
+- file: architecture/edinburgh-03.jpg
+  title: New Town Terrace
+  alt: A long Georgian terrace with dormer windows and rows of chimney pots under grey cloud
+  sub: Georgian & Classical
+  country: Scotland
+  city: Edinburgh
+  tags: [terrace, georgian, chimneys]
+- file: places/edinburgh-04.jpg
+  title: Cobbled Street
+  alt: A cobbled New Town street lined with stone townhouses, parked cars and a domed building at the end
+  country: Scotland
+  city: Edinburgh
+  tags: [street, cobbles, townhouses]
+- file: architecture/edinburgh-05.jpg
+  title: Clock Tower
+  alt: The ornate clock tower of a Victorian hotel rising into a stormy sky, a flag on top
+  sub: Victorian & Glasshouses
+  country: Scotland
+  city: Edinburgh
+  tags: [clock tower, hotel, victorian]
+- file: places/edinburgh-06.jpg
+  title: Waverley
+  alt: The ridged glass roof of Waverley station below a row of tall stone buildings
+  country: Scotland
+  city: Edinburgh
+  tags: [station, railway, roof]
+- file: architecture/edinburgh-07.jpg
+  title: The Obelisk
+  alt: A tall dark stone obelisk in an old burial ground beside a castellated tower
+  sub: Monuments
+  country: Scotland
+  city: Edinburgh
+  tags: [obelisk, monument, burial ground]
+- file: places/edinburgh-08.jpg
+  title: Toward Leith
+  alt: Rooftops stretching to the port of Leith, its yellow cranes standing against the grey sea
+  country: Scotland
+  city: Edinburgh
+  tags: [city, port, cranes, rooftops]
+- file: places/edinburgh-09.jpg
+  title: Oil on Cobbles
+  alt: A rainbow sheen of oil running between wet granite cobbles
+  country: Scotland
+  city: Edinburgh
+  tags: [cobbles, rain, colour, abstract]
+- file: places/edinburgh-10.jpg
+  title: The Close
+  alt: A narrow wet close between dark stone walls, old lanterns hanging overhead
+  country: Scotland
+  city: Edinburgh
+  tags: [close, alley, lanterns, rain]
+- file: architecture/edinburgh-11.jpg
+  title: Royal Mile
+  alt: Tall stone tenements along the Royal Mile, a row of red gables in the middle
+  sub: Colourful Terraces
+  country: Scotland
+  city: Edinburgh
+  tags: [royal mile, tenements, gables]
+- file: places/edinburgh-12.jpg
+  title: Arthur's Seat over the Old Town
+  alt: Arthur's Seat lit by sun above the dark rooftops of the Old Town and a road curving below
+  country: Scotland
+  city: Edinburgh
+  tags: [arthurs seat, old town, hill]
+- file: places/edinburgh-13.jpg
+  title: Grey Day
+  alt: Arthur's Seat under an overcast sky above dark stone buildings
+  country: Scotland
+  city: Edinburgh
+  tags: [arthurs seat, old town, overcast]
+- file: nature/edinburgh-14.jpg
+  title: The Crag
+  alt: The rocky summit of Arthur's Seat above slopes of green grass and orange gorse under a stormy sky
+  sub: Mountains
+  country: Scotland
+  city: Edinburgh
+  tags: [arthurs seat, hill, gorse, storm]
+- file: animals/edinburgh-15.jpg
+  title: Jackdaw
+  alt: A jackdaw with a pale eye peering out of bright sunlit grass
+  sub: Birds
+  country: Scotland
+  city: Edinburgh
+  tags: [jackdaw, bird, grass]
+- file: architecture/edinburgh-16.jpg
+  title: Chapel Ruin
+  alt: The ruined wall of an old chapel on a steep hillside with orange gorse below
+  sub: Castles & Country Houses
+  country: Scotland
+  city: Edinburgh
+  tags: [ruin, chapel, hill, gorse]
+- file: nature/edinburgh-17.jpg
+  title: The Park
+  alt: Dog walkers crossing a sunlit green park below the city, the Firth of Forth beyond
+  sub: Countryside
+  country: Scotland
+  city: Edinburgh
+  tags: [park, dogs, city, firth]
+- file: places/edinburgh-18.jpg
+  title: Over the City
+  alt: A figure silhouetted on the hilltop above the city and the docks, the Firth of Forth beyond under pink cloud
+  country: Scotland
+  city: Edinburgh
+  tags: [silhouette, city, firth, dusk]
+- file: nature/edinburgh-19.jpg
+  title: Rainbow over the Firth
+  alt: A rainbow dropping into the Firth of Forth beneath dark rain clouds, the city in shadow below
+  sub: Skies & Weather
+  country: Scotland
+  city: Edinburgh
+  tags: [rainbow, firth, rain, sea]
+- file: nature/edinburgh-20.jpg
+  title: Light over the City
+  alt: Sunbeams breaking through dark clouds over the city spread out below
+  sub: Skies & Weather
+  country: Scotland
+  city: Edinburgh
+  tags: [sunbeams, clouds, city]
+- file: places/edinburgh-21.jpg
+  title: Castle in the Light
+  alt: The city and its castle in hazy sunlight, a green hillside in the foreground
+  country: Scotland
+  city: Edinburgh
+  tags: [city, castle, sunlight, hill]
+- file: places/edinburgh-22.jpg
+  title: South Side
+  alt: The city's southern streets and trees seen from above, a road curving across the parkland below
+  country: Scotland
+  city: Edinburgh
+  tags: [city, aerial, park, road]
+- file: nature/edinburgh-23.jpg
+  title: Sunbeams
+  alt: Rays of light falling through cloud over the city, the dark hilltop silhouetted in front
+  sub: Skies & Weather
+  country: Scotland
+  city: Edinburgh
+  tags: [sunbeams, clouds, silhouette]
+- file: nature/edinburgh-24.jpg
+  title: The Shower
+  alt: A heavy rain shower falling from dark teal cloud over the flat land beyond the city
+  sub: Skies & Weather
+  country: Scotland
+  city: Edinburgh
+  tags: [rain, shower, clouds, storm]
+- file: nature/edinburgh-25.jpg
+  title: Purple Rain
+  alt: A huge purple-tinged rain shower pouring from billowing cloud over the plain below
+  sub: Skies & Weather
+  cover: true
+  country: Scotland
+  city: Edinburgh
+  tags: [rain, shower, clouds, storm]
+- file: nature/edinburgh-26.jpg
+  title: Rainbow in the Rain
+  alt: A rainbow glowing inside a falling rain shower above green suburbs and two tower blocks
+  sub: Skies & Weather
+  country: Scotland
+  city: Edinburgh
+  tags: [rainbow, rain, suburbs]
+- file: architecture/stirling-04.jpg
+  title: The Great Hall
+  alt: The pale ochre walls and stepped gable of the castle's Great Hall, a figure with an umbrella crossing the wet courtyard
+  sub: Castles & Country Houses
+  country: Scotland
+  city: Stirling
+  tags: [castle, great hall, gable, rain]
+- file: places/stirling-05.jpg
+  title: Storm over the Monument
+  alt: Dark storm cloud over the Wallace Monument on its wooded hill, the town and a cemetery below
+  country: Scotland
+  city: Stirling
+  tags: [wallace monument, storm, town, view]
+- file: architecture/stirling-03.jpg
+  title: Castle Skyline
+  alt: The dark battlements, round tower and gables of Stirling Castle under heavy cloud
+  sub: Castles & Country Houses
+  country: Scotland
+  city: Stirling
+  tags: [castle, battlements, towers]
+- file: places/stirling-09.jpg
+  title: The Royal Bedchamber
+  alt: A red canopied bed with a gold unicorn and lion crest beneath brass candle chandeliers and a painted ceiling
+  country: Scotland
+  city: Stirling
+  tags: [interior, royal, unicorn, candles]
+- file: places/stirling-06.jpg
+  title: Cannon on the Wall
+  alt: A black cannon pointing out between stone battlements over the green valley
+  country: Scotland
+  city: Stirling
+  tags: [cannon, battlements, view]
+- file: architecture/stirling-08.jpg
+  title: Gables in the Courtyard
+  alt: A dark stone wing with a stepped gable beside the ochre wall of the Great Hall
+  sub: Castles & Country Houses
+  country: Scotland
+  city: Stirling
+  tags: [castle, gables, courtyard]
+- file: architecture/stirling-02.jpg
+  title: Castle Gardens
+  alt: The long stone wall of the palace above planted gardens under a bright cloud
+  sub: Castles & Country Houses
+  country: Scotland
+  city: Stirling
+  tags: [castle, gardens, palace]
+- file: places/stirling-07.jpg
+  title: Monument Through the Wall
+  alt: The Wallace Monument framed between battlements, a cannon in the foreground
+  country: Scotland
+  city: Stirling
+  tags: [wallace monument, cannon, battlements]
+- file: places/stirling-01.jpg
+  title: Tudor Gable
+  alt: A black and white half-timbered gable above red brick, an old street lamp in front
+  country: Scotland
+  city: Stirling
+  tags: [half-timbered, gable, street lamp]
+- file: nature/cairngorms-22.jpg
+  title: Twin Peaks
+  alt: Two snow-streaked mountain peaks rising either side of a high corrie beneath a wide grey sky
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+  tags: [mountains, snow, peaks, corrie]
+- file: nature/cairngorms-03.jpg
+  title: Green Lochan
+  alt: A still blue loch ringed by pine forest under bright white clouds
+  sub: Lakes & Rivers
+  country: Scotland
+  city: Cairngorms
+  tags: [loch, pines, forest, clouds]
+- file: places/cairngorms-40.jpg
+  title: Lone Walker
+  alt: A lone walker standing on a vast snowfield beneath dark rolling cloud
+  country: Scotland
+  city: Cairngorms
+  tags: [hiker, snow, plateau]
+- file: nature/cairngorms-34.jpg
+  title: Boulder Field
+  alt: Snow-covered boulders stretching to the rim of a snowy corrie under a deep blue sky
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+  tags: [snow, boulders, corrie, blue sky]
+- file: places/cairngorms-01.jpg
+  title: Campsite View
+  alt: A snow-capped hill seen through pines above a campsite with a blue tent
+  country: Scotland
+  city: Cairngorms
+  tags: [campsite, tent, pines, snow]
+- file: animals/cairngorms-38.jpg
+  title: Snow Bunting
+  alt: A black and white snow bunting perched on a tuft of heather among snow and rocks
+  sub: Birds
+  country: Scotland
+  city: Cairngorms
+  tags: [snow bunting, bird, snow, rocks]
+- file: nature/cairngorms-05.jpg
+  title: Storm Valley
+  alt: A dark glen beneath brooding clouds, snow lying on the high plateau beyond
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+  tags: [glen, storm, snow, mountains]
+- file: places/cairngorms-27.jpg
+  title: Walkers in Golden Light
+  alt: Two pairs of walkers on a snowy track beneath dark golden-edged clouds
+  country: Scotland
+  city: Cairngorms
+  tags: [hikers, snow, clouds]
+- file: nature/cairngorms-10.jpg
+  title: Loch at Dusk
+  alt: A small boat silhouetted on a still loch under lilac and purple dusk clouds
+  sub: Lakes & Rivers
+  country: Scotland
+  city: Cairngorms
+  tags: [loch, dusk, boat, purple]
+- file: nature/cairngorms-37.jpg
+  title: Corrie Ridge
+  alt: A dark ridge streaked with snow curving around a deep corrie under layered blue clouds
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+  tags: [corrie, ridge, snow, clouds]
+- file: places/cairngorms-07.jpg
+  title: Path Down to the Loch
+  alt: A hiker with a backpack descending a rocky path toward a loch in the forested glen
+  country: Scotland
+  city: Cairngorms
+  tags: [hiker, path, loch, glen]
+- file: nature/cairngorms-48.jpg
+  title: Wind-Carved Snow
+  alt: Rippled patterns carved by wind across a slope of snow under dark cloud
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+  tags: [snow, texture, wind]
+- file: nature/cairngorms-11.jpg
+  title: Peak Above the Loch
+  alt: A snow-tipped peak glowing at dusk above a dark forest and a calm loch
+  sub: Lakes & Rivers
+  country: Scotland
+  city: Cairngorms
+  tags: [loch, peak, dusk, snow]
+- file: places/cairngorms-36.jpg
+  title: Snow Break
+  alt: A walker sitting in the snow on a steep slope, snowy mountains across the valley
+  country: Scotland
+  city: Cairngorms
+  tags: [hiker, snow, rest]
+- file: nature/cairngorms-17.jpg
+  title: Snowy Crags
+  alt: Dark snow-covered crags under dramatic cloud with patches of blue sky
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+  tags: [crags, snow, clouds]
+- file: nature/cairngorms-04.jpg
+  title: Golden Grass
+  alt: Golden moorland grass in front of a hillside of pines and larches under blue sky
+  sub: Forest
+  country: Scotland
+  city: Cairngorms
+  tags: [grass, pines, moor, autumn]
+- file: places/cairngorms-46.jpg
+  title: Toward the Peaks
+  alt: A walker crossing a snowy slope toward distant pointed peaks under golden cloud
+  country: Scotland
+  city: Cairngorms
+  tags: [hiker, snow, peaks, golden light]
+- file: nature/cairngorms-09.jpg
+  title: Snowy Corries
+  alt: Snow-filled corries framed by dark pines and autumn trees
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+  tags: [corries, snow, pines]
+- file: nature/cairngorms-30.jpg
+  title: Pointed Peak
+  alt: A pointed snow-dusted peak among ridges under heavy blue-grey cloud
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+  tags: [peak, snow, ridges]
+- file: nature/cairngorms-06.jpg
+  title: Loch Below the Storm
+  alt: A loch in the forested glen far below dark storm clouds, snow on the mountains beyond
+  sub: Lakes & Rivers
+  country: Scotland
+  city: Cairngorms
+  tags: [loch, storm, glen, snow]
+- file: places/cairngorms-21.jpg
+  title: Rucksack
+  alt: A rucksack resting in the snow looking out to dark snowy peaks
+  country: Scotland
+  city: Cairngorms
+  tags: [rucksack, snow, peaks]
+- file: nature/cairngorms-13.jpg
+  title: Corrie Wall
+  alt: A snowy corrie wall rising above a field of dark boulders under thin white cloud
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+  tags: [corrie, snow, boulders]
+- file: places/cairngorms-25.jpg
+  title: Tracks Across the Snow
+  alt: Small figures following a trodden trail across a white snowfield toward the horizon
+  country: Scotland
+  city: Cairngorms
+  tags: [hikers, snow, trail]
+- file: nature/cairngorms-29.jpg
+  title: Ridges to the Horizon
+  alt: Snowy ridges and dark slopes stretching away to distant blue hills
+  sub: Mountains
+  country: Scotland
+  city: Cairngorms
+  tags: [ridges, snow, mountains]
+- file: nature/cairngorms-08.jpg
+  title: Lilac Evening
+  alt: A loch in a wide glen under lilac evening cloud, heather on the slope in front
+  sub: Lakes & Rivers
+  country: Scotland
+  city: Cairngorms
+  tags: [loch, evening, heather, glen]
+- file: places/cairngorms-44.jpg
+  title: Hiker on the Plateau
+  alt: A hiker with an orange pack walking along a snowy path under a blue sky
+  country: Scotland
+  city: Cairngorms
+  tags: [hiker, snow, blue sky]
+- file: places/cairngorms-15.jpg
+  title: Summit Dome
+  alt: A smooth snow-covered summit dome under streaky cloud
+  country: Scotland
+  city: Cairngorms
+  tags: [summit, snow, clouds]
+- file: nature/cairngorms-02.jpg
+  title: Ridge over the Forest
+  alt: Snow lying in the gullies of a long ridge above a pine forest
+  sub: Forest
+  country: Scotland
+  city: Cairngorms
+  tags: [forest, pines, ridge, snow]
+- file: places/cairngorms-19.jpg
+  title: Figure on the Horizon
+  alt: A tiny figure on the skyline of a snowy plateau beneath dark teal cloud
+  country: Scotland
+  city: Cairngorms
+  tags: [figure, snow, horizon]
+- file: places/cairngorms-33.jpg
+  title: Storm Clouds
+  alt: Dark storm clouds over a slope of snow and red rocks
+  country: Scotland
+  city: Cairngorms
+  tags: [storm, snow, rocks]
+- file: places/cairngorms-45.jpg
+  title: Single File
+  alt: A black and white view of a walker on a trail through the snow toward a dark peak
+  country: Scotland
+  city: Cairngorms
+  tags: [hiker, snow, black and white]
+- file: places/cairngorms-32.jpg
+  title: Peak and Boulders
+  alt: A snow-covered peak above a foreground of boulders
+  country: Scotland
+  city: Cairngorms
+  tags: [peak, snow, boulders]
+- file: places/cairngorms-12.jpg
+  title: Ski Tow
+  alt: A ski tow pylon and cables crossing a snowy hillside under blue sky
+  country: Scotland
+  city: Cairngorms
+  tags: [ski, snow, hillside]
+- file: places/cairngorms-26.jpg
+  title: Snowy Ridge
+  alt: A snowy ridge rising above a high plateau under heavy teal cloud
+  country: Scotland
+  city: Cairngorms
+  tags: [ridge, snow, clouds]
+- file: places/cairngorms-18.jpg
+  title: Climbers' Trail
+  alt: Two climbers on a long trail zigzagging up a snowfield
+  country: Scotland
+  city: Cairngorms
+  tags: [climbers, snow, trail]
+- file: places/cairngorms-47.jpg
+  title: The Gorge
+  alt: A rocky gorge with a dark stream winding through snow under cloud
+  country: Scotland
+  city: Cairngorms
+  tags: [gorge, stream, snow]
+- file: places/cairngorms-39.jpg
+  title: Over the Rocks
+  alt: A walker picking a way across rocks and snow toward a broad white plateau
+  country: Scotland
+  city: Cairngorms
+  tags: [hiker, rocks, snow]
+- file: places/cairngorms-28.jpg
+  title: Snow and Shadow
+  alt: Snowy ridges cut by dark shadowed slopes under rolling cloud
+  country: Scotland
+  city: Cairngorms
+  tags: [ridges, snow, shadow]
+- file: places/cairngorms-16.jpg
+  title: Footprints
+  alt: Footprints crossing a wide snowfield toward a distant peak
+  country: Scotland
+  city: Cairngorms
+  tags: [footprints, snow, plateau]
+- file: places/cairngorms-41.jpg
+  title: Under the Clouds
+  alt: Snowy ridges beneath a band of dark, heavy cloud
+  country: Scotland
+  city: Cairngorms
+  tags: [ridges, snow, clouds]
+- file: places/cairngorms-42.jpg
+  title: Sun on the Plateau
+  alt: The sun breaking through cloud over a snowy plateau and distant ridges
+  country: Scotland
+  city: Cairngorms
+  tags: [sun, snow, plateau]
+- file: places/cairngorms-31.jpg
+  title: Ridge Detail
+  alt: A snow-streaked ridge falling away into a dark corrie
+  country: Scotland
+  city: Cairngorms
+  tags: [ridge, snow, corrie]
+- file: places/cairngorms-23.jpg
+  title: High Plateau
+  alt: A snowy plateau under heavy teal cloud, patches of heather showing through
+  country: Scotland
+  city: Cairngorms
+  tags: [plateau, snow, clouds]
+- file: places/cairngorms-43.jpg
+  title: Corrie Rim
+  alt: Snowy corrie rims beneath dark cloud, ski tracks across the snow in front
+  country: Scotland
+  city: Cairngorms
+  tags: [corrie, snow, ski tracks]
+- file: places/cairngorms-35.jpg
+  title: Looking Out
+  alt: A snowy slope dropping away to a dark glen and the hills beyond
+  country: Scotland
+  city: Cairngorms
+  tags: [snow, slope, view]
+- file: places/cairngorms-20.jpg
+  title: White Plateau
+  alt: A wide snowy plateau beneath low dark cloud
+  country: Scotland
+  city: Cairngorms
+  tags: [plateau, snow, clouds]
+- file: places/cairngorms-24.jpg
+  title: Twin Peaks, Closer
+  alt: A closer view of two snowy peaks and the corrie between them
+  country: Scotland
+  city: Cairngorms
+  tags: [peaks, snow, corrie]
+- file: places/cairngorms-14.jpg
+  title: Corrie and Boulders
+  alt: A snowy corrie seen across a field of boulders under thin cloud
+  country: Scotland
+  city: Cairngorms
+  tags: [corrie, boulders, snow]
 - file: film/weymouth-arch.jpg
   title: Under the Arch
   alt: A sepia view through a dark railway arch to a white cottage and a quiet lane beyond

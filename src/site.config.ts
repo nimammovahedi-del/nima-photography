@@ -21,11 +21,12 @@ export const categories = [
       'Colourful Terraces',
       'Georgian & Classical',
       'Modern',
+      'Monuments',
       'Victorian & Glasshouses',
     ],
   },
   { slug: 'places', label: 'Places', subs: [] },
-  { slug: 'nature', label: 'Nature', subs: ['Coast', 'Countryside', 'Flowers', 'Forest', 'Lakes & Rivers', 'Mountains'] },
+  { slug: 'nature', label: 'Nature', subs: ['Coast', 'Countryside', 'Flowers', 'Forest', 'Lakes & Rivers', 'Mountains', 'Skies & Weather'] },
   { slug: 'animals', label: 'Animals', subs: ['Birds', 'Farm Animals'] },
   { slug: 'film', label: 'Film', subs: [] },
 ] as const satisfies readonly { slug: string; label: string; subs: readonly string[] }[];
@@ -117,6 +118,7 @@ export const places: Place[] = [
     cities: [
       { name: 'Cairngorms', lon: -3.64, lat: 57.08 },
       { name: 'Edinburgh', lon: -3.19, lat: 55.95 },
+      { name: 'Stirling', lon: -3.94, lat: 56.12 },
     ],
   },
   { name: 'Spain', map: 'Spain', region: 'Europe', cities: [] },
