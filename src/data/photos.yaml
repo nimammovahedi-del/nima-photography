@@ -812,6 +812,469 @@
   country: Finland
   city: Helsinki
   tags: [helsinki cathedral, neoclassical, dome, evening light]
+- file: architecture/cambridge-03.jpg
+  title: King's College Chapel
+  alt: The pinnacled Gothic side of King's College Chapel against a deep blue sky
+  sub: Churches & Cathedrals
+  country: England
+  city: Cambridge
+  tags: [chapel, gothic, pinnacles]
+- file: places/cambridge-08.jpg
+  title: Bridge of Sighs
+  alt: A covered Gothic bridge over the river, a punt passing beneath toward a stone bridge beyond
+  country: England
+  city: Cambridge
+  tags: [bridge, river, punt, gothic]
+- file: animals/cambridge-09.jpg
+  title: Belted Cows
+  alt: Belted black and white cows and a pale cow grazing on a meadow in front of thatched cottages
+  sub: Farm Animals
+  country: England
+  city: Cambridge
+  tags: [cows, belted galloway, meadow, thatch]
+- file: places/cambridge-05.jpg
+  title: Bunting on Trinity Street
+  alt: Strings of colourful bunting across a narrow street, a college chapel tower rising behind
+  country: England
+  city: Cambridge
+  tags: [bunting, street, tower]
+- file: architecture/cambridge-06.jpg
+  title: Great Court
+  alt: A carved stone fountain on a lawn in front of a long college hall with a lantern tower
+  sub: Castles & Country Houses
+  country: England
+  city: Cambridge
+  tags: [college, fountain, court, lawn]
+- file: places/cambridge-01.jpg
+  title: Parker's Piece
+  alt: A wide green park with people crossing it in front of a large stone hotel with green-domed turrets
+  country: England
+  city: Cambridge
+  tags: [park, green, hotel]
+- file: places/cambridge-07.jpg
+  title: Punts on the River
+  alt: Red punts moored on the river in front of white cottages and tall pampas grass, willow leaves overhead
+  country: England
+  city: Cambridge
+  tags: [punts, river, cottages, willow]
+- file: architecture/cambridge-13.jpg
+  title: Red Brick College
+  alt: A red brick Victorian college with white windows behind a garden of white roses
+  sub: Victorian & Glasshouses
+  country: England
+  city: Cambridge
+  tags: [college, red brick, roses, garden]
+- file: animals/cambridge-10.jpg
+  title: Grazing
+  alt: A pale cow grazing in the foreground with belted cows behind it in a rough meadow
+  sub: Farm Animals
+  country: England
+  city: Cambridge
+  tags: [cows, grazing, meadow]
+- file: architecture/cambridge-02.jpg
+  title: Pinnacles
+  alt: The tall pinnacles and carved stone of King's College Chapel against a bright sky
+  sub: Churches & Cathedrals
+  country: England
+  city: Cambridge
+  tags: [chapel, pinnacles, gothic]
+- file: places/cambridge-15.jpg
+  title: Dusk on the River
+  alt: Narrowboats moored on the river at dusk below a weeping willow and Victorian houses
+  country: England
+  city: Cambridge
+  tags: [river, narrowboats, dusk, willow]
+- file: nature/cambridge-12.jpg
+  title: Stubble Field
+  alt: A wide stubble field below a line of round trees under a big cloudy sky
+  sub: Countryside
+  country: England
+  city: Cambridge
+  tags: [field, trees, clouds, farmland]
+- file: places/cambridge-04.jpg
+  title: Chapel in Silhouette
+  alt: The towers of King's College Chapel against a bright sky, half hidden by a dark tree
+  country: England
+  city: Cambridge
+  tags: [chapel, silhouette, tree]
+- file: places/cambridge-11.jpg
+  title: Thatched Cottage
+  alt: A single belted cow grazing in front of a thatched cottage and tall trees
+  country: England
+  city: Cambridge
+  tags: [cow, thatch, cottage, meadow]
+- file: nature/cambridge-14.jpg
+  title: Pink Dusk
+  alt: A pink and lilac dusk sky above dark trees and empty tennis courts
+  sub: Skies & Weather
+  country: England
+  city: Cambridge
+  tags: [dusk, pink, sky, trees]
+- file: architecture/munich-01.jpg
+  title: Theatinerkirche
+  alt: The ochre baroque front of the Theatine Church with two ornate towers and a dome against a blue sky
+  sub: Churches & Cathedrals
+  country: Germany
+  city: Munich
+  tags: [church, baroque, towers, dome]
+- file: places/munich-06.jpg
+  title: Blue Tram
+  alt: A blue tram passing a long arcade of round arches under a cloudy evening sky
+  country: Germany
+  city: Munich
+  tags: [tram, arcade, street]
+- file: architecture/munich-11.jpg
+  title: Angel of Peace
+  alt: A golden angel on top of a tall column rising beside autumn trees under a blue sky
+  sub: Monuments
+  cover: true
+  country: Germany
+  city: Munich
+  tags: [monument, angel, column, gold]
+- file: architecture/munich-04.jpg
+  title: Theatre Columns
+  alt: Looking up at the giant Corinthian columns and pediment of the National Theatre, a lamp post in front
+  sub: Georgian & Classical
+  country: Germany
+  city: Munich
+  tags: [columns, neoclassical, theatre]
+- file: places/munich-02.jpg
+  title: Spire Between Walls
+  alt: A narrow street between tall facades leading to a pale building with a dark pointed spire
+  country: Germany
+  city: Munich
+  tags: [street, spire, facades]
+- file: architecture/munich-08.jpg
+  title: Golden Facade
+  alt: A long honey-coloured government building with arched windows and statues on its towers, lit by low sun
+  sub: Georgian & Classical
+  country: Germany
+  city: Munich
+  tags: [facade, government, golden light]
+- file: places/munich-07.jpg
+  title: Tram on the Corner
+  alt: A blue tram sweeping past a corner building with an ornate bay window
+  country: Germany
+  city: Munich
+  tags: [tram, corner, bay window]
+- file: architecture/munich-09.jpg
+  title: King on the Plinth
+  alt: A green bronze statue of a king on a tall plinth surrounded by allegorical figures, tram wires overhead
+  sub: Monuments
+  country: Germany
+  city: Munich
+  tags: [statue, bronze, monument]
+- file: places/munich-03.jpg
+  title: Arcade at Dusk
+  alt: A broad street with an arcade of shops along pale classical buildings in evening light
+  country: Germany
+  city: Munich
+  tags: [arcade, street, evening]
+- file: places/munich-05.jpg
+  title: Toward the Gate
+  alt: A street between tall buildings leading to an old gate tower, a silver car coming through
+  country: Germany
+  city: Munich
+  tags: [street, gate, tower]
+- file: places/munich-10.jpg
+  title: Red and Green
+  alt: Traffic on a tree-lined road below a red apartment block and a green copper dome
+  country: Germany
+  city: Munich
+  tags: [street, dome, apartments, traffic]
+- file: places/bergen-13.jpg
+  title: Bergen from Above
+  alt: Bergen spread around its harbour and a round lake far below, the fjord and wooded hills stretching beyond
+  country: Norway
+  city: Bergen
+  tags: [panorama, city, fjord, lake, viewpoint]
+- file: architecture/bergen-08.jpg
+  title: Cobbled Lane
+  alt: A narrow cobbled lane climbing between white-painted wooden houses with old lanterns
+  sub: Wooden Houses
+  country: Norway
+  city: Bergen
+  tags: [lane, cobbles, wooden houses, old town]
+- file: places/bergen-03.jpg
+  title: The Inner Harbour
+  alt: A white harbourside restaurant and red wooden houses along the water, yachts moored and homes stacked up the green hillside behind
+  country: Norway
+  city: Bergen
+  tags: [harbour, yachts, hillside, houses]
+- file: places/bergen-05.jpg
+  title: Houses on the Hill
+  alt: Colourful wooden houses climbing a wooded hillside above sailing boats in the marina
+  country: Norway
+  city: Bergen
+  tags: [hillside, houses, marina, colour]
+- file: places/bergen-06.jpg
+  title: Ferry Bow
+  alt: The white bow of a passenger ferry pulling in, a man in a blue jacket on deck and the town on the hill behind
+  country: Norway
+  city: Bergen
+  tags: [ferry, harbour, hillside]
+- file: places/bergen-18.jpg
+  title: Nordnes and the Fjord
+  alt: The Nordnes peninsula reaching into the fjord, rooftops and quays below and islands fading into the distance
+  country: Norway
+  city: Bergen
+  tags: [panorama, peninsula, fjord, city]
+- file: places/bergen-01.jpg
+  title: Pastel Street
+  alt: A quiet street of pastel townhouses with a no-parking sign and pink wildflowers by the railing
+  country: Norway
+  city: Bergen
+  tags: [street, townhouses, pastel]
+- file: nature/bergen-11.jpg
+  title: Through the Trees
+  alt: Old tree trunks framing a view across the fjord to the town and a steep wooded mountain
+  sub: Fjords
+  country: Norway
+  city: Bergen
+  tags: [fjord, trees, mountain, town]
+- file: places/bergen-09.jpg
+  title: Supply Ships
+  alt: A blue and a red-orange offshore supply ship moored at a wide concrete quay below a dark mountain
+  country: Norway
+  city: Bergen
+  tags: [ships, quay, harbour, industry]
+- file: places/bergen-02.jpg
+  title: Waterfront Quay
+  alt: People standing on a tyre-lined quay above dark water, the old wharf and a forested hill beyond
+  country: Norway
+  city: Bergen
+  tags: [quay, harbour, people, wharf]
+- file: places/bergen-14.jpg
+  title: City Blocks
+  alt: A bird's-eye view of city blocks, a tree-lined park and the harbour edge
+  country: Norway
+  city: Bergen
+  tags: [aerial, city, park, rooftops]
+- file: places/bergen-21.jpg
+  title: Gabled Street
+  alt: A row of tall brick and stone buildings with stepped and pointed gables along a wide street, shoppers below
+  country: Norway
+  city: Bergen
+  tags: [gables, brick, street, facades]
+- file: places/bergen-07.jpg
+  title: Leaving Port
+  alt: The stern of a ferry churning turquoise water as it pulls away toward the hillside town
+  country: Norway
+  city: Bergen
+  tags: [ferry, wake, harbour]
+- file: places/bergen-16.jpg
+  title: Down to the Harbour
+  alt: Looking straight down over rooftops and streets to the harbour, a few houses in the green slope at the bottom
+  country: Norway
+  city: Bergen
+  tags: [aerial, harbour, rooftops]
+- file: places/bergen-10.jpg
+  title: Bridge and Mountain
+  alt: A view through leaves over the city to an arched bridge and a mountain dotted with houses
+  country: Norway
+  city: Bergen
+  tags: [city, bridge, mountain, view]
+- file: places/bergen-19.jpg
+  title: Tug and Tower
+  alt: A yellow and black tug moored in front of a white building with a green copper church spire
+  country: Norway
+  city: Bergen
+  tags: [tug, church, harbour, spire]
+- file: places/bergen-15.jpg
+  title: Rooftops
+  alt: A close aerial view of dense city rooftops in green, grey and pink, a pale modern block in the middle
+  country: Norway
+  city: Bergen
+  tags: [aerial, rooftops, city]
+- file: places/bergen-04.jpg
+  title: Catamaran
+  alt: A white catamaran ferry crossing the grey harbour with offshore vessels moored behind
+  country: Norway
+  city: Bergen
+  tags: [ferry, catamaran, harbour]
+- file: places/bergen-12.jpg
+  title: Orange Balconies
+  alt: A cobbled street running between a modern block with orange balconies and older white buildings
+  country: Norway
+  city: Bergen
+  tags: [street, cobbles, modern, balconies]
+- file: places/bergen-20.jpg
+  title: Rescue Zone
+  alt: Two red and white offshore rescue ships moored at a fenced quay on a grey day
+  country: Norway
+  city: Bergen
+  tags: [ships, quay, rescue, harbour]
+- file: places/bergen-17.jpg
+  title: The Wide View
+  alt: A wide view over Bergen, its lake, harbour and the mountains around the bay under scattered cloud
+  country: Norway
+  city: Bergen
+  tags: [panorama, city, bay, mountains]
+- file: nature/flam-06.jpg
+  title: Kjosfossen
+  alt: A tall waterfall pouring down a mossy rock face in several white tiers, spray rising into the mist
+  sub: Waterfalls
+  cover: true
+  country: Norway
+  city: Flåm
+  tags: [waterfall, rocks, mist]
+- file: nature/flam-04.jpg
+  title: Valley Farm
+  alt: A braided river and a white waterfall below a sheer cliff, red and white farm buildings on the green valley floor
+  sub: Lakes & Rivers
+  country: Norway
+  city: Flåm
+  tags: [river, waterfall, farm, valley, cliff]
+- file: places/flam-01.jpg
+  title: The Mountain Railway
+  alt: A green train curving along the track at the foot of a steep cliff with a thin waterfall running down it
+  country: Norway
+  city: Flåm
+  tags: [train, railway, waterfall, cliff]
+- file: architecture/flam-03.jpg
+  title: House in the Mist
+  alt: An old weathered wooden house on a green hillside among trees, low mist hiding the slope above
+  sub: Wooden Houses
+  country: Norway
+  city: Flåm
+  tags: [house, wooden, mist, hillside]
+- file: nature/flam-05.jpg
+  title: Falls Down the Valley
+  alt: Waterfalls and a zigzag road threading down a steep wooded valley under a pale sky
+  sub: Waterfalls
+  country: Norway
+  city: Flåm
+  tags: [waterfall, valley, road, forest]
+- file: nature/flam-02.jpg
+  title: Mist in the Valley
+  alt: Low cloud lying in a deep green valley below grey cliffs lit by the sun
+  sub: Mountains
+  country: Norway
+  city: Flåm
+  tags: [mist, valley, cliffs, mountains]
+- file: places/flam-09.jpg
+  title: Rowing Boat
+  alt: A small white rowing boat moored on a still, misty lake beside a wooden jetty and a red buoy
+  country: Norway
+  city: Flåm
+  tags: [boat, lake, mist, jetty]
+- file: nature/flam-07.jpg
+  title: Into the Spray
+  alt: A close view of white water crashing down dark mossy rocks
+  sub: Waterfalls
+  country: Norway
+  city: Flåm
+  tags: [waterfall, rocks, spray]
+- file: nature/flam-08.jpg
+  title: Autumn Islet
+  alt: A small islet of yellowing birches and grasses in a grey lake, the far shore lost in mist
+  sub: Lakes & Rivers
+  country: Norway
+  city: Flåm
+  tags: [lake, islet, autumn, mist]
+- file: places/flam-10.jpg
+  title: Station in the Fog
+  alt: A green train standing at a station in thick fog, red autumn shrubs on the bank below
+  country: Norway
+  city: Flåm
+  tags: [train, station, fog, autumn]
+- file: nature/sognefjord-12.jpg
+  title: Village Below the Clouds
+  alt: A village of white and red houses along the fjord shore beneath steep green mountains with cloud drifting across them
+  sub: Fjords
+  cover: true
+  country: Norway
+  city: Sognefjord
+  tags: [fjord, village, mountains, mist]
+- file: architecture/sognefjord-05.jpg
+  title: Boathouses
+  alt: A row of colourful wooden boathouses and cottages along the water at the foot of a dark pine forest
+  sub: Wooden Houses
+  cover: true
+  country: Norway
+  city: Sognefjord
+  tags: [boathouses, shore, houses, forest]
+- file: nature/sognefjord-09.jpg
+  title: Misty Walls
+  alt: Steep mountain walls fading into mist on either side of a dark fjord
+  sub: Fjords
+  country: Norway
+  city: Sognefjord
+  tags: [fjord, mist, cliffs]
+- file: architecture/sognefjord-01.jpg
+  title: Red House
+  alt: A red wooden house and boathouse on pale granite rocks at the water's edge below a wooded hill
+  sub: Wooden Houses
+  country: Norway
+  city: Sognefjord
+  tags: [house, shore, rocks, red]
+- file: nature/sognefjord-14.jpg
+  title: Reflections
+  alt: A village on a steep green slope above calm water reflecting low cloud and mountains
+  sub: Fjords
+  country: Norway
+  city: Sognefjord
+  tags: [fjord, village, reflections]
+- file: nature/sognefjord-08.jpg
+  title: Gorge Falls
+  alt: A white stream tumbling down a rocky gorge through birch trees, waterfalls on the cliffs above
+  sub: Waterfalls
+  country: Norway
+  city: Sognefjord
+  tags: [waterfall, gorge, stream, trees]
+- file: places/sognefjord-07.jpg
+  title: Fjord Village
+  alt: A village of red and white houses spread along the shore at the head of the fjord, mountains rising behind
+  country: Norway
+  city: Sognefjord
+  tags: [village, fjord, houses, mountains]
+- file: nature/sognefjord-03.jpg
+  title: Gull Over the Water
+  alt: A gull skimming low over calm grey water toward dark mountains on the horizon
+  sub: Fjords
+  country: Norway
+  city: Sognefjord
+  tags: [gull, fjord, calm, mountains]
+- file: places/sognefjord-11.jpg
+  title: Under the Cloud
+  alt: A small village at the foot of steep green mountains, a wisp of cloud caught on the slopes
+  country: Norway
+  city: Sognefjord
+  tags: [village, mountains, cloud]
+- file: nature/sognefjord-13.jpg
+  title: Still Fjord
+  alt: Calm water reflecting mountains on either side of the fjord under a grey sky
+  sub: Fjords
+  country: Norway
+  city: Sognefjord
+  tags: [fjord, reflections, mountains, calm]
+- file: places/sognefjord-06.jpg
+  title: At the Head of the Fjord
+  alt: Houses lining the shore beneath a valley that winds up between mountains, rippled water in front
+  country: Norway
+  city: Sognefjord
+  tags: [village, fjord, valley]
+- file: nature/sognefjord-02.jpg
+  title: Grey Morning
+  alt: Calm grey water stretching to a wooded headland and distant mountains under low cloud
+  sub: Fjords
+  country: Norway
+  city: Sognefjord
+  tags: [fjord, calm, grey, headland]
+- file: nature/sognefjord-10.jpg
+  title: Into the Mist
+  alt: A dark fjord narrowing between steep mountainsides hidden in mist
+  sub: Fjords
+  country: Norway
+  city: Sognefjord
+  tags: [fjord, mist, mountains]
+- file: nature/sognefjord-04.jpg
+  title: Open Water
+  alt: A wide stretch of still grey water with low islands and mountains on the horizon
+  sub: Fjords
+  country: Norway
+  city: Sognefjord
+  tags: [fjord, islands, calm]
 - file: film/weymouth-arch.jpg
   title: Under the Arch
   alt: A sepia view through a dark railway arch to a white cottage and a quiet lane beyond

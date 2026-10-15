@@ -21,11 +21,27 @@ export const categories = [
       'Colourful Terraces',
       'Georgian & Classical',
       'Modern',
+      'Monuments',
       'Victorian & Glasshouses',
+      'Wooden Houses',
     ],
   },
   { slug: 'places', label: 'Places', subs: [] },
-  { slug: 'nature', label: 'Nature', subs: ['Coast', 'Countryside', 'Flowers', 'Forest', 'Lakes & Rivers', 'Mountains'] },
+  {
+    slug: 'nature',
+    label: 'Nature',
+    subs: [
+      'Coast',
+      'Countryside',
+      'Fjords',
+      'Flowers',
+      'Forest',
+      'Lakes & Rivers',
+      'Mountains',
+      'Skies & Weather',
+      'Waterfalls',
+    ],
+  },
   { slug: 'animals', label: 'Animals', subs: ['Birds', 'Farm Animals'] },
   { slug: 'film', label: 'Film', subs: [] },
 ] as const satisfies readonly { slug: string; label: string; subs: readonly string[] }[];
@@ -74,6 +90,7 @@ export const places: Place[] = [
     cities: [
       { name: 'Berlin', lon: 13.4, lat: 52.52 },
       { name: 'Dresden', lon: 13.74, lat: 51.05 },
+      { name: 'Munich', lon: 11.58, lat: 48.14 },
     ],
   },
   {
@@ -101,7 +118,9 @@ export const places: Place[] = [
     name: 'Norway', map: 'Norway', region: 'Europe',
     cities: [
       { name: 'Bergen', lon: 5.32, lat: 60.39 },
+      { name: 'Flåm', lon: 7.11, lat: 60.86 },
       { name: 'Oslo', lon: 10.75, lat: 59.91 },
+      { name: 'Sognefjord', lon: 6.6, lat: 61.12 }, // the main fjord, north-west of Flåm
     ],
   },
   {
@@ -137,6 +156,8 @@ export const places: Place[] = [
 
 export const slugify = (s: string) =>
   s
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // Flåm → flam
     .toLowerCase()
     .replace(/&/g, 'and')
     .replace(/[^a-z0-9]+/g, '-')
