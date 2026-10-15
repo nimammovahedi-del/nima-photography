@@ -19,6 +19,8 @@
     "world-atlas": "^2.0.2"
   },
   "devDependencies": {
+    "aws4fetch": "^1.0.20",
+    "sharp": "^0.35.4",
     "topojson-simplify": "^3.0.3"
   }
 }
