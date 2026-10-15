@@ -35,8 +35,14 @@ const IMMUTABLE = 'public, max-age=31536000, immutable';
 // ---- Storage: R2 over its S3 API, or a local folder for testing ----
 
 function r2Store() {
-  const { R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY } = process.env;
-  const bucket = process.env.R2_BUCKET || 'nima-photos';
+  // Trimmed because a secret pasted with a trailing newline otherwise breaks the request signature.
+  const env = (name) => process.env[name]?.trim();
+  const [R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY] = [
+    'R2_ACCOUNT_ID',
+    'R2_ACCESS_KEY_ID',
+    'R2_SECRET_ACCESS_KEY',
+  ].map(env);
+  const bucket = env('R2_BUCKET') || 'nima-photos';
   if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY)
     throw new Error('Set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY (or R2_LOCAL_DIR).');
   const aws = new AwsClient({
