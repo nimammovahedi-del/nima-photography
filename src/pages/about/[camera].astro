@@ -1,0 +1,323 @@
+---
+// One camera: its detailed 3D model to turn and zoom into, what makes it special, and where it
+// has been.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { cameras } from '../../data/cameras';
+import { getCameras } from '../../lib/cameras';
+
+export function getStaticPaths() {
+  return cameras.map((c) => ({ params: { camera: c.slug } }));
+}
+
+const all = await getCameras();
+const i = all.findIndex((c) => c.slug === Astro.params.camera);
+const c = all[i];
+const next = all[(i + 1) % all.length];
+---
+
+<BaseLayout title={`${c.brand} ${c.name}`} description={`${c.brand} ${c.name}: ${c.intro}`}>
+  <nav class="back"><a href="/about"><span aria-hidden="true">←</span> About</a></nav>
+
+  <header class="head">
+    <p class="eyebrow">{c.short}</p>
+    <h1><span class="brand">{c.brand}</span> {c.name}</h1>
+  </header>
+
+  <div class="stage">
+    <canvas data-camera={c.model} aria-label={`3D model of the ${c.brand} ${c.name}. Drag to rotate, scroll or pinch to zoom.`} role="img"></canvas>
+    <p class="hint">Drag to rotate · scroll or pinch to zoom</p>
+    <button type="button" class="reset" data-view="">Reset view</button>
+  </div>
+
+  <div class="info">
+    <section class="about">
+      <p class="intro">{c.intro}</p>
+      <h2 class="label">What makes it special</h2>
+      <ul class="highlights">
+        {
+          c.highlights.map((h) => (
+            <li>
+              <button type="button" data-view={h.view ? JSON.stringify(h.view) : ''} aria-pressed="false">
+                <span class="t">{h.title}</span>
+                <span class="d">{h.text}</span>
+                {h.view && <span class="show">Show on the camera →</span>}
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <aside>
+      <h2 class="label">Countries</h2>
+      {
+        c.countries.length ? (
+          <ul class="countries">
+            {c.countries.map((p) => (
+              <li>
+                <a href={`/places/${p.slug}`}>{p.name}</a>
+                <span>{p.photos ? `${p.photos} photo${p.photos === 1 ? '' : 's'}` : 'photos coming soon'}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="none">Photos coming soon.</p>
+        )
+      }
+
+      <h2 class="label">Specifications</h2>
+      <dl class="specs">
+        {
+          c.specs.map(([k, v]) => (
+            <div>
+              <dt>{k}</dt>
+              <dd>{v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </aside>
+  </div>
+
+  <nav class="next">
+    <a href={`/about/${next.slug}`}>Next camera: <strong>{next.brand} {next.name}</strong> <span aria-hidden="true">→</span></a>
+  </nav>
+</BaseLayout>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('canvas[data-camera]')!;
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-view]')];
+  import('../../scripts/camera-viewer').then(async ({ mountCamera }) => {
+    const viewer = await mountCamera(canvas, canvas.dataset.camera as any, 'page');
+    for (const b of buttons) {
+      b.addEventListener('click', () => {
+        const pressed = b.getAttribute('aria-pressed') === 'true';
+        buttons.forEach((x) => x.setAttribute('aria-pressed', 'false'));
+        const view = !pressed && b.dataset.view ? JSON.parse(b.dataset.view) : undefined;
+        if (view) b.setAttribute('aria-pressed', 'true');
+        viewer.focus(view);
+        // On a phone the model is above the list: bring it back into view.
+        if (view && canvas.getBoundingClientRect().bottom < 120) canvas.scrollIntoView({ block: 'center' });
+      });
+    }
+  });
+</script>
+
+<style>
+  .back {
+    padding-top: 24px;
+  }
+  .back a {
+    color: var(--text);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    opacity: 0.85;
+  }
+  .back a:hover {
+    color: var(--accent);
+  }
+  .head {
+    padding: 22px 0 4px;
+  }
+  .head .eyebrow {
+    margin-bottom: 8px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 300;
+    letter-spacing: 0.01em;
+  }
+  h1 .brand {
+    color: var(--muted);
+  }
+  .stage {
+    position: relative;
+    margin: 12px 0 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .stage canvas {
+    display: block;
+    width: 100%;
+    height: min(68vh, 640px, 115vw);
+    min-height: 340px;
+    background: radial-gradient(ellipse at 50% 50%, #1d1c19, transparent 65%);
+    cursor: grab;
+    touch-action: none;
+    opacity: 0;
+    transition: opacity 500ms ease;
+  }
+  .stage canvas:global(.ready) {
+    opacity: 1;
+  }
+  .stage canvas:active {
+    cursor: grabbing;
+  }
+  .hint {
+    position: absolute;
+    left: 0;
+    bottom: 10px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    pointer-events: none;
+  }
+  .reset {
+    position: absolute;
+    right: 0;
+    bottom: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--label-bg);
+    color: var(--muted);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .reset:hover {
+    color: var(--text);
+    border-color: var(--tan);
+  }
+
+  .info {
+    display: grid;
+    gap: 40px;
+    margin-top: 36px;
+  }
+  @media (min-width: 900px) {
+    .info {
+      grid-template-columns: 2fr 1fr;
+      gap: 64px;
+    }
+  }
+  .intro {
+    max-width: 44rem;
+    margin: 0 0 32px;
+    color: var(--text);
+    font-size: clamp(16px, 1.4vw, 19px);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+  .label {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  aside .label + * {
+    margin-bottom: 36px;
+  }
+  .highlights {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 640px) {
+    .highlights {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .highlights button {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    width: 100%;
+    height: 100%;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    background: var(--bg-raised);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 200ms ease;
+  }
+  .highlights button:hover,
+  .highlights button[aria-pressed='true'] {
+    border-color: var(--tan);
+  }
+  .highlights .t {
+    font-size: 15px;
+  }
+  .highlights .d {
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .highlights .show {
+    margin-top: 4px;
+    color: var(--accent);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .countries {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .countries li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 15px;
+  }
+  .countries a {
+    text-decoration: none;
+  }
+  .countries a:hover {
+    color: var(--accent);
+  }
+  .countries span {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .none {
+    color: var(--muted);
+  }
+  .specs {
+    margin: 0;
+  }
+  .specs div {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+  }
+  .specs dt {
+    color: var(--muted);
+  }
+  .specs dd {
+    margin: 0;
+  }
+  .next {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    text-align: right;
+  }
+  .next a {
+    color: var(--muted);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .next strong {
+    color: var(--text);
+    font-weight: 400;
+  }
+  .next a:hover strong {
+    color: var(--accent);
+  }
+</style>

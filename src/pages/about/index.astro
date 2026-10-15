@@ -1,0 +1,230 @@
+---
+// About: a bio beside a portrait, the cameras (3D models that open their own pages), and the
+// "Where to next" globe.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WhereNext from '../../components/WhereNext.astro';
+import { about, site } from '../../site.config';
+import { getCameras } from '../../lib/cameras';
+
+const cameras = await getCameras();
+---
+
+<BaseLayout title="About" description={`About ${site.name}, the cameras behind the photos, and where they're heading next.`}>
+  <header class="page-head">
+    <h1>{about.heading}</h1>
+  </header>
+
+  <!-- Same three columns as the photo galleries: a square portrait, then the bio across two. -->
+  <section class="bio">
+    <div class="portrait" role="img" aria-label="Portrait coming soon">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4"></circle><path d="M4 21c1.2-4 4.4-6 8-6s6.8 2 8 6"></path></svg>
+      <span>Portrait</span>
+    </div>
+    <div class="text">
+      <h2>{site.name}</h2>
+      {about.bio.map((p) => <p>{p}</p>)}
+    </div>
+  </section>
+
+  <section class="cameras" aria-labelledby="cameras-title">
+    <h2 id="cameras-title" class="section-title">Cameras</h2>
+    <p class="lede">Drag a camera to turn it, or open it to look closer.</p>
+    <ul>
+      {
+        cameras.map((c) => (
+          <li>
+            <a href={`/about/${c.slug}`} class="card">
+              <canvas data-camera={c.model} aria-label={`3D model of the ${c.brand} ${c.name}`} role="img" />
+              <span class="name">
+                <span class="brand">{c.brand}</span> {c.name}
+              </span>
+              <span class="short">{c.short}</span>
+              <span class="where">{c.countries.map((p) => p.name).join(' · ') || 'Photos coming soon'}</span>
+              <span class="cta" aria-hidden="true">
+                Look closer <span class="arrow">→</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <WhereNext />
+</BaseLayout>
+
+<script>
+  // The 3D viewer loads once the cameras are near the screen.
+  const canvases = [...document.querySelectorAll<HTMLCanvasElement>('canvas[data-camera]')];
+  if (canvases.length) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        io.disconnect();
+        import('../../scripts/camera-viewer').then(({ mountCamera }) => {
+          for (const c of canvases) mountCamera(c, c.dataset.camera as any, 'card');
+        });
+      },
+      { rootMargin: '300px' },
+    );
+    canvases.forEach((c) => io.observe(c));
+  }
+</script>
+
+<style>
+  .bio {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px var(--gap);
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .bio {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .text {
+      grid-column: span 2;
+      padding-left: 16px;
+    }
+  }
+  .portrait {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 10px;
+    aspect-ratio: 1;
+    border: 1px solid var(--line);
+    background: var(--bg-raised);
+    color: #4a4a48;
+  }
+  @media (max-width: 899px) {
+    .portrait {
+      max-width: 420px;
+    }
+  }
+  .portrait svg {
+    width: 64px;
+    height: 64px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+  }
+  .portrait span {
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+  .text h2 {
+    margin: 0 0 14px;
+    font-size: clamp(22px, 2.4vw, 30px);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+  .text p {
+    margin: 0 0 16px;
+    max-width: 44rem;
+    color: var(--muted);
+    font-size: clamp(15px, 1.25vw, 17px);
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  :global(.section-title) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 6px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+  :global(.section-title)::before {
+    content: '';
+    width: 18px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .cameras {
+    margin-top: 72px;
+  }
+  .lede {
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .cameras ul {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 640px) {
+    .cameras ul {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .card {
+    display: grid;
+    gap: 4px;
+    padding: 0 0 18px;
+    border: 1px solid var(--line);
+    background: var(--bg-raised);
+    text-decoration: none;
+    transition: border-color 200ms ease;
+  }
+  .card > span {
+    padding: 0 18px;
+  }
+  .card canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 8px;
+    background: radial-gradient(ellipse at 50% 45%, #1d1c19, transparent 70%);
+    cursor: grab;
+    touch-action: pan-y;
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+  .card canvas:global(.ready) {
+    opacity: 1;
+  }
+  .name {
+    font-size: 17px;
+  }
+  .brand {
+    color: var(--muted);
+  }
+  .short {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .where {
+    color: var(--tan);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+  .cta {
+    margin-top: 8px;
+    color: var(--accent);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .arrow {
+    display: inline-block;
+    transition: transform 200ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .card:hover {
+      border-color: #3a3a38;
+    }
+    .card:hover .arrow {
+      transform: translateX(4px);
+    }
+  }
+</style>

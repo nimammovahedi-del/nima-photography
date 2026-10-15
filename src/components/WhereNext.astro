@@ -1,0 +1,191 @@
+---
+// "Where to next": the home page's globe look, smaller, with planned countries striped.
+import '../styles/map.css';
+import { plannedPlaces, sortedPlaces } from '../site.config';
+
+const W = 1000;
+const H = 560;
+const config = {
+  planned: plannedPlaces,
+  visited: sortedPlaces.map((p) => p.map),
+  center: [72, 36], // facing Central Asia, with France and Japan either side
+};
+---
+
+<section class="where" aria-labelledby="where-title">
+  <h2 id="where-title" class="section-title">Where to next</h2>
+  <p class="lede">The places I plan to photograph next. Drag the globe to turn it, and tap a striped country to see its name.</p>
+
+  <div class="globe map-ui" data-where-next data-config={JSON.stringify(config)}>
+    <svg class="map" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" role="img" aria-label="Globe showing the countries I plan to visit next">
+      <defs>
+        <!-- Diagonal stripes in the same cream as the countries already visited -->
+        <pattern id="planned-stripes" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+          <rect class="stripe-gap" width="6" height="6"></rect>
+          <rect class="stripe" width="3" height="6"></rect>
+        </pattern>
+      </defs>
+      <circle class="sphere" cx={W / 2} cy={H / 2} r={H * 0.46}></circle>
+      <path class="graticule"></path>
+      <g class="land"></g>
+      <g class="marks"></g>
+      <circle class="rim" cx={W / 2} cy={H / 2} r={H * 0.46}></circle>
+    </svg>
+    <div class="tag" role="status" hidden></div>
+  </div>
+
+  <div class="key">
+    <span class="swatch visited" aria-hidden="true"></span> Photographed
+    <span class="swatch planned" aria-hidden="true"></span> Planned
+  </div>
+  <ul class="chips" aria-label="Planned countries">
+    {
+      plannedPlaces.map((p) => (
+        <li>
+          <button type="button" data-planned={p.name} aria-pressed="false">
+            {p.name}
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-where-next]');
+  if (root) {
+    // Load the globe when it's about to scroll into view.
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        import('../scripts/where-next').then((m) => m.mountWhereNext(root));
+      },
+      { rootMargin: '400px' },
+    );
+    io.observe(root);
+  }
+</script>
+
+<style>
+  .where {
+    margin-top: 72px;
+  }
+  .lede {
+    max-width: 40rem;
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .globe {
+    max-width: 1000px;
+    margin: 0 auto;
+    aspect-ratio: 1000 / 560;
+    touch-action: pan-y;
+  }
+  /* On a phone, a square frame: the globe fills its width, and the empty sea either side is cropped. */
+  @media (max-width: 639px) {
+    .globe {
+      aspect-ratio: 1;
+    }
+  }
+  .globe :global(svg.map) {
+    cursor: grab;
+  }
+  .globe :global(.land path.planned) {
+    fill: url(#planned-stripes);
+    stroke: var(--visited-edge);
+    stroke-width: 0.8;
+    cursor: pointer;
+  }
+  /* Countries already visited aren't links here. */
+  .globe :global(.land path.visited) {
+    cursor: inherit;
+  }
+  .globe :global(.planned.marker) {
+    fill: url(#planned-stripes);
+    stroke: var(--visited);
+    stroke-width: 1.5;
+    cursor: pointer;
+  }
+  .globe :global(.planned.hot) {
+    stroke: var(--visited);
+    stroke-width: 1.6;
+  }
+  .stripe-gap {
+    fill: var(--land);
+  }
+  .stripe {
+    fill: var(--visited);
+  }
+  .tag {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 3px 10px;
+    background: var(--label-bg);
+    border-left: 2px solid var(--visited);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+    translate: -50% calc(-100% - 10px);
+  }
+  .tag[hidden] {
+    display: none;
+  }
+  .key {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 10px;
+    margin: 18px 0 14px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .swatch {
+    width: 22px;
+    height: 12px;
+    border: 1px solid var(--visited-edge);
+  }
+  .swatch.planned {
+    margin-left: 14px;
+    background: repeating-linear-gradient(-45deg, var(--visited) 0 2.1px, var(--land) 2.1px 4.2px);
+  }
+  .swatch.visited {
+    background: var(--visited);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+  .chips button {
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition:
+      color 150ms ease,
+      border-color 150ms ease;
+  }
+  .chips button:hover,
+  .chips button[aria-pressed='true'] {
+    border-color: var(--tan);
+    color: var(--text);
+  }
+</style>

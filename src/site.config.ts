@@ -180,3 +180,32 @@ export const sortedPlaces = [...places]
 export type SortedPlace = (typeof sortedPlaces)[number];
 
 export const sortedSubs = (subs: readonly string[]) => [...subs].sort(byName);
+
+// "Where to next" on the About page: countries you plan to photograph, striped on its globe.
+// `map` is the country's name in the map data (as for `places` above).
+export const plannedPlaces: { name: string; map: string; lon?: number; lat?: number }[] = [
+  { name: 'Armenia', map: 'Armenia' },
+  { name: 'Azerbaijan', map: 'Azerbaijan' },
+  { name: 'China', map: 'China' },
+  { name: 'France', map: 'France' },
+  { name: 'Georgia', map: 'Georgia' },
+  // Too small to see from the globe's distance: it also gets a marker at this spot.
+  { name: 'Hong Kong', map: 'Hong Kong', lon: 114.17, lat: 22.32 },
+  { name: 'Japan', map: 'Japan' },
+  { name: 'Kazakhstan', map: 'Kazakhstan' },
+  { name: 'Kyrgyzstan', map: 'Kyrgyzstan' },
+  { name: 'South Korea', map: 'South Korea' },
+  { name: 'Tajikistan', map: 'Tajikistan' },
+  { name: 'Turkey', map: 'Turkey' },
+  { name: 'Turkmenistan', map: 'Turkmenistan' },
+  { name: 'Uzbekistan', map: 'Uzbekistan' },
+];
+
+// The About page's bio. Placeholder text for now — replace with your own.
+export const about = {
+  heading: 'About',
+  bio: [
+    'Placeholder: a short introduction goes here. Who you are, where you are based, and how photography started for you: the first camera, the trip that made it stick, the kind of pictures you kept coming back to.',
+    'Placeholder: a second paragraph about how you work. What you look for in a place, why buildings, landscapes and animals, the cameras you carry and why, and where the next trips are heading. Two paragraphs of about this length fill the space beside the portrait.',
+  ],
+};
