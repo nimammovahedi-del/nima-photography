@@ -8,7 +8,7 @@
 //      camera settings. The site reads only this file at build time; it never touches the images.
 //
 // Runs in the "Photos" GitHub Action. Needs R2_ACCOUNT_ID, R2_ACCESS_KEY_ID and
-// R2_SECRET_ACCESS_KEY (and optionally R2_BUCKET, default nima-photos).
+// R2_SECRET_ACCESS_KEY (and optionally R2_BUCKET, default nimaphotos).
 // For a local test without R2, set R2_LOCAL_DIR to a folder that stands in for the bucket.
 import { createHash } from 'node:crypto';
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
@@ -42,7 +42,7 @@ function r2Store() {
     'R2_ACCESS_KEY_ID',
     'R2_SECRET_ACCESS_KEY',
   ].map(env);
-  const bucket = env('R2_BUCKET') || 'nima-photos';
+  const bucket = env('R2_BUCKET') || 'nimaphotos';
   if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY)
     throw new Error('Set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY (or R2_LOCAL_DIR).');
   const aws = new AwsClient({
@@ -89,7 +89,7 @@ function r2Store() {
           const body = await res.text();
           const code = body.match(/<Code>(.*?)<\/Code>/)?.[1] ?? res.status;
           throw new Error(
-            `R2 ${what} check on bucket "${bucket}" at ${jurisdiction ?? 'default'} endpoint failed: ${res.status} ${code}. ` +
+            `R2 ${what} check on bucket "${bucket}" at the ${jurisdiction || 'default'} endpoint failed: ${res.status} ${code}. ` +
               `${body.match(/<Message>(.*?)<\/Message>/)?.[1] ?? ''}`,
           );
         }

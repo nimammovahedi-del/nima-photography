@@ -27,7 +27,7 @@ npm run dev      # open http://localhost:4321 — the page updates as you edit
    `src/data/photo-manifest.json` and removes the file from the repo. Vercel then builds from the
    Action's commit (a few minutes later). The photos are served from `photos.nimamovahedi.com`.
 
-   You can also upload originals straight into the R2 bucket (`nima-photos`, folder
+   You can also upload originals straight into the R2 bucket (`nimaphotos`, folder
    `originals/<category>/`) in the Cloudflare dashboard, then run the Action by hand from GitHub's
    **Actions → Photos → Run workflow**.
 
