@@ -51,7 +51,10 @@ function r2Store() {
     service: 's3',
     region: 'auto',
   });
-  const base = `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${bucket}`;
+  // Buckets created with a jurisdiction (e.g. EU) have their own endpoint.
+  const jurisdiction = env('R2_JURISDICTION');
+  const host = `${R2_ACCOUNT_ID}.${jurisdiction ? `${jurisdiction}.` : ''}r2.cloudflarestorage.com`;
+  const base = `https://${host}/${bucket}`;
   const url = (key) => `${base}/${key.split('/').map(encodeURIComponent).join('/')}`;
 
   async function call(input, init, attempt = 1) {
@@ -65,6 +68,34 @@ function r2Store() {
   }
 
   return {
+    /** Checks the credentials can list and write, with a readable reason if not. */
+    async check() {
+      const shape = [
+        ['R2_ACCOUNT_ID', R2_ACCOUNT_ID, 32],
+        ['R2_ACCESS_KEY_ID', R2_ACCESS_KEY_ID, 32],
+        ['R2_SECRET_ACCESS_KEY', R2_SECRET_ACCESS_KEY, 64],
+      ];
+      for (const [name, value, length] of shape)
+        if (!new RegExp(`^[0-9a-f]{${length}}$`).test(value))
+          console.warn(
+            `${name} doesn't look like an R2 value (${value.length} characters; expected ${length} hex characters).`,
+          );
+      for (const [what, input, init] of [
+        ['list', `${base}?list-type=2&max-keys=1`, undefined],
+        ['write', url('_check.txt'), { method: 'PUT', body: 'ok', headers: { 'Content-Type': 'text/plain' } }],
+      ]) {
+        const res = await aws.fetch(input, init);
+        if (!res.ok) {
+          const body = await res.text();
+          const code = body.match(/<Code>(.*?)<\/Code>/)?.[1] ?? res.status;
+          throw new Error(
+            `R2 ${what} check on bucket "${bucket}" at ${jurisdiction ?? 'default'} endpoint failed: ${res.status} ${code}. ` +
+              `${body.match(/<Message>(.*?)<\/Message>/)?.[1] ?? ''}`,
+          );
+        }
+        console.log(`R2 ${what} check passed.`);
+      }
+    },
     async list(prefix) {
       const out = new Map();
       let token;
@@ -208,6 +239,7 @@ const contentType = (file) =>
 // ---- Main ----
 
 const store = process.env.R2_LOCAL_DIR ? localStore(process.env.R2_LOCAL_DIR) : r2Store();
+await store.check?.();
 const manifest = JSON.parse(await readFile(MANIFEST, 'utf8').catch(() => '{}'));
 let changed = 0;
 
