@@ -1,0 +1,4263 @@
+{
+ "animals/cairngorms-38.jpg": {
+  "etag": "d1c26bdcbe2c1890594a307646c4c8b4",
+  "hash": "e18c616be7",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZQAD5eoG+sKWVqClkZggAAD+7UVRaVoPQmCzfKTbj4i+3JSIPTMvZzAWHOqte+bCc+zAnTOdUjcqXjOgU/ittN6p/+kJkG6ap2XNeZWbMh0SLVWHiGQ/sCb5Rv8Mh3Qg77sXuyJKwaA7y1bb7PBFxlsnpGhfsemPlfIk0ebb78/7QnqJJfI7d/OFmnkvGCnmEAAA",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "animals/cambridge-09.jpg": {
+  "etag": "1e5863fca59232b6d648ed25c0d6bb15",
+  "hash": "37e58fb167",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoQAAsAA4BaJQBOgB9S307AAAD+50GC3AIdO9CcDTWGTrmD/EbsXoilWs1YqcbSzmMqOLL8P+yYAA==",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/7.1 · 1/400s · ISO 200"
+ },
+ "animals/cambridge-10.jpg": {
+  "etag": "26a7cca69600956a226de1f4a754b19c",
+  "hash": "d5b6104071",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAQBACdASoQABgAPu1iqU2ppaQiMAgBMB2JYwCdACPtBuycTixW+7+bkAD+0+MeY0ZTyJFQRxZH+j0x9w9ZhNq9LrGwAfUyEew1eptrliY9JYjybGOXLLRWO88wym/VamXvwkv7UryD4J8XqdbSVemNLxHeXh4QAAA=",
+  "exif": "FUJIFILM X-E1 · 34mm · ƒ/9 · 1/200s · ISO 200"
+ },
+ "animals/dingle-03.jpg": {
+  "etag": "c98f8519705520c1a8ce57c6b3c37287",
+  "hash": "e4389eaaf3",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JbACdMoAB2MTE/yLg8HtZYgAA94s0vWZ8P6pzc/3qLDDl9v79gBp7QB9A0bTwcx2WFEasdJNdZ3VdKyfVT6gHDrWoYqfS1XuyB9rolh6BKFfZzffTHA9qjgg8lCxDw0TloX2Jd5X/6zOFOp/zUgOhPntMAaia3epBR9RpGAkixEm95rsLcWcksHAAAA==",
+  "exif": "Canon EOS 7D Mark II · 200mm · ƒ/4 · 1/320s · ISO 125"
+ },
+ "animals/edinburgh-15.jpg": {
+  "etag": "efc96df984b2fc13934a8fac430cfc73",
+  "hash": "54690d0ba8",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAAAwBACdASoQABgAPu1iqk2ppaQiMAgBMB2JbACdACIKGoszRFbAkA4/WQAA/u6+i5bc6XxsIY/mOOtjTFhpiSeYfyEPwTCbbHYZ0XQ7tpk72d3VlhHcD5zhFVQvmxjyGD6N1Se2781s3uH2REHecHDDFeDGvgfVp8D99qbXOY3YXeR/vxZ4IHfvaSbZ6wAA",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/5 · 1/800s · ISO 100"
+ },
+ "animals/galway-01.jpg": {
+  "etag": "c28bd78aad4b4d1337566f3c5c046adf",
+  "hash": "34c020d66f",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYgAAUrb38UBlYGMxk/eK/gD+qGp5Oh0oR0UlQTihQN6+pHEnfR64W+j2lgsYZaMdwjRPUyqEeGe36yFF5tnNJNatanXujgzSufgcGXcuT0+CgStVzTHgtk3Nm4KAAAA=",
+  "exif": "Canon EOS 7D Mark II · 188mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "animals/galway-04.jpg": {
+  "etag": "165fb2c424ff8a044b20d429afa44dab",
+  "hash": "a061390b07",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAABwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZgCw7B4jNxcyrSfUNLqxiT/wAAD+6PHNPyUBRnZIlBg+kfCLaMW9azbVPzR8v5epbNinmW1HygQzbBm0VBz5hroIVC+NmfRvamFXRazOmKWxlyUlkX0KhyBKTYAA",
+  "exif": "Canon EOS 7D Mark II · 200mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "animals/galway-05.jpg": {
+  "etag": "6fc1226b631c8647b5db3f202f90043e",
+  "hash": "f0a1905e47",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JbACdMoACnnGwDEXVhXD/KAAA/tmSatMnNBFz4KUKepVTOblSjLjnAT6hgCk0v0NgxbLkdet1JFoqSRMBsqtLf/L52q6fYqDMbfN0/Gf080dzbg3wPJz1Rs6L9Zm6V6GmSdSOx4aqQlBZNE4AAA==",
+  "exif": "Canon EOS 7D Mark II · 200mm · ƒ/4 · 1/1600s · ISO 100"
+ },
+ "animals/galway-06.jpg": {
+  "etag": "0c6f644535575cae3ef50c74983d1565",
+  "hash": "5a86804b26",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JbACdMoADS/aoTvgSY0DHAAD+y456ZTM0I98KK+s7hWK+zttC+nqRYBIM2ZgrBjFanZOW443Y9EqZoBKLVo9NTb4ujAmZg2FJzDxhE+0u1Bh85vKJhCVsJd3qzZfaeHVBCV2k+BKMGL/AEKKAAA==",
+  "exif": "Canon EOS 7D Mark II · 172mm · ƒ/4 · 1/2500s · ISO 100"
+ },
+ "animals/galway-07.jpg": {
+  "etag": "6d5bb62bbd079b2b123f1be72dbc7793",
+  "hash": "a25068a23e",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAwBACdASoQABgAPu1iqU2ppaQiMAgBMB2JYgC/OCHfTVz3S9kA1PpQCOAA/riU/zfyURcuwTUHXWrzJ6bX6YESIzvx8XBA8XR+bjQilvRxQlaDv6rc+Xh0Pumrdb0dMVgL695wRyGUsgCa0kAAAA==",
+  "exif": "Canon EOS 7D Mark II · 200mm · ƒ/4 · 1/1600s · ISO 100"
+ },
+ "animals/killarney-02.jpg": {
+  "etag": "b2c84b5194fc10aaca26775c08e06c8c",
+  "hash": "65c3a7637d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAACwAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JZgAAXK+WV8SlxltdkAD+6UYw9xgGY7X8eDCfHXbvgF/waBPhe6+1ZGz/kCTU3oV6dddkBuHoCYbi6iESgcjGJOEyaWttWz8AAA==",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/4 · 1/2000s · ISO 100"
+ },
+ "architecture/bath-01.jpg": {
+  "etag": "bb86fd82cdb2409c19c75cf6f8eb5b72",
+  "hash": "c1992b406f",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRsQAAABXRUJQVlA4ILgAAADQBACdASoQABwAPu1iqU2ppaOiMAgBMB2JbACdMoRwAdBYx772HOGbHzDs7bUQeADib2GkGmF35Ee0QW1dYdODHFW/eLOn7pvnkZoQ1DjK80EDhp6UkyA6rk9rQErdXDGib+bB8F7aPfUkLUiwVD5FW4gwQDkV/51uS87PuCo/jaDPsam0Af3nrIEMvN3QMxfC9qfTOBQfYqnCTGEiCwKtWkIvelxOSaNwB4hmIoR8SMtJEh6aBzAA",
+  "exif": "FUJIFILM X-E1 · 21mm · ƒ/10 · 1/350s · ISO 400"
+ },
+ "architecture/bath-02.jpg": {
+  "etag": "c294d2da5a5add0e67c78a975d0107e6",
+  "hash": "40fd5d85bc",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADwAQCdASoQAAkAA4BaJbACdADJ953y0QAA/swWQmzKO1Gcyr++CUEcsh7+cp+kluYfItmKU8yFLDg5WN42Wt4DLLzbBB6EjgHTOB0AAAA=",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/9 · 1/420s · ISO 400"
+ },
+ "architecture/bath-03.jpg": {
+  "etag": "5e8eabb15f24f3029dca4c1824208e46",
+  "hash": "9579160e2f",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAwAgCdASoQAAkAA4BaJZACdAEfvPPEk0/oAAD+8jvYDTN+J93qIUh9nYdxs6wMJP0GuZFczIHlmLaDGyOvvLoGotfD1c/Yr3LEDrMC1YAAAA==",
+  "exif": "FUJIFILM X-E1 · 18mm · ƒ/11 · 1/350s · ISO 400"
+ },
+ "architecture/bath-04.jpg": {
+  "etag": "0e0f5fc48296dec8e3e636a0144e4eb0",
+  "hash": "cfea3f825c",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAQAgCdASoQAAkAA4BaJbACdAD7HmlZQf5gAPJtxtthZ5sPH4RdTmqbs1Wyregc7TSTqP2Io4hPJUgYLHv30EYw+ptHF/rbKxDd8cGNc6DduLwAAAA=",
+  "exif": "FUJIFILM X-E1 · 23mm · ƒ/13 · 1/400s · ISO 400"
+ },
+ "architecture/bath-07.jpg": {
+  "etag": "b75c4dea5389f00deb836083fed57023",
+  "hash": "0bacb90bb8",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQAgCdASoQAAkAA4BaJbACdADp6/FMrdQAAP4kAxA+VRKoHmxmJqAGwzt/fVwhz/vI0jzkuGTMDTxv3kPIvKFrct2iHPjznSWSP92ffQqnFPjyZvL3QyWFx4AAAA==",
+  "exif": "FUJIFILM X-E1 · 20mm · ƒ/7.1 · 1/350s · ISO 400"
+ },
+ "architecture/bath-08.jpg": {
+  "etag": "d67ee87b8350e6ec18cae54121b45b49",
+  "hash": "f8051b1754",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAACQBACdASoQABwAPu1iqk2ppaQiMAgBMB2JZgCdMoR3ACnJcKWoiRctnRcO/gAA/tMatyznTuXAq6ZhZFkZpzEIb3eMwXqXdvWQekywil7C9TB03El6u7PdBj8nTyjaD+jiF8o/HJ1HriNjglFvbIcXqqObEbUhUXJnJXkupw7KnFRpd33thUmRSNvyJ1BanePa3mclDMihB6c5M9sVQAAA",
+  "exif": "FUJIFILM X-E1 · 19mm · ƒ/8 · 1/420s · ISO 400"
+ },
+ "architecture/bath-09.jpg": {
+  "etag": "90aabc855c458e6ee6048c85b815e66a",
+  "hash": "ec69198923",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoQAAkAA4BaJbACdAEJzvGggAD+kXQ6SL0FVUkG+2t6VD3lFuI664+TkFOGOCIpfNR1lNGW252zfsLrCl8knvMQl4WUGucXGoR4gAAA",
+  "exif": "FUJIFILM X-E1 · 17mm · ƒ/13 · 1/350s · ISO 400"
+ },
+ "architecture/bath-11.jpg": {
+  "etag": "452417cc0f1424028039a637e18c46ec",
+  "hash": "00680f9a38",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoQAAkAA4BaJbACdAEf+6Z++kAA/tSKP1adpL8hgB0sMK1Eh1V4mhLAbxmCIhf9h+ygHoFUnQtSiXdgAAA=",
+  "exif": "FUJIFILM X-E1 · 45mm · ƒ/13 · 1/420s · ISO 400"
+ },
+ "architecture/bath-13.jpg": {
+  "etag": "605c99481cbc3ca0a4e7060a45ff6ae5",
+  "hash": "9cfcceadab",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADQAQCdASoQAAkAA4BaJbACdAD7v2vcgAD85j58ocWTtSlDtd8w7n2PrYabR9dXE2+Db2zPpndhEvoFTRYRp2rUltXdXRZWqu9/qhf9fTlTl4yHzi6rb27tQAAAAA==",
+  "exif": "FUJIFILM X-E1 · 20mm · ƒ/10 · 1/420s · ISO 400"
+ },
+ "architecture/bergen-08.jpg": {
+  "etag": "3bdd0ebbd0ae291caa45b5a3daa229f9",
+  "hash": "3e6eac5fd7",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAACwAwCdASoQABgAPu1kqU2ppaOiMAgBMB2JZwAAO8IJKwgVwuAw2AD8XbUan/HZU1MkDCKej327FrFAJOCqEIAtpEVsO7gcOJJQ0sTAQHGE9k22FvEOe5RjesobvE+wlN6aLN704jlS3H40wxsGvPjdjeIxvEZr+Q7wsG/e4ltIOopgh+g+MrmHkAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/200s · ISO 100"
+ },
+ "architecture/cambridge-02.jpg": {
+  "etag": "70b189e1a007037335238690560a07aa",
+  "hash": "a663cd65a0",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQAgCdASoQAAsAA4BaJbACdAYuvILb69cgAPehkRy47nzAFrSPHYzqCTYuAKB9pA9iAkbqv6KB1zgcPmU2vw39F5vS2YskAbS/GHRV7ytlvlShDzyongTx+WB0dYBumAAAAA==",
+  "exif": "Canon EOS 7D Mark II · 55mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "architecture/cambridge-03.jpg": {
+  "etag": "6ae1ad49e65968d317bd6dd4fb644a6b",
+  "hash": "32c180b73b",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoQAAsAA4BaJbACdADRtjqR9IAA/rPYM4oncXj6EBDIJ5jlsBbstSYcTrUIAoac1YqzBzrJ5vu9YkgQXIAPxLwRAX435kjNgVmZTDsvy0+i+PIAAAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "architecture/cambridge-06.jpg": {
+  "etag": "fd70e75959c16c8b1c23f1eaa45b774f",
+  "hash": "42c5752cd7",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADQAwCdASoQABgAPu1kq04ppaQiMAgBMB2JZAC2yCHRC26W7lJL2FAA/u1H/6NSBZ9gFX+UybbndewfdLr0/PwMkC9xJzx4m3mNejT6K4SbGKrGqJfjWZLGnXVbG0NB6u9D76zduP7K4ckCDQ2b8P8EJ/Jg36o+Ct1/8wAA",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "architecture/cambridge-13.jpg": {
+  "etag": "d3f4b88ec34bd3c0a31dc7fe29547b01",
+  "hash": "991ab32062",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZAC7ACFl4i/4S53TWxh03aAA/sc/nG3eOwhkNamjZJnIC4xZ8hY1kmfT5aiIAGBJqORvoVgANxbyuiN92x8ayMs5vNWKp8w51j2lux8DYkgX+7oCBSHlzN3oWVoSd8AYFIJAbdY2UAAA",
+  "exif": "FUJIFILM X-E1 · 21mm · ƒ/6.4 · 1/420s · ISO 200"
+ },
+ "architecture/cork-02.jpg": {
+  "etag": "85b36fb86bc79d5921848ac73f3ff460",
+  "hash": "f001ec1fb6",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAADwAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JZQC06CP/dzG39jDyVUQwAP7q1/yKv3WcK52V3xEMmGaCA4EcGj3FHiwl3lOyKXu9NhB6AHXdjWKh7c3bnHwW8V4bHelWiROLQZfLH6HC7mVKN8AtpVJXSLQXnac5Ce3h9oyV2a0gYAAA",
+  "exif": "Canon EOS 7D Mark II · 55mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "architecture/cork-03.jpg": {
+  "etag": "835c41aaf5105caf784966d8b6e10c78",
+  "hash": "3daf2571af",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZQAD5LINxXMz2CuwB2CeAAD+4YPMQ2iYsQJd7irFkvxaPB52mDq2P6xOqRqgWKaNHEy8m4BvXwj2jhKa53VbLyPE+V73Pe1yCIEBN/AR8PwQ/4vFV/d3PN2wNIYYdl20AyA9RFF+r//VPZ8Zxd2RjgA=",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4 · 1/1600s · ISO 100"
+ },
+ "architecture/cork-04.jpg": {
+  "etag": "b43b20c8c950e2a67a5bacc3f46c6d4f",
+  "hash": "4b3aa72687",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAABQAgCdASoQAAsAA4BaJYwC7AYuHwfFymE6UAAA/uetuvFyJ8Ymcz2qAqw6+liGvB0omNtsOXfXHNjypKDlsx6ybvsrCTkbztqIL/BecQGyD8ftLgx7ZRJTGBPQAA==",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4 · 1/1600s · ISO 100"
+ },
+ "architecture/cork-05.jpg": {
+  "etag": "b9303d1379a35e0b474f244324191940",
+  "hash": "b5b6b3829e",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZwDG9CGZIyUc4ekIzzIAAP7f9bS91wdiKyFpakl+2iIcyLhYKUH9bZun0JBh4nqiM4J3t8CyakfjVB9dYnpaCAtJq/LnOTLmRJN0UldcE5c9dj3aT/PgAAA=",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "architecture/cork-06.jpg": {
+  "etag": "2cf1f61d88d66cb6e315a1921c0c586d",
+  "hash": "e761833865",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZQC7ACHgcCGwyyLswdS/eUAA/vKfRno4sbGMeTHcSDonYNWHstiVjfCIoO4xmBcyLQRcYPMjAhc3o5lsCFRrYG+4NPM1tMVi7W/VCvl0OgSYRO1PKQnVXErJHGnC48ZfnVZsYh6jAAAA",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/60s · ISO 4000"
+ },
+ "architecture/dublin-01.jpg": {
+  "etag": "b1d8465e3b87f77da2a90387ee8293dc",
+  "hash": "5a3959ee5c",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAAAQBACdASoQABwAPu1iqU2ppaOiMAgBMB2JZQCw7YxETnnB2QRFGdjPgAD+4Kthr5ufs/NHrsA1+DX5OimkpV1IFH+0bYOzgYZKPWqn00bQOztz7898yjUw35+R+tu7Ss91ftZEuW///m8gxlLY3nV7h9OZTlyA04lbF3SbB+jRQzsXahqhQp2dCG1AtRjX1UM0OUM09oO6GhweF5xGUGsNpJ8ebcPbJtooAAAA",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/14 · 1/400s · ISO 800"
+ },
+ "architecture/dublin-04.jpg": {
+  "etag": "1f3ab0c38b49dfca96bb64346afb7521",
+  "hash": "63cfe398a5",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAQCdASoQAAkAA4BaJQBOgBoq1dfQGAAA995hwswOFKMw9cZ3jlf23U/raES8Fg99J5sQmcIqzLFtqEmb2x4t6cRXEmATlxzc8l6sCTc/IAAA",
+  "exif": "FUJIFILM X-E1 · 22mm · ƒ/9 · 1/400s · ISO 200"
+ },
+ "architecture/dublin-05.jpg": {
+  "etag": "34b52b9cc5dc8e06cc828442a1c5db6d",
+  "hash": "60489177b9",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAABwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JbACdMoCGACSv207L9dNEx+XxwAD+tqaSgEDafnds287htOs1ZdChULIG6B1eV9PjCQt6NrDdpZsyp1xNr51U2bJWHDVcvaVN+sskvvWJ+Z/P5iQE3n0whjJwEoa3lpJzC1b/ZzHujbN5ori5+q5UIQxtjSQxw6ViAc5YNlCSL3cB6k8QAAAA",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/18 · 1/400s · ISO 800"
+ },
+ "architecture/edinburgh-01.jpg": {
+  "etag": "8a5968711cb0b76f7bd8fbd600f569dc",
+  "hash": "e5a56b8728",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAwAgCdASoQAAsAA4BaJYgCdH8AGLa2tc+AAAD+ye1LwHfHYYHj+eD/W8q7kHKRD3uL4nSK3k0STMp+f//BKI8Qvi3yoRUe9cCEXhyHDDVZXCAA",
+  "exif": "Canon EOS 7D Mark II · 47mm · ƒ/5 · 1/800s · ISO 100"
+ },
+ "architecture/edinburgh-02.jpg": {
+  "etag": "30e80d7d0e59555fc5d93f234bd39df0",
+  "hash": "77b3442cd8",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoQAAsAA4BaJYgC7AD5MZkx0AD+34mS3sekSSL8UaNb/UdkHrCZk5mr56fflTpEV0ozC/FWxsDRzPvCJEvmwy8XbAwAAA==",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/5 · 1/1250s · ISO 100"
+ },
+ "architecture/edinburgh-03.jpg": {
+  "etag": "0930565fc84ed4aeff2002526fd412b3",
+  "hash": "a4bd4aee51",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADwAQCdASoQAAsAA4BaJQBOgB6uhgmYgEAA4getTUZrOwxh3y3usSJThQ2B3qWKhMeg82BhDLtdJ+TMLACguTuerZi96v5O7ZvAAA==",
+  "exif": "Canon EOS 7D Mark II · 65mm · ƒ/5 · 1/1250s · ISO 100"
+ },
+ "architecture/edinburgh-05.jpg": {
+  "etag": "942f991da7811e2431e939437cb221a0",
+  "hash": "b331cdf102",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAABQBACdASoQABgAPu1iqU2ppaQiMAgBMB2JZQDCgCIaVYvr3mzN/GRkfAbIAP7hXGrhNNfIDY++cr27mAYSaLW+MHEpz3P1W8ydt5xri6zje0NJNDTlqc89f43GTmawYBw36OefK4Oti+2INW3k0YkHrfYJNFEzs2gbEdAytS4NssAA",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/5 · 1/1600s · ISO 100"
+ },
+ "architecture/edinburgh-07.jpg": {
+  "etag": "481a9e7d04b49f16fd4dbd1db0836714",
+  "hash": "dfa40a088c",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAACQAwCdASoQABgALrV2u12jqampiYC0SzgABdIaSqNfDY/37pQAAP7rUYYfwL1CLvVI/I/xYhujH83f0aUn4uzNhOcQWmmX9s9jrYo2OftHgCxWRXWQtV+gOI37Hf5cBZILHcrWpIeCmTU83WL8LLAAAAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/5 · 1/2000s · ISO 100"
+ },
+ "architecture/edinburgh-11.jpg": {
+  "etag": "cd831460cfc8716123f829290234c170",
+  "hash": "27e0cb01bd",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoQAAsAA4BaJQBOgBe8kfsAYAAA/u2q7Gc5HRjKR1XNRm2PHJUfLcKvPqFnbXpeBgp6o32BoqJzelLehiBAdwPhazDXAAAA",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/5 · 1/1000s · ISO 100"
+ },
+ "architecture/edinburgh-16.jpg": {
+  "etag": "945a7da0da23cff0adfd16f0ae8e8804",
+  "hash": "6b4faa6462",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAQBACdASoQABgAPu1Ct1apoqakGAEwHYlsAJ0yhHcAG4H60Fx0AF6MAAD9FIlDQe3fGGa19AwkdzZ4g66DAcoc8cgaJmAREbNXJts5IoOmeeh1v+5Om3c4nPu0SR2jwwaS5v1yu0nHudkvGPATo/Rbo7MYBgEJEnW0x/mlAAA=",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/5 · 1/1600s · ISO 100"
+ },
+ "architecture/flam-03.jpg": {
+  "etag": "07cf6b956f12832c5f97577e4e7d45ea",
+  "hash": "eb4bd95dbd",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAwBACdASoQABgAPu1qrU8ppiQiMAgBMB2JYwC7ACHfQ+06zdGX1RmWrsAA/u1D1tOyK51lmkMQGDzybCqpTc8DdnWQRCotEHEOI3w6bUMW7zcReuLdEYIrmMXzeOt8cAAAAA==",
+  "exif": "Canon EOS 7D Mark II · 55mm · ƒ/4 · 1/100s · ISO 100"
+ },
+ "architecture/galway-09.jpg": {
+  "etag": "cac74cb4ccc4d8c96598d2790006e8f8",
+  "hash": "c8f79ed82b",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAAAQBACdASoQABwAPu1iqU2ppaOiMAgBMB2JZQC7ACG65tEKUucOiNhJUAD+5ynfauyoyqUOYxau9Smnjeatxha+BB3GRCXkhHd098rH7Vo4FrAU7sV0gUykz7k/S8dj3A//amr57HZqL3ZDHL/+PdBocE32/YS+w3sY84xkgbGzAHuVACK3s69UyrjHRDouBS/E7bb/It1UKWNpAYAAAA==",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/18 · 1/250s · ISO 800"
+ },
+ "architecture/galway-10.jpg": {
+  "etag": "32f9cc5f2689fdc4db4d2bd04f28e2c8",
+  "hash": "4a4a0bb909",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAACQAwCdASoQABwAPu1iqk2ppaQiMAgBMB2JQAAitXt7oCpDS4AAAP7YYffSiy1W9b9tXHYFd9ynmyvAExW6hb/LnbHG3rc6yQpVZOtX3wHwHX9UJ0D5/tj8VOCEObAlbUmNi/qNVfIuFLDmfuJ0XMDigp5+y5IYgAA=",
+  "exif": "FUJIFILM X-E1 · 26mm · ƒ/18 · 1/120s · ISO 800"
+ },
+ "architecture/helsinki-01.jpg": {
+  "etag": "d35a83fb84cbd9da9320c06b4c74a662",
+  "hash": "9e07a97ce8",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAABwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JbACdFQAuzMICu9io6xkKPbV3DAD+yypSHpTBdexAZTtiU/efrFXhter/8uBH/gL/YwwRt5rc4br5Df6Fec0KrH25oJNw03PwrDlohWmuTz/JEfcyMsFRCOXkNDOBMTNHPBzhdLqt4FF3ao78z/cgAAA=",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/10 · 1/420s · ISO 800"
+ },
+ "architecture/helsinki-02.jpg": {
+  "etag": "9c2f67c840bb07345e115c3791aad7d4",
+  "hash": "b9f8299637",
+  "width": 1299,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1299
+  ],
+  "blur": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAAAwBACdASoQAB4APu1iqU2ppaOiMAgBMB2JQBUejSv425fUzDrLZ7uO7GAA/t+kR6MeUp4aqfySGRD7s4dv6JhgtlGV8VzVfk6xuMTIg//j+xJvVoitO7BENW9/+g/aI9DqD/fOYvKnxwf90oodJVzgdqpK7U4jk4pLy8PtYHvPkmRKO2yumVVHFsAAAA==",
+  "exif": "FUJIFILM X-E1 · 23mm · ƒ/5.6 · 1/250s · ISO 400"
+ },
+ "architecture/helsinki-05.jpg": {
+  "etag": "2c951371caa73bf217be732104a4b496",
+  "hash": "8d10f299af",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAQBACdASoQABwAPu1kqU2ppaQiMAgBMB2JbACw86gCWgB2Ac/IietJrgD+se7wb9Ri8lIffb9oHYGSM7S6iMCEyK9Pj6GS/5//diH+muvyGETJzJyXtaG7PL5BHC/bL+KKele8neoAdrOpB4E+C5dmAh0u1wAKlKBWoG4AAAA=",
+  "exif": "FUJIFILM X-E1 · 28mm · ƒ/9 · 1/420s · ISO 800"
+ },
+ "architecture/helsinki-06.jpg": {
+  "etag": "9a89a27bbb830ae6a6fdf238f560be30",
+  "hash": "79998b41d3",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACQAwCdASoQABwAPu1iqU2ppaOiMAgBMB2JQBdgARj85d8NfPAAAPx+nn4YKP50HOv2SMceNcKkFyHBqVQC2TN8BqKB/Qa9W6Hr+9g8/2tghF7nmE1/j6v8m267Upx5lJOGKrJs0FLFVt03+8xMGSAztaDLXTE6lqpPV8SiQYOAAA==",
+  "exif": "FUJIFILM X-E1 · 26mm · ƒ/5.6 · 1/450s · ISO 400"
+ },
+ "architecture/helsinki-07.jpg": {
+  "etag": "7ac07b3dee938987767e95a163303bc6",
+  "hash": "1a1167730c",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRtoAAABXRUJQVlA4IM4AAAAQBQCdASoQABwAPu1kqk4ppaQiMAgBMB2JbACdMoCGBGAOUyWz1U7xzeI8YSQuAYMAANq2SWXSCJJZV7u9yMfYridqOjFtanIa9HIQ807mfTKgQTXcteMKP7jf4r3ZsUo/I6bJGvNBcK5Lemp8rXmRWAQv1bF/8PSKaEszDRDMm58hXi9B1P6Fb14S+ietUTRGGWlmf3033qQRKIzmJI7jJ/AckYil3rIj0VYbkgcPq38BEtqSWfh0QGns7y1UPT4DUBnzYPqjdsmRnAAAAA==",
+  "exif": "FUJIFILM X-E1 · 17mm · ƒ/3.5 · 1/56s · ISO 800"
+ },
+ "architecture/killarney-09.jpg": {
+  "etag": "cd6a98426835771bbca7f933eaaad44d",
+  "hash": "3f74111d9b",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAwAgCdASoQAAsAA4BaJbACdAD2P8/ZzD1QAAD+6qozkbLjqvMF98yaWxubkW/2fFa6KjNIo3jdixHpJSmgDz6QYSg+PE7xD2or9B9DeZDveIgB8mAAAA==",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/640s · ISO 100"
+ },
+ "architecture/killarney-10.jpg": {
+  "etag": "5b272212f80e31e976f5487bb046bbc0",
+  "hash": "b53a21a37d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JagCdACICrSzvQ/BNrNUM0JQA/lukIkGA8oyLaf5i2YmdZIDWV7H1oNxTcJ8jFwcW0HrRtZj7SK1q7wwonmlFl1yRGeexXrA8BB6Af4Ts9w2/pp7rfwsAAAA=",
+  "exif": "Canon EOS 7D Mark II · 47mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "architecture/killarney-13.jpg": {
+  "etag": "f475df1b593e4d437d002cd257877b3b",
+  "hash": "88df153e3e",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JYwC7ABsBsdeSHow/gsEAAP7WE3E7AlntmCS3Menr44t5IItn2QghIQHKaXyX+uC4nmtb4qRgfY5w6VRapWaxYNYsyp3lvHG9foh5NbBeYQ37NNGJR9XHywxseyrOTihfldp3IMNqyX+E9JOgbdmcsivWGZphurs/sInHFwyfNEEf0O+igAAA",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/800s · ISO 100"
+ },
+ "architecture/killarney-14.jpg": {
+  "etag": "285319c2d102d0992b41c300ae2c522d",
+  "hash": "4324bd9922",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JbACdOUE4AALNjlHSlKtpgAD8capR6UC8LMphR3p5rkyKVslKNx9pyHw1Wgb+qiP/YNag3wpYfECmteOdaGhVWbLatZS9CDkPx0RaTKenmrWTKWxUX/o/+KxURahEVO4NWcVJEGolM0hH8MENeZ2mffKoWPe4a6r/0NtxYreAAA==",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "architecture/munich-01.jpg": {
+  "etag": "b56c759bb0a44da5f19c3fea453bb0d1",
+  "hash": "ae542842f7",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZAAOfIKzqMPKNefpikKAAP7gu/qgwwO/bN98nOXSpSUHV1B7XtZdRja2gGjgQEXuLemJMKvdGXlQc3Ozi0J5399t0QLCPejwfPUD8qgluSUBGRkXNe3BxYW0NHxBbwAAAA==",
+  "exif": "FUJIFILM X-E1 · 18mm · ƒ/5.6 · 1/340s · ISO 200"
+ },
+ "architecture/munich-04.jpg": {
+  "etag": "853167872910c1504150b197baa120c7",
+  "hash": "dbffccb7d3",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JbACdMoADS+kjkAszhNjJpwAA/s1gcXnkWv4aSSmKB1tfO0kvczXUifHRyNbzN4PjQL+jXV8CgRNSrSkfxiTp3oJnI4Itlocd6fVWjd4gVh/IGPXolDsqSSLyAOY5TGC1296fOOWKMwez/9xeapGfOW3IWJP7fyE24Ct5VWlH7YhASq/pJ4ioxMclAAAA",
+  "exif": "FUJIFILM X-E1 · 26mm · ƒ/7.1 · 1/400s · ISO 200"
+ },
+ "architecture/munich-08.jpg": {
+  "etag": "d88654a6416f49f8e98c87984fce4eb7",
+  "hash": "884680a37d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JbACdLwDAKwIEq2S1kpulGVwA9bDSUlA4N+NyMsaR2eUtsyZCjW2BUhqyP/JGNPr4gdK+4IX4fsdX/YsNOcDFB95Kgtc0Dl3F0YI7Jg6mgZm3CfKrlI07vcQKJSIAB2dIKOQl7TjJb+/nXYZAIw3Wy47viFkiOAccLGydAAA=",
+  "exif": "FUJIFILM X-E1 · 47mm · ƒ/9 · 1/350s · ISO 200"
+ },
+ "architecture/munich-09.jpg": {
+  "etag": "95f23381be80c5edd3cfbfdc25c814c1",
+  "hash": "dd9a2172cb",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZgCsABmVSCVtZSDUYLrQiqwQAP5qFZnUVxYWo1Txrr+H9K6cIZIHfQjLvcur0G6utCWSCZlC1ut9m4aPKl4GAJMgxE8BvrcbwjI2LEjBVDFWjEIvUlp6sUcnWyNsFUK4bhxY4qCSrvHGvF5hRoFJ/CGbMH7Wo1vYRYwA",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/6.4 · 1/400s · ISO 200"
+ },
+ "architecture/munich-11.jpg": {
+  "etag": "4cea8fdbd09bc09419ba460f4abd3d3a",
+  "hash": "5b84bde7ff",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAACwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JbACdMoR3ACIMxINVH1Z/f3P+uHyAAP7Z9rQtGSVn7cRgmNlELbJShey6Dpw1ft7pg2t+cTkNZpmStBvz5Vl7TZmNwfn2fEHs7Bq5Jui3w74CFPTDIGlPrdBWG9R52SMye7Z/u5XMxC/FRwn9H8AA",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/6.4 · 1/350s · ISO 200"
+ },
+ "architecture/sognefjord-01.jpg": {
+  "etag": "8cac0f8d1d063444aa8b07e45c42f391",
+  "hash": "95701c8332",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JQBdgBDcvSFpKT/cvKgFAAP7x0CYi/ETqHjmACX8Sq1qONaU0Po6DfYR1df8fvFNTKGHo8uFK21oyXGvtnJELmSzCWNNeLGQP1Y3UAAA=",
+  "exif": "Canon EOS 7D Mark II · 67mm · ƒ/4 · 1/100s · ISO 200"
+ },
+ "architecture/sognefjord-05.jpg": {
+  "etag": "56c73bbfeba217ce33ee4bb561a10074",
+  "hash": "681fd0620c",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAACwAQCdASoQAAsAA4BaJYwAApI1cVEgAP7bd5Z3wBjkYwX1btoFsZTIQos9YyHSOUMDol0DYHEibCFd/zB4/gAA",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/4 · 1/160s · ISO 500"
+ },
+ "architecture/stirling-02.jpg": {
+  "etag": "3a200aeadfb090b4d5630ba6f310d004",
+  "hash": "9958a19a4d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwDE2Yvq3FG+zmcbfl6hAQAA/uDFL/IljfuPESJEFkQUthukRf0yw5Unpfv9Lo1qO3Ac6F8CMGVeDrPTkAyQQTB49Nn7qKqMQTe4uPbPxglfhpw1bsJYXO9ubGLnPeQQAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/800s · ISO 100"
+ },
+ "architecture/stirling-03.jpg": {
+  "etag": "75b5d31dea7ce12672f72ddd96c79e61",
+  "hash": "ddf7c74fca",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADQAQCdASoQAAsAA4BaJaQAAud5iZYkAAD+9O+RNoCqZ+xMNzowcuNj7RJuVgYTy9nMJ4QO9FOl+vZcAAA=",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "architecture/stirling-04.jpg": {
+  "etag": "b23cf1fd0ef8fd754a0190d3f45d3a43",
+  "hash": "b358e4c609",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQApgAMaROXxbuKl7DE7wAP7Fgs9WiR5EKRkfOAI0fvRutLS7D6hLHQv5C2J5zNgtETUVFEEmNiJG1TD/sf1Hc7LDMOWCN4Ykzbl/CgfYRGN9/dpGiYjvheQLHbjgCPPWdt5OgZ0l7mnudSpVyouRTSgAAA==",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4 · 1/3200s · ISO 100"
+ },
+ "architecture/stirling-08.jpg": {
+  "etag": "b7aabdd45602fa2e7e4b9c954c3c1f35",
+  "hash": "d345966aac",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwDG9B6jqY0tW3VobAAboAD+sjFw9pHICqe4e48UVDE8HC1eBGVwhN42yll4JlX7k/DUOMOOC7ke9FPE8JYKBO+pRuyGC6CiIJsSHt6s1w0d8QwDnBQA",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/4 · 1/800s · ISO 100"
+ },
+ "architecture/weymouth-13.jpg": {
+  "etag": "d46bc3e9075d2649f62f7fd77c4ff596",
+  "hash": "cb0290186a",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwAwCdASoQABwALrV2u12jqampiYC0S2AE6ZQAMO3TzvWVjcEMgAD+jUjhG+QvGPSYiNmhxgYhQQrG4Zt8LssVuBY//iKXWVaELlO8k2faHXjXVg97282rKOZNsa7okG/3Gbx/6DviFaKsWOUn7ZAZj1CmOJv1BApnHSJbRKMAAA==",
+  "exif": "FUJIFILM X-E1 · 40mm · ƒ/16 · 1/420s · ISO 800"
+ },
+ "film/weymouth-arch.jpg": {
+  "etag": "b158c912bfcef3707d26ace1b4baf4a6",
+  "hash": "5457d6f996",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAQBACdASoQABwAPu1kqk4ppaQiMAgBMB2JZQCw7CHa0N2/SJ7LLcqdAAD+7oIQlYO+1msyz665pi2/fEFdV3tl8zM3uE3HQAocAjBOvLwTdh389awrcJDw4sO1kombSEZ7c2CwZnTSdWjwdZ4+rtBZbl0Y6YaEEgA=",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/5.6 · 1/210s · ISO 800"
+ },
+ "film/weymouth-beach.jpg": {
+  "etag": "10ed21b8804553c5baca85a2fe89b8ca",
+  "hash": "384d1fe333",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAACwAwCdASoQABwAPu1iqk2ppaQiMAgBMB2JZAAAR9nsfs7uTmoOQADyk39VyEipl6eH1mUkdgdR9nD2e+Q6D3PeSP0YvhrJi4gvU+NYeCiq5EK8A8SJTKjAS2joDPVvJLWNT2KnFQq6tGAA",
+  "exif": "FUJIFILM X-E1 · 24mm · ƒ/22 · 1/240s · ISO 400"
+ },
+ "film/yosemite-half-dome.jpg": {
+  "etag": "349d85feed6fb5d0f3abfce5f2b44ffc",
+  "hash": "39d72c7612",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAACwAwCdASoQABwAPu1iqU2ppaOiMAgBMB2JaQABHvAJYFIS1OH3UAD+/TMVEYf+UxznndufLk5dvPZglDVz/5ut4wgn4EyyDpiMf+Bz2hwAAA==",
+  "exif": "FUJIFILM X-E1 · 42mm · ƒ/6.4 · 1/350s · ISO 100"
+ },
+ "film/yosemite-high-country.jpg": {
+  "etag": "ec2917302b5bba492ee5a72cdcf59d70",
+  "hash": "b429c44c15",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAACwAQCdASoQAAkAA4BaJaQAAxZeHJ6AAP73Ta4Zj5Le6fyfFDFNH6etr2z2ky8k4rAAAA==",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/5.6 · 1/320s · ISO 100"
+ },
+ "film/yosemite-hiker.jpg": {
+  "etag": "7900e05195a629393c827d6546dc5983",
+  "hash": "22ed804cf4",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAwBACdASoQABwAPu1iqk2ppaQiMAgBMB2JZQCw7GlhX6ruW1xboxMMHQAA/vqqHH0rbn1DHWhgcwjJsUUGtwB8XgHnXqrS2bLvkdhDda/bVhF3uNKJt1npcCC7NZ0ca4H/rXuXwHoS2YxnLAQwgI4TlAAAAA==",
+  "exif": "FUJIFILM X-E1 · 34mm · ƒ/14 · 1/400s · ISO 800"
+ },
+ "film/yosemite-ledge.jpg": {
+  "etag": "b8c507c7e61aebbdbed61d1af821045f",
+  "hash": "c373bb942e",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAABQBACdASoQABwAPu1iqU2ppaQiMAgBMB2JZQB2AAhNUo6vBL0qheMniVwAAP7tljHm4r1tOwq83ffyQvQM1V7XydMWmEN2cd+zerwlzVz7VCl1ECbKXf9T7+C7/5FIsZRyvOTSoCjGzeTVvlIOihm7YxsK/p7q78GCved/6R4F5uY9TSKzWkJjNbtKz1XvEEtBbwAA",
+  "exif": "FUJIFILM X-E1 · 30mm · ƒ/13 · 1/400s · ISO 800"
+ },
+ "film/yosemite-outcrop.jpg": {
+  "etag": "75611115417f68ba060cefabf030133f",
+  "hash": "b6e46f2167",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAACwAQCdASoQAAkAA4BaJQBOgB7EBJlgAP5g69NacQr5kab3UU7dFKVThzUm3EMpvPa4z2ikIiPszDRBU2ycuhkJp+++e5iFimtIcLIIMttggAAA",
+  "exif": "FUJIFILM X-E1 · 28mm · ƒ/13 · 1/420s · ISO 800"
+ },
+ "film/yosemite-shadows.jpg": {
+  "etag": "76393056e1b178a5a34e9a9d8ee11b47",
+  "hash": "69ae4ce094",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAwBACdASoQABwAPu1kqU2ppaOiMAgBMB2JZQB2AAJdQildfKY22vIphZAA/vOs+5RbyaXhT7P3RTyElfRCcdqFn5ihaqo485VOEmeVNd5/4J6lyj/rQtCBdnqVYTwB0keMHvDxGC2KrQHf1OjQrepmN0N+WBya15UDZcxlp9o+/0ToAAA=",
+  "exif": "FUJIFILM X-E1 · 28mm · ƒ/14 · 1/400s · ISO 800"
+ },
+ "film/yosemite-snag.jpg": {
+  "etag": "670802ab11ccc3591b556d885c100019",
+  "hash": "9b9201c411",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAQBACdASoQABwAPu1kqk4ppaQiMAgBMB2JYwCo9GlWU0jnLQjeXJeuwAD+u6vVafEs1cF9y/9vDvbDxTAfkdHbzLc0IybgBMgCH1aexg4EnhuxZWf2P3LL5QOehnRcyWK/BskU5y+R2EN2HLCc95t4g8002h6Rif6YqFimAQOXS/pYfPyaBPtVB5HvfDI1YSZBkIAA",
+  "exif": "FUJIFILM X-E1 · 26mm · ƒ/14 · 1/400s · ISO 800"
+ },
+ "film/yosemite-valley-floor.jpg": {
+  "etag": "895f42b244e8816947b0bdb8dddbd53e",
+  "hash": "36771ed2e5",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAwBACdASoQABwAPu1kqk2ppaQiMAgBMB2JZQB2AAJcSqamSmQ5h7hticAA/vHUGU7lKF0cR8HjW30WBaJozhbaV4863pRMhrUW+irYb6PZQqVqV5ppcQ/dM9H/gnqXKP+tC0H8NGoW885eG1AQLtfUfNEUGMaj5DnJgDbcSk4bJhIAAAA=",
+  "exif": "FUJIFILM X-E1 · 45mm · ƒ/22 · 1/140s · ISO 800"
+ },
+ "nature/bergen-11.jpg": {
+  "etag": "63a48b62163ac455c0194563a10a8957",
+  "hash": "50e18a8f62",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAACwAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JYwDCgAroV7zUWiQ3UADOOPwOkQwBJs2Uv/NJp/shB5cnuuQXNlFxMvkQ63omGNcReFommKfb9ZSHCt5pHJ9fWpcCBFytDqfHWWTaxZw8J8pfIIl6p9uyI5UL92nnJ+Wai0mew1NvW+ogqZhTFGvCtJlHAAAA",
+  "exif": "Canon EOS 7D Mark II · 67mm · ƒ/4 · 1/320s · ISO 100"
+ },
+ "nature/cairngorms-02.jpg": {
+  "etag": "516e2c2ad96d7b93f36650e69abf9814",
+  "hash": "a923dedc85",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAACwAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JYwAAMgMUFmvU/BUfQAD8iZwafPNK0GmvE1AUuAFWEEN37hjzvfcb8Ud6Yd9og4NxXJlcaUG4fF7wlRYv+HLEjOEffiOJZLLg57ksdKMiKJH/ZaXgAA==",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4.5 · 1/1600s · ISO 100"
+ },
+ "nature/cairngorms-03.jpg": {
+  "etag": "0766d5c31946f27a192dff25a8990f7d",
+  "hash": "1e52d0db97",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoQAAsAA4BaJaACdAEQSTFQi5FWcAD5baPmWl1MguAnOOGkiirBvUBaIbxYWTcIO7I9BddtCPIiwvyXZIouI2HvylX/Ee/tKeVBlNQPwv2HhvyosAA=",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4.5 · 1/1600s · ISO 100"
+ },
+ "nature/cairngorms-04.jpg": {
+  "etag": "204f32d63474dcc31b463bcaea3bc81d",
+  "hash": "85ff3d61df",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JaACdMoRwABubv+B7oD1kn3M4AP3jb0nSoaP/eCdotqClmhuDFcK2LTepEmcpx1bfWUSbWn55Qirzz4+1G4uGRgCxYoeOrohqshvABUGAQBTunNWXZBbVyoadb9ehNINrDOpcuo4IUTpF6plOl1j03oYLV1PH/ktrfrCmqG9lOFwAAAA=",
+  "exif": "Canon EOS 7D Mark II · 47mm · ƒ/4.5 · 1/2500s · ISO 100"
+ },
+ "nature/cairngorms-05.jpg": {
+  "etag": "601e9ca45e9ae660b6f4e84afcb5f3de",
+  "hash": "e038b1f3d0",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoQAAsAA4BaJQBOgCBUpY+xwNAA+OG/zrqepf924UHp0o+Sp9vMpX253M6jcDWqB5jI7H99DOVJ5B77BbLlVkwA",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4.5 · 1/1000s · ISO 100"
+ },
+ "nature/cairngorms-06.jpg": {
+  "etag": "ddc7a59dc2f6b22812e7a5784a88bd2d",
+  "hash": "475bebea63",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAgCdASoQAAsAA4BaJQBOgCKeTbGpm+gAAP6mggkEtWuob3P1ELWj0aIEagnBp6ivvh+2wl2r4XfBMhrnAAAA",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4.5 · 1/1000s · ISO 100"
+ },
+ "nature/cairngorms-08.jpg": {
+  "etag": "9765c9e9a498f969ae57be037df65a50",
+  "hash": "519a8bac94",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADQAQCdASoQAAsAA4BaJQBOgCHahsPgAAD+jhp+5JadC5EOxSGrlDsFlIKtGrDFsXi3rhwtaMq1F0NUbweaPgy+SLpAAA==",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4.5 · 1/640s · ISO 100"
+ },
+ "nature/cairngorms-09.jpg": {
+  "etag": "3b763af0a4c8a4f2d4abecfd1c70d28e",
+  "hash": "0730be05b2",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAQAgCdASoQAAsAA4BaJQBOgCLJ5B/LVlfAAP7eLIzwRyGrksnt626XbYHO3a58KiSXnF5QOpu0LDGUVEOLLxI5vcoAAA==",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4.5 · 1/500s · ISO 100"
+ },
+ "nature/cairngorms-10.jpg": {
+  "etag": "54fad28c566f65dcc188aba89d31a1ff",
+  "hash": "0928be72b6",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAQCdASoQAAsAA4BaJQAAWMJjulegAAD9U2uDpKldQW7A1nrHFh95GcAjmprWKQCFyV+Xxvb6hmoIHD8RnTaK9tkrFi4AAAA=",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4.5 · 1/2500s · ISO 100"
+ },
+ "nature/cairngorms-11.jpg": {
+  "etag": "f3fd900363fa6aa73ff94fcc69500d59",
+  "hash": "4484402a1a",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADQAQCdASoQAAsAA4BaJZAC7ADcHy7fAAD+U/jczkuhYgaFd2P1clVFhncz7aH/EZ6QvLE2ava3RlzKFB89+9wASAA=",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4.5 · 1/500s · ISO 100"
+ },
+ "nature/cairngorms-13.jpg": {
+  "etag": "6fd965d3bb6b005b91671282f080ac44",
+  "hash": "d6e501fa21",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAQCdASoQAAsAA4BaJZQCdAEPgjP2eAAA/u/KB6a4czL255LjcF0zipEGyuzeE3BR9OpB4bMAAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4.5 · 1/5000s · ISO 100"
+ },
+ "nature/cairngorms-17.jpg": {
+  "etag": "657326ace04bc04abf0734b04cda37f0",
+  "hash": "6f5b21adba",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAACQAQCdASoQAAsAA4BaJZQCdADZgLAA/YqECwEN2PtEPwO6uiMUfjpG7yo4VZoMoVlNfoFAROSCAixEoSwul4AA",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "nature/cairngorms-22.jpg": {
+  "etag": "2456ebb3f0a3a764480d97541a5056ff",
+  "hash": "17c54504c9",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAQAgCdASoQAAsAA4BaJZQCdAD1fOZFdEkAAP5b8KJQKz/fKQJ6O1B3bEvrg0zJPnKmNCgzRbD712VCSfJyOJwj4yI2UIHuW/1hBp0gIyzMlv58AAA=",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/4.5 · 1/8000s · ISO 100"
+ },
+ "nature/cairngorms-29.jpg": {
+  "etag": "a9eb30de73f0a9b978935d77503a644f",
+  "hash": "c12b19be8d",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAQAgCdASoQAAsAA4BaJZQCdBHABXKbYEcAAP5mbwfU1fSsCp6I0MkMRludHhKiMMd6mYwjBkdUOCrhmaaafxavaBCNm134+SLtsuAA",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/4.5 · 1/3200s · ISO 100"
+ },
+ "nature/cairngorms-30.jpg": {
+  "etag": "8a34dd55681b68c674fa3f508d4a335d",
+  "hash": "5601ed1a74",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAwAgCdASoQAAsAA4BaJYwCdAEUoF1zpOjyAAD+t2YwDrLDfPT53BSwpXmVu5s6A0XTdEhUY78PC3jHZX6hT38M4huaHRmsoo+TjDAA",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "nature/cairngorms-34.jpg": {
+  "etag": "afb9d166c41c5004d1301d53e42889cf",
+  "hash": "1fdcb5f976",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABQAgCdASoQAAsAA4BaJQBOiP/wPS+YgZdmDwAA/I5UNPdRKchPKH389DefFQZ7iusFFZZgYuKV+XAx4mXAC10AiKzLFNcWwxarxMgG2NmeSdrSOXEzoznkO7T6OkzUIXAAAA==",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "nature/cairngorms-37.jpg": {
+  "etag": "9ddb1acacf7ddb65d1bbaec9f55f3f76",
+  "hash": "197eb4dd85",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADQAQCdASoQAAsAA4BaJQBOgCHKBFkGoAD+BzOCf8y0i/CrFt7QBxYu2eaBW5HQEd/D5vkrPkqDXjy8UJMRJNg57WJTPtkxUnVGgL4duoSmCTMiQwBkAOmjS9gAAA==",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "nature/cairngorms-48.jpg": {
+  "etag": "c87127f1336093df1ff4973ea3d0c2bb",
+  "hash": "2d568021fe",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoQAAsAA4BaJZQCdAEf/kkD+4AA/tUWppucuiSJ1kMPsFzkwos57pIEmAB7l3R7YDlyjDrIAv55hqedc5IIZvGIAAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4.5 · 1/8000s · ISO 100"
+ },
+ "nature/cambridge-12.jpg": {
+  "etag": "9c661daac028164d590ef23338e55755",
+  "hash": "3101c14e12",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoQAAsAA4BaJQBOgMXIyPMtbBwA/uHzMCM6mvVc+1xDGPlQePwRAc6NRAlr8a5iBcmf0EE7ckj4ZT0iaq/S+cWXy+s+ZgAA",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/6.4 · 1/420s · ISO 200"
+ },
+ "nature/cambridge-14.jpg": {
+  "etag": "7807542059970995f5ac4dc725be3161",
+  "hash": "847bbbed34",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACQAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JYgABHsTHgcGFdfYAAPGM2+kDImv/8UObLS1dnxldOGk7GxNeCS//fgdNYgAAAAA=",
+  "exif": "FUJIFILM X-E1 · 26mm · ƒ/4.5 · 1/17s · ISO 200"
+ },
+ "nature/dingle-02.jpg": {
+  "etag": "e226f918c00d7c1e85ddfc293a2b97da",
+  "hash": "b68dfd3093",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACQAwCdASoQABgAPu1kqU2ppaOiMAgBMB2JZQC7ACHWnxpcyRAAAP7qbwOxTs/lOwyisRvyVZAtDO3593MFJQVjIN7ncN+AAAA=",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/4 · 1/800s · ISO 100"
+ },
+ "nature/dingle-04.jpg": {
+  "etag": "2d74530a6641c0428a1ea6cb72a8d012",
+  "hash": "c66448625e",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoQAAsAA4BaJQBOgB482twAAP5UZe/FS2FHEOBFGj2b9s6MEsitv00v4/1dUtVtZ4gsAAAA",
+  "exif": "Canon EOS 7D Mark II · 168mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "nature/dingle-05.jpg": {
+  "etag": "618e9814725d00c00fb87c523a764a67",
+  "hash": "43869ef6ff",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAACwAwCdASoQABgAPu1oqk6ppiQiMAgBMB2JQAAj3VFollTPtb/AAAD++kIQBKYfJ4EAZAmh51ReB+mCbqLRLGGUyqO4xoTN+dkSQUChzQa5Y1zAwaEofVXZtpXeXra835FVM1U1O+1bnsQAAAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/640s · ISO 100"
+ },
+ "nature/dingle-07.jpg": {
+  "etag": "de1b52907359994ecb170becacc6c90a",
+  "hash": "b2aadcbd10",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADwAQCdASoQAAsAA4BaJbACdAEO4qqsNGAA/t/tJ0WBOsmMQc6AjHLzZGOo9W2v1+2et0b5xKhgbf6ydRbUiAAA",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "nature/dingle-11.jpg": {
+  "etag": "54bd583fae182e10ccea7627597b0a7c",
+  "hash": "a6a3171d94",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABwBACdASoQABgAPu1krU6ppaSiMAgBMB2JZgCdMoAKRrp7s17PNs7rBcUqYAD++q1Po/s7uSXCDO5OIV6IGuNW4g/48jU++aJ8qVPae6692BRm15aYW2nAyXkcfkTp4Vbqp9h47Kuk02G7UVenvxtnj+EZ3PLI/r/c5AAA",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "nature/dingle-13.jpg": {
+  "etag": "847366767ee6ba5d14a6f6933f3cebbb",
+  "hash": "4f059415f3",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABQBACdASoQABgAPu1qrU8ppiQiMAgBMB2JZAC06Gj5i+jay0EAuNzq9rYAAP74Coh92roTI7bIPBj9D9jycZ4E644Qa9siEpbUa75FDilB3nGS62Zlx/M2J3JeI3E9JG1ef1jWZz9fA5PD0AG6guQs7+hPQ3DleaTxkgAA",
+  "exif": "Canon EOS 7D Mark II · 70mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "nature/dingle-15.jpg": {
+  "etag": "7c08263927ce34e8dffc589452b8e422",
+  "hash": "341b5a4a26",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAACwAwCdASoQABgAPu1kqU2ppaQiMAgBMB2JYgAAW8rxkyyNXs5aAAD+7X9ErYTBvXv3n5rZqLU4Fp/xdtqXUZH4EW1TvS0fz2rZGhZ+utgR7k7r4dFngGXd/3OY4k6t8PZAFCG1K2/m+xYAAAA=",
+  "exif": "Canon EOS 7D Mark II · 70mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "nature/dingle-16.jpg": {
+  "etag": "eda02b6d3ce3ecc899b181a789f5bfea",
+  "hash": "7016fd9775",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAACwAwCdASoQABgALrV2u12jqampiYC0S2AF2I//A9D13nPOoNsxAAD+8czFk40eh5VdfsbCiAe/kTt5/fwZxeykvmb6+bvL9hQ0dOyV2Kxrt3FbE2/jRHBqqSt+n71jBK2s2yOE1iIs+ezzYnw+Njv/U3iLtCQOx1D5hwAA",
+  "exif": "Canon EOS 7D Mark II · 81mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "nature/edinburgh-14.jpg": {
+  "etag": "de5ed1697b2f24551d49ef50f70d22c2",
+  "hash": "f6e4e9bcef",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZACdABIF6GJx9dVFYstQAPb2YIpoZAKGXFoBAcHrtQEtXU1WpxJq3bZXTcvXidBbmvyh2Ila9gfQ96FBaQoGkQTTKCBrnVMMp8Bp1CeA50gzgN7FoiWlIuxFHg1gAAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/5 · 1/1600s · ISO 100"
+ },
+ "nature/edinburgh-17.jpg": {
+  "etag": "435186dff222600b14d2b056b36e00a5",
+  "hash": "b434135be5",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAADwAwCdASoQABgAPu1mqk4ppaOiMAgBMB2JbACdACHe02XA5hcZCREAAPqecFn9i0TexBxFxImUwEgrX5IgtNk3yF6lGcjgj4VYWmTAgbD0p1TCx7MQYyC08tj2/+Zh1dwG5iCdphLVoiM0Fr//5xGvckxU1a18/3l2V1r2JIAAAA==",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/5 · 1/1250s · ISO 100"
+ },
+ "nature/edinburgh-19.jpg": {
+  "etag": "53ac4f6aec0bf5c8ca7bc2cce8720a9e",
+  "hash": "9925ee00a0",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAwCdASoQABgAPu1kqU2ppaQiMAgBMB2JZQCo9CPSFGToP7ufdwAA/LD7BLtYEVcWx1DbTdHNTL33oe88ivy19eBOVzVSG8TsB10RmVXAAA==",
+  "exif": "Canon EOS 7D Mark II · 65mm · ƒ/5 · 1/1600s · ISO 100"
+ },
+ "nature/edinburgh-20.jpg": {
+  "etag": "9526c2c330f0bf279f33e86119416557",
+  "hash": "0c5aed3763",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAADQAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQBibAmdIHA40nPsr0gAA+gVBl2WLszbSIjgDKepkSC+QyQaT1T9/8InKJ2eswZ75arwQI1ux2HYzr4k9L8vnAglxth/uYfHEiw1jW4mEVvb2BmduQyppB8ZHAAAA",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/5 · 1/8000s · ISO 100"
+ },
+ "nature/edinburgh-23.jpg": {
+  "etag": "8a49281561c4d17e2d71cd3369788025",
+  "hash": "345ee18f30",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAACwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZwDCgCBoa/Ey2/dcAADb8WzDNpWTi3Vs1BZZQnDDV7BM6apHbbP0Q5VdZKMSvo2le6lPRtLABp/Nr3qHkEvspN6Aee68AAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/5 · 1/3200s · ISO 100"
+ },
+ "nature/edinburgh-24.jpg": {
+  "etag": "cdfd7f29d4621576f5671fc4c204024c",
+  "hash": "829c0d0b4d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYgCdACP62vNaOqHbmn3IlgAA4nZV4usmE1GO8zfbpS6tPqKfDm0lVDqmpH+qBIFFis/m+qgnHvNq+u2RRBGGjDSUtAPnnDasY0xtLeU9nLH25fksZjQA",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/5 · 1/2000s · ISO 100"
+ },
+ "nature/edinburgh-25.jpg": {
+  "etag": "e189ad24092e3992f6374cf212da9a34",
+  "hash": "af342bf7e6",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAwAgCdASoQAAsAA4BaJYwC7AEfbTR4BbGgoADNpL5f14o5/uRL6kQ+hJOO+U+t78oU7mjmdkCmMBl8aT9zlZIAAAA=",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/5 · 1/2500s · ISO 100"
+ },
+ "nature/edinburgh-26.jpg": {
+  "etag": "ba2c271f8ad9406828fa56e398251b34",
+  "hash": "8b0bc14bc2",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADwAwCdASoQABgAPu1krU2ppaSiMAgBMB2JYwDE2CIiu87+AkNyUrQAAP5VI2OQtGgZtPSHQQYpkefGtFzNz6nT8vZX15z3X95qYZBuSSwBdWyHHIqhUom5wyt95Fbb+Ci7H6KUyJE+3QAA",
+  "exif": "Canon EOS 7D Mark II · 73mm · ƒ/5 · 1/1600s · ISO 100"
+ },
+ "nature/flam-02.jpg": {
+  "etag": "8084910fba1904d6a68ae823307aa652",
+  "hash": "d43c552190",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoQABgAPu1iqU2ppaQiMAgBMB2JQBdgBH/+C329HMfAWE9ogAD+63VsRQ++M4rNt6C+o0VP/qp5CdT0+FQAKz2MS/N2rz7qjFR0IdjUW7iNanu6FeDbGCTf3gAAAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/125s · ISO 100"
+ },
+ "nature/flam-04.jpg": {
+  "etag": "0084b36e30fdf51ac2a86ecbf336fe20",
+  "hash": "123f4f92c2",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAAAQBACdASoQABgAPu1kqU2ppaOiMAgBMB2JQBlD+ABghO1yb6mH8a1pPAD+8c9c/xOgiCk98KTIW3QeNWu6shsvoOyH0MRc7asy7Q/ayG8F6p8JpOvdNY9nmFABtOS5zEltpHB31l2gRFJCYp7nmyEu/Fdn1VT25QsEfc6uCEgIytNj3MJASLoRYv19Jl5EAAA=",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/60s · ISO 100"
+ },
+ "nature/flam-05.jpg": {
+  "etag": "5adadd775605cf068acec14d32d3296b",
+  "hash": "d01340fbfc",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwCw7CHhB152ntOuvbAKvZwAAP7xzBK9Fbrf0pUKV9ieFb5yS/dsT4xlRCTiTyjVTaRr0JHNcP/NX+KyvtHIRyriViHiT8zeQtDrFvkduwiRIojo9BjRAAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/80s · ISO 100"
+ },
+ "nature/flam-06.jpg": {
+  "etag": "b3297c6da2ed11133f03efd077a972af",
+  "hash": "e252364e0e",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABQBACdASoQABgAPu1kqk4ppaQiMAgBMB2JZQDKACHMiLbro7b5umVcfHAAAP7xye7+4mydINCwLx2uJhjXL1Fctp5J94C8AhwpfepXsnnN8nnHfv5KohL25ujf0gy/6siqwKTIS8XQNhqUOM/092uhSG00X1VLeumJZVGLmJnqUglHZdT9LSyc+4iNQAAA",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/250s · ISO 100"
+ },
+ "nature/flam-07.jpg": {
+  "etag": "4a59fe33e30058c20460793dfc62bcf7",
+  "hash": "8ec059151c",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZQAAW+MyUvL24oOmziZqAPjGgW07qQtBLSOWKB6iTMkwFYIG4rpDsrwFQHJMMf7sZtjVAM8GE3Zld95sxkBeyrfJg22lLCtpQXM3Idrs1H5N04KUPmfeKewvdIRaeEMLHS2r+MrpF5+tuMjK2dqYH+AAAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/160s · ISO 100"
+ },
+ "nature/flam-08.jpg": {
+  "etag": "a9230e0f336cd5139b4d68160c5b2631",
+  "hash": "ead094c8db",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADQAwCdASoQABgAPu1iqk4ppaQiMAgBMB2JYwC7AGlfq9YRbYtr2OAA/vTdDHk02XnchdNcoWxIjwaPEp9z7pEU3cwtEvTk/fSj/f/AXrIm5rdZmW5x0uQZ0CgAAA==",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/400s · ISO 100"
+ },
+ "nature/galway-02.jpg": {
+  "etag": "6014fef43f4cea464ac8ff013fddb35d",
+  "hash": "e175b6289d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADQAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JYwC06BUxc6r2wXPeqFAA/t9iFaJqK4e6pVqKU/FzoSSkusywr7waOOnIeItkAPh/5+TX3AlGFIizu4HGnL6gMOftOZhAAAA=",
+  "exif": "Canon EOS 7D Mark II · 70mm · ƒ/4 · 1/2000s · ISO 100"
+ },
+ "nature/galway-08.jpg": {
+  "etag": "6217f87c501d26058421403813bd0c4b",
+  "hash": "74f72bdf36",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAAAQBACdASoQABgAPu1kqk4ppaQiMAgBMB2JaACdAGlgEfK2VjX6zu5j4AD++i4XFpJcZiz5DjqCXRvFh77NaoieWH2AF3uu40Dulf5p4k+FqRjYEzMj+eRarW4OB9BG7Puq29Ty0sl+4i138NkWDa/tPWjOdblm8EgE595cEQ4jyII9dhlUMlXwYAA=",
+  "exif": "Canon EOS 7D Mark II · 70mm · ƒ/4 · 1/2500s · ISO 100"
+ },
+ "nature/galway-11.jpg": {
+  "etag": "8b6168e4f14d40c6a6b6c3ef54a164a2",
+  "hash": "72b5d5da01",
+  "width": 1352,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1352
+  ],
+  "blur": "data:image/webp;base64,UklGRgwBAABXRUJQVlA4IAABAACwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JagCdMoBOAucHBdGqfbU/87ebhcwAAP6+YG/hLDGcxXUXCOHucT3cOwNrVJZGMT3fwWTjHnu16GI1YWiGKuzyr+m3ftzIU1kgmg3Stcivy2LVh2dSeTqVEQrrrMdI4ZAQCKqhd3Y8poSarPqcjTqz1+icvECdO63GFIBBGNN4flZUGxYun1r1uJz9WKAnzWuJDC+BqzcfaDyP8Vorl9PWp3k1mlq0lp/994/kLoEDNbENkPkGvwqGbufv3PXEErC6O19BkYhya4s9yssjHe91cAYytsF+/NMLCsyOAqdjYj0VZP4DP5IA",
+  "exif": "FUJIFILM X-E1 · 37mm · ƒ/22 · 1/38s · ISO 800"
+ },
+ "nature/killarney-01.jpg": {
+  "etag": "84f628cab29c7e59f0ffa3de0010cf34",
+  "hash": "2d57c7037d",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAwAgCdASoQAAsAA4BaJaACdAEUU+uoaNwOAAD9+XvOQR2YF+gG6n7OtUH4Px0n/vyGXqO73eUB6FC8ZLIokUrc3hAPwXcL7fOKGKpb4o1b/XAA",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/2000s · ISO 100"
+ },
+ "nature/killarney-03.jpg": {
+  "etag": "2761569114e089a38740823244431b61",
+  "hash": "dbc46188e4",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAACQAwCdASoQABgALrV2u12jqampiYC0SyAE6ZQANTp3vHKtfkVAAP7tRmAVpN0yXPlmK5JbInbq15d+l+JYNVvdwSbGdWyKrHH26ULvqpaq+L6RsbwOFMAisN3/HuYZNkGbnchqAAA=",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/4 · 1/3200s · ISO 100"
+ },
+ "nature/killarney-06.jpg": {
+  "etag": "cb6fa12034e72deafa2b4b651fc35699",
+  "hash": "9b813a087f",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAAAwBACdASoQABgAPu1iqU2ppaQiMAgBMB2JYgCdAywBQongQ5WP3oysAsAA/ozwd5jFRMBtjUF7bHa5NpyNWI+3p4DHUAr9UoPImE0PvaYzwQRmREU4XI/C+tKqLC0byPnqlQgt8cx7s+0UyD+naSdAAAA=",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4 · 1/2500s · ISO 100"
+ },
+ "nature/killarney-11.jpg": {
+  "etag": "13dccb9b86119094274f1e6d7dbc3e6d",
+  "hash": "2ed1ec853f",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRswAAABXRUJQVlA4IMAAAADQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JagCdMoAlpN3ANTzix2i3DkjWq7xOwAD+L2GA/MnOCVG5XIf6pspdZxoHkacx1kjdysd/y6SXcGdIhmPRQYq+K/wMBSfkiWU03EzX8W+sLBX+bNw8RJPMXVP4udmFBPU3U+ozfwJ4hfvi56MPmcg+c7ETJ8ibfHhDwsri9DPSQmk5CtS0Idts5o9dAn+NxuiMXwHuO1RUx3VVNN+GCADmckMuLFwAAAA=",
+  "exif": "Canon EOS 7D Mark II · 67mm · ƒ/4 · 1/1600s · ISO 100"
+ },
+ "nature/killarney-12.jpg": {
+  "etag": "14afa9e5e677bbc1d72ada42aada5cdd",
+  "hash": "fa08258d94",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRt4AAABXRUJQVlA4INIAAABwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JbACdMoAlrxE2sR5urc5wyWCGAAD+cdkYHl4GYFu1U9IrbLT6lpYOLJS+FwJycR/jxVjsbLXENnG06ovL2RVBE99mXklNEQnIEJ0U9AeK+kkK4XY2DW/+hWUIobOipGpQ9D096APHTo1Z79yvh0PmRXYflu/xNT2tkLzHv0lwaD9mwFfoeijkcweDfxjdvKzvJxj/CsUR6d+Ea+8h4iu7URYVs3Ee2+MhXGUZooWzDEW5UqPtpnOUAAA=",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "nature/killarney-16.jpg": {
+  "etag": "5aed44193cba12a4e54ead244046a97c",
+  "hash": "1b3b7ae71d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JbACw7CBzFn8+BNxfnykoAPz42h/mIaxlD7hmNzeTj93HCp0HyqSykPmX+NApXnx7F44D69SIeiFnm+8k0ZHipbTCHShXI5/1/6KBcljyY5vdtrnlX9bMXn2/zHr67/vysQMU2meNLYryBlo9QbuKK02R6JrzwpuQAA==",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/800s · ISO 100"
+ },
+ "nature/sognefjord-02.jpg": {
+  "etag": "89f8c872702245f6ced215df56ade745",
+  "hash": "5c3e883877",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAwCdASoQABgAPu1kqU2ppaQiMAgBMB2JZQDE2CHUrQqQf+zwXCvAAP6u/ZMOPJ+TXJhqpJIK3Ep+F5fAfuraFo3Gkyir+AA=",
+  "exif": "Canon EOS 7D Mark II · 58mm · ƒ/4 · 1/200s · ISO 100"
+ },
+ "nature/sognefjord-03.jpg": {
+  "etag": "980d0dcd410670654cf29356eae78f5b",
+  "hash": "73392470e9",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAwCdASoQABgAPu1kqU4ppaOiMAgBMB2JZQCdAB7DgzD9Qkb9AYAA/o0epZYsLUyXhIdDcSLrW2wjQNXQnGRR7vjDnqyMQAAAAA==",
+  "exif": "Canon EOS 7D Mark II · 55mm · ƒ/4 · 1/400s · ISO 100"
+ },
+ "nature/sognefjord-04.jpg": {
+  "etag": "5541de8e22d362346bad68161ed8a228",
+  "hash": "c46a7deee7",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACwAwCdASoQABgAPu1mq04ppaQiMAgBMB2JZQCdACHMr3r03+seAAD+wxV0zJu8Afh/aVQjB/nosiaBLZmYwXzqFVZV6BgA",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "nature/sognefjord-08.jpg": {
+  "etag": "672110e18bb9ca11cfdc29b8f90fc447",
+  "hash": "c48d930e97",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JaAAAUz0w49UCwBt1SagAAP7x/XlQ54tt6Jm+scdbgtjn9d3mS2dXww/0j/+qN3miI/WVvUZCHZmH/7afJSlOioUaJ0kRv4SgLkA3UTF81Cm1E9pwpiWlvS97xPyKsN1mJ2/Il9U0Pr/H7M3qdQN5QIwYAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/80s · ISO 100"
+ },
+ "nature/sognefjord-09.jpg": {
+  "etag": "96173d1a67adc145373eddfca91420db",
+  "hash": "40e7f71243",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACwAwCdASoQABgAPu1iqk4ppaQiMAgBMB2JaQAAW89Bh7XqZwpe8AD+5xkb0wHpvPjkxSXWkmKR5zZWp4+26D5yPWP60r1EUt9vFwAA",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/320s · ISO 100"
+ },
+ "nature/sognefjord-10.jpg": {
+  "etag": "6e483245523568f3aee90cf6f3f3353f",
+  "hash": "614c5f50d2",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JZwAAW+yId94AUpJ+yi7AAP7erTVBvjYcsBBc8U+1hgxHDVXD3HzAscxUhG9c4gAAAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "nature/sognefjord-12.jpg": {
+  "etag": "8bf29c78bc8fe3dba2c24039f170c37f",
+  "hash": "7facc4894d",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoQAAsAA4BaJYwAAu1+q0zZcEAA/vcQgD5Je7MhCnCOS2QMGTqwRUVlq7YZ6uqo4yL959hOz24oqz2VdkX9D68AAAA=",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/160s · ISO 100"
+ },
+ "nature/sognefjord-13.jpg": {
+  "etag": "220f76208f39be1c357edf91a3916c6c",
+  "hash": "1f08084d2e",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JYwAAXlOipjtcdGHEtoYAAP7niRpmfx/RDScJJzYWy8ERRMtMEh2uZDuPZhS4DeQe77iRSPkph824bHYwBnlGDid4BSpn2Wm9YwAlFLLd4oxGAAA=",
+  "exif": "Canon EOS 7D Mark II · 55mm · ƒ/4 · 1/250s · ISO 100"
+ },
+ "nature/sognefjord-14.jpg": {
+  "etag": "587e48ad99b9516dee203706bf9515f7",
+  "hash": "d5f0c993be",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAADwAwCdASoQABgAPu1kqk4ppaQiMAgBMB2JZwAAUcXAxMBTofispK4AAP7tcWB5fURrxYtXzdqQ1v9oIIOGn9hnNAEUPEv9XS9SzTHYm4SXz6/tjYaNSCG9ylb1ZWSR8ZTpwcd4F5888RvSzAA=",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/320s · ISO 100"
+ },
+ "nature/weymouth-14.jpg": {
+  "etag": "f53de18aebb7381238b1e7ccbe5ce203",
+  "hash": "b58efbfd33",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRr4AAABXRUJQVlA4ILIAAAAQBACdASoQABwAPu1iqU2ppaQiMAgBMB2JZgAAPe9lz2v/tsidgWmGQAD72xfW2hY/9Cf6TZytHv5LmwIj8QvLu81WOF03z1msmDpSrYNZ0zy7DwZREh1fVys/vQetd+DRoXXjUoryRc9WdnojFNMTa1y/l/d/yLmuW2AVjf3JavZjuLqjqzHowZzFIRX996Lg+8ErATFZUKkECo273r7MZtCzgKCERjMbnyL4CgEHAAAA",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/11 · 1/420s · ISO 800"
+ },
+ "nature/weymouth-18.jpg": {
+  "etag": "6edf69da622cc7a6fddfd20caad25f46",
+  "hash": "ed8f087f20",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JagCdAGle851jlhaFmTyQwwAA/vOfJPSQIgiH9gIERmUtqWDVD/9Ug4oIAQz8XdiAUSdhUifzz3f2QWnjKfFg6L1iemT1Wf2ZIw+GcMEmVQ4AAAA=",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/14 · 1/420s · ISO 800"
+ },
+ "nature/weymouth-19.jpg": {
+  "etag": "679e77133285624a73070113c26c315f",
+  "hash": "256ac021c0",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAQBACdASoQABwAPu1iqU2ppaOiMAgBMB2JQBfnA6QEimpj0B4U+GpwAAD90/cuSCGAQ5TyGydSUNX8qbRqeY9fifDMXtho3FN1Ov28J7ZH9U//hIPdHrVl3y/vXFNt2GGZFpTjgG6vT1bQEcKI+AccRYxOhlLB5LIRRXLSNqPZeyROCAA=",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/14 · 1/420s · ISO 800"
+ },
+ "nature/weymouth-20.jpg": {
+  "etag": "a1182cd168a0bd08d4a802f0eede2349",
+  "hash": "4e06855f1d",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRr4AAABXRUJQVlA4ILIAAADQBACdASoQABwAPu1iqU2ppaOiMAgBMB2JYgCdH8Agsxbr4MlEbIisunpbNzHhAAD67WPx0SAh800sf0Z6wuW5+tlPgbdJmwTAT84W/2PiST21WCLknB+VJL2ljENe419Ym3M1sCGVcXIOGDMbv8Rv/gX/sq0cg1MEz+KgitcuyBdmyjHgoqFzxt+V3kXtMw3uTyxjJuHeFUNnb0PWtLEVqIB2pDbDh8WHmFII7i0+AAAA",
+  "exif": "FUJIFILM X-E1 · 37mm · ƒ/11 · 1/350s · ISO 800"
+ },
+ "nature/yosemite-01.jpg": {
+  "etag": "7fa527683410768fde9465aa318927f9",
+  "hash": "32d8514e44",
+  "width": 1290,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1290
+  ],
+  "blur": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAACwAwCdASoQAB4APu1mqk4ppaOiMAgBMB2JbAC7AGkmYsF9Ub4+5AD++SyjKcsgpTQpghYk/NmNUbcsE/LRblB9oVN7SQ58tJ71wtnjn7NbNRnsMnLFTuAjzq0vh0QfwJK37kKlZNzlPYP85p8ZvZfoMpTFpykiV5OQklASVDqELd3RDbeYx304O6+D9ixpRAA=",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/5.6 · 1/160s · ISO 400"
+ },
+ "nature/yosemite-02.jpg": {
+  "etag": "6e42c72e07e182c581b982e87d95ed43",
+  "hash": "2049b9179e",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAAAQBACdASoQABwAPu1kqU2ppaQiMAgBMB2JagCdHX+gcoBPGbywx2x1EAD9RUVlJDNbC6m65z5WKACowg8V2xiqRnn5nl9mLMvsln8A2KEzAgbFwIXd60FV3ZnOA4fpMf/fqWbRK82/vS6wVozMHg7huleKrc8DDXvW4oVq3NhhH3JSF5NzBaoRsAA=",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/5.6 · 1/200s · ISO 800"
+ },
+ "nature/yosemite-03.jpg": {
+  "etag": "7566d1bb91fc0a61657fc97713e9a8df",
+  "hash": "0e9f81351d",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADwAQCdASoQAAkAA4BaJYgCdAD0StyqzAAA/ut4jgyVXBcoDoD+oGF3gDQDEx4tTJMId6i3jfRyNE6xN04AAA==",
+  "exif": "FUJIFILM X-E1 · 34mm · ƒ/9 · 1/420s · ISO 400"
+ },
+ "nature/yosemite-05.jpg": {
+  "etag": "ad1b0a084eabbec5f597e58df764ee3b",
+  "hash": "00d5950288",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADQAQCdASoQAAkAA4BaJZACdADNsshnfAD9j9aMYjVbQJcO4W51bL8rV+NyakSyepN3XlZrjKQTQvG0QHoPprV4AAA=",
+  "exif": "FUJIFILM X-E1 · 39mm · ƒ/22 · 1/400s · ISO 800"
+ },
+ "places/bath-05.jpg": {
+  "etag": "1bfdc9c5c6b3d9ee374eaa0a0dedeebe",
+  "hash": "82084eff11",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAAAwBACdASoQABwAPu1kq04ppaQiMAgBMB2JZgCdMoAJ+NXof0xFGoIs1gAA/vsxe6Ov5j2XJfYcLetCr7d3R4tR4aWO1sbOR3VrwEiNxro3vkkntElNlXTBRBL3spcEIm1x7/+/Lmfxjt++u34BEOWV9vQDyL7TPjeSZ7XWWh5DoEB3ZzxW1D3Z9tEhoboRVunsy963cmqPY/AA",
+  "exif": "FUJIFILM X-E1 · 19mm · ƒ/13 · 1/400s · ISO 400"
+ },
+ "places/bath-06.jpg": {
+  "etag": "203898f8c14a9d4c4350215a1e3acc3c",
+  "hash": "4476429e93",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAADQBACdASoQABwAPu1iqU2ppaOiMAgBMB2JagCdMoR3A8ABoYfPA/da2IE699ywcAD+6ikU8May84QbMDvVbR7LLK3nQwe9Tns/hWdQyxed0HuayUPBIrF4t7jDJTaM/KGzZLuiFnOdE6UsnlakjmAHROcvQzBciYy3TncB67fgPPEwlvbrPUYGdZq0JGUpWC2s3Nnh1IPHQeZy3c/uq95a+FUCOIUrmiN5bgAA",
+  "exif": "FUJIFILM X-E1 · 30mm · ƒ/5.6 · 1/350s · ISO 400"
+ },
+ "places/bath-10.jpg": {
+  "etag": "8d79bdb801abcd8575b3497c9e6cbf51",
+  "hash": "e9cada258c",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADQAwCdASoQABwAPu1yrU+pp6QiMAgBMB2JZlefTuEpoqQAJu/WxwAA/vOgHCKUPpQR4Zp35IaxW5e4dBazLkW9uOIgjjfzsv8NnQ0ih9fJbd/WAomuD3wMl8Z1qLxjTZY9C9JMiGrYAAAA",
+  "exif": "FUJIFILM X-E1 · 43mm · ƒ/13 · 1/420s · ISO 400"
+ },
+ "places/bath-12.jpg": {
+  "etag": "df5475056aff7b1740e384f554c72d08",
+  "hash": "3d94578256",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAADQAQCdASoQAAkAA4BaJZgCdAEfYzNWQAD+76lV7xuNnRP2nHZwGR/fY+2EC6GiKZhwaY6ldJg+3W7r0PXYpyYHQlVFdJYC8zM3RX68NL0fbHKMbhHi+jsu4Q2foAAA",
+  "exif": "FUJIFILM X-E1 · 27mm · ƒ/11 · 1/400s · ISO 400"
+ },
+ "places/bath-14.jpg": {
+  "etag": "acfe886589421b9e913938e765e4c50a",
+  "hash": "c674904621",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAQCdASoQAAkAA4BaJbACdAEHMWc5AAD337XK302gL/17XavS5+v8o4938SlcvkUEa+uav+8uIouYrYTBWzz24DTQkG6k6kUeb3xjGkeTLurnVpLKoAAA",
+  "exif": "FUJIFILM X-E1 · 19mm · ƒ/9 · 1/400s · ISO 400"
+ },
+ "places/bergen-01.jpg": {
+  "etag": "4241927d992c48ded176d6382768ec42",
+  "hash": "e30d5dfa86",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAADQAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZwAAUOlcSzY9qPSHz8AA+MTOQaJ2LIHu4HW68cfoiPW6vrwWPaLIz7FKF/pXlsNy5wrQ814U/8UG9elH4+VSrDmyN5LbnNDF86i3zD2E8s1G5y9Q7ZEBa+d1nH2+OMsHinZpOE0bvgAA",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/640s · ISO 100"
+ },
+ "places/bergen-02.jpg": {
+  "etag": "da3a3400e1dbbf1fe5e918128c4d4bc9",
+  "hash": "0b6728b68d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAAAwBACdASoQABgAPu1iqk2ppaQiMAgBMB2JZQAAW9oOSKw9Iui3qGsNEQAA/vHT/kNNANi9u0TWP4s/hnzF7GOGY8gEsJjJV4jNvHOEC/nEd3OXTl2+eue2extQfpGN+wmT9c6PR2jVyOFGASBOv66LoRRZrKwEb3nevzYZSk3pUPjad5vHn3AHiO0vYzGgAAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/250s · ISO 100"
+ },
+ "places/bergen-03.jpg": {
+  "etag": "2a70ad373c0528b1f55a7c5263f19bdb",
+  "hash": "66204ced85",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAABQAgCdASoQAAsAA4BaJZQC7AYwn24x+3uKU4AA/sBukA25JSAiaeKqaZ35AVYEUp9z/f7ES6Lu3TbilWmk9aeJS4/l/apjwEjy61Ik0DjKzAFFd20cJ1GVY39HGAAA",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/160s · ISO 100"
+ },
+ "places/bergen-04.jpg": {
+  "etag": "8286ca525ad10b08be156c218b80ee40",
+  "hash": "9fb3152030",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JZQDCgCHfvDjrN+HxZeuAAP7DiuV2TlaymMA5GNEzFdy0dryJUURcjFSvQM0IBqNwW8UXgwTahUOjXNO5kAAA",
+  "exif": "Canon EOS 7D Mark II · 70mm · ƒ/4 · 1/800s · ISO 100"
+ },
+ "places/bergen-05.jpg": {
+  "etag": "27f32a0b5680be6a2aa5bc377c6980cd",
+  "hash": "e9a9ac9044",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAADQAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JYwDCgB89L6naxBaVK3AA/tqKZijK1VIMCX19cl5M7PqTO0ihPD08AZTrdlLoGyRMPwjr/QJdqBcZRh1OPlyDwljHyaGk4Vo2ez8ndv1jOxPNRdVjwcHEeM8tJ2wDLxiu8mzBWq1taF7CD3tNUM0VvBK0Eu3SEHDvMvzXBL0AAA==",
+  "exif": "Canon EOS 7D Mark II · 85mm · ƒ/4 · 1/200s · ISO 100"
+ },
+ "places/bergen-06.jpg": {
+  "etag": "c189fc8ab902520947dd26f8b11c699f",
+  "hash": "980676a8c8",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAADQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZwDMIagR/gv+M9xnhl2wnqL1hVW5MAD+8coGUeu5ZW8Bijyrkj2uH1ByIQqNNW2yWQkQIXxCPu5vAMyg2AKfgL/EdNaeH2Zelz5Bsq6qQ62tKpLTaWaFd+9w/1/og2A9yktE/yydhz3hl/v41iUJAlQriHqAAAA=",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4 · 1/320s · ISO 100"
+ },
+ "places/bergen-07.jpg": {
+  "etag": "ace72ba4c61cddd487a009e12727db97",
+  "hash": "2ca984816a",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADwAwCdASoQABgAPu1Ct1apoqakGAEwHYlAE6AxgBY/EUtUUXyWgLzwAP70z23Tm9Mepuj7EO/Nn53B6u/TGlLwknfDPI1EPi3QnJNaGGu/UVrjqsa4GEJ61ijNAokQ22yVHV1woAHcpjgG9vt7LcfUuFikTMeWJf5xzEuuSnZAhvD1tl4AAA==",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "places/bergen-09.jpg": {
+  "etag": "3b5233c6c8765b5f5930134237728738",
+  "hash": "62e2116509",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAsAA4BaJYgC7AEOmIPs6EAA/vZKnCX0GXmwe78WUzxeM8JUN1iMycVENg20XOzDOiiKVisJ4HlrhzZfwp3V/F9ZPzAzhuVoAA==",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "places/bergen-10.jpg": {
+  "etag": "c521540eb9b57805a5053d7e7621ec5c",
+  "hash": "3419195b3e",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZwAAXBvpE+zNzoyqbygAAPz/pgIgyXsHa7gM28FIdX+x5qnVkUmm+YjY9TYc9sweyQH0+cQpo8IsfPSWFqfOm4r4OCLPQ59s1zOiGDmhOi1ws+umtc13wawS3pS1orFtWKnxH9AjtmhDmvNWJLn41tEiDjsnZg2jMmvPtNzwgAAA",
+  "exif": "Canon EOS 7D Mark II · 73mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "places/bergen-12.jpg": {
+  "etag": "3f322969ae8e33f9cd3b18bb7bd32a2c",
+  "hash": "b20568271c",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBfJBH+WRrZQxI3FboLkjwFgAP7Krape/l1fkQDYf9SxlgMxNwlBzOUIjYIwybYm7b1cwg7Wo3zlBSTOwrfcHYRjK+COALn80IShU3KkvdK/rLG8CRRi3/ml1U//CvoRzX1NE9IzdR6Cn/594iUSmLHAAA==",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "places/bergen-13.jpg": {
+  "etag": "1056795b5a5491120d562852754450e8",
+  "hash": "7d3111fb15",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAQAgCdASoQAAsAA4BaJQBOgjgAv8Piun9QAP6RvFF9csHltk4zNvh9gYljyfOyG76y3cnwgCD/bREFXdPR2xOQmfYAAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "places/bergen-14.jpg": {
+  "etag": "20c2fb029e0840b03fb42bc4d1a8954e",
+  "hash": "ee06bf41e8",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAABwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZwAIEAPVi8I9KsAA+OJEngJZX3IFB435k19WKvyeyCJlSkRntXMWwYfmucQ3zDfuxw6x2qY0E6Gjkg9pnImOxrETfHdewl8cDMTDlDAM6WdwxN4EgT6RC6+yLoZO9NumGqtDYXY5A75HwQjO9Gg6sAA=",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "places/bergen-15.jpg": {
+  "etag": "1dc27ea72826e239d94875263ae7bd99",
+  "hash": "87bcff969e",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoQAAsAA4BaJZwAAuuOkf1wSAAA+fKMQrMKduS3F2kvIPw2QFtV56Pj8r27igRYefqRaXzswo438VKyeJVm7bmxtalSTolMfIYtOE3vgAA=",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/4 · 1/640s · ISO 100"
+ },
+ "places/bergen-16.jpg": {
+  "etag": "4bb045d321aedd75ff7bbfa215b221a4",
+  "hash": "854b3a48be",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAABwBACdASoQABgAPu1iqU2ppaQiMAgBMB2JQBfntQI/cYBdqHSMq9KalvxIBAD94UOje+SHWZCoS+FOCpGoP3sbjoKGkokXd4MYBDCuxTi0zE8t3CI636o9N83n2M2Kb4FXsxsA6vDZ5fLx2DkBFQ/PZuunb4LwKevQv1nXPQmbBcBB/UCRUA9h78Qnu1ad9w3V/jZ5cxvAAA==",
+  "exif": "Canon EOS 7D Mark II · 65mm · ƒ/4 · 1/640s · ISO 100"
+ },
+ "places/bergen-17.jpg": {
+  "etag": "9389959cf0abe58f7c5ee14036eecb3f",
+  "hash": "3f278fb837",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAAAQAgCdASoQAAsAA4BaJYgCdAEQL8jRNxEAAPff3Uw610182uhlBpY+0D/dWhT11KVP2Aud8HdC3oO2kcoB/e4g4NEWcf2wXiYgAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "places/bergen-18.jpg": {
+  "etag": "ae43e387a4298477fa41e102341cea52",
+  "hash": "bf5ee83fc7",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQAgCdASoQAAsAA4BaJQBOgB6UaAtfjHgAAPulNDZI8s4O+ss6yIiKTZ6rFeiQ1YGoxEvEKLab8KzlXBOfkO5ObYV8ZRJtXBhpZzayuDQAAA==",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4 · 1/640s · ISO 100"
+ },
+ "places/bergen-19.jpg": {
+  "etag": "03bc1a13e48be6e6f8bba727caa605de",
+  "hash": "749a875b91",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAABQAwCdASoQABgALrV2u12jqampiYC0S0AGN6xeHfbvthKqmAD+7TzodZtenUlvwe/lmtwLbkrXyV2ftjhKahbJWH/ZaITwRWErDOJDR5NirQfXZg0A5wwfrcUuLgdg+X7U1eS25EyCimm621Kv29eET4oi+C6XZyVAAA==",
+  "exif": "Canon EOS 7D Mark II · 73mm · ƒ/4 · 1/160s · ISO 100"
+ },
+ "places/bergen-20.jpg": {
+  "etag": "1989e303a9c97a7a1add80fa5c01de9d",
+  "hash": "3004cd2c7c",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAwAgCdASoQAAsAA4BaJZgCdAEfB2hmGbboAAD8/fG9U745O8xgcRlbho8lz3p4jmbkHf9V3kNSkppJO8fbMWHiBtl0/yly6s9xoLNYJX52EAAA",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/160s · ISO 100"
+ },
+ "places/bergen-21.jpg": {
+  "etag": "642bc184e84d3958c24f4d1f6a3ed294",
+  "hash": "904b9592da",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQBACdASoQABgAPu1kqU2ppaOiMAgBMB2JZQDDNCG7XVXXZ5xD2gFKgAD+8c+Kvc7N9wwF57didziGKXy4WAuvgQmJ2b9CKrhzzPXdT0ROFQdzqJ5JFfyk4JiiQgwafAZtC0CyxcVQ3cOh6+GXMiTRtQAAAA==",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/100s · ISO 100"
+ },
+ "places/cairngorms-01.jpg": {
+  "etag": "97d7412ce9b8421e35fccf5f1c5e3f0c",
+  "hash": "cc2de3fa36",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZAAAXKCUrwsnBfeEI4WwAP5mHYmSlX7APdTOpBCumEWPqlFvdC/OLr6Cx8+mcOUITTPah5NDIoKoUgjjV/ZmbXi3GvbWqNS87C1wY/8vwbuRDjskYN5X6cDiPEQppDpnhutqwWUM/6PURsSoRFSzo8/6fZEIAAA=",
+  "exif": "Canon EOS 7D Mark II · 47mm · ƒ/4.5 · 1/1600s · ISO 100"
+ },
+ "places/cairngorms-07.jpg": {
+  "etag": "7acefc09fdc05edc22286c05baf72871",
+  "hash": "a470381acd",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAQBACdASoQABgAPu1kqU2ppaQiMAgBMB2JYwC06BSX70zevI8q8W2GwAD+V3HHddojiQaAOV0DyYLhkoSqZzjGXTb3FJHOGR7J3vjsOdygsgjnp9HEBisQHdnxME7WbPiogPuXrAlfgap2AAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4.5 · 1/1000s · ISO 100"
+ },
+ "places/cairngorms-12.jpg": {
+  "etag": "eca68d62a3662e055323aa85152e541a",
+  "hash": "47ccb4dbec",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACQAQCdASoQAAsAA4BaJQBOgBbTBgAA9EbG7t4xo8OanTCPApzFUfUDaGCBjBoNNN741WbY5/jcy/7cXOvDgncWAAA=",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4.5 · 1/4000s · ISO 100"
+ },
+ "places/cairngorms-14.jpg": {
+  "etag": "c946253eab8fea8930ddb32f36904c3e",
+  "hash": "16ca0b2b4d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQBACdASoQABgAPu1iqU2ppaQiMAgBMB2JQBOmUI7gBT/QsUncdStoYgD+04YGKr35bLkYFNB7SBCwUdfVCFlhXYFczTZfw2tO2FphPMFQv09sd761IgCtzHcg63od6bI8ihgTi22AAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4.5 · 1/5000s · ISO 100"
+ },
+ "places/cairngorms-15.jpg": {
+  "etag": "2dadd4a53f3efb45c1b3ac048e12ade1",
+  "hash": "c83ef2a9fa",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoQAAsAA4BaJQBOgB6qRfhkAAD9UBgGgo3Imgb0W/g6GFoVlugOjsb6M9c74AQ8NOEHdTnkZ7amWYavuoAI1empqfAAAA==",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "places/cairngorms-16.jpg": {
+  "etag": "badafdc2e53fd9f1c7e48ffd01eba3f6",
+  "hash": "19c51df024",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAADQAQCdASoQAAsAA4BaJZQCdAEOeP+wAAD+sQcUeDSP2GBPUYDXUU7wt4g3x8HneO8V20jzMAA=",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/5 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-18.jpg": {
+  "etag": "20bfc62c68c2f3e56cd0cafb4af49b96",
+  "hash": "74888a0d3d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACwAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JZQCo9CHT2uupBKhCAAD8cDs6FVidbRgv/AvIVjc7A7dqlV1FQfKvc33GPYR4cAAAAA==",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/5 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-19.jpg": {
+  "etag": "cc4e78f3094584d1460bfa8d5a1f84c6",
+  "hash": "463271fe2c",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZQCsAB40rMAAAPrd9igPrXfmie8kgSd22sW0FW2BHNd95K32cqMtz3qWFfJUgz6aAAAA",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4.5 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-20.jpg": {
+  "etag": "4907f80cc000d09f15614ab597b8c3c1",
+  "hash": "7b6c7f1918",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JZwAASrwzYMncWXw6wAD3jZejygR3x9K9C7AaF30PQDS6tiO16htEnlZtCay6/ak/HEq670YFE1YAAAA=",
+  "exif": "Canon EOS 7D Mark II · 58mm · ƒ/5 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-21.jpg": {
+  "etag": "2b43a2b3bd79a7f96bc54bc730c3260c",
+  "hash": "df4632b02b",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAAAwBACdASoQABgAPu1krU6ppaSiMAgBMB2JZwCdB3gGyrGcvNxlCxaoaDAA/sajym6DgTvpD0HJhnf9KUO43b47e5lFzTFoQwj/8AzAYHjHxGZyoVGngUqbFutQIuJfZcAQdWJ3c5auZ9WT7/G/5O1cVzjszz3vevQhrypETHKokw8rkgEnQ3CAAAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4.5 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-23.jpg": {
+  "etag": "34832e7ad75d066968862a4b5322fca0",
+  "hash": "f2aa5e4b6a",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAACwAwCdASoQABgAPu1mqk4ppaOiMAgBMB2JZQCw7A6rGimN6YyTLACrfsBhbFrOe+VS6oJR4SRxJQm0z2B4UbC492lSbfwXYOAHaLl7vdctaH60zGRvS5FP7vkToNtda8RsxEySenUJ/FBWW+rgJRixgAA=",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/5.6 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-24.jpg": {
+  "etag": "c8cae7ed5a73b9c0796fe74c645d2fdc",
+  "hash": "132e4b9763",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQAgCdASoQAAsAA4BaJZQCdAEPfDD9UOsgAP5b+FzLVMr7snnNqp86A3P5Yu66ZIetzd2zPqF7IN3YfpnhKZWHMxSvrEA1i5/C+oDG8UMAAA==",
+  "exif": "Canon EOS 7D Mark II · 58mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "places/cairngorms-25.jpg": {
+  "etag": "515bb65434fa4bf1fbef1404fe2b319c",
+  "hash": "0cd2042de3",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADQAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZwAAXemG4bnsGvcCDAAAyTqMsyIf9e2A/jozoi91RtpxVM174ZiXKiqMEeuLaGSXvufhMOdSBWeyQxn8AA==",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/5 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-26.jpg": {
+  "etag": "9c8dde260bc4e5117dfd614260f23e77",
+  "hash": "da183aa335",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADQAQCdASoQAAsAA4BaJZQCdADzmgMwAADJbO8vEaI3zguDHO2b3YHtPCZeacKHDO5fvQeXYQJleKPVnEbCK+V9vpAAAA==",
+  "exif": "Canon EOS 7D Mark II · 47mm · ƒ/5 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-27.jpg": {
+  "etag": "b38660a03c3afefa2c035bc7b97bfb1a",
+  "hash": "5c5178349c",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JYwCzgCBsllxkml+4/F3MAP4+RmDcXlKKNyjo56lNVP3ZBnTOl5WNre/NSWnGRij0YcRUm5/X26EVUHAAAA==",
+  "exif": "Canon EOS 7D Mark II · 60mm · ƒ/5 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-28.jpg": {
+  "etag": "b8ff701a079d3b4cfeb4a3378d146560",
+  "hash": "349757567e",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQAALg0NUSCL108lwjtYAAP6Rp7tU6Nx9GxkqNnZsicmwcYj4ssAyGU+X23xPXSqF4g5P8TNYwjDOfwZVexCmVAqWD3g6BDxWWKFVSHil0bKid75+zzTT6hWtUtgBKAo4kTOtV383/IlATHInPwG80RfgAA==",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "places/cairngorms-31.jpg": {
+  "etag": "5fc869731886918d2972114d031c87a3",
+  "hash": "373d6e462b",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBOmUABWKuzWJWlGd3PYAAD86k/c3kYtLpsCtPxnwRAvMQ2N53HWGqYrQhfXoXrIFuSNPp1FoWkpSR+GAbDw9HVHM4P33WUkraf7/uwrzB34h5MZsm78AVV7/8qhsvhydA2uxSgAAA==",
+  "exif": "Canon EOS 7D Mark II · 60mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "places/cairngorms-32.jpg": {
+  "etag": "b9c5d086667d571cba621b201661940a",
+  "hash": "cc43685732",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAACQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwAIEC6RXb9z110znHDfl2HLYBgA/udZOTTGP0SgHLFHYvHUS4KGijjOqtcqsDIWJ2fjbnOh0c7nJQzmnmOYhqcPv8nBexIbQm0LCDnIPatyMTSOY/g8ih9vCIyu9x2A7WeUIwvSMKCwsiaiH2f2+nXs2AyDg0mD8q63GQgYfDYA",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "places/cairngorms-33.jpg": {
+  "etag": "e728c670c4a900a01ae8ecb59329bf2c",
+  "hash": "1e80e632fd",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBACdASoQABgAPu1qrU8ppiQiMAgBMB2JZQCw8agEuoEXthuAnMAv6gAA/oQaX+VOne5WiOnDo41K4LpqweFThIrxsUNF0qlwOXwZnRfT6A/BtYb8xq6mps1DBvqykS5usyHLvEEaGk6Yb5tAMjLPbsV6+bLTRzwZzXpamqsKij4pm0tDIAAA",
+  "exif": "Canon EOS 7D Mark II · 73mm · ƒ/4.5 · 1/4000s · ISO 100"
+ },
+ "places/cairngorms-35.jpg": {
+  "etag": "b4ffb0c4450e51e42af18a1a51a0ef6c",
+  "hash": "7f493676dd",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwCdIIjB+cORHybcpmgiAAD+XqJKbYuJ3CKDa5q7eHhMwcTB1F6HcDDvGDYqWvE613XRNaMABUcpVDdRC9xT4gwJdcxMsVW3V159PfNdOaMIQD1ZPf32/epzZU7m6chVy/0479cvfbRa7aSBWia2UgAAAA==",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4.5 · 1/5000s · ISO 100"
+ },
+ "places/cairngorms-36.jpg": {
+  "etag": "fd4f8cd87fbcd310223ccd0c906a47a2",
+  "hash": "17b5fdb83f",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZQC2yCHW3FuvM8X1zfkAAP7DFk6HvZPOxiyxqiHBvF0FnSStumNgAMiihHF6QlF6G1fsMt1J08b4UyQbxbrpo9MAmwicxAAAAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "places/cairngorms-39.jpg": {
+  "etag": "956c704dd7cbfa99904b6cb91885834d",
+  "hash": "baf00c964a",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoQABgAPu1kqk4ppaQiMAgBMB2JZQCdBHaQqiDePljx8HXXAAD8cu0uPhSuukAmFKMaRJDUgNjM5I+o8lr4ryzDE034j3x6+qKucrlUFPa84p2nn0rIN0huNzNn3dNd1T6zQmGBXAtJGtykc3QQpQgmgIX1+jFiZnuW5PIqnhncrSC1AvxnlvmWEyAAAA==",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-40.jpg": {
+  "etag": "da206e949808f349315eefc32551b485",
+  "hash": "5a18f7ca10",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZQC7ABerGBembLKc1IuQAMkwkfsWg3in2OnWW9nAPRz/59623unrB2CSGofdu3mbBiGcoRjctaS5BqD7Wq8VbF6Eg5Qaj9DfBaVCqwMpx8a+OoXkExMAAAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-41.jpg": {
+  "etag": "0440fa4a2214af3e8fd5ee840812d2f5",
+  "hash": "e093e7f975",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAQAgCdASoQAAsAA4BaJaQAAqHo4DhmZ24AAP40MEuRTOe4h5oWX1wV8zlz5HR6u76Vrof26JxWLQhqIsWB+Fz6U7lY/2VdPvClmXAy6Q6gUAAA",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4.5 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-42.jpg": {
+  "etag": "db9768f72f9c4e11e9c2bb394613e411",
+  "hash": "92522bd6b1",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAQBACdASoQABgAPu1kqU2ppaQiMAgBMB2JZwDA3CGK/zxGuyYyqeBBIAD+yAeeIjDVb70W+jJQXX6pP3SrApS6D254EEGdKtG0KI45l/eNxUU/LNvw/oHGBVaitdZbjNxIGzu8YQL7YmH+ss1r0ni7IF4UAAAA",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/5.6 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-43.jpg": {
+  "etag": "beaa3b2cbee7cf8a0594e2d77e789439",
+  "hash": "04434ef6ed",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAwAgCdASoQAAsAA4BaJYwCdAEN8QnLp6C8AAD9apQ6vq2Ozl47hiGcy2YO34MEwrkcH+X8tDzFy3+VFz4c1J045M2RRBEDAAA=",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4.5 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-44.jpg": {
+  "etag": "d971780ffe40c068216945b8104d7114",
+  "hash": "fd7a91c085",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADQAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JQBOgBDVRyrFV0NZVtwAA/qBIJzEi7MyKL0R361Y82mWwAvkoLY7nRRvlXfokHhZaR9xjc4ImO7axZ8Wk0eDDndZ3NYKhTcazQy8Qgv/SIdlhZkeq/3WC7PyA8qXlpg6kZLrBrO77pYW0AAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-45.jpg": {
+  "etag": "8db2a756c87e708bebf85f88b760860a",
+  "hash": "4f7fb3a835",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADQAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JZwAASj7TbpjosUswwcgA/mmxolrtQZvSht9nbSqUO5tKKh860zLEyrOb5hK5+E5J92nGHP1Tnsdy6xb16q3GxrtxWesl7AhIMwpnagH6csvuyPYfHzW5mQgrIHsQAAA=",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-46.jpg": {
+  "etag": "41750ee9e1f482c203043ea03e1cf8bd",
+  "hash": "4ba1da0d4f",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoQAAsAA4BaJZwCsAD0qkrN9UAA9jvtmQ/tXbV36KIzKtR/IhbV1GnLfiuzup/5DCUXcNmUbxV17OoOVKILeHieTUVrwvovvhhiwOkAAAA=",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/8000s · ISO 100"
+ },
+ "places/cairngorms-47.jpg": {
+  "etag": "186f574202e9ef24960fcb9f575f6bf6",
+  "hash": "1d41037005",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZQC06CFwpiaMXYaej8UIAAD+xbcKYBAWB3TiQHpC1KO1hoohWf4aKPHy8JYZzY8xPPVVA+q+r1hlsesPkPcyztGQpwCN8wYOu1zKRMenkXRJHtV4JptYDLwKoo2f8qEky8AA",
+  "exif": "Canon EOS 7D Mark II · 67mm · ƒ/4 · 1/5000s · ISO 100"
+ },
+ "places/cambridge-01.jpg": {
+  "etag": "d681b918098e857b2e4d6a248e4cbd33",
+  "hash": "534f683e76",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADwAQCdASoQAAsAA4BaJbACdAEPgi2jKAAA/u/dRSdJILvJwfdV/Ze0jEm4CjqchFwfMaZYczqX6FqcQAfssdIuO/AAAA==",
+  "exif": "Canon EOS 7D Mark II · 58mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "places/cambridge-04.jpg": {
+  "etag": "6f69dd9eea74d0923c1075e144dc3d6c",
+  "hash": "26ec999279",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwCo9CHfK2yHEduWfPMGQAD+6oYoTqnCI5qQncG5U+G1r1nWGc9I0M1W6MODUOL05aCBsLuwqAkRhIDOoavFKVhItMo3S/o47G9z5xcxngBoOO0HbcqJrbYPSqt7IBboAA==",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/800s · ISO 100"
+ },
+ "places/cambridge-05.jpg": {
+  "etag": "f06c812953cec2c5607eb0f886b33afa",
+  "hash": "f81d5249e6",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JbACw7YyoyMXdEJstEYoKgAD+uBMlBdSU2D+iWVZFN7lU+z7+3yCExYAkIplvvIKQLGqwKQgVHa8Lcrq9vk7D/jBSBkn/bbMWewnQzG6LU8VFoBNuHccv3/9o5KQw3y5LM81pGYQP+YYR0bN54Ucp4wAmV4VJWVhfUL6XL9OjS9NtqiDrkH8Al1dAAA==",
+  "exif": "Canon EOS 7D Mark II · 67mm · ƒ/4 · 1/800s · ISO 100"
+ },
+ "places/cambridge-07.jpg": {
+  "etag": "fb8bf1ae7abe0513ed983eca7b132553",
+  "hash": "6cac04263f",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAABwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBhQMXNVni/lWGMF9TffeRAZsAD+mle+Su+BjWMdQJ67T4wEcXfBDtTnsgf57f+HV8dGKka9B5IHtAnSo9KpCtir6UXGycFq9yDlhvb0OX4td9Iy8rJ24QfVnfjf12RhQUO74T1+kHmXncgEinE677WKPzWHgZl+7fhg0KT72wFnVshqyWaOyXczxgHGkvnAAA==",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4 · 1/400s · ISO 100"
+ },
+ "places/cambridge-08.jpg": {
+  "etag": "b87d08616350238d422fe39392c2faef",
+  "hash": "3599cd8afe",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwC/OCHo4uQHsaLJP2w2rAD+mwUY+lLta3tEyo9R0ohbOVATFDnNZmqyRvYQeFBlSBlPMz+/2T5k2Rqz29ph0bLRYWnH1zywh0OPMom6yYT59Pfc82AlflOz+bZlNykUISzyDmvSKe4HyXjCL1G+GncTM3w3toW91v0Nx04NteCUgkU+4gbCDazhFJUu2YUvKTZWgAAAAA==",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4 · 1/160s · ISO 100"
+ },
+ "places/cambridge-11.jpg": {
+  "etag": "eb02d1fb526e5b528d88e86683da7298",
+  "hash": "f3e21a3b89",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwCdACHwfxAl7cq/sFZcToAA/q7RGNAIIfF/dHgmyUVvmCOczIHQolCiuVZ14vIV3xII2FQ4Ohr4FgvRIfRoeiAAAA==",
+  "exif": "FUJIFILM X-E1 · 48mm · ƒ/8 · 1/400s · ISO 200"
+ },
+ "places/cambridge-15.jpg": {
+  "etag": "7af3759ba8acdbd7abe910845b65aca1",
+  "hash": "6890aba2eb",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAABwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JYwC/OA4Mr/J9juAA/FLqt/e9nleIC6zWRFBHRHpwBlmtGY8QM2BZ5AJn14JXl5mhSrHndjNRaQrfoE5mPQAA",
+  "exif": "FUJIFILM X-E1 · 22mm · ƒ/4 · 1/10s · ISO 200"
+ },
+ "places/cork-01.jpg": {
+  "etag": "0e45bf5464e1770b606d87d73f5922ce",
+  "hash": "88a4c797b9",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAwBACdASoQABgAPu1kqU2ppaQiMAgBMB2JYwCo9GlXg7A3a/Akd0fypfgA/Gg0gz/9BAraEw4Kk347fhL+k36lxpQZQh2wnJwdLLhFT4HsU/cMDN6EliUbMFhoJu4I8+xj7yG6ysFAfpfVgqHEIEdZnMv1ZpK/bvPBVKrwrrHXLpMzoYLsD5b2LH39cR81vgAAAA==",
+  "exif": "Canon EOS 7D Mark II · 82mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "places/dingle-01.jpg": {
+  "etag": "d6a5b1b897a394536c91452a4bfc5707",
+  "hash": "e21760be5a",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADQAwCdASoQABgAPu1orU6ppiSiMAgBMB2JQBOmUABp0wGm4J8sMzAA/u1B0UT8RqVHqMMNBuilVZ2zWigc1gvGtTbeA9cGQu6/9ZKX8mSsp7bzEy45hzbYEAAAAA==",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4 · 1/800s · ISO 100"
+ },
+ "places/dingle-06.jpg": {
+  "etag": "aa40f6bca18e0b51f4fe1142639b9a0c",
+  "hash": "db47a1af07",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADwAwCdASoQABgAPu1kqk2ppaQiMAgBMB2JYgCdMoACqBeynGe9jZNoAP7JtOzQP5mUpldnV+r05P63tdUCbNxQEli4p9/NK9fSGobF2DsiSdk+r7oBnPPQCF8BjNaQXgOuFsJsCRnZp+8sO5AAAA==",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "places/dingle-08.jpg": {
+  "etag": "a97eb7216eb65fb82864168d710bd7c1",
+  "hash": "9125f674b4",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADQAgCdASoQABgAA4BaJbACdAEOukZAlACj+cCo5qbAAP7x1MQyeNiYF5dyP391JYkhu47eNiMIttPUhcBlskZd6vfAc9FTFcGigplXcPnWnQC7wGiSq9GZlLWdLSmicDfa8xvKS96hYsx4CdrBiiWSORQaV/lAAAA=",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/4 · 1/320s · ISO 100"
+ },
+ "places/dingle-09.jpg": {
+  "etag": "ddd35127a9bf966db398dd3d24c23e03",
+  "hash": "dcf1314349",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JQBOmUABpwcOokTzHcoFAAP7erWhv12aN+P8lOlGPMeU9TNJ8UPZNoIjp7l0S9XcFqHgYtFvJ/r9CfCAAAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4 · 1/640s · ISO 100"
+ },
+ "places/dingle-10.jpg": {
+  "etag": "36703e5059305d03880e93fb7dc926d6",
+  "hash": "1f3813ef04",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAADQAQCdASoQAAsAA4BaJbAAAudwp0G9YAD+84/0ZTxs5wq4UOLo2L5lFfRZB/rfDrGI/W0TgAA=",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/500s · ISO 100"
+ },
+ "places/dingle-12.jpg": {
+  "etag": "8b3285ae096b974dbc9958d8ad9b723c",
+  "hash": "6130a49275",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAABQBACdASoQABgAPu1kq04ppaQiMAgBMB2JZACdMoADTqp4byt3RELdFT8AAP7ermfqjhwOhw4tAMEBmL4BNWfABjXxK9gVysGSyT2nLi032caGq+WO9ZIHlLC4xJiHIba64uYGS0aHgCOpqAA=",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "places/dingle-14.jpg": {
+  "etag": "a2470583eb418f3c0fcba59e797cf614",
+  "hash": "b9d1a966cd",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAACwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JQBOgBDo3gDc+qbhGIAD+7UZUl9WcfxdDI2nhzS5lebLXQfpOqTyv8TI2vx/7KPPc+NH7BlGHlrhCzkGkjgTlD+trl/z095UYAA==",
+  "exif": "Canon EOS 7D Mark II · 100mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "places/dingle-17.jpg": {
+  "etag": "ce6e6d42f419473e43fa60fcbdc52ef8",
+  "hash": "86acac6296",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAABwBACdASoQABgAPu1iqU2ppaQiMAgBMB2JbACdMoAJq3jYsKamaVfSfvcEAAD+3x0xnX3bK8HrF+U0Xhx0yEZbBJZv+lpws6/LhjmllfjJTGNzKnYeDuPbJIgxzp1wQ0uxmygIhOSYKzYTYOMqEVoCV1fkdqsAAAA=",
+  "exif": "Canon EOS 7D Mark II · 70mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "places/dublin-02.jpg": {
+  "etag": "56c32e268d6f8f7cacaa0a8a33fc000d",
+  "hash": "feb6a74928",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAADwAwCdASoQABwAPu1kqU4ppaOiMAgBMB2JYwCsACHZy6TSnkhwkJgAAP7ynRs05R3I9Hmm1itCU0BBkz3f3gg5R9ptL/hhnV7gr98WTvRbh7YOdi3mAu7Iwi7aWBkyTv+vT8jyWJl36wHdE+jLY5VkNnR1CNLhWoAAAA==",
+  "exif": "FUJIFILM X-E1 · 19mm · ƒ/3.8 · 1/20s · ISO 800"
+ },
+ "places/dublin-03.jpg": {
+  "etag": "9e4ab1b19f308e4a04f89ad9c0472667",
+  "hash": "6dfcbdd857",
+  "width": 1295,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1295
+  ],
+  "blur": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAADQBACdASoQAB4APu1kq04ppaQiMAgBMB2JQBYd5YJyMX+he6qvJzIx0oJocJGr4AD+8p3xbE+3P5rhNZCGnwq/cl+X042BYal6QTGtYhTNytZk+WyHkYCWUkrx6A+v3VoYrtx3R3wO5UTBqg8W2vX1cv6GqMuuMRDrMseiZ6WJqDYhswIZaVfoxNnwGTrx2yBoaZ6+WzSAAA==",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/3.5 · 1/17s · ISO 800"
+ },
+ "places/dublin-06.jpg": {
+  "etag": "33bc2c1a451a585b207b73ed4230fbb0",
+  "hash": "0121133b06",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAAAwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JQBOgBCmvaMV5YpvVhEOGm4AA/tMuFixjhJQMgr6u4hw1p4OwmEbT3rpkpGI3RrqSdNnIYDxvGGf/t3js2eGaX5Kv8gu4wzDM1al43Eo2dOyIbW222/SXe37nl8e5IMbfHpa+r7OdyeZw2cEO/VfKESs9roIgWqJM66TBetN/g7naVGXhDCQAAAA=",
+  "exif": "FUJIFILM X-E1 · 22mm · ƒ/10 · 1/420s · ISO 400"
+ },
+ "places/dublin-07.jpg": {
+  "etag": "44a6584a757456460d11f0eeb28c1157",
+  "hash": "41c759abbd",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABQBACdASoQABwAPu1iqU2ppaOiMAgBMB2JYgCdMoC2mgc9XoA09hWLW+AAAOIPEgunYKckXpPC3xR/aVxM5aBqy1YtjVuy5Rxm7e8E014f3GlCSdCKMXwmOFMpEXlHChS4yurGh0vOi6zZ/FM2e+cNLznyJea4qA41ehgA",
+  "exif": "FUJIFILM X-E1 · 26mm · ƒ/20 · 1/200s · ISO 400"
+ },
+ "places/dublin-08.jpg": {
+  "etag": "9dccbca9c18bae1099f4aae2392b3260",
+  "hash": "7ccb7d3d53",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JQBOmUAA0MgKyRa+L7XM4wAAA/KRdZ/wxkMtsMdZbCk0bmYyQFWu0pGz3Xn+hWrq28Pptjn3+wz56CNswCBCrltQSp78FOPBvVEghJ9JN9OUp+vyzWayvx6gAAA==",
+  "exif": "FUJIFILM X-E1 · 21mm · ƒ/20 · 1/240s · ISO 400"
+ },
+ "places/dublin-09.jpg": {
+  "etag": "7fb67237655c315082a1e5edecd8ac97",
+  "hash": "1c25933899",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAACQBACdASoQABwAPu1iqU2ppaOiMAgBMB2JbACdMoGvtgMTVyaxEVqpxIi8b4AA/hZlS8xCD0yCynJBnLT0i6z7sUH2exdd2mHyX9ofYQ/zi6A0ZK5xOVOaPp923iB+EPYDKhWLuegk2fgqrEsvZHXNCG3SFQLin1o+t6AMvnHrs9WIOpSnsmUPL8fxTFZLfUv0IIbaX2lSAAAA",
+  "exif": "FUJIFILM X-E1 · 28mm · ƒ/20 · 1/500s · ISO 800"
+ },
+ "places/edinburgh-04.jpg": {
+  "etag": "e39f62cd7da50aeff75781f79bfe4cb4",
+  "hash": "e5ad82d83f",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQBTigw6YZOYiWDEjGd7SAM42dJx4222a/fpwoBq2WZkMuZdLn/Yupi3Ahsb9x7no7oQ40Ncymb7hdZ6CEsdbIME6z03sMSehpC9uyky9N30G5T1JxqaOAjN8M/6f2shSsAAA",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/5 · 1/800s · ISO 100"
+ },
+ "places/edinburgh-06.jpg": {
+  "etag": "2f197b44682f3af322a2cc1a00cddd05",
+  "hash": "6d7b91d75a",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZwAAUAMcQMGNmpBkBAAA/t/tSMPQdQDUpMoCIqDKq7ORe4eACGpvQqt5fQanwqtgjGKBH4gRUvH5ieInOO58C0X8A9kXbD8AUOqifEIfAXF/Rgn5wIAA",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/5 · 1/1000s · ISO 100"
+ },
+ "places/edinburgh-08.jpg": {
+  "etag": "d79747d3f37d29543215be40836c959a",
+  "hash": "0adc10c27b",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAAAQAgCdASoQAAsAA4BaJQBOgCHweI5NP9IAAP7qxWlOuB0AFxonUzSMxW7PZh1s4Hd4HKRZ3ZjL1JaQAAA=",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/5 · 1/640s · ISO 100"
+ },
+ "places/edinburgh-09.jpg": {
+  "etag": "40cdb9639e146ecde3948789da131c52",
+  "hash": "0a753f1a02",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBOgBFqBae34vssByHzLEMAA9n0uJY6KBCWsHWu0/5qfZPqPMuCeSIVc6XCia2WkkJXe/AH3Nvuz8oRSMMAOi2Hvb8s/M7Nd/RE6ZJRdvpcrbQQfqz02fb7Fe5fy3r7fBHxeyt/c4o8WI9nAAA==",
+  "exif": "Canon EOS 7D Mark II · 97mm · ƒ/5 · 1/400s · ISO 100"
+ },
+ "places/edinburgh-10.jpg": {
+  "etag": "20c366f27f75d384cdc91089ecfc7aec",
+  "hash": "92441d4677",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADwAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JZQDA3BjTolA4oqfawEzoAP6/9lZsnMZlCHo9HcOweTYIAdx+nm1jZAKxISI0fKoD+EYd3w7CKySl8A734NTKlKpXah71lKLn6liMJhheonkwvhTyXWklt9oizKqQnpfmoJ4BWi9kJKKeEwAAAA==",
+  "exif": "Canon EOS 7D Mark II · 65mm · ƒ/5 · 1/100s · ISO 100"
+ },
+ "places/edinburgh-12.jpg": {
+  "etag": "b29d7e3ac214c5804001f5386efa22d0",
+  "hash": "51720921ff",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JaACdABFMSr8n5/C/urc+gAD4okYDYypGcNAK8n8b0WInK0Zp0tXDUOcRiw9SiWtezJkMgNsB+uLHFGMjT8rsLyDw8clnMMXKeuzbTvXziu85YazLNVJUskUUo+yjnWVUe498bsxEzOhw6v9AcAe5Fl35O5lJgAA=",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/5 · 1/1250s · ISO 100"
+ },
+ "places/edinburgh-13.jpg": {
+  "etag": "b9a14d41f14ec6d53c35f2937500f5e4",
+  "hash": "00bbb47da9",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAADQAwCdASoQABgAPu1kq04ppaQiMAgBMB2JZQAAXBk8Hy6D+EPLJkAA/M4zLls/oPtTS25GADRfYUwm1rzfPcE0HkLDq0/VJooTg2Jnl9XQ6qjhi6yk8LBEtc1zgbqofI9ILJdhg1KSFw8CoAA=",
+  "exif": "Canon EOS 7D Mark II · 47mm · ƒ/5 · 1/1250s · ISO 100"
+ },
+ "places/edinburgh-18.jpg": {
+  "etag": "1605431191b67a4cd0dd287b2c1d2318",
+  "hash": "650a7e0371",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADQAwCdASoQABgAPu1kq04ppaQiMAgBMB2JQBOmUABfhuhILwtOpyAA/sRUO1r3gfzN6Bnl10cYLpEt8pKSMno/u748GAQTuaxY+gDAibNhH61wmKmPV4NBOVBuPbltVThlFyNlYkjrqgwA",
+  "exif": "Canon EOS 7D Mark II · 58mm · ƒ/5 · 1/1600s · ISO 100"
+ },
+ "places/edinburgh-21.jpg": {
+  "etag": "ddc1602cb31591586e315e30372fc37a",
+  "hash": "0e7ff78e87",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQBYdg+nfcV3PLloPhSsAAP6PscCqOdk09l3C7GMeixr8NOKJvXZ0VWfogMIA0tVBzNsADHatlgHXe5ECPMD5jttBm2Yd85KTwAAA",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/5 · 1/1600s · ISO 100"
+ },
+ "places/edinburgh-22.jpg": {
+  "etag": "eacb61b108cb66879921be875bcd9fe4",
+  "hash": "5ecb02f990",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JYwDE2BuIZEgafD54/49gAPzGj+0ToHiJgPV4k93S0bS6uvSkKaGZtAV/3agyFxQLpsKbrfn1++OeMiNgt9/bHYcXNilaAMN6s9e/iEfHvdclIDbxeRUhO6GXPI5A1r9a/lUUi13jbYZbLEgAAA==",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/5 · 1/1250s · ISO 100"
+ },
+ "places/flam-01.jpg": {
+  "etag": "56c67351e43e8c65f10c615d41c66881",
+  "hash": "88c7633405",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADQAwCdASoQABgAPu1Ct1apoqakGAEwHYlAGJsEN5BJ3FddWxwshwAA/vHMpp8kuUREv7M4Np069YC55WIcPxp70q5taWJ/r6j031DUMF3EOOdrj98l4EA6+KOGAOubclU9h1JS1HopSY1qHwAAAA==",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/60s · ISO 160"
+ },
+ "places/flam-09.jpg": {
+  "etag": "d77a5ea0bfef8e3cba1e283c1108f413",
+  "hash": "33bdfbb320",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAABwAwCdASoQABgAPu1orU2ppqSiMAgBMB2JZwABHuqSK5nDzwAA/vUtysAeG9KbsPX+5iNoSfTkFzI6wqnX5b07cyRDA8Z7xuSNEc9KholCAA==",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4 · 1/320s · ISO 100"
+ },
+ "places/flam-10.jpg": {
+  "etag": "9244fe3b16520383786bb343f9561750",
+  "hash": "b767d577b9",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAACwAwCdASoQABgAPu1yrU+pp6QiMAgBMB2JZQDG9CHfr1rLgZudAAD+lnldAFx6VBXSjq1t1+vy1pteWsC192MuISMMYt4WGav+X2KrATjfuv7sUX8FV9xskKjFtrMxjPgAAA==",
+  "exif": "Canon EOS 7D Mark II · 67mm · ƒ/4 · 1/125s · ISO 100"
+ },
+ "places/galway-03.jpg": {
+  "etag": "80e7c60b7254a80296419978de74d04d",
+  "hash": "637e6e59db",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAABwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JQAALdQCxyW/2PMAA/rHtU1A9aaDFcyjxMT3KgkPxMD/BKLdeEu8dFTWHW56mlDjfUrtrPOWU9caNfQ9LMAAA",
+  "exif": "Canon EOS 7D Mark II · 98mm · ƒ/4 · 1/2500s · ISO 100"
+ },
+ "places/helsinki-03.jpg": {
+  "etag": "daab408e197fe4e427ad33496cd0b941",
+  "hash": "8078dd439b",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADwAwCdASoQABwAPu1qrU8ppiQiMAgBMB2JQBWADSyzsZ2CKTQ+eSjAAP73CQh8bvDJ/Dv0n/nE8x5o92SSePmRUgVtyXKPqN+Wyj4VWQhNs0LeNQAK0q7ZKsYKdru7y7FeJ7WaQrk7rlmNZBP7Lvs5HTXe7zHj3nKCE7qB2PZTETOYpyAAAA==",
+  "exif": "FUJIFILM X-E1 · 33mm · ƒ/5.6 · 1/300s · ISO 400"
+ },
+ "places/helsinki-04.jpg": {
+  "etag": "1c0a587d1220835297fbf252938ba27d",
+  "hash": "aa87258163",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JbACdAGlfGzYs2oIDZTWwBwAA/upxIWQwB4ic3b2EfBuqEfilep/VKvVnsNhvVYVscPk3FNNfv2byv5rQ4P/gjs/ajuO4BocP+vvJhoz+aYOF4M2EoD8g8BDR2M3DLW29qeik18Ox5AgpBjDYzpLVyJk7ealwuA5VlMVVgAA=",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/11 · 1/400s · ISO 800"
+ },
+ "places/helsinki-08.jpg": {
+  "etag": "62a4f55fd1fa6bf5abe80b8b0dd43036",
+  "hash": "92404e326b",
+  "width": 1352,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1352
+  ],
+  "blur": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAACwBACdASoQABwAPu1orU2ppqSiMAgBMB2JbACdB3gN0BJVnMvXjJjktdDXF5cAAP7wFDVBBEofdLBcj1Sbj6wm8I+T+tSsDY1gbPa9M9yOy6JAe9B2u88b3GP+/sKmXRbsxauY4SNKs6KBbbRWTt3Z7JL/Sq3MqySFjG7kzevWlvWCx0LTSt+Sef4+KVqgXoluvrQn5ZCe3d8Nd2WPFnUAWvJGXKD5u1AfqiHeXQ0G7zh9lPlzzpub/iNMGeFbTqEAAA==",
+  "exif": "FUJIFILM X-E1 · 39mm · ƒ/11 · 1/400s · ISO 400"
+ },
+ "places/helsinki-09.jpg": {
+  "etag": "0638934c355bb0123e4dd72c387430ba",
+  "hash": "402a9d3eab",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRrQAAABXRUJQVlA4IKgAAABwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JbACdMoC4AUgASrnfAiwzwFHWyAD+ncxsggDFCd27VWPRFLy22Ub/8mfuiai6PxcwSqVPjY05OtvwX1oNnmn6JBsT8UGidbbx3FNpBIqyZBGfzUNF74kbnPfQM17ToYmpgErxUIuLM1Qd7hyCPBQp6W3rh0zHzFnOhJ6KS17/tjzxBpxJAfhqZQ7Y/CjQAAA=",
+  "exif": "FUJIFILM X-E1 · 23mm · ƒ/16 · 1/400s · ISO 800"
+ },
+ "places/helsinki-10.jpg": {
+  "etag": "0f31c1895a6239436e1bc6fa9d22565d",
+  "hash": "537d6acdd6",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADwAwCdASoQABwAPu1iqU2ppaOiMAgBMB2JZgCdACP+0Mt2i8YKbiwAAPeHef0sCSXiqWxRhm57b5JOIZEJmEQKcUfI53fqxSgZbEESkUzXxg48aysOkN0zHufwxphAnrivkODxKCX9JJGAaj2zsWQA",
+  "exif": "FUJIFILM X-E1 · 39mm · ƒ/20 · 1/420s · ISO 800"
+ },
+ "places/killarney-04.jpg": {
+  "etag": "458df589bab9488876362a546e7e621b",
+  "hash": "db95cd6c19",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAACwAwCdASoQABgAPu1kqk4ppaQiMAgBMB2JZAC06B0yuVgnQFbxMAD+sjOe9+vsu3AaFu3gkowzrTbLOiKNY9xrmcmcTEULRYwVVE8+QpBKlABRU+tqrLwVL0nectaCt9+mIuJURXMQgdeso4lAAA==",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4 · 1/3200s · ISO 100"
+ },
+ "places/killarney-05.jpg": {
+  "etag": "8e21dbbcc073d09984e09b285699af59",
+  "hash": "1813f9f84b",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoQAAsAA4BaJbAC7AEOlCLqAAD+6pg4daxleIkeB+U6coQLEwSvQ3oX2V1KXTyTMw4jNfmty0qwAA==",
+  "exif": "Canon EOS 7D Mark II · 35mm · ƒ/4 · 1/2000s · ISO 100"
+ },
+ "places/killarney-07.jpg": {
+  "etag": "bd41735f5aa8d5ca39e63765f0f2ae39",
+  "hash": "298385a303",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAABQAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JZQAAO7acmW/8AAB4FG4ALvsW+mZP6Wv3W2Fur8bN1CJWLnzzJi/63fDyry2i9GRN9ZezQmad2AAA",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4 · 1/4000s · ISO 100"
+ },
+ "places/killarney-08.jpg": {
+  "etag": "3928aee45507c825a02d544946c7c131",
+  "hash": "1da566cfba",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAABwAQCdASoQAAsAA4BaJagAAeaoAAD+7J0LF1G9ctaarYfij4+5UfsBKcvMF8SUj9wfVLx/+LzwDIMwuAej62y+AAA=",
+  "exif": "Canon EOS 7D Mark II · 105mm · ƒ/4 · 1/1600s · ISO 100"
+ },
+ "places/killarney-15.jpg": {
+  "etag": "38deeddd23638a0cfc5c7be77c2e7c59",
+  "hash": "bfb402f608",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JagCdOUF+AAE44eHIjc7zE0J2sAD9zFTKMgyZqgHb7JQLDyPtZfNSrJpbwUTAVxsFr96YIAjTM9p2axbbzOM9RFn8XyepN5lAAA==",
+  "exif": "Canon EOS 7D Mark II · 55mm · ƒ/4 · 1/1250s · ISO 100"
+ },
+ "places/killarney-17.jpg": {
+  "etag": "b4e3278d5254c8fc46cb144df204a8ae",
+  "hash": "fa1de8f6f2",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBACdASoQABgAPu1iqU2ppaQiMAgBMB2JZgCdMoADKs1mw7su99/vZgAA/rG6/VUIJHMd7lzDcfKL4O1ixvHlmScgZpENH9RszU7aA7C1muldKDl2QRk4RZK3/vM3zwfk0mRvx4PMzq5qROuJ1sqSrGowS9+Ex4dWwI/Vd3u0cJ3AYtdWYAAA",
+  "exif": "Canon EOS 7D Mark II · 55mm · ƒ/4 · 1/1600s · ISO 100"
+ },
+ "places/munich-02.jpg": {
+  "etag": "3eb8053f4fe6488d9a6ac73fd2e1ba9f",
+  "hash": "4d173b6cfe",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JaAC06CPqgrT0B/mYOYkuVf7MAM4/E0qq92ottD/vD38G1xHUrWROpO4vnpmqKYcKMPxAZw3+np9ufhC2DXRy014ce9o8xVKgs2B5Xs4NL9ETb4ltIHt8kZCDf+gbMrXg6m90zLJ611WDhiwAAA==",
+  "exif": "FUJIFILM X-E1 · 45mm · ƒ/5.6 · 1/210s · ISO 200"
+ },
+ "places/munich-03.jpg": {
+  "etag": "929a0c16b33257d8002e9ef7e3ef1c29",
+  "hash": "28bf3dbd11",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZACdACKHeRvGsbJd8q0fAAD+W4Gt/28H+RCTA4165uXVlfIDMni6WC4ZSGenVStw1gsE/xofwkm+nPiNouHIghVGBpHTKfpLatstw1iMbdJ9YFRpzb8A7WecmvfLxKrcuK/UdCAAAA==",
+  "exif": "FUJIFILM X-E1 · 33mm · ƒ/5.6 · 1/350s · ISO 200"
+ },
+ "places/munich-05.jpg": {
+  "etag": "66537e9233c95d2e77b9a0eda4b7a43c",
+  "hash": "aa88d82b14",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBOgBA7KGA+lucYyxSeiHV/wAOJ+iuHAyS9kuqvgmSFNQZCbfxm1q4P66kCI3a23FjSez8rEAt5m+W8Nn4MhweZc9PhlO/VExyskamQbVTSWjna84DzGK9a5b6DwfJ0OCPsz0/0RRtcXQ4mL1+VOsHNeAA==",
+  "exif": "FUJIFILM X-E1 · 33mm · ƒ/5.6 · 1/320s · ISO 200"
+ },
+ "places/munich-06.jpg": {
+  "etag": "88c85c8a35926be0cc49fc9be81603ee",
+  "hash": "67fbc1ff96",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAADQAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JbACsABIBoAMLgRibNYAA960KVfaLmdVU7we0LLnJt46IB21i2DwU9VTt7iOSbTcuAdljFvHIc7HH1brXOuHPPm3s9ON/eYtwN+mLkfdT1Q6BaRuYggHOwswEAAAA",
+  "exif": "FUJIFILM X-E1 · 21mm · ƒ/5.6 · 1/170s · ISO 200"
+ },
+ "places/munich-07.jpg": {
+  "etag": "20f9663e6b37a7f1b3ff4d27617bad17",
+  "hash": "8529c7bcc3",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBOgBHwNdQgRRvFs6orU4AD99zPYXz5fXvcazuvldku9kbeHy5es33Z2jCkDja8BlkKcB1UR/qpNyzIemUEnfGIJkzz7DNsK0nRMXHf5NVXedYBj51HnvtSI4i03pUib+EN7YDgnIJZNgZIBwAAA",
+  "exif": "FUJIFILM X-E1 · 23mm · ƒ/5.6 · 1/280s · ISO 200"
+ },
+ "places/munich-10.jpg": {
+  "etag": "6e556777c16e5dc135691dcbc5b166b4",
+  "hash": "bba83f8c1d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAACQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBOgtQA26vLhwog1C7hSltOz8QAA/tfSIEeOy5wPmbB2g173uVtKwON3RpibZhxWT7ypNO3b75kxpIpiFPQjT1sygUFKg92/jJYlmulmYhjddBtSQN7hwW1LxqNaHXrV/REe0znSRGQWBT1wWsQAAAA=",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/5.6 · 1/320s · ISO 200"
+ },
+ "places/sognefjord-06.jpg": {
+  "etag": "aa219fd4075029119046b24f91b0ed41",
+  "hash": "f0f6c06a2e",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAACwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZwAAW+FJWQM9sFCFAAD+5znVVKdfSGSzKRr8gGmkwwwDbM9gpHZej8AJUwhZggVnoqWJUQuV3QpZsM+6DhGtPsyM1I9RySFYPSzAAAA=",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4 · 1/200s · ISO 100"
+ },
+ "places/sognefjord-07.jpg": {
+  "etag": "87c09e51ea5e381e6fe84300cd88c04c",
+  "hash": "2438e3617e",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADQAQCdASoQAAsAA4BaJZQAAvyJcvGwAAD+0fsOjL7wdtfPqwLEFYaOeDZ+PofNdh5wEh+iLWfBMXwRAAA=",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/4 · 1/125s · ISO 100"
+ },
+ "places/sognefjord-11.jpg": {
+  "etag": "d6601542c672668bc39e773eaceee0f3",
+  "hash": "34e926f52f",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAQBACdASoQABgAPu1iqU2ppaQiMAgBMB2JYwAAYf1ERBWzYlb3cVg9oAD+6s9CW2XbluffFE+q0VqrsZzIkqyqo+xjWRS2v5R2wWnmCcD39pulKr4H3ZzOB8aV6J7qxF1wh+rZpJM/oM/YDBcKbSYs4PvdymvwAAA=",
+  "exif": "Canon EOS 7D Mark II · 40mm · ƒ/4 · 1/160s · ISO 100"
+ },
+ "places/stirling-01.jpg": {
+  "etag": "43763b0f5c96c29b1cac029393681c01",
+  "hash": "d01d66e2ad",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoQAAsAA4BaJZwAAn2JeQLoAAD+62blJGt6IoQ3FgAOut6ZhdmJD6GzcxPd5o/1c2w0ObsR0V4jQb2yWlQiecWgSA4gKoyZ9PvPgFAA",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/1600s · ISO 100"
+ },
+ "places/stirling-05.jpg": {
+  "etag": "622a504cb3a8b7689d4674a3c323149a",
+  "hash": "e190122b6a",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAADQAwCdASoQABgAPu1kqU2ppaQiMAgBMB2JQBOmUAE+Q+1D4PcTwGAA/jQg1ssmqk/tLTiZJ1uMewh+0/v87f4T5d7tKajB8zfp1yJYIbMPrsf0pX39oluF1Ta5KAAA",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/4 · 1/1600s · ISO 100"
+ },
+ "places/stirling-06.jpg": {
+  "etag": "f34795661aa87dcf2f57fc650735acac",
+  "hash": "d5fbfe8227",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JZQAATvv1/4IiHugeS4PAAP7j4MQuI8Gsv+9s4J6G0l6l4btrV6MCf9irOm94tWgCVFzE6qipG/X9st5GeVWfXxYuuoUEU66ybuhSfxArLlAM/ZKdgAAA",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "places/stirling-07.jpg": {
+  "etag": "2f1dc1da4f2be747db79ef47fd11872a",
+  "hash": "b980124f60",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAACwAwCdASoQABgAPu1iqk4ppaQiMAgBMB2JZwC/OB5Pr+9wsh8WYAD92FXTLrdxsGUQx1ySZKaAulKmqsE4msCEDQpRw39PpIKB0oqpxpu9LLDrNRqkhm6tErOORUGAY14tn70/pMFpIAAA",
+  "exif": "Canon EOS 7D Mark II · 98mm · ƒ/4 · 1/1000s · ISO 100"
+ },
+ "places/stirling-09.jpg": {
+  "etag": "4d95fe2666f68686135d330fd7f44267",
+  "hash": "4078a8c640",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwAwCdASoQABgAPu1kqk4ppaQiMAgBMB2JQBdgBDw+wpUW0rWfEz0AAP7eJBCs+aiPUeFjKvUX4GQmTfK23WCC0jDHFQPWAlyHCpNCmn/+HlK+tPTgepAZuVCl6eXd/eVvv3pbzzX//iEMsJOnXU9i5imZ8evU7yad6L8GNJNSfRJGwAA=",
+  "exif": "Canon EOS 7D Mark II · 32mm · ƒ/4 · 1/50s · ISO 1250"
+ },
+ "places/weymouth-01.jpg": {
+  "etag": "7a7bd2333661e11bd5b869ab622da11c",
+  "hash": "492ca0fb85",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAADwAwCdASoQABwAPu1orU6ppiSiMAgBMB2JZACdAGMltpGGYU1g1fYAAP7n9BZRAIeTt/v4Z1Q3GZAX8yjvkI3bWnkKIeaoYuqgokwTgDw6REhZPXoHLboAXl4YQbh3/A0OYyLa28zQSsRXFKJ6lejBSWyqb9PIJwmWCVxMAAA=",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/13 · 1/350s · ISO 400"
+ },
+ "places/weymouth-02.jpg": {
+  "etag": "b56ca7eced6920b73c5be6adec83a835",
+  "hash": "4d530e0515",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAABwBACdASoQABwAPu1yrU+pp6QiMAgBMB2JZgCw7GtwHlvt95/QVxknOA9yAAD+ZIquLkCSvghrdxdhnBwPOpMBiCNro2dzOSB/7b9x17/PbqA+aoI0ofAGLywfUxK3z/ZQ/dWAXFLChsdSUzpDh3hwCU+4BLx30Wgz5U+ultRUZGTX7u6CBtSjZ1EWXOc2AbfaokdXGKm1sFGLhUkpFP9/608LyBmfTc929oAA",
+  "exif": "FUJIFILM X-E1 · 42mm · ƒ/13 · 1/350s · ISO 400"
+ },
+ "places/weymouth-03.jpg": {
+  "etag": "b0685bdedbf8d7992960e2b90db1d181",
+  "hash": "7855ac0063",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAACwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JbACdMoAlvEA+hwZlWZZeH/uDbZIAAP1CXOBTrEsPq0CIodJZrEd1xKOu9/HFwx+o4yT9UPSGTzdAXq3CzPqDL6GT/8Q57YL/26sl+cMlthEgEHu3v4aqe3whIvvLK/+rNqUscD3SAl7/gJUiBZ9pAfkk7zGkRnppww2XjpwG3HVkxUCtaQAA",
+  "exif": "FUJIFILM X-E1 · 20mm · ƒ/18 · 1/400s · ISO 800"
+ },
+ "places/weymouth-04.jpg": {
+  "etag": "42ce5008d6314998aec94cc5c67ce6ac",
+  "hash": "e1a99382be",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAABQBACdASoQABwAPu1orU2ppqSiMAgBMB2JYgCdAGt83myOViQLTvmr9deAAP7oUWe7toIad8ym1jf5r7GaejfTfJIZqBcy3Lappf9SS4pfeaSDDXfSVF+HQJg5PrGWt42xOV4/w8+Q3XIbzwLwHvHfAISQtspA38e2+xgztLHnawSMW4UkcFkQMSVBs1+ZeNTtgOoZOYCAAA==",
+  "exif": "FUJIFILM X-E1 · 43mm · ƒ/20 · 1/420s · ISO 800"
+ },
+ "places/weymouth-05.jpg": {
+  "etag": "21ea797638164b0c67da885f73594c72",
+  "hash": "ada31834d7",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAADwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JbACdMoR3Ff/gvBAnSc/DRii+JaVG7AAA/ueHyazYvshpSMcyRXDpC9/C/PQJr8fYW/xdDX76PZkaGd3hQk5m+Iy+FlkqtaR6bFpotFY/w9/V16RB52YhxanAnr3Cqr7I3HWFRXwRfm5ttzlKNIIiTq/hZoVBEIKWrFaJhzUKxm4DZmNSkCkAAAA=",
+  "exif": "FUJIFILM X-E1 · 43mm · ƒ/10 · 1/350s · ISO 400"
+ },
+ "places/weymouth-06.jpg": {
+  "etag": "a368dbc011482ddf072cb75270dc8420",
+  "hash": "2fca1a6ffe",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAABwBACdASoQABwAPu1krU2ppaSiMAgBMB2JaACdMoR2Wc+PMrqf7LxY+JKegAD+xW+tYT/szDaH+oOx6mP7dV2pCjtsVmhr2E9zs7cS3+6DaSY62D/O1WVfh5dapUDRoVNtMxXftq3idIPvSj7XNPRgaTGAAA==",
+  "exif": "FUJIFILM X-E1 · 39mm · ƒ/7.1 · 1/350s · ISO 800"
+ },
+ "places/weymouth-07.jpg": {
+  "etag": "d7acd397138dc56ace842df3fca809aa",
+  "hash": "e51b4c59e9",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAwBACdASoQABwAPu1iqk2ppaQiMAgBMB2JYgCw7GlhhQKzTNVOTTekvQAA/lt/6tcJZYdFdG5rYZhD+7y2Opv9Px6q7EuDnklbWAFMdHu2h2n9rX6lnKpDezR7l4O6KbAbXO8ZJtOvUXuAFtjHG28BUrNpYhKzUdN8QAAA",
+  "exif": "FUJIFILM X-E1 · 34mm · ƒ/14 · 1/400s · ISO 800"
+ },
+ "places/weymouth-08.jpg": {
+  "etag": "aeb29233adeb0da8d778ca24463cb8af",
+  "hash": "225b8dd842",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADwAwCdASoQABwAPu1kqk4ppaQiMAgBMB2JZACw7GlWnbNAAM4hPgoAAPelAuWlm0IeBkk/2/aMj3oDWKf8+Ar+FZTxho8zH8UPNSVI8F+wvuXkgESnP50N27viTrdVVQR+zbFvhGtHihJgLR7cMq6/4yT4aSDwAAA=",
+  "exif": "FUJIFILM X-E1 · 24mm · ƒ/5.6 · 1/240s · ISO 400"
+ },
+ "places/weymouth-09.jpg": {
+  "etag": "ae029f12a5392882c87b08aa21b7cfdd",
+  "hash": "13fac7e9d0",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAABQBACdASoQABwAPu1oqk6ppiQiMAgBMB2JagCdMoAC+/upwEdVxUY5iFW0AP7JzPbbtAXIqi51VB16IWUslhxaInN9Gc2AzF57A+yMJra6dP3q0+7GnyIAR3UNRT49Ib9EGlKxXpczu3egK/pHZujBulnMckmnKP13Hvls8j/AAA==",
+  "exif": "FUJIFILM X-E1 · 42mm · ƒ/7.1 · 1/400s · ISO 400"
+ },
+ "places/weymouth-10.jpg": {
+  "etag": "1783b4765c98394573b62b413c8a0538",
+  "hash": "29fa06e54f",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAAAwBACdASoQABwAPu1mqk2ppaQiMAgBMB2JbACxGwAFpa3W3FdxJg7tnAAA/tSqMrB/2s+rKLa6iYT3Ztny4mmxTmTd5wG3KmITsPXpblerX/8lP+f2f7vFy734r3WZOm1Fdlo8TrQt6ManwLz0po3XYAA=",
+  "exif": "FUJIFILM X-E1 · 26mm · ƒ/13 · 1/420s · ISO 800"
+ },
+ "places/weymouth-11.jpg": {
+  "etag": "cf257a94f854a52aa41a2a223c2c7be2",
+  "hash": "258adec2f3",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAACwAwCdASoQABwAPu1kqU2ppaOiMAgBMB2JZgCdMoABSEuZVyZGYADVANXvnMj/d3VaX3wqUAY4G8d3hvWj6sEXgvfdfzphj+OAoMRjZkXMmoEzIjX3SZbWGbIEYixTPcbTYAAA",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/22 · 1/340s · ISO 800"
+ },
+ "places/weymouth-12.jpg": {
+  "etag": "2030d6def197d8227fb28d6353863259",
+  "hash": "58eefc9874",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAAAQBACdASoQABwAPu1iqU2ppaQiMAgBMB2JbACw7GZGwTF7lNx3NiBuAAD+xQaXbbpUuorVNFiho+d8Sfk8sZ5fubmHy/65K6lhk6aAjiQeBgE5LkbP/xFAn/0ZuMq3kOkj5yzPrHJeOz8mt3IGJx43NuTrHCEXorpJn3nOpUC6Gax/nDj+gIRoUI7JPAAA",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/22 · 1/200s · ISO 800"
+ },
+ "places/weymouth-15.jpg": {
+  "etag": "b0a603f81d3f894a0789977fad505bf8",
+  "hash": "eeb4df9d4c",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAwAwCdASoQABwAPu1kqU2ppaOiMAgBMB2JQBdgA8ebBJgAAP3hBNaOwrhz74OAHNuoQtRPlAUVR3xH4oQ4RmtEwGSYift9CnbaAAAA",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/16 · 1/450s · ISO 800"
+ },
+ "places/weymouth-16.jpg": {
+  "etag": "b15ca7b8f9127c34e6da52736c5fdb9e",
+  "hash": "e603d71c97",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQBACdASoQABwAPu1kqU2ppaQiMAgBMB2JagCdMoAKTX2Pnu99fpIEAAD+9goyuzwXXfP0cJvB6fBzOYwvAv15HqVS7k1IYOP/115wt9vvUxGScx5AhrmFmVfvsqVTYAA=",
+  "exif": "FUJIFILM X-E1 · 28mm · ƒ/16 · 1/350s · ISO 800"
+ },
+ "places/weymouth-17.jpg": {
+  "etag": "bf9786838004646e51068262822c137e",
+  "hash": "fe54076ba1",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAABwBACdASoQABwAPu1iqU2ppaQiMAgBMB2JbACdMoC9AD+WgxyYni2lVugyYADJMA8ff/hcA73SRXXfP7WO7l6fliA0l3eT+lWnvzwB1P0JY6zq485noa9r221k7UyqoiVueIei3u3y7wd3RXsfs+77qVQAAA==",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/20 · 1/400s · ISO 800"
+ },
+ "places/yosemite-04.jpg": {
+  "etag": "6187d715ccad247ac716710fb5889765",
+  "hash": "415c53d6e4",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAABwBACdASoQABwAPu1mq04ppaQiMAgBMB2JaACdL14T+hY5+YuV8iJ3AzNLgAD+8ALo6P9pWgGdiNkCWDFiNMYlDxjsc5AXyS/Vrf9pa+7igVQjRZ6ZdIgZWrbWfiuFI1qFsikN9VcuEwAA",
+  "exif": "FUJIFILM X-E1 · 50mm · ƒ/13 · 1/420s · ISO 400"
+ },
+ "places/yosemite-06.jpg": {
+  "etag": "ec60f9fa1c15225fe55e2b1d1d262c77",
+  "hash": "4a2f8e75b1",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAABQBACdASoQABwAPu1kqU2ppaOiMAgBMB2JZACdMvaA2CWiAx4MAgEW56voAP7BoOX2uKCjvvzdjm/09xGbIDHCXlky9PUIzCTDLyYjV7ojXSus7LcN4ZmFHc21pZUhYHe4nwezz81OWZNG3xiAfC5K/FbymdLOHri+vJRkRc05dN34N0XHswGC3a7y4HNeIP41BMXm3bzybOmAAAA=",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/22 · 1/70s · ISO 400"
+ },
+ "places/yosemite-07.jpg": {
+  "etag": "26f5ab39ab9e77812c72377a9770f7b4",
+  "hash": "7792c55ee8",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAACwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JbACdMoBOABeZtpJT4jHBVgd31gsQAP63pwKqVl8lYM1NSDaN8n3ZIqqVBtDnIvek/AHjoEmq9/2roXXKrJudKCVBbQXlpuOpyoY/27rht8L25y4mAbPFOxi2ZoanZwjpIvEK1UJQlbJesYgF45XnJlu99Y9vMAAAAA==",
+  "exif": "FUJIFILM X-E1 · 16mm · ƒ/22 · 1/300s · ISO 800"
+ }
+}

@@ -21,8 +21,15 @@ npm run dev      # open http://localhost:4321 — the page updates as you edit
    | `animals/` | Animals |
    | `film/` | Film |
 
-   Use the full-resolution JPEG. The site makes the small, fast versions (AVIF/WebP, several sizes,
-   blurred preview) automatically. Use simple file names like `harbor-dusk.jpg`.
+   Use the full-resolution JPEG and simple file names like `harbor-dusk.jpg`. After you push, the
+   **Photos** GitHub Action uploads the original to Cloudflare R2, makes the small, fast web versions
+   (AVIF/WebP at several sizes, blurred preview, GPS stripped), records them in
+   `src/data/photo-manifest.json` and removes the file from the repo. Vercel then builds from the
+   Action's commit (a few minutes later). The photos are served from `photos.nimamovahedi.com`.
+
+   You can also upload originals straight into the R2 bucket (`nimaphotos`, folder
+   `originals/<category>/`) in the Cloudflare dashboard, then run the Action by hand from GitHub's
+   **Actions → Photos → Run workflow**.
 
 2. **Add an entry to `src/data/photos.yaml`:**
 
@@ -55,7 +62,8 @@ npm run dev      # open http://localhost:4321 — the page updates as you edit
      shown in the lightbox (ⓘ button).
    - A typo in `sub`, `country` or `city`? The build prints a warning telling you which photo.
 
-3. **Remove a photo:** delete the file and its entry.
+3. **Remove a photo:** delete its entry, and its original from `originals/` in the R2 bucket, then
+   run the Photos Action by hand.
 
 To replace the placeholders, delete the `placeholder-*.jpg` files and their entries in `photos.yaml`.
 
@@ -127,13 +135,15 @@ Want to check it first? Run `npm run build && npm run preview` to see the exact 
 
 ```
 src/
-  photos/<category>/    your images
+  photos/<category>/    drop new images here (the Photos Action moves them to R2)
   data/photos.yaml      titles, alt text, sub-tabs, places, film sims
+  data/photo-manifest.json  sizes, blur previews and EXIF of the photos in R2 (written by the Action)
   site.config.ts        name, intro, sub-tabs, regions, countries & cities
   pages/                one file per page (sub-tab and country pages are generated)
   components/           Gallery, Lightbox, Nav, SubTabs, Globe, CountryMap, Illustration
   scripts/globe.ts      the interactive globe (loads when it scrolls into view)
-  lib/photos.ts         reads photos, EXIF and blur previews at build time
+  lib/photos.ts         builds the photo list and R2 image URLs at build time
+scripts/sync-photos.mjs uploads photos to R2 and makes their web versions (run by the Action)
   lib/world.ts          country outlines for the globe and maps (build time)
   styles/global.css     colours, spacing, film theme
 ```

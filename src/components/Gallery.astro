@@ -1,8 +1,7 @@
 ---
 // Masonry grid of photos. Never crops: every photo keeps its own shape.
 // Clicking a photo opens the lightbox (see Lightbox.astro).
-import { Picture, getImage } from 'astro:assets';
-import type { Photo } from '../lib/photos';
+import { photoSrcset, photoUrl, type Photo } from '../lib/photos';
 import Lightbox from './Lightbox.astro';
 
 interface Props {
@@ -27,8 +26,6 @@ const sizes = {
   'film-3': '(min-width: 900px) 380px, 46vw',
 }[layout];
 
-const WIDTHS = [480, 720, 960, 1280, 1600, 2000];
-
 // CSS columns fill top-to-bottom, so a list in order would read down the first column.
 // Deal the photos into three balanced columns (shortest column first) and output them column
 // by column: the page then reads left-to-right in roughly the original order.
@@ -38,23 +35,18 @@ function balance(list: Photo[], cols = 3) {
   for (const p of list) {
     const i = heights.indexOf(Math.min(...heights));
     buckets[i].push(p);
-    heights[i] += p.image.height / p.image.width;
+    heights[i] += p.height / p.width;
   }
   return buckets.flat();
 }
 const ordered = layout === 'grid' ? balance(photos) : photos;
 
-const items = await Promise.all(
-  ordered.map(async (p) => {
-    const w = p.image.width;
-    const large = await getImage({ src: p.image, width: Math.min(2400, w), format: 'webp' });
-    return {
-      ...p,
-      widths: [...WIDTHS.filter((x) => x < w), Math.min(w, 2400)],
-      large,
-    };
-  }),
-);
+const items = ordered.map((p) => ({
+  ...p,
+  large: photoUrl(p, p.widths.at(-1)!, 'webp'),
+  // The lightbox picks from these by screen size, so phones don't download the 2400px version.
+  largeSet: photoSrcset(p, 'webp'),
+}));
 ---
 
 <section class:list={['gallery', layout]} data-gallery aria-label={label}>
@@ -63,24 +55,28 @@ const items = await Promise.all(
       <figure class="item">
         <a
           class="frame"
-          href={p.large.src}
-          data-pswp-width={p.large.attributes.width}
-          data-pswp-height={p.large.attributes.height}
+          href={p.large}
+          data-pswp-srcset={p.largeSet}
+          data-pswp-width={p.width}
+          data-pswp-height={p.height}
           data-title={p.title}
           data-sim={p.filmSim}
           data-exif={p.exif}
-          style={`background-image:url(${p.blur});aspect-ratio:${p.image.width}/${p.image.height}`}
+          style={`background-image:url(${p.blur});aspect-ratio:${p.width}/${p.height}`}
         >
-          <Picture
-            src={p.image}
-            alt={p.alt}
-            formats={['avif', 'webp']}
-            widths={p.widths}
-            sizes={sizes}
-            loading={i < eager ? 'eager' : 'lazy'}
-            fetchpriority={i === 0 ? 'high' : undefined}
-            decoding="async"
-          />
+          <picture>
+            <source type="image/avif" srcset={photoSrcset(p, 'avif', 2000)} sizes={sizes} />
+            <source type="image/webp" srcset={photoSrcset(p, 'webp', 2000)} sizes={sizes} />
+            <img
+              src={photoUrl(p, p.widths.find((w) => w >= 960) ?? p.widths.at(-1)!, 'webp')}
+              alt={p.alt}
+              width={p.width}
+              height={p.height}
+              loading={i < eager ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : undefined}
+              decoding="async"
+            />
+          </picture>
           <span class="visually-hidden">Open {p.title} full screen</span>
           {variant === 'default' && (
             <span class="overlay" aria-hidden="true">

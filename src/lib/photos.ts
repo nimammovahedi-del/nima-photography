@@ -1,18 +1,34 @@
-// Builds the photo list from src/photos/<category>/ and src/data/photos.yaml.
+// Builds the photo list from src/data/photos.yaml and src/data/photo-manifest.json.
 // Runs at build time only — nothing here ships to the browser.
-import type { ImageMetadata } from 'astro';
-import { readFile } from 'node:fs/promises';
+//
+// The images themselves live in Cloudflare R2 (photos.nimamovahedi.com). The "Photos" GitHub
+// Action (scripts/sync-photos.mjs) makes their web versions and writes the manifest, so the
+// site build never processes an image.
 import path from 'node:path';
-import exifr from 'exifr';
 import { load as parseYaml } from 'js-yaml';
-import sharp from 'sharp';
 import { categories, places, type CategorySlug } from '../site.config';
 import metadataSource from '../data/photos.yaml?raw';
+import manifest from '../data/photo-manifest.json';
+
+/** Where the web versions are served from. Override with PUBLIC_PHOTOS_URL (e.g. for a local test). */
+const PHOTOS_URL = (import.meta.env.PUBLIC_PHOTOS_URL ?? 'https://photos.nimamovahedi.com').replace(/\/$/, '');
+
+interface ManifestEntry {
+  hash: string;
+  width: number;
+  height: number;
+  widths: number[];
+  blur: string;
+  exif?: string;
+}
 
 export interface Photo {
   id: string; // e.g. "film/harbor-dusk.jpg"
   category: CategorySlug;
-  image: ImageMetadata;
+  width: number; // upright size of the largest web version
+  height: number;
+  widths: number[]; // widths available in R2, smallest first
+  hash: string; // changes when the photo does, so its URLs can be cached forever
   title: string;
   alt: string;
   filmSim?: string;
@@ -23,6 +39,22 @@ export interface Photo {
   tags: string[];
   blur: string; // tiny base64 image shown while the real one loads
   exif?: string; // e.g. "Canon EOS R6 · 35mm · ƒ/2.8 · 1/250s · ISO 100"
+}
+
+export type PhotoFormat = 'avif' | 'webp';
+
+/** URL of one web version of a photo. */
+export function photoUrl(p: Photo, width: number, format: PhotoFormat) {
+  return `${PHOTOS_URL}/w/${p.id.replace(/\.[^.]+$/, '')}-${p.hash}-${width}.${format}`;
+}
+
+/** srcset listing every width of a photo (optionally only up to `max`). AVIF stops at 2000px. */
+export function photoSrcset(p: Photo, format: PhotoFormat, max = Infinity) {
+  if (format === 'avif') max = Math.min(max, 2000);
+  return p.widths
+    .filter((w, i) => w <= max || i === 0)
+    .map((w) => `${photoUrl(p, w, format)} ${w}w`)
+    .join(', ');
 }
 
 interface Entry {
@@ -37,34 +69,7 @@ interface Entry {
   tags?: string[];
 }
 
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/photos/**/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP}',
-  { eager: true },
-);
-
 const slugs = new Set<string>(categories.map((c) => c.slug));
-
-function formatExif(e: Record<string, any> | undefined): string | undefined {
-  if (!e) return undefined;
-  const model = e.Model ? String(e.Model).trim() : undefined;
-  const camera =
-    model && e.Make && !model.toLowerCase().startsWith(String(e.Make).toLowerCase())
-      ? `${String(e.Make).trim()} ${model}`
-      : model;
-  const shutter = e.ExposureTime
-    ? e.ExposureTime >= 1
-      ? `${e.ExposureTime}s`
-      : `1/${Math.round(1 / e.ExposureTime)}s`
-    : undefined;
-  const parts = [
-    camera,
-    e.FocalLength && `${Math.round(e.FocalLength)}mm`,
-    e.FNumber && `ƒ/${e.FNumber}`,
-    shutter,
-    e.ISO && `ISO ${e.ISO}`,
-  ].filter(Boolean);
-  return parts.length ? parts.join(' · ') : undefined;
-}
 
 function titleFromFile(file: string) {
   return path
@@ -78,52 +83,47 @@ async function load(): Promise<Photo[]> {
   const byFile = new Map(entries.map((e) => [e.file, e]));
   const order = new Map(entries.map((e, i) => [e.file, i]));
 
-  const photos = await Promise.all(
-    Object.entries(images).map(async ([key, mod]) => {
-      const id = key.replace('/src/photos/', '');
-      const category = id.split('/')[0];
-      if (!slugs.has(category)) return null;
+  const photos = Object.entries(manifest as Record<string, ManifestEntry>).map(([id, m]) => {
+    const category = id.split('/')[0];
+    if (!slugs.has(category)) return null;
 
-      const entry = byFile.get(id);
-      if (!entry) console.warn(`[photos] ${id} has no entry in photos.yaml — using defaults.`);
-      else {
-        if (!entry.alt) console.warn(`[photos] ${id} is missing alt text.`);
-        const subs: readonly string[] = categories.find((c) => c.slug === category)!.subs;
-        if (entry.sub && !subs.includes(entry.sub))
-          console.warn(`[photos] ${id}: sub "${entry.sub}" isn't listed for ${category} in site.config.ts.`);
-        const place = places.find((p) => p.name === entry.country);
-        if (entry.country && !place)
-          console.warn(`[photos] ${id}: country "${entry.country}" isn't in site.config.ts.`);
-        if (entry.city && !place?.cities.some((c) => c.name === entry.city))
-          console.warn(`[photos] ${id}: city "${entry.city}" isn't listed under ${entry.country}.`);
-      }
+    const entry = byFile.get(id);
+    if (!entry) console.warn(`[photos] ${id} has no entry in photos.yaml — using defaults.`);
+    else {
+      if (!entry.alt) console.warn(`[photos] ${id} is missing alt text.`);
+      const subs: readonly string[] = categories.find((c) => c.slug === category)!.subs;
+      if (entry.sub && !subs.includes(entry.sub))
+        console.warn(`[photos] ${id}: sub "${entry.sub}" isn't listed for ${category} in site.config.ts.`);
+      const place = places.find((p) => p.name === entry.country);
+      if (entry.country && !place)
+        console.warn(`[photos] ${id}: country "${entry.country}" isn't in site.config.ts.`);
+      if (entry.city && !place?.cities.some((c) => c.name === entry.city))
+        console.warn(`[photos] ${id}: city "${entry.city}" isn't listed under ${entry.country}.`);
+    }
 
-      const file = await readFile(path.join(process.cwd(), key));
-      const [exif, blurBuf] = await Promise.all([
-        exifr
-          .parse(file, ['Make', 'Model', 'FocalLength', 'FNumber', 'ExposureTime', 'ISO'])
-          .catch(() => undefined),
-        sharp(file).rotate().resize(16).webp({ quality: 40 }).toBuffer(),
-      ]);
-
-      const title = entry?.title ?? titleFromFile(id);
-      return {
-        id,
-        category: category as CategorySlug,
-        image: mod.default,
-        title,
-        alt: entry?.alt ?? title,
-        filmSim: entry?.filmSim,
-        sub: entry?.sub,
-        cover: entry?.cover,
-        country: entry?.country,
-        city: entry?.city,
-        tags: entry?.tags ?? [],
-        blur: `data:image/webp;base64,${blurBuf.toString('base64')}`,
-        exif: formatExif(exif),
-      } satisfies Photo;
-    }),
-  );
+    const title = entry?.title ?? titleFromFile(id);
+    return {
+      id,
+      category: category as CategorySlug,
+      width: m.width,
+      height: m.height,
+      widths: m.widths,
+      hash: m.hash,
+      title,
+      alt: entry?.alt ?? title,
+      filmSim: entry?.filmSim,
+      sub: entry?.sub,
+      cover: entry?.cover,
+      country: entry?.country,
+      city: entry?.city,
+      tags: entry?.tags ?? [],
+      blur: m.blur,
+      exif: m.exif,
+    } satisfies Photo;
+  });
+  for (const e of entries)
+    if (!(e.file in manifest))
+      console.warn(`[photos] ${e.file} is in photos.yaml but not uploaded yet (no web versions in R2).`);
 
   // photos.yaml order first, then any un-listed files alphabetically.
   return photos

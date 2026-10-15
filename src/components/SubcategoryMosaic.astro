@@ -3,8 +3,7 @@
 // as a mosaic (wide photos span two columns; tall ones are one column wide, as a square or a
 // tall tile twice its height). Each tile links to that
 // subcategory's own page. Covers are the photos marked `cover: true` in photos.yaml.
-import { Picture } from 'astro:assets';
-import type { Photo } from '../lib/photos';
+import { photoSrcset, photoUrl, type Photo } from '../lib/photos';
 import { mosaic, type Shape } from '../lib/mosaic';
 
 interface Props {
@@ -14,7 +13,7 @@ interface Props {
 
 const { items, label } = Astro.props;
 const shapes: Shape[] = items.map(({ cover }) =>
-  cover.image.width >= cover.image.height ? 'landscape' : 'portrait',
+  cover.width >= cover.height ? 'landscape' : 'portrait',
 );
 // Separate layouts for phones (2 columns) and larger screens (3 columns).
 const two = mosaic(shapes, 2);
@@ -28,15 +27,24 @@ const area = (t: { col: number; row: number; w: number; h: number }) =>
     items.map((s, i) => (
       <li style={`--area-2:${area(two.tiles[i])};--area-3:${area(three.tiles[i])}`}>
         <a href={s.href} class="tile" style={`background-image:url(${s.cover.blur})`}>
-          <Picture
-            src={s.cover.image}
-            alt={s.cover.alt}
-            formats={['avif', 'webp']}
-            widths={[480, 720, 960, 1280, 1600]}
-            sizes={three.tiles[i].w > 1 ? '(min-width: 900px) 66vw, 100vw' : '(min-width: 900px) 33vw, 50vw'}
-            loading={i < 3 ? 'eager' : 'lazy'}
-            decoding="async"
-          />
+          {(() => {
+            const sizes =
+              three.tiles[i].w > 1 ? '(min-width: 900px) 66vw, 100vw' : '(min-width: 900px) 33vw, 50vw';
+            return (
+              <picture>
+                <source type="image/avif" srcset={photoSrcset(s.cover, 'avif', 1600)} sizes={sizes} />
+                <source type="image/webp" srcset={photoSrcset(s.cover, 'webp', 1600)} sizes={sizes} />
+                <img
+                  src={photoUrl(s.cover, s.cover.widths.find((w) => w >= 960) ?? s.cover.widths.at(-1)!, 'webp')}
+                  alt={s.cover.alt}
+                  width={s.cover.width}
+                  height={s.cover.height}
+                  loading={i < 3 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              </picture>
+            );
+          })()}
           <span class="caption">
             <span class="name">{s.label}</span>
             <span class="count">
