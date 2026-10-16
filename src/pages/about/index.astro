@@ -34,7 +34,7 @@ const cameras = await getCameras();
         cameras.map((c) => (
           <li>
             <a href={`/about/${c.slug}`} class="card">
-              <canvas data-camera={c.model} aria-label={`3D model of the ${c.brand} ${c.name}`} role="img" />
+              <canvas data-camera={c.model} data-paper="#151515" aria-label={`3D model of the ${c.brand} ${c.name}`} role="img" />
               <span class="name">
                 <span class="brand">{c.brand}</span> {c.name}
               </span>
@@ -184,7 +184,6 @@ const cameras = await getCameras();
     width: 100%;
     aspect-ratio: 4 / 3;
     margin-bottom: 8px;
-    background: radial-gradient(ellipse at 50% 45%, #1d1c19, transparent 70%);
     cursor: grab;
     touch-action: pan-y;
     opacity: 0;

@@ -24,7 +24,7 @@ const next = all[(i + 1) % all.length];
   </header>
 
   <div class="stage">
-    <canvas data-camera={c.model} aria-label={`3D model of the ${c.brand} ${c.name}. Drag to rotate, scroll or pinch to zoom.`} role="img"></canvas>
+    <canvas data-camera={c.model} data-paper="#0b0b0b" aria-label={`3D model of the ${c.brand} ${c.name}. Drag to rotate, scroll or pinch to zoom.`} role="img"></canvas>
     <p class="hint">Drag to rotate · scroll or pinch to zoom</p>
     <button type="button" class="reset" data-view="">Reset view</button>
   </div>
@@ -143,7 +143,6 @@ const next = all[(i + 1) % all.length];
     width: 100%;
     height: min(68vh, 640px, 115vw);
     min-height: 340px;
-    background: radial-gradient(ellipse at 50% 50%, #1d1c19, transparent 65%);
     cursor: grab;
     touch-action: none;
     opacity: 0;

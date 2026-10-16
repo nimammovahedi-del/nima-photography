@@ -14,7 +14,7 @@ import {
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { buildCamera } from './camera-models';
+import { buildCamera, setPaper } from './camera-models';
 import type { CameraModel } from '../data/cameras';
 
 type View = { target: [number, number, number]; from: [number, number, number] };
@@ -36,6 +36,8 @@ export async function mountCamera(canvas: HTMLCanvasElement, model: CameraModel,
   fill.position.set(3, -1, -4);
   scene.add(fill);
 
+  // The drawing's surfaces are filled with the colour behind it (so hidden lines stay hidden).
+  setPaper(canvas.dataset.paper ?? '#0b0b0b', renderer.getPixelRatio());
   const { group, size, offset } = buildCamera(model, mode === 'card' ? 'simple' : 'full');
   scene.add(group);
 
