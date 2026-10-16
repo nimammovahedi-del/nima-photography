@@ -116,6 +116,17 @@ const cameras = await getCameras();
       max-width: 420px;
     }
   }
+  /* On a phone, a smaller portrait centred above the bio, so the bio starts on the first screen. */
+  @media (max-width: 639px) {
+    .portrait {
+      justify-self: center;
+      width: min(56%, 220px);
+    }
+    .portrait svg {
+      width: 44px;
+      height: 44px;
+    }
+  }
   .portrait svg {
     width: 64px;
     height: 64px;

@@ -86,6 +86,10 @@ const path = Astro.url.pathname.replace(/\/$/, '');
   a:hover {
     color: var(--text);
   }
+  /* Nothing here yet (e.g. a city still waiting for its photos): quieter. */
+  a.empty:not([aria-current='page']) {
+    opacity: 0.5;
+  }
   a[aria-current='page'] {
     color: var(--text);
   }

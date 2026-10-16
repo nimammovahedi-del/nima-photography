@@ -222,6 +222,10 @@ export async function mountWhereNext(root: HTMLElement) {
     const dx = e.clientX - drag.x;
     const dy = e.clientY - drag.y;
     if (!drag.moved && Math.hypot(dx, dy) < 4) return;
+    if (!drag.moved && e.pointerType === 'touch' && !zoomed()) {
+      axis ??= Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      if (axis === 'y') return void (drag = null); // a swipe up or down: the page scrolls instead
+    }
     if (!drag.moved) {
       drag.moved = true;
       root.classList.add('dragging');
@@ -263,6 +267,40 @@ export async function mountWhereNext(root: HTMLElement) {
     };
     anim = requestAnimationFrame(coast);
   });
+  // On a phone, the first few pixels of a one-finger swipe decide what it does, for the whole swipe:
+  // mostly sideways turns the globe and holds the page still; mostly up or down scrolls the page
+  // and leaves the globe alone. (Otherwise a sideways swipe that drifts can move both at once.)
+  let axis: 'x' | 'y' | null = null;
+  let touchFrom: { x: number; y: number } | null = null;
+  const zoomed = () => root.classList.contains('zoomed');
+  svg.addEventListener(
+    'touchstart',
+    (e) => {
+      if (e.touches.length !== 1) return;
+      axis = null;
+      touchFrom = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    },
+    { passive: true },
+  );
+  svg.addEventListener(
+    'touchmove',
+    (e) => {
+      // Two fingers (pinching) or zoomed in: the globe has the gesture, never the page.
+      if (e.touches.length > 1 || zoomed()) return void (e.cancelable && e.preventDefault());
+      if (!axis && touchFrom) {
+        const dx = e.touches[0].clientX - touchFrom.x;
+        const dy = e.touches[0].clientY - touchFrom.y;
+        if (Math.hypot(dx, dy) >= 4) axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      }
+      if (axis === 'x' && e.cancelable) e.preventDefault();
+      else if (axis === 'y' && drag) {
+        drag = null;
+        root.classList.remove('dragging');
+      }
+    },
+    { passive: false },
+  );
+
   window.addEventListener('pointercancel', (e) => {
     endTouch(e);
     drag = null;

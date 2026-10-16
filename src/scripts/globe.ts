@@ -10,7 +10,7 @@ import {
   geoStream,
 } from 'd3-geo';
 import type { Geometry } from 'geojson';
-import { countryView, layoutLabels, mainland } from '../lib/geo-shared';
+import { countryView, mainland, placeLabels } from '../lib/geo-shared';
 
 export interface MapPlace {
   name: string;
@@ -56,6 +56,47 @@ let worldData: Promise<{ n: string; g: Geometry; m?: Geometry }[]> | undefined;
 // drawn from a lighter outline ("m") that also matches its neighbours, so phones keep up.
 const loadWorld = () => (worldData ??= fetch('/map/world.json').then((r) => r.json()));
 
+// A cap (centre + angular radius) around each country, so the ones out of view can be skipped
+// while drawing — most of the world is off screen once you zoom in. Working these out is the
+// slow part of opening a map, so warmUp() does it ahead of time, a few countries at a time.
+type Cap = { mid: [number, number]; reach: number };
+const caps = new WeakMap<object, Cap>();
+function capOf(c: { g: Geometry }): Cap {
+  let cap = caps.get(c);
+  if (!cap) {
+    const mid = geoCentroid(c.g) as [number, number];
+    let reach = 0;
+    geoStream(c.g, {
+      point: (x: number, y: number) => void (reach = Math.max(reach, geoDistance(mid, [x, y]))),
+      lineStart() {},
+      lineEnd() {},
+      polygonStart() {},
+      polygonEnd() {},
+      sphere() {},
+    });
+    cap = { mid, reach };
+    caps.set(c, cap);
+  }
+  return cap;
+}
+
+/** Fetch the map data and prepare it while the page is idle, so opening a map doesn't stall. */
+export async function warmUp() {
+  const world = await loadWorld();
+  const idle = (cb: (d?: IdleDeadline) => void) =>
+    'requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 2000 }) : setTimeout(cb, 16);
+  let i = 0;
+  await new Promise<void>((done) => {
+    const step = (d?: IdleDeadline) => {
+      const until = performance.now() + 8;
+      while (i < world.length && (d ? d.timeRemaining() > 1 : performance.now() < until)) capOf(world[i++]);
+      if (i < world.length) idle(step);
+      else done();
+    };
+    idle(step);
+  });
+}
+
 export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHooks) {
   const svg = root.querySelector<SVGSVGElement>('svg.map')!;
   const pinLayer = root.querySelector<HTMLElement>('.pins')!;
@@ -98,18 +139,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       el.setAttribute('class', 'visited');
       el.dataset.name = place.name;
     }
-    // A cap (centre + angular radius) around each country, so the ones out of view can be
-    // skipped while drawing — most of the world is off screen once you zoom in.
-    const mid = geoCentroid(c.g);
-    let reach = 0;
-    geoStream(c.g, {
-      point: (x: number, y: number) => void (reach = Math.max(reach, geoDistance(mid, [x, y]))),
-      lineStart() {},
-      lineEnd() {},
-      polygonStart() {},
-      polygonEnd() {},
-      sphere() {},
-    });
+    const { mid, reach } = capOf(c);
     return { ...c, el, place, mid, reach, drawn: true };
   });
   land.replaceChildren(
@@ -260,7 +290,7 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
         a.href = m.href;
         a.dataset.label = m.label;
         a.style.setProperty('--i', String(i));
-        a.innerHTML = `<span class="dot" aria-hidden="true"></span><span class="label">${m.label}</span>`;
+        a.innerHTML = `<span class="leader" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span><span class="label">${m.label}</span>`;
         if (m.kind === 'country' && m.place) {
           const place = m.place;
           a.addEventListener('click', (e) => {
@@ -307,11 +337,19 @@ export async function createMap(root: HTMLElement, cfg: MapConfig, hooks: MapHoo
       })());
       return { x: ox + x * px, y: oy + y * px, w: size?.w ?? 0, h: size?.h ?? 20 };
     });
-    const sides = layoutLabels(
+    // Every label stays readable: the four sides first, then corners and further out, kept on
+    // screen and clear of the other labels and dots (a phone's narrow screen crowds them).
+    const spots = placeLabels(
       visible.map((i) => pts[i]),
       { width: svg.clientWidth, height: svg.clientHeight },
     );
-    visible.forEach((i, k) => (els[i].dataset.side = sides[k]));
+    visible.forEach((i, k) => {
+      els[i].dataset.side = 'free';
+      els[i].style.setProperty('--lx', `${spots[k].dx}px`);
+      els[i].style.setProperty('--ly', `${spots[k].dy}px`);
+      els[i].style.setProperty('--ll', `${spots[k].len}px`);
+      els[i].style.setProperty('--la', `${spots[k].angle}deg`);
+    });
   }
 
   const countryMarkers = (name: string): Marker[] =>

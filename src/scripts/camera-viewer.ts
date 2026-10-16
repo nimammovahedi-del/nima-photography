@@ -72,6 +72,7 @@ export async function mountCamera(
   let visible = true;
   let raf = 0;
   let last = performance.now();
+  let lastDraw = 0;
   let flight: ((now: number) => boolean) | undefined;
   let focused = false; // looking at a feature: the turning stops
   const target = new Vector3();
@@ -127,7 +128,10 @@ export async function mountCamera(
     }
     if (flight && !flight(now)) flight = undefined;
     if (glows.size) animateGlow(dt, now);
-    if (dirty) {
+    // The cards only turn slowly, so half the frames look the same: drawing every other one
+    // keeps three of them on screen light enough for a phone.
+    if (dirty && (mode === 'page' || now - lastDraw > 28)) {
+      lastDraw = now;
       cam.lookAt(target);
       renderer.render(scene, cam);
       point();
