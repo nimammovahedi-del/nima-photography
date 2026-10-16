@@ -23,13 +23,32 @@ const next = all[(i + 1) % all.length];
     <h1><span class="brand">{c.brand}</span> {c.name}</h1>
   </header>
 
-  <div class="stage">
-    <canvas data-camera={c.model} data-paper="#0b0b0b" aria-label={`3D model of the ${c.brand} ${c.name}. Drag to rotate, scroll or pinch to zoom.`} role="img"></canvas>
-    <p class="hint">Drag to rotate · scroll or pinch to zoom</p>
-    <button type="button" class="reset" data-view="">Reset view</button>
-  </div>
+  <div class="top">
+    <div class="stage">
+      <!-- Shares its name with the camera's card on the About page, so opening the page grows the
+           card's camera into this one (and back again). -->
+      <div class="frame" style={`view-transition-name: camera-${c.slug}`}>
+        <img class="snap" alt="" hidden />
+        <canvas data-camera={c.model} data-paper="#0b0b0b" aria-label={`3D model of the ${c.brand} ${c.name}`} role="img"></canvas>
+      </div>
+      <script is:inline define:vars={{ slug: c.slug }}>
+        // Arriving from the About page: show the card's last picture of the camera until this
+        // page's model is drawn (it then carries on turning from the same angle).
+        try {
+          var note = JSON.parse(sessionStorage.getItem('camera-open') || 'null');
+          if (note && note.slug === slug && Date.now() - note.t < 8000) {
+            var img = document.currentScript.parentElement.querySelector('.snap');
+            img.src = note.img;
+            img.hidden = false;
+            window.__cameraStart = note.rot;
+          }
+          sessionStorage.removeItem('camera-open');
+        } catch (e) {}
+      </script>
+      <p class="hint">Pick a feature to see it on the camera</p>
+      <button type="button" class="reset" hidden>Back to full view</button>
+    </div>
 
-  <div class="info">
     <section class="about">
       <p class="intro">{c.intro}</p>
       <h2 class="label">What makes it special</h2>
@@ -40,15 +59,21 @@ const next = all[(i + 1) % all.length];
               <button type="button" data-view={h.view ? JSON.stringify(h.view) : ''} aria-pressed="false">
                 <span class="t">{h.title}</span>
                 <span class="d">{h.text}</span>
-                {h.view && <span class="show">Show on the camera →</span>}
+                {h.view && (
+                  <span class="show">
+                    Show on the camera <span aria-hidden="true">→</span>
+                  </span>
+                )}
               </button>
             </li>
           ))
         }
       </ul>
     </section>
+  </div>
 
-    <aside>
+  <div class="more">
+    <section>
       <h2 class="label">Countries</h2>
       {
         c.countries.length ? (
@@ -64,7 +89,8 @@ const next = all[(i + 1) % all.length];
           <p class="none">Photos coming soon.</p>
         )
       }
-
+    </section>
+    <section>
       <h2 class="label">Specifications</h2>
       <dl class="specs">
         {
@@ -76,7 +102,7 @@ const next = all[(i + 1) % all.length];
           ))
         }
       </dl>
-    </aside>
+    </section>
   </div>
 
   <nav class="next">
@@ -86,20 +112,32 @@ const next = all[(i + 1) % all.length];
 
 <script>
   const canvas = document.querySelector<HTMLCanvasElement>('canvas[data-camera]')!;
-  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-view]')];
+  const snap = document.querySelector<HTMLImageElement>('.stage .snap')!;
+  const reset = document.querySelector<HTMLButtonElement>('.stage .reset')!;
+  const hint = document.querySelector<HTMLElement>('.stage .hint')!;
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('.highlights [data-view]')];
+  // On a phone the camera stays pinned under the menu while the features scroll past.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const setNav = () => document.documentElement.style.setProperty('--nav-h', `${header?.offsetHeight ?? 72}px`);
+  setNav();
+  addEventListener('resize', setNav);
+
   import('../../scripts/camera-viewer').then(async ({ mountCamera }) => {
-    const viewer = await mountCamera(canvas, canvas.dataset.camera as any, 'page');
+    const start = (window as any).__cameraStart ?? 0;
+    const viewer = await mountCamera(canvas, canvas.dataset.camera as any, 'page', start);
+    // The model is drawn: swap it in for the About page's picture.
+    if (!snap.hidden) setTimeout(() => (snap.hidden = true), 450);
+    const pick = (b: HTMLButtonElement | null) => {
+      const view = b?.dataset.view ? JSON.parse(b.dataset.view) : undefined;
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b && !!view)));
+      reset.hidden = !view;
+      hint.style.visibility = view ? 'hidden' : '';
+      viewer.focus(view);
+    };
     for (const b of buttons) {
-      b.addEventListener('click', () => {
-        const pressed = b.getAttribute('aria-pressed') === 'true';
-        buttons.forEach((x) => x.setAttribute('aria-pressed', 'false'));
-        const view = !pressed && b.dataset.view ? JSON.parse(b.dataset.view) : undefined;
-        if (view) b.setAttribute('aria-pressed', 'true');
-        viewer.focus(view);
-        // On a phone the model is above the list: bring it back into view.
-        if (view && canvas.getBoundingClientRect().bottom < 120) canvas.scrollIntoView({ block: 'center' });
-      });
+      b.addEventListener('click', () => pick(b.getAttribute('aria-pressed') === 'true' ? null : b));
     }
+    reset.addEventListener('click', () => pick(null));
   });
 </script>
 
@@ -133,69 +171,113 @@ const next = all[(i + 1) % all.length];
   h1 .brand {
     color: var(--muted);
   }
+  /* Camera and features side by side on a wide screen, so a feature and the camera showing it
+     are in view together. */
+  .top {
+    display: grid;
+    gap: 20px;
+    margin-top: 16px;
+  }
+  @media (min-width: 900px) {
+    .top {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: 48px;
+      align-items: start;
+    }
+  }
   .stage {
-    position: relative;
-    margin: 12px 0 0;
+    position: sticky;
+    top: calc(var(--nav-h, 72px) + 12px);
+    z-index: 5;
+    background: var(--bg);
     border-bottom: 1px solid var(--line);
   }
-  .stage canvas {
+  @media (max-width: 899px) {
+    .stage {
+      top: var(--nav-h, 72px);
+      margin: 0 calc(var(--gutter) * -1);
+      padding: 0 var(--gutter);
+    }
+  }
+  .frame {
+    position: relative;
+    view-transition-class: camera-model;
+  }
+  .frame canvas,
+  .snap {
     display: block;
     width: 100%;
-    height: min(68vh, 640px, 115vw);
-    min-height: 340px;
-    cursor: grab;
-    touch-action: none;
-    opacity: 0;
-    transition: opacity 500ms ease;
+    height: min(50vh, 440px);
+    min-height: 260px;
   }
-  .stage canvas:global(.ready) {
+  @media (max-width: 899px) {
+    .frame canvas,
+    .snap {
+      height: min(36vh, 300px);
+      min-height: 200px;
+    }
+  }
+  .snap {
+    position: absolute;
+    inset: 0;
+    object-fit: contain;
+  }
+  .snap[hidden] {
+    display: none;
+  }
+  .frame canvas {
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+  .frame canvas:global(.ready) {
     opacity: 1;
   }
-  .stage canvas:active {
-    cursor: grabbing;
-  }
   .hint {
-    position: absolute;
-    left: 0;
-    bottom: 10px;
     margin: 0;
+    padding: 0 0 10px;
     color: var(--muted);
     font-size: 12px;
     letter-spacing: 0.06em;
-    pointer-events: none;
   }
   .reset {
     position: absolute;
     right: 0;
     bottom: 6px;
     padding: 6px 12px;
-    border: 1px solid var(--line);
+    border: 1px solid var(--tan);
     border-radius: 999px;
     background: var(--label-bg);
-    color: var(--muted);
+    color: var(--text);
     font: inherit;
     font-size: 12px;
     cursor: pointer;
   }
+  @media (max-width: 899px) {
+    .reset {
+      right: var(--gutter);
+    }
+  }
+  .reset[hidden] {
+    display: none;
+  }
   .reset:hover {
-    color: var(--text);
-    border-color: var(--tan);
+    border-color: var(--text);
   }
 
-  .info {
+  .more {
     display: grid;
-    gap: 40px;
-    margin-top: 36px;
+    gap: 36px;
+    margin-top: 56px;
   }
   @media (min-width: 900px) {
-    .info {
-      grid-template-columns: 2fr 1fr;
+    .more {
+      grid-template-columns: 1fr 1fr;
       gap: 64px;
     }
   }
   .intro {
     max-width: 44rem;
-    margin: 0 0 32px;
+    margin: 0 0 28px;
     color: var(--text);
     font-size: clamp(16px, 1.4vw, 19px);
     font-weight: 300;
@@ -209,20 +291,12 @@ const next = all[(i + 1) % all.length];
     letter-spacing: 0.22em;
     text-transform: uppercase;
   }
-  aside .label + * {
-    margin-bottom: 36px;
-  }
   .highlights {
     display: grid;
     gap: 10px;
     margin: 0;
     padding: 0;
     list-style: none;
-  }
-  @media (min-width: 640px) {
-    .highlights {
-      grid-template-columns: 1fr 1fr;
-    }
   }
   .highlights button {
     display: grid;
@@ -251,12 +325,26 @@ const next = all[(i + 1) % all.length];
     font-size: 13.5px;
     line-height: 1.6;
   }
+  /* A clear button, so it's obvious the camera can show the feature. */
   .highlights .show {
-    margin-top: 4px;
-    color: var(--accent);
+    justify-self: start;
+    margin-top: 6px;
+    padding: 7px 14px;
+    border: 1px solid var(--cream);
+    border-radius: 999px;
+    color: var(--cream);
     font-size: 11px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+    transition:
+      background 180ms ease,
+      color 180ms ease;
+  }
+  .highlights button:hover .show,
+  .highlights button:focus-visible .show,
+  .highlights button[aria-pressed='true'] .show {
+    background: var(--cream);
+    color: var(--bg);
   }
   .countries {
     margin: 0;
@@ -320,3 +408,4 @@ const next = all[(i + 1) % all.length];
     color: var(--accent);
   }
 </style>
+

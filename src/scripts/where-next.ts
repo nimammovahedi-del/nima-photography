@@ -1,6 +1,7 @@
 // The About page's "Where to next" globe: the home page's globe look, with the countries you've
-// been to in solid cream and the ones you plan to visit striped. Drag to turn it; hover or tap a
-// striped country (or pick one from the list) to see its name.
+// been to in solid cream and the ones you plan to visit in brown. Drag to turn it, pinch (or
+// pinch a trackpad) to zoom; hover or tap a brown country (or pick one from the list) to see its
+// name. A plain scroll still scrolls the page.
 import { geoCentroid, geoDistance, geoGraticule10, geoInterpolate, geoOrthographic, geoPath } from 'd3-geo';
 import type { Geometry } from 'geojson';
 import { mainland } from '../lib/geo-shared';
@@ -38,7 +39,9 @@ export async function mountWhereNext(root: HTMLElement) {
   const visitedSet = new Set(visited);
   const byMap = new Map(planned.map((p) => [p.map, p]));
   let center: [number, number] = [...start];
-  const scale = H * 0.46;
+  const baseScale = H * 0.46;
+  const MAX_SCALE = baseScale * 8;
+  let scale = baseScale;
   const projection = geoOrthographic().translate([W / 2, H / 2]).scale(scale).clipAngle(90);
   const path = geoPath(projection).digits(1);
   const graticule = geoGraticule10();
@@ -52,7 +55,7 @@ export async function mountWhereNext(root: HTMLElement) {
     } else if (visitedSet.has(c.n)) el.setAttribute('class', 'visited');
     return { ...c, el, plan };
   });
-  // Plain land first, then where you've been, then where you're going (on top, so stripes and
+  // Plain land first, then where you've been, then where you're going (on top, so their fill and
   // their outlines aren't covered by a neighbour's).
   const rank = (s: (typeof shapes)[number]) => (s.plan ? 2 : visitedSet.has(s.n) ? 1 : 0);
   land.replaceChildren(...[...shapes].sort((a, b) => rank(a) - rank(b)).map((s) => s.el));
@@ -64,7 +67,7 @@ export async function mountWhereNext(root: HTMLElement) {
     if (p.lon !== undefined && p.lat !== undefined) anchors.set(p.name, [p.lon, p.lat]);
     else if (s) anchors.set(p.name, geoCentroid(mainland(s.g)) as [number, number]);
   }
-  // Places too small to see get a striped ring marker.
+  // Places too small to see get a ring marker.
   const markers = planned
     .filter((p) => p.lon !== undefined)
     .map((p) => {
@@ -78,7 +81,7 @@ export async function mountWhereNext(root: HTMLElement) {
 
   let moving = false;
   function draw() {
-    projection.rotate([-center[0], -center[1]]).precision(moving ? 0 : Math.SQRT1_2);
+    projection.rotate([-center[0], -center[1]]).scale(scale).precision(moving ? 0 : Math.SQRT1_2);
     for (const c of [sphere, rim]) {
       c.setAttribute('cx', String(W / 2));
       c.setAttribute('cy', String(H / 2));
@@ -150,12 +153,71 @@ export async function mountWhereNext(root: HTMLElement) {
   const nameAt = (e: Event) => ((e.target as Element).closest?.('.planned') as SVGElement | null)?.dataset.name ?? null;
   let drag: { x: number; y: number; c: [number, number]; moved: boolean; v: number; t: number } | null = null;
   const degPerPx = () => 180 / (Math.PI * scale * (svg.getBoundingClientRect().height / H));
+  // ── Zoom: pinch on a phone, pinch on a trackpad (ctrl+wheel, or Safari's gesture events) ──
+  let settle = 0;
+  function zoomTo(next: number) {
+    cancelAnimationFrame(anim);
+    scale = Math.min(MAX_SCALE, Math.max(baseScale, next));
+    // Zoomed in, a finger moves the globe every way, so it can't scroll the page as well.
+    root.classList.toggle('zoomed', scale > baseScale * 1.05);
+    moving = true;
+    draw();
+    clearTimeout(settle);
+    settle = window.setTimeout(() => {
+      moving = false;
+      draw();
+    }, 150);
+  }
+  svg.addEventListener(
+    'wheel',
+    (e) => {
+      if (!e.ctrlKey) return; // a plain scroll scrolls the page
+      e.preventDefault();
+      zoomTo(scale * Math.exp(-e.deltaY * 0.012));
+    },
+    { passive: false },
+  );
+  let gestureFrom = 0;
+  const touches = new Map<number, { x: number; y: number }>();
+  let pinch: { d: number; scale: number } | null = null;
+  const spread = () => {
+    const [a, b] = [...touches.values()];
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  };
+  svg.addEventListener('gesturestart', (e) => {
+    e.preventDefault();
+    gestureFrom = touches.size ? 0 : scale; // on iPhone the pinch arrives as touches too
+  });
+  svg.addEventListener('gesturechange', (e) => {
+    e.preventDefault();
+    if (gestureFrom) zoomTo(gestureFrom * (e as unknown as { scale: number }).scale);
+  });
+  svg.addEventListener('gestureend', (e) => {
+    e.preventDefault();
+    gestureFrom = 0;
+  });
+  const endTouch = (e: PointerEvent) => {
+    touches.delete(e.pointerId);
+    if (touches.size < 2) pinch = null;
+  };
+
   svg.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') {
+      touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (touches.size === 2) {
+        drag = null; // second finger: pinching, not turning
+        root.classList.remove('dragging');
+        pinch = { d: spread(), scale };
+        return;
+      }
+    }
     if (e.button !== 0) return;
     cancelAnimationFrame(anim);
     drag = { x: e.clientX, y: e.clientY, c: [...center], moved: false, v: 0, t: performance.now() };
   });
   window.addEventListener('pointermove', (e) => {
+    if (touches.has(e.pointerId)) touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch && touches.size === 2) return zoomTo((pinch.scale * spread()) / pinch.d);
     if (!drag) return;
     const dx = e.clientX - drag.x;
     const dy = e.clientY - drag.y;
@@ -167,7 +229,9 @@ export async function mountWhereNext(root: HTMLElement) {
     const k = degPerPx();
     const lon = drag.c[0] - dx * k;
     // On a phone one finger only turns it sideways, so swiping up and down still scrolls the page.
-    const lat = e.pointerType === 'touch' ? drag.c[1] : Math.max(-60, Math.min(70, drag.c[1] + dy * k));
+    // Zoomed in, it moves every way.
+    const lockLat = e.pointerType === 'touch' && scale <= baseScale * 1.05;
+    const lat = lockLat ? drag.c[1] : Math.max(-60, Math.min(70, drag.c[1] + dy * k));
     const now = performance.now();
     drag.v = (lon - center[0]) / Math.max(now - drag.t, 1);
     drag.t = now;
@@ -176,12 +240,13 @@ export async function mountWhereNext(root: HTMLElement) {
     draw();
   });
   window.addEventListener('pointerup', (e) => {
+    endTouch(e);
     if (!drag) return;
     const d = drag;
     drag = null;
     root.classList.remove('dragging');
     if (!d.moved) {
-      // A click or tap: name the striped country under it (or clear the name).
+      // A click or tap: name the brown country under it (or clear the name).
       const name = nameAt(e);
       return show(name, !!name);
     }
@@ -198,7 +263,8 @@ export async function mountWhereNext(root: HTMLElement) {
     };
     anim = requestAnimationFrame(coast);
   });
-  window.addEventListener('pointercancel', () => {
+  window.addEventListener('pointercancel', (e) => {
+    endTouch(e);
     drag = null;
     root.classList.remove('dragging');
   });
