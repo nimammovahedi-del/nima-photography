@@ -5,7 +5,9 @@ import { categories, site } from '../site.config';
 const links = [
   ...categories.filter((c) => c.slug === 'places'),
   ...categories.filter((c) => c.slug !== 'places'),
-].map((c) => ({ href: c.slug === 'places' ? '/' : `/${c.slug}`, label: c.label }));
+].map((c) => ({ href: c.slug === 'places' ? '/' : `/${c.slug}`, label: c.label }))
+  // About isn't a photo subject, so it sits after them all, at the far right.
+  .concat({ href: '/about', label: 'About' });
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 // A section stays highlighted on its sub-pages too (e.g. /architecture/brutalism, /places/egypt).
 const isCurrent = (href: string) =>
