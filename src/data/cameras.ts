@@ -7,7 +7,9 @@
 //               site.config.ts). Both lists are merged.
 //   highlights: the traits on its page. `view` (optional) is where the 3D camera flies to when the
 //               trait is picked: a point to look at and the direction to look from (x right,
-//               y up, z out of the lens), in the model's units (10 cm).
+//               y up, z out of the lens), in the model's units (10 cm). `part` is what lights up
+//               on the model when it's picked (see camera-models.ts); parts inside the camera are
+//               shown through its body, which fades to see-through.
 
 export type CameraModel = 'eos-5d-mark-ii' | 'eos-7d-mark-ii' | 'x-e1';
 
@@ -15,6 +17,7 @@ export interface Highlight {
   title: string;
   text: string;
   view?: { target: [number, number, number]; from: [number, number, number] };
+  part?: string;
 }
 
 export interface Camera {
@@ -58,22 +61,26 @@ export const cameras: Camera[] = [
       {
         title: 'Full-frame sensor',
         text: 'A sensor the size of a 35mm film frame: wide lenses stay truly wide, backgrounds melt away more easily and shadows stay clean at high ISO.',
-        view: { target: [0, 0.1, 0.5], from: [0, 0.2, 3.2] },
+        view: { target: [0.04, -0.05, -0.15], from: [1.1, 0.6, 2.3] },
+        part: 'sensor',
       },
       {
         title: 'Optical viewfinder',
         text: 'A glass pentaprism shows the scene through the lens with no lag, covering 98% of the frame.',
-        view: { target: [0, 0.55, -0.3], from: [0.3, 1.6, -2.6] },
+        view: { target: [0.04, 0.3, -0.02], from: [1.7, 1.1, 1.4] },
+        part: 'viewfinder',
       },
       {
         title: 'Quick control dial',
         text: 'The large rear wheel Canon is known for, for setting exposure compensation or flicking through photos with a thumb.',
-        view: { target: [-0.45, -0.15, -0.4], from: [-0.9, 0.2, -2.6] },
+        view: { target: [-0.46, -0.14, -0.26], from: [-0.9, 0.2, -2.4] },
+        part: 'qcd',
       },
       {
         title: 'Top LCD panel',
         text: 'A small backlit panel on the top plate shows the settings at a glance, without lighting up the big screen.',
-        view: { target: [-0.42, 0.42, 0.05], from: [-1, 2.1, 1.5] },
+        view: { target: [-0.32, 0.43, -0.04], from: [-0.9, 2.1, 1.4] },
+        part: 'lcd',
       },
     ],
   },
@@ -102,22 +109,26 @@ export const cameras: Camera[] = [
       {
         title: '1.6× crop sensor',
         text: 'The APS-C sensor frames tighter than full frame, so a 300 mm lens behaves like a 480 mm one: a big help for distant animals.',
-        view: { target: [0, 0.1, 0.5], from: [0, 0.2, 3.2] },
+        view: { target: [0.04, -0.05, -0.14], from: [1.1, 0.6, 2.3] },
+        part: 'sensor',
       },
       {
         title: '10 frames per second',
         text: 'A shutter rated for 200,000 shots and a mirror that settles fast enough for ten frames a second, for the moment a gull takes off.',
-        view: { target: [-0.6, 0.55, 0.25], from: [-1.6, 1.8, 1.6] },
+        view: { target: [0.04, -0.05, -0.04], from: [1.7, 0.8, 1.7] },
+        part: 'shutter',
       },
       {
         title: 'Built-in GPS',
         text: 'A GPS receiver in the top of the prism records where every photo was taken. (The site removes it from the photos it serves.)',
-        view: { target: [0, 0.75, 0], from: [0.4, 2.4, 1.2] },
+        view: { target: [0.04, 0.62, -0.06], from: [0.9, 2.2, 1.3] },
+        part: 'gps',
       },
       {
         title: 'Weather sealing',
         text: 'Gaskets around every door and dial keep out rain and spray, the reason it came home from the Cairngorms working.',
-        view: { target: [0.75, 0, 0], from: [2.8, 0.4, 0.6] },
+        view: { target: [-0.2, 0, 0], from: [-2.2, 1.1, 1.6] },
+        part: 'seals',
       },
     ],
   },
@@ -146,22 +157,26 @@ export const cameras: Camera[] = [
       {
         title: 'X-Trans sensor',
         text: 'Its colour filters sit in an irregular 6 × 6 pattern, like the random grain of film, so it needs no blurring filter in front of the sensor and resolves fine detail sharply.',
-        view: { target: [0.05, 0, 0.4], from: [0.1, 0.1, 2.4] },
+        view: { target: [-0.02, -0.08, 0], from: [0.9, 0.5, 2.1] },
+        part: 'sensor',
       },
       {
         title: 'Shutter speed dial',
         text: 'Shutter speed and exposure compensation have their own engraved dials on the top plate, so settings can be read with the camera switched off.',
-        view: { target: [-0.4, 0.42, 0], from: [-0.8, 1.9, 0.9] },
+        view: { target: [-0.29, 0.39, -0.01], from: [-0.8, 1.9, 0.9] },
+        part: 'sdial',
       },
       {
         title: 'Aperture ring',
         text: 'Aperture is set on the lens itself, a click per third of a stop, the way it was on film cameras.',
-        view: { target: [0.05, -0.02, 0.55], from: [1.2, 0.5, 1.8] },
+        view: { target: [-0.02, -0.02, 0.29], from: [1.2, 0.6, 1.6] },
+        part: 'aring',
       },
       {
         title: 'Film simulations',
         text: 'Colour profiles modelled on Fujifilm film stocks: Provia for everyday colour, Velvia for vivid landscapes, Astia for soft skin tones, plus black-and-white and sepia.',
-        view: { target: [0.12, 0, -0.2], from: [0.3, 0.3, -2.2] },
+        view: { target: [0.12, -0.1, -0.09], from: [0.5, 0.4, -2.1] },
+        part: 'processor',
       },
     ],
   },

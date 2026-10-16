@@ -1,5 +1,5 @@
 ---
-// "Where to next": the home page's globe look, smaller, with planned countries striped.
+// "Where to next": the home page's globe look, with planned countries in brown; drag, pinch to zoom.
 import '../styles/map.css';
 import { plannedPlaces, sortedPlaces } from '../site.config';
 
@@ -14,17 +14,10 @@ const config = {
 
 <section class="where" aria-labelledby="where-title">
   <h2 id="where-title" class="section-title">Where to next</h2>
-  <p class="lede">The places I plan to photograph next. Drag the globe to turn it, and tap a striped country to see its name.</p>
+  <p class="lede">The places I plan to photograph next. Drag the globe to turn it, pinch to zoom, and tap a brown country to see its name.</p>
 
   <div class="globe map-ui" data-where-next data-config={JSON.stringify(config)}>
     <svg class="map" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" role="img" aria-label="Globe showing the countries I plan to visit next">
-      <defs>
-        <!-- Diagonal stripes in the same cream as the countries already visited -->
-        <pattern id="planned-stripes" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
-          <rect class="stripe-gap" width="6" height="6"></rect>
-          <rect class="stripe" width="3" height="6"></rect>
-        </pattern>
-      </defs>
       <circle class="sphere" cx={W / 2} cy={H / 2} r={H * 0.46}></circle>
       <path class="graticule"></path>
       <g class="land"></g>
@@ -70,6 +63,11 @@ const config = {
 <style>
   .where {
     margin-top: 72px;
+    /* Countries you plan to visit: a warm mid-brown, apart from the cream of the ones you've
+       visited and the tan of the rest. */
+    --planned: #8a6a45;
+    --planned-edge: #5c4630;
+    --planned-hot: #a07c52;
   }
   .lede {
     max-width: 40rem;
@@ -78,10 +76,14 @@ const config = {
     font-size: 14px;
   }
   .globe {
-    max-width: 1000px;
+    max-width: 1080px;
     margin: 0 auto;
     aspect-ratio: 1000 / 560;
     touch-action: pan-y;
+  }
+  /* Zoomed in, a finger moves the globe in every direction instead of scrolling the page. */
+  .globe:global(.zoomed) {
+    touch-action: none;
   }
   /* On a phone, a square frame: the globe fills its width, and the empty sea either side is cropped. */
   @media (max-width: 639px) {
@@ -93,8 +95,8 @@ const config = {
     cursor: grab;
   }
   .globe :global(.land path.planned) {
-    fill: url(#planned-stripes);
-    stroke: var(--visited-edge);
+    fill: var(--planned);
+    stroke: var(--planned-edge);
     stroke-width: 0.8;
     cursor: pointer;
   }
@@ -103,20 +105,20 @@ const config = {
     cursor: inherit;
   }
   .globe :global(.planned.marker) {
-    fill: url(#planned-stripes);
+    fill: var(--planned);
     stroke: var(--visited);
     stroke-width: 1.5;
     cursor: pointer;
   }
   .globe :global(.planned.hot) {
+    fill: var(--planned-hot);
     stroke: var(--visited);
     stroke-width: 1.6;
   }
-  .stripe-gap {
-    fill: var(--land);
-  }
-  .stripe {
-    fill: var(--visited);
+  @media (hover: hover) and (pointer: fine) {
+    .globe :global(.planned:hover) {
+      fill: var(--planned-hot);
+    }
   }
   .tag {
     position: absolute;
@@ -154,7 +156,7 @@ const config = {
   }
   .swatch.planned {
     margin-left: 14px;
-    background: repeating-linear-gradient(-45deg, var(--visited) 0 2.1px, var(--land) 2.1px 4.2px);
+    background: var(--planned);
   }
   .swatch.visited {
     background: var(--visited);

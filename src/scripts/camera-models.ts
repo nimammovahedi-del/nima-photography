@@ -34,6 +34,7 @@ import type { CameraModel } from '../data/cameras';
 export type Detail = 'simple' | 'full';
 
 const INK = '#efe8d2'; // the site's cream
+const GLOW = '#ffd98c'; // a feature picked on a camera's page, in a lighter, warmer ink
 
 // What each part is made of decides how it's drawn. (The names are what the parts are; the
 // drawing is all cream lines.)
@@ -52,6 +53,7 @@ const KIND: Record<string, number> = { body: 0, metal: 0, hide: 1, dark: 2, scre
 /** The colour behind the model, which its surfaces are filled with so hidden lines stay hidden. */
 const paper = { value: new Color('#151515') };
 const pxRatio = { value: 1 };
+const fade = { value: 0 }; // 1 = the body see-through, to show the machinery inside
 export function setPaper(color: string, dpr: number) {
   paper.value.set(color);
   pxRatio.value = dpr;
@@ -70,6 +72,7 @@ const frag = /* glsl */ `
   uniform vec3 ink;
   uniform float kind;
   uniform float px;
+  uniform float fade;
   varying vec3 vN;
   float stroke(float d, float spacing) {
     float f = abs(fract(d / (spacing * px)) - 0.5) * spacing * px; // distance to the stroke, px
@@ -95,7 +98,7 @@ const frag = /* glsl */ `
       vec2 g = fract(p / (5.0 * px)) - 0.5;
       a = (1.0 - smoothstep(0.1, 0.2, length(g))) * 0.45;
     }
-    gl_FragColor = vec4(mix(paper, ink, clamp(a, 0.0, 1.0)), 1.0);
+    gl_FragColor = vec4(mix(paper, ink, clamp(a, 0.0, 1.0)), 1.0 - fade * 0.88);
     #include <colorspace_fragment>
   }`;
 
@@ -104,9 +107,10 @@ function mat(kind: string, _flat = false) {
   let m = mats.get(kind);
   if (!m) {
     m = new ShaderMaterial({
-      uniforms: { paper, ink: { value: new Color(INK) }, kind: { value: KIND[kind] ?? 0 }, px: pxRatio },
+      uniforms: { paper, ink: { value: new Color(INK) }, kind: { value: KIND[kind] ?? 0 }, px: pxRatio, fade },
       vertexShader: vert,
       fragmentShader: frag,
+      transparent: true,
       // Pushed back a hair, so the lines on its own edges always draw on top of it.
       polygonOffset: true,
       polygonOffsetFactor: 1,
@@ -119,7 +123,7 @@ function mat(kind: string, _flat = false) {
 
 // Outlines: a slightly fattened copy of each shape drawn from the inside (its silhouette), plus
 // lines on its sharp edges.
-const hullMat = new MeshBasicMaterial({ color: INK, side: BackSide });
+const hullMat = new MeshBasicMaterial({ color: INK, side: BackSide, transparent: true });
 hullMat.onBeforeCompile = (s) => {
   s.uniforms.thickness = { value: 0.008 };
   s.vertexShader = s.vertexShader
@@ -127,6 +131,97 @@ hullMat.onBeforeCompile = (s) => {
     .replace('#include <begin_vertex>', 'vec3 transformed = position + normalize(normal) * thickness;');
 };
 const lineMat = new LineBasicMaterial({ color: INK, transparent: true, opacity: 0.9 });
+const labelMats: MeshBasicMaterial[] = [];
+
+/** See through the body (0 solid … 1 ghosted), so the parts inside can be shown. */
+export function setXray(v: number) {
+  fade.value = v;
+  hullMat.opacity = 1 - v * 0.8;
+  lineMat.opacity = 0.9 - v * 0.62;
+  for (const m of labelMats) m.opacity = 1 - v * 0.8;
+}
+
+// ── Highlights ──
+// Each feature on a camera's page can light up the parts it's about: a copy of a part on the
+// outside drawn in GLOW, or machinery inside (sensor, mirror, prism…) that is only drawn when its
+// feature is picked, seen through the ghosted body.
+export interface Glow {
+  group: Group;
+  fill: MeshBasicMaterial;
+  line: LineBasicMaterial;
+  inside: boolean;
+  /** Its middle and size, in the model's scene coordinates (before it turns). */
+  centre: Vector3;
+  radius: number;
+}
+let glows: Map<string, Glow> | null = null; // collected while building a detailed model
+
+function glowFor(id: string, inside: boolean) {
+  let gl = glows!.get(id);
+  if (!gl) {
+    const common = { color: GLOW, transparent: true, opacity: 0, depthWrite: false, depthTest: !inside };
+    gl = {
+      group: new Group(),
+      fill: new MeshBasicMaterial({ ...common, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }),
+      line: new LineBasicMaterial(common),
+      inside,
+      centre: new Vector3(),
+      radius: 0,
+    };
+    gl.group.visible = false;
+    gl.group.renderOrder = 10;
+    glows!.set(id, gl);
+  }
+  return gl;
+}
+
+/** Light up a shape as part of a feature. Inside parts are drawn only then. */
+function glow(g: Group, id: string, geo: BufferGeometry, at: [number, number, number], o: { rot?: [number, number, number]; inside?: boolean } = {}) {
+  if (!glows) return;
+  const gl = glowFor(id, !!o.inside);
+  const m = new Mesh(geo, gl.fill);
+  m.position.set(...at);
+  if (o.rot) m.rotation.set(...o.rot);
+  m.renderOrder = 10;
+  const l = new LineSegments(new EdgesGeometry(geo, 30), gl.line);
+  l.renderOrder = 11;
+  m.add(l);
+  gl.group.add(m);
+  if (!gl.group.parent) g.add(gl.group);
+}
+/** Glowing lines only (pixel grids, shutter slats). Points are pairs, relative to `at`. */
+function glowLines(g: Group, id: string, pts: number[], at: [number, number, number]) {
+  if (!glows) return;
+  const gl = glowFor(id, true);
+  const geo = new BufferGeometry();
+  geo.setAttribute('position', new Float32BufferAttribute(pts, 3));
+  const l = new LineSegments(geo, gl.line);
+  l.position.set(...at);
+  l.renderOrder = 11;
+  gl.group.add(l);
+  if (!gl.group.parent) g.add(gl.group);
+}
+/** A flat rectangular loop (a door's seal), facing +z. */
+function loop(w: number, h: number, t = 0.014) {
+  const s = new Shape();
+  s.moveTo(-w / 2, -h / 2).lineTo(w / 2, -h / 2).lineTo(w / 2, h / 2).lineTo(-w / 2, h / 2).closePath();
+  const hole = new Shape();
+  hole.moveTo(-w / 2 + t, -h / 2 + t).lineTo(-w / 2 + t, h / 2 - t).lineTo(w / 2 - t, h / 2 - t).lineTo(w / 2 - t, -h / 2 + t).closePath();
+  s.holes.push(hole);
+  const geo = new ExtrudeGeometry(s, { depth: 0.008, bevelEnabled: false });
+  geo.translate(0, 0, -0.004);
+  return geo;
+}
+/** A sensor: the chip on its board, with a grid of `n` × `m` cells drawn on it. */
+function sensor(g: Group, id: string, at: [number, number, number], w: number, h: number, n: number, m: number) {
+  glow(g, id, new BoxGeometry(w + 0.1, h + 0.1, 0.012), [at[0], at[1], at[2] - 0.014], { inside: true });
+  glow(g, id, new BoxGeometry(w, h, 0.01), at, { inside: true });
+  const pts: number[] = [];
+  const z = 0.006;
+  for (let i = 1; i < n; i++) pts.push(-w / 2 + (w * i) / n, -h / 2, z, -w / 2 + (w * i) / n, h / 2, z);
+  for (let j = 1; j < m; j++) pts.push(-w / 2, -h / 2 + (h * j) / m, z, w / 2, -h / 2 + (h * j) / m, z);
+  glowLines(g, id, pts, at);
+}
 
 interface Opts {
   outline?: boolean; // default true
@@ -134,7 +229,8 @@ interface Opts {
 }
 
 /** Add a shape to a group, drawn in ink. */
-function add(g: Group, geo: BufferGeometry, kind: string, at: [number, number, number], o: Opts & { flat?: boolean; rot?: [number, number, number] } = {}) {
+function add(g: Group, geo: BufferGeometry, kind: string, at: [number, number, number], o: Opts & { flat?: boolean; rot?: [number, number, number]; glow?: string } = {}) {
+  if (o.glow) glow(g, o.glow, geo, at, { rot: o.rot });
   const m = new Mesh(geo, mat(kind));
   m.position.set(...at);
   if (o.rot) m.rotation.set(...o.rot);
@@ -201,6 +297,7 @@ function label(text: string, h: number, _color = INK, weight = 600, letterSpacin
     new PlaneGeometry((h * w) / cvs.height, h),
     new MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }),
   );
+  labelMats.push(m.material as MeshBasicMaterial);
   return m;
 }
 
@@ -241,11 +338,11 @@ function rounded(pts: [number, number][]): [number, number][] {
 }
 
 /** A lens: rings stacked along +z from the mount. */
-type Ring = { r: number; len: number; color: string; ridges?: number; r2?: number };
+type Ring = { r: number; len: number; color: string; ridges?: number; r2?: number; glow?: string };
 function lens(g: Group, at: [number, number, number], rings: Ring[], glassR: number, full: boolean) {
   let z = at[2];
   for (const ring of rings) {
-    add(g, zcyl(ring.r, ring.len, full ? 64 : 40, 0, ring.r2 ?? ring.r), ring.color, [at[0], at[1], z + ring.len / 2], { edges: 50 });
+    add(g, zcyl(ring.r, ring.len, full ? 64 : 40, 0, ring.r2 ?? ring.r), ring.color, [at[0], at[1], z + ring.len / 2], { edges: 50, glow: ring.glow });
     if (full && ring.ridges) ridgeLines(g, [at[0], at[1], z + ring.len / 2], ring.r + 0.004, ring.len, Math.round(ring.ridges / 2));
     z += ring.len;
   }
@@ -258,8 +355,8 @@ function lens(g: Group, at: [number, number, number], rings: Ring[], glassR: num
 }
 
 /** A dial standing upright; on the detailed model, with strokes round its edge for the ridges. */
-function dial(g: Group, r: number, h: number, kind: string, at: [number, number, number], ridges: number) {
-  add(g, ycyl(r, h, 40), kind, at, { edges: 50 });
+function dial(g: Group, r: number, h: number, kind: string, at: [number, number, number], ridges: number, glowId?: string) {
+  add(g, ycyl(r, h, 40), kind, at, { edges: 50, glow: glowId });
   if (!ridges) return;
   const l = new Group();
   ridgeLines(l, [0, 0, 0], r + 0.003, h, ridges);
@@ -284,6 +381,7 @@ interface DslrSpec {
   lensGlass: number;
   lensLabel: string;
   accentRing?: boolean; // the red ring of an L lens (drawn in sage)
+  sensor: [number, number]; // its width and height
 }
 
 function dslr(s: DslrSpec, full: boolean) {
@@ -371,7 +469,7 @@ function dslr(s: DslrSpec, full: boolean) {
   dial(g, 0.12, 0.05, C.dark, [sx + 0.14, top + 0.005, front - 0.02], full ? 24 : 0);
 
   // Top LCD panel on the grip side; mode dial on the other.
-  add(g, rbox(0.34, 0.03, 0.24, 0.02), C.dark, [-w / 2 + 0.44, top + 0.005, -0.04], { edges: 0 });
+  add(g, rbox(0.34, 0.03, 0.24, 0.02), C.dark, [-w / 2 + 0.44, top + 0.005, -0.04], { edges: 0, glow: 'lcd' });
   add(g, new PlaneGeometry(0.26, 0.17), C.screen, [-w / 2 + 0.44, top + 0.022, -0.04], { outline: false, edges: 0, rot: [-Math.PI / 2, 0, 0] });
   dial(g, 0.15, 0.09, C.dark, [w / 2 - 0.24, top + 0.04, -0.02], full ? 28 : 0);
   add(g, ycyl(0.09, 0.02, 32), C.body, [w / 2 - 0.24, top + 0.09, -0.02], { edges: 0 });
@@ -380,8 +478,8 @@ function dslr(s: DslrSpec, full: boolean) {
   add(g, rbox(0.66, 0.5, 0.03, 0.03), C.dark, [0.1, -0.08, back - 0.01], { edges: 0 });
   add(g, new PlaneGeometry(0.6, 0.45), C.screen, [0.1, -0.08, back - 0.027], { outline: false, edges: 0, rot: [0, Math.PI, 0] });
   // Quick control dial
-  add(g, new TorusGeometry(0.12, 0.03, 12, 40), C.dark, [-w / 2 + 0.3, -0.14, back - 0.01], { edges: 0 });
-  add(g, zcyl(0.06, 0.03, 24), C.body, [-w / 2 + 0.3, -0.14, back - 0.01]);
+  add(g, new TorusGeometry(0.12, 0.03, 12, 40), C.dark, [-w / 2 + 0.3, -0.14, back - 0.01], { edges: 0, glow: 'qcd' });
+  add(g, zcyl(0.06, 0.03, 24), C.body, [-w / 2 + 0.3, -0.14, back - 0.01], { glow: 'qcd' });
   // Thumb rest
   add(g, rbox(0.3, 0.2, 0.06, 0.05), C.hide, [-w / 2 + 0.2, top - 0.15, back - 0.01], { edges: 0 });
 
@@ -416,6 +514,55 @@ function dslr(s: DslrSpec, full: boolean) {
       const z = front + 0.04 + s.lens.slice(0, 2).reduce((a, r) => a + r.len, 0);
       add(g, zcyl(s.lens[2].r + 0.004, 0.02, 64), C.glass, [mountX, mountY, z + 0.01], { edges: 0, outline: false });
     }
+
+    // ── Inside (drawn only when a feature about it is picked) ──
+    const [sw, sh] = s.sensor;
+    const sz = front - 0.4; // the sensor sits 44 mm behind the front of the mount
+    sensor(g, 'sensor', [mountX, mountY, sz], sw, sh, 6, 4);
+    // The mirror, tipped at 45° to send the picture up to the focusing screen and the prism.
+    const mirror = new BoxGeometry(0.34, 0.32, 0.008);
+    const mirrorAt: [number, number, number] = [mountX, mountY + 0.02, front - 0.17];
+    const prismShape = new Shape(); // its side view (z across, y up), cut across the camera
+    const pts: [number, number][] = [
+      [0.15, top - 0.02],
+      [-0.12, top - 0.02],
+      [-0.17, top + 0.12],
+      [-0.03, top + ph - 0.05],
+      [0.11, top + ph - 0.09],
+    ];
+    pts.forEach(([z, y], i) => (i ? prismShape.lineTo(z, y) : prismShape.moveTo(z, y)));
+    prismShape.closePath();
+    const prismIn = new ExtrudeGeometry(prismShape, { depth: 0.26, bevelEnabled: false });
+    prismIn.rotateY(-Math.PI / 2);
+    prismIn.translate(0.13, 0, 0);
+    if (!s.flash) {
+      // 5D Mark II: the optical viewfinder.
+      glow(g, 'viewfinder', mirror, mirrorAt, { inside: true, rot: [-Math.PI / 4, 0, 0] });
+      glow(g, 'viewfinder', new BoxGeometry(0.34, 0.008, 0.26), [mountX, top - 0.05, front - 0.2], { inside: true });
+      glow(g, 'viewfinder', prismIn, [mountX, 0, 0], { inside: true });
+      glow(g, 'viewfinder', rbox(0.22, 0.14, 0.03, 0.03), [mountX, top + 0.1, back - 0.09], { inside: true });
+    } else {
+      // 7D Mark II: the shutter and mirror that keep up with ten frames a second…
+      glow(g, 'shutter', mirror, mirrorAt, { inside: true, rot: [-Math.PI / 4, 0, 0] });
+      glow(g, 'shutter', new BoxGeometry(sw + 0.2, sh + 0.16, 0.03), [mountX, mountY, sz + 0.05], { inside: true });
+      const slats: number[] = [];
+      for (let i = 1; i < 7; i++) {
+        const y = -sh / 2 + (sh * i) / 7;
+        slats.push(-sw / 2 - 0.06, y, 0.017, sw / 2 + 0.06, y, 0.017);
+      }
+      glowLines(g, 'shutter', slats, [mountX, mountY, sz + 0.05]);
+      glow(g, 'shutter', zcyl(0.05, 0.16, 20), [mountX + 0.3, mountY - 0.22, sz + 0.12], { inside: true });
+      // …the GPS receiver at the top of the prism…
+      glow(g, 'gps', new BoxGeometry(0.2, 0.02, 0.16), [mountX, top + ph - 0.09, -0.06], { inside: true });
+      glow(g, 'gps', new BoxGeometry(0.1, 0.03, 0.1), [mountX, top + ph - 0.065, -0.06], { inside: true });
+      // …and the seals behind every door and dial.
+      glow(g, 'seals', new TorusGeometry(0.335, 0.012, 8, 64), [mountX, mountY, front + 0.004], { inside: true });
+      glow(g, 'seals', new TorusGeometry(0.13, 0.01, 8, 40), [sx + 0.14, top + 0.004, front - 0.02], { inside: true, rot: [Math.PI / 2, 0, 0] });
+      glow(g, 'seals', new TorusGeometry(0.16, 0.01, 8, 40), [w / 2 - 0.24, top + 0.004, -0.02], { inside: true, rot: [Math.PI / 2, 0, 0] });
+      glow(g, 'seals', loop(0.3, 0.42), [gx0 - 0.01, -0.06, -0.02], { inside: true, rot: [0, Math.PI / 2, 0] });
+      glow(g, 'seals', loop(0.28, 0.3), [-w / 2 + 0.3, -hb / 2 - 0.004, -0.02], { inside: true, rot: [Math.PI / 2, 0, 0] });
+      glow(g, 'seals', loop(0.7, 0.54), [0.1, -0.08, back - 0.03], { inside: true });
+    }
   }
   return g;
 }
@@ -447,7 +594,7 @@ function xe1(full: boolean) {
   add(g, zcyl(0.3, 0.03, 48), C.metal, [lx, ly, front + 0.015]);
   const rings: Ring[] = [
     { r: 0.3, len: 0.05, color: C.dark },
-    { r: 0.305, len: 0.11, color: C.dark, ridges: 40 },
+    { r: 0.305, len: 0.11, color: C.dark, ridges: 40, glow: 'aring' },
     { r: 0.3, len: 0.04, color: C.dark },
     { r: 0.32, len: 0.2, color: C.dark, ridges: 56 },
     { r: 0.315, len: 0.12, color: C.dark },
@@ -456,8 +603,8 @@ function xe1(full: boolean) {
 
   // Top dials (shutter speed and exposure compensation), on the left as you face the lens
   const sdX = -w / 2 + 0.36;
-  dial(g, 0.13, 0.08, C.metal, [sdX, top + 0.04, -0.01], full ? 28 : 0);
-  add(g, ycyl(0.045, 0.06, 24), C.metal, [sdX, top + 0.09, -0.01]);
+  dial(g, 0.13, 0.08, C.metal, [sdX, top + 0.04, -0.01], full ? 28 : 0, 'sdial');
+  add(g, ycyl(0.045, 0.06, 24), C.metal, [sdX, top + 0.09, -0.01], { glow: 'sdial' });
   dial(g, 0.1, 0.07, C.metal, [-w / 2 + 0.12, top + 0.035, -0.06], full ? 24 : 0);
   // Hot shoe and the pop-up flash
   add(g, new BoxGeometry(0.2, 0.025, 0.19), C.dark, [0.08, top + 0.012, -0.02]);
@@ -499,6 +646,15 @@ function xe1(full: boolean) {
     ll.position.set(lx, ly + 0.303, front + 0.03 + 0.05 + 0.11 + 0.02);
     ll.rotation.x = -Math.PI / 2;
     g.add(ll);
+
+    // ── Inside ──
+    // The X-Trans sensor, 17.7 mm behind the mount, its colour filters in 6 × 6 blocks.
+    sensor(g, 'sensor', [lx, ly, front + 0.03 - 0.177], 0.236, 0.156, 6, 6);
+    // The processor that turns its pictures into the film looks, on the board behind it.
+    glow(g, 'processor', new BoxGeometry(0.72, 0.36, 0.012), [0.1, yLow, back + 0.06], { inside: true });
+    glow(g, 'processor', new BoxGeometry(0.13, 0.13, 0.025), [0.02, yLow + 0.03, back + 0.045], { inside: true });
+    glow(g, 'processor', new BoxGeometry(0.08, 0.06, 0.02), [0.24, yLow - 0.06, back + 0.048], { inside: true });
+    glow(g, 'processor', new BoxGeometry(0.06, 0.1, 0.02), [0.34, yLow + 0.05, back + 0.048], { inside: true });
   }
   return g;
 }
@@ -507,6 +663,7 @@ function xe1(full: boolean) {
 
 export function buildCamera(model: CameraModel, detail: Detail) {
   const full = detail === 'full';
+  glows = full ? new Map() : null;
   let g: Group;
   if (model === 'x-e1') g = xe1(full);
   else if (model === 'eos-5d-mark-ii')
@@ -531,6 +688,7 @@ export function buildCamera(model: CameraModel, detail: Detail) {
         lensGlass: 0.31,
         lensLabel: 'EF 24-105mm  1:4 L IS',
         accentRing: true,
+        sensor: [0.36, 0.24],
       },
       full,
     );
@@ -555,6 +713,7 @@ export function buildCamera(model: CameraModel, detail: Detail) {
         ],
         lensGlass: 0.29,
         lensLabel: 'EF-S 18-135mm  IS USM',
+        sensor: [0.224, 0.15],
       },
       full,
     );
@@ -564,6 +723,14 @@ export function buildCamera(model: CameraModel, detail: Detail) {
   g.position.sub(c);
   const wrap = new Group();
   wrap.add(g);
+  wrap.updateMatrixWorld(true);
+  const found = glows ?? new Map<string, Glow>();
+  glows = null;
+  for (const gl of found.values()) {
+    const b = new Box3().setFromObject(gl.group);
+    b.getCenter(gl.centre);
+    gl.radius = b.getSize(new Vector3()).length() / 2;
+  }
   // `offset` maps the model's own coordinates (as used for the highlights' views) to the scene's.
-  return { group: wrap, size: box.getSize(new Vector3()), offset: g.position.clone() };
+  return { group: wrap, size: box.getSize(new Vector3()), offset: g.position.clone(), glows: found };
 }

@@ -28,13 +28,13 @@ const cameras = await getCameras();
 
   <section class="cameras" aria-labelledby="cameras-title">
     <h2 id="cameras-title" class="section-title">Cameras</h2>
-    <p class="lede">Drag a camera to turn it, or open it to look closer.</p>
+    <p class="lede">Open a camera to look closer.</p>
     <ul>
       {
         cameras.map((c) => (
           <li>
             <a href={`/about/${c.slug}`} class="card">
-              <canvas data-camera={c.model} data-paper="#151515" aria-label={`3D model of the ${c.brand} ${c.name}`} role="img" />
+              <canvas data-camera={c.model} data-slug={c.slug} data-paper="#151515" style={`view-transition-name: camera-${c.slug}`} aria-label={`3D model of the ${c.brand} ${c.name}`} role="img" />
               <span class="name">
                 <span class="brand">{c.brand}</span> {c.name}
               </span>
@@ -61,8 +61,22 @@ const cameras = await getCameras();
       (entries) => {
         if (!entries.some((e) => e.isIntersecting)) return;
         io.disconnect();
-        import('../../scripts/camera-viewer').then(({ mountCamera }) => {
-          for (const c of canvases) mountCamera(c, c.dataset.camera as any, 'card');
+        import('../../scripts/camera-viewer').then(async ({ mountCamera }) => {
+          for (const c of canvases) {
+            const viewer = await mountCamera(c, c.dataset.camera as any, 'card');
+            // Opening a camera: hand its picture and how far it has turned to the camera's page,
+            // which shows the picture until its own model is drawn and carries on the turn from
+            // there. The page change itself grows the card's camera into the page's (a view
+            // transition: both canvases share a name).
+            c.closest('a')!.addEventListener('click', () => {
+              try {
+                sessionStorage.setItem(
+                  'camera-open',
+                  JSON.stringify({ slug: c.dataset.slug, rot: viewer.rotation(), img: c.toDataURL('image/png'), t: Date.now() }),
+                );
+              } catch {}
+            });
+          }
         });
       },
       { rootMargin: '300px' },
@@ -180,12 +194,11 @@ const cameras = await getCameras();
     padding: 0 18px;
   }
   .card canvas {
+    view-transition-class: camera-model;
     display: block;
     width: 100%;
     aspect-ratio: 4 / 3;
     margin-bottom: 8px;
-    cursor: grab;
-    touch-action: pan-y;
     opacity: 0;
     transition: opacity 400ms ease;
   }

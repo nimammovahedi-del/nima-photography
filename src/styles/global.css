@@ -198,6 +198,12 @@ a.accent:hover {
 ::view-transition-group(site-header) {
   animation: none;
 }
+/* Opening a camera from the About page (or going back): its picture grows into the camera page's
+   camera, and shrinks back into its card (see pages/about). */
+::view-transition-group(*.camera-model) {
+  animation-duration: 550ms;
+  animation-timing-function: var(--ease-in-out);
+}
 @media (prefers-reduced-motion: reduce) {
   @view-transition {
     navigation: none;
