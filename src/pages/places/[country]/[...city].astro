@@ -27,13 +27,16 @@ const base = `/places/${place.slug}`;
 const regionHref = `/#${slugify(place.region)}`;
 const ownRegion = sortedPlaces.filter((p) => p.region === place.region).length > 1;
 
+const cityTabs = place.cities.map((c) => ({
+  label: c.name,
+  href: `${base}/${c.slug}`,
+  count: all.filter((p) => p.city === c.name).length,
+}));
+// Cities with photos first; the ones still waiting for photos go to the end (dimmed, see SubTabs).
 const tabs = [
   { label: 'All', href: base, count: all.length },
-  ...place.cities.map((c) => ({
-    label: c.name,
-    href: `${base}/${c.slug}`,
-    count: all.filter((p) => p.city === c.name).length,
-  })),
+  ...cityTabs.filter((t) => t.count > 0),
+  ...cityTabs.filter((t) => t.count === 0),
 ];
 ---
 
@@ -211,6 +214,19 @@ const tabs = [
 </script>
 
 <style>
+  /* On a phone the heading goes first and the back links tuck in under it, so the map and photos
+     start higher up the screen. */
+  @media (max-width: 640px) {
+    .place .page-head {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 8px;
+      padding: 18px 0 14px;
+    }
+    .place .crumbs {
+      margin-bottom: 0;
+    }
+  }
   /* "← All places" and "← Europe", side by side on the left, bright enough to read as links. */
   .crumbs {
     display: flex;

@@ -137,6 +137,24 @@
   top: auto;
   transform: translateX(-50%);
 }
+/* A label pushed away from its pin by its neighbours gets a hairline back to it. */
+.map-ui .pin .leader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--ll, 0px);
+  height: 1px;
+  background: rgb(239 232 210 / 0.85);
+  /* A dark edge either side, so the line shows over light land as well as dark sea. */
+  box-shadow: 0 0 0 1px rgb(11 11 11 / 0.7);
+  transform: rotate(var(--la, 0deg));
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+.map-ui .pin[data-side='free'] .label {
+  left: var(--lx);
+  top: var(--ly);
+}
 .map-ui .pin[data-side='down'] .label {
   top: 11px;
   transform: translateX(-50%);

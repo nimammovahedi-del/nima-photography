@@ -81,6 +81,7 @@ const cityPins = place.cities.map((c) => {
             style={`--i:${i}`}
             aria-current={c.name === active ? 'page' : undefined}
           >
+            <span class="leader" aria-hidden="true" />
             <span class="dot" aria-hidden="true" />
             <span class="label">{c.name}</span>
           </a>
@@ -118,9 +119,11 @@ const cityPins = place.cities.map((c) => {
       return { x, y, w: label.offsetWidth, h: label.offsetHeight };
     });
     const first = pins.flatMap((p, i) => (p.classList.contains('active') ? [i] : []));
-    placeLabels(pts, { width: w, height: h }, { first }).forEach(({ dx, dy }, i) => {
+    placeLabels(pts, { width: w, height: h }, { first }).forEach(({ dx, dy, len, angle }, i) => {
       pins[i].style.setProperty('--lx', `${dx}px`);
       pins[i].style.setProperty('--ly', `${dy}px`);
+      pins[i].style.setProperty('--ll', `${len}px`);
+      pins[i].style.setProperty('--la', `${angle}deg`);
     });
     frame.classList.add('placed');
   }
@@ -310,7 +313,9 @@ const cityPins = place.cities.map((c) => {
   @media (max-width: 640px) {
     .frame {
       height: auto;
-      aspect-ratio: 4 / 3;
+      /* Wide and short on a phone, so the photos start higher up. The country is drawn into a
+         central box that still fits whole at this shape (see lib/strip.ts). */
+      aspect-ratio: 16 / 9;
     }
   }
   svg {
@@ -418,6 +423,20 @@ const cityPins = place.cities.map((c) => {
       transform 220ms var(--ease-out),
       background-color 220ms ease,
       box-shadow 220ms ease;
+  }
+  /* A label pushed away from its pin by its neighbours gets a hairline back to it. */
+  .leader {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--ll, 0px);
+    height: 1px;
+    background: rgb(239 232 210 / 0.85);
+    /* A dark edge either side, so the line shows over light land as well as dark sea. */
+    box-shadow: 0 0 0 1px rgb(11 11 11 / 0.7);
+    transform: rotate(var(--la, 0deg));
+    transform-origin: 0 0;
+    pointer-events: none;
   }
   /* Each label's spot beside its pin is worked out by the script above. */
   .label {

@@ -129,7 +129,10 @@ const config = {
     </header>
 
     <div class="footer">
-      <p class="hint">Drag to rotate · pinch or two-finger scroll to zoom · zoom out to go back</p>
+      <p class="hint">
+        <span class="for-mouse">Drag to rotate · pinch or two-finger scroll to zoom · zoom out to go back</span>
+        <span class="for-touch">Drag to turn · pinch to zoom · pinch out to go back</span>
+      </p>
       <ul class="chips"></ul>
     </div>
   </div>
@@ -167,7 +170,7 @@ const config = {
 
   const engineModule = () => import('../scripts/globe');
   // Warm up the map code and data as soon as the page is idle.
-  (window.requestIdleCallback ?? setTimeout)(() => engineModule());
+  (window.requestIdleCallback ?? setTimeout)(() => engineModule().then((m) => m.warmUp()));
 
   const insetFor = (el: Element) => {
     const r = el.getBoundingClientRect();
@@ -380,10 +383,11 @@ const config = {
       if (m && m.vw === innerWidth && m.vh === innerHeight) return m.rect;
     } catch {}
     const phone = innerWidth <= 640;
+    const TOP_PHONE = 173; // measured: the strip sits under the header, heading and back links
     const gutter = innerWidth >= 768 ? 32 : 16;
     const width = Math.min(innerWidth - 2 * gutter, 1376);
-    const height = phone ? width * 0.75 : Math.min(380, Math.max(240, innerHeight * 0.38));
-    return { left: (innerWidth - width) / 2, top: phone ? 209 : 189, width, height };
+    const height = phone ? (width * 9) / 16 : Math.min(380, Math.max(240, innerHeight * 0.38));
+    return { left: (innerWidth - width) / 2, top: phone ? TOP_PHONE : 189, width, height };
   }
 
   /** The globe camera that shows exactly what the strip shows, inside `r` on screen. */
@@ -667,7 +671,7 @@ const config = {
   :global(html.strip-return) .stage[hidden] > * {
     visibility: hidden;
   }
-  .stage.handing-off :is(.bar, .footer, .pins) {
+  .stage.handing-off :is(.bar, .bar > *, .footer, .pins) {
     opacity: 0;
     pointer-events: none;
   }
@@ -703,8 +707,13 @@ const config = {
     flex-wrap: wrap;
     align-items: center;
     gap: 8px 24px;
-    padding: 14px var(--gutter);
-    background: linear-gradient(to bottom, rgb(14 14 14 / 0.95), rgb(14 14 14 / 0));
+    padding: 14px var(--gutter) 30px;
+    /* Solid enough behind the title that it reads over light land too. */
+    background: linear-gradient(to bottom, rgb(14 14 14 / 0.95) 55%, rgb(14 14 14 / 0));
+    pointer-events: none; /* the faded edge mustn't block dragging the map */
+  }
+  .bar > * {
+    pointer-events: auto;
   }
   .back {
     padding: 8px 14px;
@@ -760,8 +769,9 @@ const config = {
     right: 0;
     bottom: 0;
     z-index: 3;
-    padding: 28px var(--gutter) max(16px, env(safe-area-inset-bottom));
-    background: linear-gradient(to top, rgb(14 14 14 / 0.95), rgb(14 14 14 / 0));
+    padding: 40px var(--gutter) max(16px, env(safe-area-inset-bottom));
+    /* Solid enough behind the hint that it reads over light land too. */
+    background: linear-gradient(to top, rgb(14 14 14 / 0.95) 60%, rgb(14 14 14 / 0));
     pointer-events: none;
   }
   .hint {
@@ -769,6 +779,17 @@ const config = {
     color: var(--muted);
     font-size: 11px;
     letter-spacing: 0.08em;
+  }
+  .for-touch {
+    display: none;
+  }
+  @media (hover: none) and (pointer: coarse) {
+    .for-mouse {
+      display: none;
+    }
+    .for-touch {
+      display: inline;
+    }
   }
   .chips {
     display: flex;
