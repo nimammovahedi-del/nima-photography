@@ -10,10 +10,12 @@ import {
   Vector3,
   WebGLRenderer,
 } from 'three';
-import { buildCamera, setPaper } from './camera-models';
+import { buildCamera, setPaper, setXray } from './camera-models';
 import type { CameraModel } from '../data/cameras';
 
 type View = { target: [number, number, number]; from: [number, number, number] };
+/** Where the picked part is on the canvas (CSS px), for the page to point an arrow at. */
+export type Point = { x: number; y: number; r: number; w: number; h: number; opacity: number };
 const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
@@ -23,6 +25,7 @@ export async function mountCamera(
   mode: 'card' | 'page',
   /** Where in its turn to start (radians): the page picks up where the About page's card was. */
   startRotation = 0,
+  onPoint?: (p: Point | null) => void,
 ) {
   // Lettering on the model uses the site font: wait for it so it isn't drawn in a fallback.
   await document.fonts?.ready;
@@ -41,7 +44,7 @@ export async function mountCamera(
 
   // The drawing's surfaces are filled with the colour behind it (so hidden lines stay hidden).
   setPaper(canvas.dataset.paper ?? '#0b0b0b', renderer.getPixelRatio());
-  const { group, size, offset } = buildCamera(model, mode === 'card' ? 'simple' : 'full');
+  const { group, size, offset, glows } = buildCamera(model, mode === 'card' ? 'simple' : 'full');
   scene.add(group);
   group.rotation.y = startRotation;
 
@@ -73,6 +76,48 @@ export async function mountCamera(
   let focused = false; // looking at a feature: the turning stops
   const target = new Vector3();
 
+  // The picked feature's part glows (pulsing gently); for a part inside, the body fades to
+  // see-through first.
+  let part: string | undefined;
+  let xray = 0;
+  const glowLevel = new Map<string, number>();
+  function animateGlow(dt: number, now: number) {
+    const step = reduceMotion() ? 1 : dt / 450;
+    const towards = (v: number, to: number) => (v < to ? Math.min(to, v + step) : Math.max(to, v - step));
+    const want = part && glows.get(part)?.inside ? 1 : 0;
+    if (xray !== want) {
+      xray = towards(xray, want);
+      setXray(ease(xray));
+      dirty = true;
+    }
+    for (const [id, gl] of glows) {
+      const v = towards(glowLevel.get(id) ?? 0, id === part ? 1 : 0);
+      glowLevel.set(id, v);
+      gl.group.visible = v > 0;
+      if (!v) continue;
+      const pulse = id === part && v === 1 && !reduceMotion() ? 0.8 + 0.2 * Math.cos(now / 380) : 1;
+      gl.fill.opacity = (gl.inside ? 0.42 : 0.62) * ease(v) * pulse;
+      gl.line.opacity = ease(v) * pulse;
+      dirty = true;
+    }
+  }
+
+  const tmp = new Vector3();
+  function point() {
+    const gl = part ? glows.get(part) : undefined;
+    const v = part ? glowLevel.get(part) ?? 0 : 0;
+    if (!onPoint) return;
+    // Parts spread round the camera (the seals) are lit up without an arrow.
+    if (!gl || !v || gl.radius > 0.6) return onPoint(null);
+    tmp.copy(gl.centre).applyMatrix4(group.matrixWorld);
+    const dist = tmp.distanceTo(cam.position);
+    tmp.project(cam);
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    const r = ((gl.radius / dist) * (h / 2) * cam.zoom) / Math.tan(((cam.fov / 2) * Math.PI) / 180);
+    onPoint({ x: ((tmp.x + 1) / 2) * w, y: ((1 - tmp.y) / 2) * h, r, w, h, opacity: ease(v) });
+  }
+
   function frame(now: number) {
     const dt = Math.min(now - last, 50);
     last = now;
@@ -81,9 +126,11 @@ export async function mountCamera(
       dirty = true;
     }
     if (flight && !flight(now)) flight = undefined;
+    if (glows.size) animateGlow(dt, now);
     if (dirty) {
       cam.lookAt(target);
       renderer.render(scene, cam);
+      point();
       dirty = false;
     }
     raf = visible ? requestAnimationFrame(frame) : 0;
@@ -102,9 +149,11 @@ export async function mountCamera(
   renderer.render(scene, cam);
   canvas.classList.add('ready');
 
-  /** Fly the view to look at a feature (or, with none, back to the start and turning again). */
-  function focus(view?: View) {
+  /** Fly the view to look at a feature and light up its part (or, with none, back to the start
+   *  and turning again). */
+  function focus(view?: View, partId?: string) {
     if (mode !== 'page') return;
+    part = view ? partId : undefined;
     // Views are in the model's own coordinates; a little further back than written, so the
     // feature is seen with some of the camera around it.
     const toTarget = view ? new Vector3(...view.target).add(offset) : new Vector3();

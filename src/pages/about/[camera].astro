@@ -30,6 +30,8 @@ const next = all[(i + 1) % all.length];
       <div class="frame" style={`view-transition-name: camera-${c.slug}`}>
         <img class="snap" alt="" hidden />
         <canvas data-camera={c.model} data-paper="#0b0b0b" aria-label={`3D model of the ${c.brand} ${c.name}`} role="img"></canvas>
+        <!-- An arrow to the part a picked feature is about. -->
+        <svg class="pointer" aria-hidden="true"><path class="shaft"></path><path class="head"></path></svg>
       </div>
       <script is:inline define:vars={{ slug: c.slug }}>
         // Arriving from the About page: show the card's last picture of the camera until this
@@ -56,7 +58,7 @@ const next = all[(i + 1) % all.length];
         {
           c.highlights.map((h) => (
             <li>
-              <button type="button" data-view={h.view ? JSON.stringify(h.view) : ''} aria-pressed="false">
+              <button type="button" data-view={h.view ? JSON.stringify(h.view) : ''} data-part={h.part ?? ''} aria-pressed="false">
                 <span class="t">{h.title}</span>
                 <span class="d">{h.text}</span>
                 {h.view && (
@@ -122,9 +124,36 @@ const next = all[(i + 1) % all.length];
   setNav();
   addEventListener('resize', setNav);
 
+  const pointer = document.querySelector<SVGSVGElement>('.stage .pointer')!;
+  const shaft = pointer.querySelector('.shaft')!;
+  const head = pointer.querySelector('.head')!;
+  // Point at the part from the emptier side, curving in a little.
+  function aim(p: import('../../scripts/camera-viewer').Point | null) {
+    if (!p) return void (pointer.style.opacity = '0');
+    const r = Math.min(Math.max(p.r * 0.75, 14), Math.min(p.w, p.h) * 0.3);
+    const sx = p.x > p.w / 2 ? -1 : 1;
+    const sy = p.y > 90 ? -1 : 1;
+    const len = 64;
+    const ux = sx * Math.SQRT1_2;
+    const uy = sy * Math.SQRT1_2;
+    const tip = [p.x + ux * (r + 8), p.y + uy * (r + 8)];
+    const start = [
+      Math.min(Math.max(tip[0] + ux * len, 8), p.w - 8),
+      Math.min(Math.max(tip[1] + uy * len, 8), p.h - 8),
+    ];
+    const ctrl = [start[0], tip[1] + uy * len * 0.2];
+    shaft.setAttribute('d', `M${start[0]},${start[1]} Q${ctrl[0]},${ctrl[1]} ${tip[0]},${tip[1]}`);
+    // The arrowhead points along the curve's last stretch.
+    const a = Math.atan2(tip[1] - ctrl[1], tip[0] - ctrl[0]);
+    const hx = (d: number) => tip[0] - 11 * Math.cos(a + d);
+    const hy = (d: number) => tip[1] - 11 * Math.sin(a + d);
+    head.setAttribute('d', `M${hx(0.45)},${hy(0.45)} L${tip[0]},${tip[1]} L${hx(-0.45)},${hy(-0.45)}`);
+    pointer.style.opacity = String(p.opacity);
+  }
+
   import('../../scripts/camera-viewer').then(async ({ mountCamera }) => {
     const start = (window as any).__cameraStart ?? 0;
-    const viewer = await mountCamera(canvas, canvas.dataset.camera as any, 'page', start);
+    const viewer = await mountCamera(canvas, canvas.dataset.camera as any, 'page', start, aim);
     // The model is drawn: swap it in for the About page's picture.
     if (!snap.hidden) setTimeout(() => (snap.hidden = true), 450);
     const pick = (b: HTMLButtonElement | null) => {
@@ -132,7 +161,7 @@ const next = all[(i + 1) % all.length];
       buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b && !!view)));
       reset.hidden = !view;
       hint.style.visibility = view ? 'hidden' : '';
-      viewer.focus(view);
+      viewer.focus(view, b?.dataset.part || undefined);
     };
     for (const b of buttons) {
       b.addEventListener('click', () => pick(b.getAttribute('aria-pressed') === 'true' ? null : b));
@@ -231,6 +260,23 @@ const next = all[(i + 1) % all.length];
   }
   .frame canvas:global(.ready) {
     opacity: 1;
+  }
+  .pointer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    opacity: 0;
+    fill: none;
+    stroke: var(--glow);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .stage {
+    --glow: #ffd98c; /* the picked part's colour on the model */
   }
   .hint {
     margin: 0;
