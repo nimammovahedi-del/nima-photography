@@ -3,7 +3,8 @@
 // Swipe on phones · ← → and Esc on desktop · caption with optional camera settings (ⓘ).
 //
 // Optional, set on the gallery element:
-//   data-numbers   a row of numbered buttons along the bottom that jump straight to a photo
+//   data-numbers   a row of numbered buttons along the bottom that jump straight to a photo, with
+//                  larger arrows, caption and counter (made for a short, numbered set on a computer)
 //   data-urls      JSON list of one address per photo: the address bar follows the photo shown,
 //   data-home      and goes back to data-home when the viewer closes
 //   data-open      index of a photo to open full screen as soon as the page loads
@@ -26,21 +27,23 @@
       children: 'a.frame',
       pswpModule: () => import('photoswipe'),
       bgOpacity: 1,
+      mainClass: numbered ? 'pswp--numbered' : undefined,
       // Open by growing from the photo you tapped (and shrink back into it on close), so the
       // motion shows where the image came from. Photos are never cropped, so the zoom lines up.
       showHideAnimationType: 'zoom',
       showAnimationDuration: 300,
       hideAnimationDuration: 250,
       easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
-      imageClickAction: 'close',
+      // A numbered set is for looking closely on a laptop: one click zooms in, another zooms out.
+      imageClickAction: numbered ? 'zoom' : 'close',
       tapAction: 'toggle-controls',
       wheelToZoom: false,
       // Leave room at the bottom for the caption so it never covers the photo.
       paddingFn: (viewport) => ({
         top: viewport.x < 768 ? 56 : 64,
-        bottom: (viewport.x < 768 ? 88 : 96) + (numbered ? 48 : 0),
-        left: viewport.x < 768 ? 0 : 48,
-        right: viewport.x < 768 ? 0 : 48,
+        bottom: (viewport.x < 768 ? 88 : 96) + (numbered ? 84 : 0),
+        left: viewport.x < 768 ? 0 : numbered ? 120 : 48,
+        right: viewport.x < 768 ? 0 : numbered ? 120 : 48,
       }),
       closeTitle: 'Close (Esc)',
       arrowPrevTitle: 'Previous (←)',
@@ -58,17 +61,32 @@
         appendTo: 'root',
         onInit: (el) => {
           el.setAttribute('aria-live', 'polite');
+          let zoomed = false;
           const render = () => {
             const d = (pswp.currSlide?.data.element as HTMLElement | undefined)?.dataset ?? {};
             const title = esc(d.title);
             const sim = d.sim ? `<span class="pswp-sim">${esc(d.sim)}</span>` : '';
             const info =
               d.exif && showInfo ? `<span class="pswp-exif">${esc(d.exif)}</span>` : '';
-            el.innerHTML = `<span class="pswp-title">${title}</span>${sim}${info}`;
+            const hint = numbered
+              ? `<span class="pswp-hint">${zoomed ? 'Click to zoom out · drag to look around' : 'Click the photo to zoom in'}</span>`
+              : '';
+            el.innerHTML = `<span class="pswp-title">${title}</span>${sim}${info}${hint}`;
             infoBtn?.toggleAttribute('hidden', !d.exif);
           };
-          pswp.on('change', render);
+          pswp.on('change', () => {
+            zoomed = false;
+            render();
+          });
           pswp.on('info-toggle' as any, render);
+          if (numbered)
+            pswp.on('zoomPanUpdate', ({ slide }) => {
+              const z = slide === pswp.currSlide && slide.currZoomLevel > slide.zoomLevels.initial + 0.01;
+              if (z !== zoomed) {
+                zoomed = z;
+                render();
+              }
+            });
         },
       });
 
@@ -183,6 +201,84 @@
     color: var(--muted);
     font-size: 12px;
     font-variant-numeric: tabular-nums;
+  }
+  /* Numbered sets: bigger, easier-to-see arrows (a round button behind each), caption and counter. */
+  .pswp--numbered .pswp__button--arrow {
+    width: 112px;
+    height: 112px;
+    margin-top: -56px;
+  }
+  .pswp--numbered .pswp__button--arrow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 24px;
+    width: 72px;
+    height: 72px;
+    margin-top: -36px;
+    border: 1px solid rgb(255 255 255 / 0.35);
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.1);
+    transition: background-color 150ms var(--ease-out), border-color 150ms var(--ease-out);
+  }
+  .pswp--numbered .pswp__button--arrow:hover::before {
+    border-color: rgb(255 255 255 / 0.7);
+    background: rgb(255 255 255 / 0.2);
+  }
+  .pswp--numbered .pswp__button--arrow .pswp__icn {
+    left: 36px;
+    width: 48px;
+    height: 48px;
+    margin-top: -24px;
+  }
+  .pswp--numbered .pswp__button--arrow--next .pswp__icn {
+    left: auto;
+    right: 36px;
+  }
+  .pswp--numbered .pswp__counter {
+    font-size: 17px;
+  }
+  /* A dark band behind the numbers and caption keeps them readable over a zoomed-in photo. */
+  .pswp--numbered .pswp__custom-caption {
+    z-index: 1;
+    min-height: 108px;
+    font-size: 19px;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+  }
+  .pswp--numbered .pswp__custom-caption::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    height: 190px;
+    background: linear-gradient(to top, rgb(11 11 11 / 0.92) 60%, rgb(11 11 11 / 0));
+  }
+  .pswp--numbered .pswp__numbers {
+    z-index: 2;
+  }
+  .pswp-hint {
+    flex-basis: 100%;
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+  }
+  .pswp--numbered .pswp__numbers {
+    bottom: calc(108px + max(0px, env(safe-area-inset-bottom) - 18px));
+    gap: 6px;
+  }
+  .pswp--numbered .pswp__numbers button {
+    min-width: 44px;
+    height: 52px;
+    font-size: 18px;
+    color: rgb(255 255 255 / 0.7);
+    border-bottom-width: 2px;
+  }
+  .pswp--numbered .pswp__numbers button[aria-current] {
+    color: var(--text);
+    font-weight: 500;
   }
   .pswp__numbers {
     position: absolute;
