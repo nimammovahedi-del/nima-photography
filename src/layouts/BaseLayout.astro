@@ -7,9 +7,11 @@ interface Props {
   title?: string;
   description?: string;
   film?: boolean;
+  /** Keep the page out of search engines (unlisted pages). */
+  noindex?: boolean;
 }
 
-const { title, description = site.intro, film = false } = Astro.props;
+const { title, description = site.intro, film = false, noindex = false } = Astro.props;
 const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -22,6 +24,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content={film ? '#100f0d' : '#0b0b0b'} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

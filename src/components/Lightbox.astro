@@ -1,6 +1,12 @@
 ---
 // Full-screen viewer powered by PhotoSwipe.
 // Swipe on phones · ← → and Esc on desktop · caption with optional camera settings (ⓘ).
+//
+// Optional, set on the gallery element:
+//   data-numbers   a row of numbered buttons along the bottom that jump straight to a photo
+//   data-urls      JSON list of one address per photo: the address bar follows the photo shown,
+//   data-home      and goes back to data-home when the viewer closes
+//   data-open      index of a photo to open full screen as soon as the page loads
 ---
 
 <script>
@@ -13,6 +19,8 @@
   function init(gallery: HTMLElement) {
     if (gallery.dataset.lightbox) return;
     gallery.dataset.lightbox = 'ready';
+    const numbered = 'numbers' in gallery.dataset;
+    const urls: string[] | undefined = gallery.dataset.urls ? JSON.parse(gallery.dataset.urls) : undefined;
     const lightbox = new PhotoSwipeLightbox({
       gallery,
       children: 'a.frame',
@@ -30,7 +38,7 @@
       // Leave room at the bottom for the caption so it never covers the photo.
       paddingFn: (viewport) => ({
         top: viewport.x < 768 ? 56 : 64,
-        bottom: viewport.x < 768 ? 88 : 96,
+        bottom: (viewport.x < 768 ? 88 : 96) + (numbered ? 48 : 0),
         left: viewport.x < 768 ? 0 : 48,
         right: viewport.x < 768 ? 0 : 48,
       }),
@@ -84,6 +92,40 @@
         },
       });
 
+      if (numbered) {
+        pswp.ui!.registerElement({
+          name: 'numbers',
+          order: 10,
+          isButton: false,
+          appendTo: 'root',
+          onInit: (el) => {
+            el.setAttribute('role', 'group');
+            el.setAttribute('aria-label', 'Go to photo');
+            const buttons = Array.from({ length: pswp.getNumItems() }, (_, i) => {
+              const b = document.createElement('button');
+              b.type = 'button';
+              b.textContent = String(i + 1);
+              b.setAttribute('aria-label', `Photo ${i + 1}`);
+              b.addEventListener('click', () => pswp.goTo(i));
+              el.append(b);
+              return b;
+            });
+            const mark = () =>
+              buttons.forEach((b, i) => b.toggleAttribute('aria-current', i === pswp.currIndex));
+            pswp.on('change', mark);
+            mark();
+          },
+        });
+      }
+
+      if (urls) {
+        const go = (path: string) => {
+          if (location.pathname !== path) history.replaceState(history.state, '', path);
+        };
+        pswp.on('change', () => urls[pswp.currIndex] && go(urls[pswp.currIndex]));
+        pswp.on('close', () => go(gallery.dataset.home ?? location.pathname));
+      }
+
       pswp.on('keydown', (e) => {
         if (e.originalEvent.key === 'i') {
           infoBtn?.click();
@@ -92,6 +134,9 @@
     });
 
     lightbox.init();
+
+    const open = Number(gallery.dataset.open);
+    if (gallery.dataset.open && Number.isInteger(open)) lightbox.loadAndOpen(open);
   }
 
   const initAll = () => document.querySelectorAll<HTMLElement>('[data-gallery]').forEach(init);
@@ -138,6 +183,38 @@
     color: var(--muted);
     font-size: 12px;
     font-variant-numeric: tabular-nums;
+  }
+  .pswp__numbers {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(72px + max(0px, env(safe-area-inset-bottom) - 18px));
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    padding: 0 var(--gutter);
+  }
+  .pswp__numbers button {
+    min-width: 32px;
+    height: 40px;
+    padding: 0 4px;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    background: none;
+    color: var(--muted);
+    font: 400 13px/1 var(--font);
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: color 150ms var(--ease-out), border-color 150ms var(--ease-out);
+  }
+  .pswp__numbers button[aria-current] {
+    border-bottom-color: var(--text);
+    color: var(--text);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .pswp__numbers button:hover {
+      color: var(--text);
+    }
   }
   .pswp__button--info {
     display: grid;

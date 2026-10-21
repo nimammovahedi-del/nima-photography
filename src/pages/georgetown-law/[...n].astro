@@ -1,0 +1,182 @@
+---
+// Unlisted page: Nima's top 10 photos for Georgetown Law. Not in the menu or linked from
+// anywhere, and kept out of search engines. /georgetown-law shows all ten, numbered;
+// /georgetown-law/1 … /10 open that photo full screen (one link per photo for the application),
+// and the address bar follows along as you move through them.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import { getUnlisted, photoSrcset, photoUrl } from '../../lib/photos';
+
+const BASE = '/georgetown-law';
+
+// In Nima's order, captions exactly as written.
+const list = [
+  { file: 'georgetown/01.jpg', caption: 'Sunset from The Greenwich Naval Observatory' },
+  { file: 'georgetown/02.jpg', caption: 'Deer resting at Richmond Park' },
+  { file: 'georgetown/03.jpg', caption: 'Sliding down the second-highest peak in the United Kingdom' },
+  { file: 'georgetown/04.jpg', caption: 'Canary Wharf Estate' },
+  { file: 'georgetown/05.jpg', caption: "Arthur's Seat overlooking Edinburgh" },
+  // The list sent had #3 twice (same caption and photo); waiting on the real #6.
+  { file: 'georgetown/03.jpg', caption: 'Sliding down the second-highest peak in the United Kingdom' },
+  { file: 'georgetown/07.jpg', caption: 'University of London library during finals week' },
+  { file: 'georgetown/08.jpg', caption: 'Cloisters in the Christ Church College Chapel, Oxford' },
+  { file: 'georgetown/09.jpg', caption: 'Empty tube carriage on the Jubilee Line' },
+  { file: 'georgetown/10.jpg', caption: 'Greenhouse at Killarney National Park, Ireland' },
+];
+
+export function getStaticPaths() {
+  return [undefined, ...Array.from({ length: 10 }, (_, i) => String(i + 1))].map((n) => ({
+    params: { n },
+  }));
+}
+
+const open = Astro.params.n ? Number(Astro.params.n) - 1 : undefined;
+
+const uploaded = await getUnlisted('georgetown');
+const items = list
+  .map((item, i) => ({ ...item, n: i + 1, photo: uploaded.find((p) => p.id === item.file) }))
+  .filter((item) => {
+    if (!item.photo) console.warn(`[georgetown-law] ${item.file} isn't uploaded yet.`);
+    return item.photo;
+  })
+  .map(({ photo, ...item }) => ({
+    ...item,
+    photo: photo!,
+    href: `${BASE}/${item.n}`,
+    large: photoUrl(photo!, photo!.widths.at(-1)!, 'webp'),
+    largeSet: photoSrcset(photo!, 'webp'),
+  }));
+
+const sizes = '(min-width: 1440px) 480px, (min-width: 900px) 34vw, 100vw';
+---
+
+<BaseLayout
+  title="Top 10 photos for Georgetown Law"
+  description="Ten favourite photographs from a year as a master's student in the United Kingdom."
+  noindex
+>
+  <header class="page-head top-head">
+    <h1>Top 10 photos for Georgetown Law</h1>
+    <p>
+      Here are my top 10 favorite photos I’ve taken over the last year as a master's student in the
+      United Kingdom, in no particular order:
+    </p>
+  </header>
+
+  <ol
+    class="top"
+    data-gallery
+    data-numbers
+    data-urls={JSON.stringify(items.map((i) => i.href))}
+    data-home={BASE}
+    data-open={open}
+    aria-label="Top 10 photographs"
+  >
+    {
+      items.map(({ n, caption, photo: p, href, large, largeSet }, i) => (
+        <li class="item" id={`photo-${n}`} style={`--ar:${(p.width / p.height).toFixed(3)}`}>
+          <a
+            class="frame"
+            href={large}
+            data-pswp-srcset={largeSet}
+            data-pswp-width={p.width}
+            data-pswp-height={p.height}
+            data-title={caption}
+            data-exif={p.exif}
+            style={`background-image:url(${p.blur});aspect-ratio:${p.width}/${p.height}`}
+          >
+            <picture>
+              <source type="image/avif" srcset={photoSrcset(p, 'avif', 2000)} sizes={sizes} />
+              <source type="image/webp" srcset={photoSrcset(p, 'webp', 2000)} sizes={sizes} />
+              <img
+                src={photoUrl(p, p.widths.find((w) => w >= 960) ?? p.widths.at(-1)!, 'webp')}
+                alt={p.alt}
+                width={p.width}
+                height={p.height}
+                loading={i < 3 ? 'eager' : 'lazy'}
+                fetchpriority={i === 0 ? 'high' : undefined}
+                decoding="async"
+              />
+            </picture>
+            <span class="visually-hidden">Open photo {n} full screen</span>
+          </a>
+          <p class="caption">
+            <span class="num">{n}</span>
+            <span>{caption}</span>
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+  <Lightbox />
+</BaseLayout>
+
+<style>
+  .top-head {
+    max-width: 640px;
+    padding-bottom: 32px;
+  }
+
+  /* Rows that fill the width left to right, each photo sized by its shape (nothing cropped),
+     so the numbers read 1 → 10 in order. One photo per row on phones. */
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .top::after {
+    content: '';
+    flex-grow: 999;
+  }
+  .item {
+    flex: 1 1 100%;
+    margin: 0;
+  }
+  @media (min-width: 700px) {
+    .item {
+      flex: var(--ar) 1 calc(var(--ar) * 300px);
+    }
+  }
+  @media (min-width: 1200px) {
+    .item {
+      flex-basis: calc(var(--ar) * 380px);
+    }
+  }
+
+  .frame {
+    position: relative;
+    display: block;
+    background-size: cover;
+    background-color: var(--bg-raised);
+    overflow: hidden;
+    cursor: zoom-in;
+  }
+  .frame :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    outline: 1px solid oklch(1 0 0 / 0.1);
+    outline-offset: -1px;
+  }
+
+  .caption {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    margin: 12px 0 0;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .num {
+    flex: none;
+    min-width: 1.6em;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
