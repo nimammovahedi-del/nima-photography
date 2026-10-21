@@ -1230,6 +1230,21 @@
   "blur": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAADQAwCdASoQABgAPu1kqU2ppaOiMAgBMB2JZQC7ACP6cYVaKYz2R0gA/rEKR7yLB/rXk9LG7DJAeDfZXM9uVf/divDyaf3AYrVG0Bb5xnINzztG4K8ionhJbzIB7EAA",
   "exif": "Canon EOS 7D Mark II · 45mm · ƒ/5 · 1/1600s · ISO 100"
  },
+ "georgetown/06.jpg": {
+  "etag": "e4a0fe908ab7765eae38fd8a3696d4d1",
+  "hash": "a4ae8593ba",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwCdAYuQ7QzgAeOM5TEjgdOwAPfd8uNNDsiUIeEXlstz7PYNr1aOtB9+JUZ0LrJBohgoYRcmfoCPnL09cAk9c/jgS2wQ3Edwe1lUxTlKM8xmfOZ4w/rsMRNmokWHm9ZyrbIioob31am84qCSaMg3TUa7mDIIkc0CfIMnI4QTE610Dm7KlWWvpmNIDOvsY+typNNxvOMwAA==",
+  "exif": "Canon EOS 7D Mark II · 200mm · ƒ/4 · 1/250s · ISO 400"
+ },
  "georgetown/07.jpg": {
   "etag": "80c4f8dea492173efd59401b86982cd8",
   "hash": "33fa3eb240",
