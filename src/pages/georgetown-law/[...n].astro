@@ -16,8 +16,7 @@ const list = [
   { file: 'georgetown/03.jpg', caption: 'Sliding down the second-highest peak in the United Kingdom' },
   { file: 'georgetown/04.jpg', caption: 'Canary Wharf Estate' },
   { file: 'georgetown/05.jpg', caption: "Arthur's Seat overlooking Edinburgh" },
-  // The list sent had #3 twice (same caption and photo); waiting on the real #6.
-  { file: 'georgetown/03.jpg', caption: 'Sliding down the second-highest peak in the United Kingdom' },
+  { file: 'georgetown/06.jpg', caption: 'Boarding the Southwestern rail service at Waterloo Station' },
   { file: 'georgetown/07.jpg', caption: 'University of London library during finals week' },
   { file: 'georgetown/08.jpg', caption: 'Cloisters in the Christ Church College Chapel, Oxford' },
   { file: 'georgetown/09.jpg', caption: 'Empty tube carriage on the Jubilee Line' },
@@ -47,7 +46,27 @@ const items = list
     largeSet: photoSrcset(photo!, 'webp'),
   }));
 
-const sizes = '(min-width: 1440px) 480px, (min-width: 900px) 34vw, 100vw';
+// Mosaic on a computer screen: 4 columns; a cell is one column wide and
+// 3/4 of a column tall, so a 2:3 portrait fills 1 x 2 cells exactly. #3 is the large feature
+// (2 x 4) with the rest arranged around it. [column, columns spanned, row, rows spanned]
+const place: Record<number, [number, number, number, number]> = {
+  3: [1, 2, 1, 4],
+  1: [3, 1, 1, 2],
+  5: [4, 1, 1, 2],
+  6: [3, 1, 3, 2],
+  7: [4, 1, 3, 2],
+  4: [1, 3, 5, 2],
+  8: [4, 1, 5, 2],
+  9: [1, 1, 7, 2],
+  2: [2, 2, 7, 2],
+  10: [4, 1, 7, 2],
+};
+const area = (n: number) => {
+  const [c, cs, r, rs] = place[n] ?? [1, 1, 1, 2];
+  return `--area:${r} / ${c} / span ${rs} / span ${cs}`;
+};
+const sizeFor = (n: number) =>
+  `(min-width: 900px) ${Math.min(4, place[n]?.[1] ?? 1) * 25}vw, 100vw`;
 ---
 
 <BaseLayout
@@ -73,8 +92,8 @@ const sizes = '(min-width: 1440px) 480px, (min-width: 900px) 34vw, 100vw';
     aria-label="Top 10 photographs"
   >
     {
-      items.map(({ n, caption, photo: p, href, large, largeSet }, i) => (
-        <li class="item" id={`photo-${n}`} style={`--ar:${(p.width / p.height).toFixed(3)}`}>
+      items.map(({ n, caption, photo: p, large, largeSet }, i) => (
+        <li class:list={['item', { feature: n === 3 }]} id={`photo-${n}`} style={area(n)}>
           <a
             class="frame"
             href={large}
@@ -83,18 +102,19 @@ const sizes = '(min-width: 1440px) 480px, (min-width: 900px) 34vw, 100vw';
             data-pswp-height={p.height}
             data-title={caption}
             data-exif={p.exif}
+            data-cropped="true"
             style={`background-image:url(${p.blur});aspect-ratio:${p.width}/${p.height}`}
           >
             <picture>
-              <source type="image/avif" srcset={photoSrcset(p, 'avif', 2000)} sizes={sizes} />
-              <source type="image/webp" srcset={photoSrcset(p, 'webp', 2000)} sizes={sizes} />
+              <source type="image/avif" srcset={photoSrcset(p, 'avif', 2000)} sizes={sizeFor(n)} />
+              <source type="image/webp" srcset={photoSrcset(p, 'webp', 2000)} sizes={sizeFor(n)} />
               <img
                 src={photoUrl(p, p.widths.find((w) => w >= 960) ?? p.widths.at(-1)!, 'webp')}
                 alt={p.alt}
                 width={p.width}
                 height={p.height}
-                loading={i < 3 ? 'eager' : 'lazy'}
-                fetchpriority={i === 0 ? 'high' : undefined}
+                loading={i < 7 ? 'eager' : 'lazy'}
+                fetchpriority={n === 3 ? 'high' : undefined}
                 decoding="async"
               />
             </picture>
@@ -117,35 +137,17 @@ const sizes = '(min-width: 1440px) 480px, (min-width: 900px) 34vw, 100vw';
     padding-bottom: 32px;
   }
 
-  /* Rows that fill the width left to right, each photo sized by its shape (nothing cropped),
-     so the numbers read 1 → 10 in order. One photo per row on phones. */
+  /* Phones: one photo after another, whole and uncropped, caption underneath. */
   .top {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px var(--gap);
+    display: grid;
+    gap: 32px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
-  .top::after {
-    content: '';
-    flex-grow: 999;
-  }
   .item {
-    flex: 1 1 100%;
     margin: 0;
   }
-  @media (min-width: 700px) {
-    .item {
-      flex: var(--ar) 1 calc(var(--ar) * 300px);
-    }
-  }
-  @media (min-width: 1200px) {
-    .item {
-      flex-basis: calc(var(--ar) * 380px);
-    }
-  }
-
   .frame {
     position: relative;
     display: block;
@@ -158,8 +160,47 @@ const sizes = '(min-width: 1440px) 480px, (min-width: 900px) 34vw, 100vw';
     display: block;
     width: 100%;
     height: 100%;
+    object-fit: cover;
     outline: 1px solid oklch(1 0 0 / 0.1);
     outline-offset: -1px;
+  }
+
+  /* Computers (where the school will most likely look): a mosaic with #3 as the large feature.
+     Tiles keep close to each photo's shape; the full-screen view always shows the whole photo.
+     The number and caption sit on the photo, over a soft shadow. */
+  @media (min-width: 900px) {
+    .top {
+      --cell: calc((min(100vw, var(--max)) - 2 * var(--gutter) - 3 * var(--gap)) / 4);
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: calc(var(--cell) * 0.75);
+      gap: var(--gap);
+    }
+    .item {
+      position: relative;
+      grid-area: var(--area);
+    }
+    .frame {
+      height: 100%;
+      aspect-ratio: auto !important;
+    }
+    .caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 56px 18px 16px;
+      background: linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0));
+      color: #fff;
+      pointer-events: none;
+    }
+    .feature .caption {
+      padding: 80px 28px 24px;
+      font-size: 17px;
+    }
+    .feature .num {
+      font-size: 15px;
+    }
   }
 
   .caption {
