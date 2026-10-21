@@ -1826,3 +1826,46 @@
   country: England
   city: Weymouth
   tags: [beach, flags, seaside, sand]
+
+# Unlisted Georgetown Law page (/georgetown-law). These photos appear only there; the page sets
+# their order and captions.
+- file: georgetown/01.jpg
+  title: Sunset from The Greenwich Naval Observatory
+  alt: The Old Royal Naval College and Queen's House in Greenwich at sunset, with the towers of Canary Wharf glowing behind
+  tags: [greenwich, london, skyline, sunset]
+- file: georgetown/02.jpg
+  title: Deer resting at Richmond Park
+  alt: A herd of fallow deer stags with large antlers lying on bright green grass in Richmond Park
+  tags: [deer, richmond park, london, animals]
+- file: georgetown/03.jpg
+  title: Sliding down the second-highest peak in the United Kingdom
+  alt: A person sliding down a snowfield on Ben Macdui in the Cairngorms, snowy mountains and heavy clouds beyond
+  tags: [snow, mountains, cairngorms, scotland]
+- file: georgetown/04.jpg
+  title: Canary Wharf Estate
+  alt: Black-and-white view of Canary Wharf's glass towers and their reflections in the dock
+  tags: [canary wharf, london, skyline, black and white]
+- file: georgetown/05.jpg
+  title: Arthur's Seat overlooking Edinburgh
+  alt: The green slopes of Arthur's Seat in the foreground and Edinburgh spread out below under sunbeams breaking through clouds
+  tags: [edinburgh, arthurs seat, city, sky]
+- file: georgetown/06.jpg
+  title: Boarding the Southwestern rail service at Waterloo Station
+  alt: Looking down on South Western Railway trains at Waterloo Station, a passenger stepping towards an open carriage door
+  tags: [waterloo, london, trains, station]
+- file: georgetown/07.jpg
+  title: University of London library during finals week
+  alt: Looking down through the floors of a university library, students studying at tables among warm-lit bookshelves
+  tags: [library, london, university, interior]
+- file: georgetown/08.jpg
+  title: Cloisters in the Christ Church College Chapel, Oxford
+  alt: The fan-vaulted ceiling and rose window of Christ Church Cathedral in Oxford, lit in warm gold
+  tags: [oxford, christ church, cathedral, vaulting]
+- file: georgetown/09.jpg
+  title: Empty tube carriage on the Jubilee Line
+  alt: An empty London Underground carriage on the Jubilee Line, rows of blue seats and grab poles leading to the far door
+  tags: [tube, london, underground, interior]
+- file: georgetown/10.jpg
+  title: Greenhouse at Killarney National Park, Ireland
+  alt: A Victorian glasshouse beside a wide lawn and tall trees in Killarney National Park under a blue sky
+  tags: [killarney, ireland, glasshouse, garden]

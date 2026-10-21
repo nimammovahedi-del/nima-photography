@@ -19,7 +19,8 @@ import { AwsClient } from 'aws4fetch';
 
 const INBOX = 'src/photos';
 const MANIFEST = 'src/data/photo-manifest.json';
-const CATEGORIES = ['architecture', 'places', 'nature', 'animals', 'film'];
+// 'georgetown' holds the photos of the unlisted Georgetown Law page (src/pages/georgetown-law).
+const CATEGORIES = ['architecture', 'places', 'nature', 'animals', 'film', 'georgetown'];
 const IMAGE = /\.(jpe?g|png|webp|avif|tiff?)$/i;
 const WIDTHS = [480, 720, 960, 1280, 1600, 2000, 2400];
 const MAX = 2400;

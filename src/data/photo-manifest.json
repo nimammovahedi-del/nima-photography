@@ -1151,6 +1151,160 @@
   "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAwBACdASoQABwAPu1kqk2ppaQiMAgBMB2JZQB2AAJcSqamSmQ5h7hticAA/vHUGU7lKF0cR8HjW30WBaJozhbaV4863pRMhrUW+irYb6PZQqVqV5ppcQ/dM9H/gnqXKP+tC0H8NGoW885eG1AQLtfUfNEUGMaj5DnJgDbcSk4bJhIAAAA=",
   "exif": "FUJIFILM X-E1 · 45mm · ƒ/22 · 1/140s · ISO 800"
  },
+ "georgetown/01.jpg": {
+  "etag": "a38fb1b2609d965e21af6059613874dc",
+  "hash": "e435c50814",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoQABgAPu1mqk2ppaQiMAgBMB2JQBdgBDvou2KmY9tPFgAA/or/I8XGuI/7GePSlIWAd2Y27v8PJuAE5+UwvF1xxwilw9af7hBH3QYJRqJJ8lFp9QPdkxcTcrYAAA==",
+  "exif": "Canon EOS 7D Mark II · 50mm · ƒ/4 · 1/250s · ISO 100"
+ },
+ "georgetown/02.jpg": {
+  "etag": "ba15cd97bdb5596f950d1cc0904d0f05",
+  "hash": "74846f3dee",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAsAA4BaJbACdAEOW66AAAD+wG7hNbS0JoNse6/zE/QSBB1YxrcMAjYAa2I3S9HwABTeRWRE2/p2oZ4qO7C5G/aOGGQEEAA=",
+  "exif": "Canon EOS 7D Mark II · 200mm · ƒ/4 · 1/1600s · ISO 100"
+ },
+ "georgetown/03.jpg": {
+  "etag": "f476ef8907c2dbfe03fce0bc67d11e1c",
+  "hash": "46417cbd55",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoQABgAPu1kqU2ppaOiMAgBMB2JZQC2yCHW3FuvNJhRagAA/sMWToe9k87GLLGqIcG8XQWdJK26Y2AAyKKEcXpCUXobV+wyKc84+pMk8iqE7dGm0cdANxVpSoAAAA==",
+  "exif": "Canon EOS 7D Mark II · 24mm · ƒ/4.5 · 1/6400s · ISO 100"
+ },
+ "georgetown/04.jpg": {
+  "etag": "c869bc3b0017379732b5b940f8450a7b",
+  "hash": "b11bb281ce",
+  "width": 2400,
+  "height": 1353,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600,
+   2000,
+   2400
+  ],
+  "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAQCdASoQAAkAA4BaJaQAAjAqa5N8IAD+yS2syKqFHL00puOlNd+B8yTM2EYKY6kJfdpyNkN0MmQqQP2AfqOi9asJPiAAAAA=",
+  "exif": "FUJIFILM X-E1 · 19mm · ƒ/5.6 · 1/400s · ISO 100"
+ },
+ "georgetown/05.jpg": {
+  "etag": "5ee65ab06c2c80fa08aee7352e84a376",
+  "hash": "4f3191bf7d",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAADQAwCdASoQABgAPu1kqU2ppaOiMAgBMB2JZQC7ACP6cYVaKYz2R0gA/rEKR7yLB/rXk9LG7DJAeDfZXM9uVf/divDyaf3AYrVG0Bb5xnINzztG4K8ionhJbzIB7EAA",
+  "exif": "Canon EOS 7D Mark II · 45mm · ƒ/5 · 1/1600s · ISO 100"
+ },
+ "georgetown/06.jpg": {
+  "etag": "e4a0fe908ab7765eae38fd8a3696d4d1",
+  "hash": "a4ae8593ba",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwCdAYuQ7QzgAeOM5TEjgdOwAPfd8uNNDsiUIeEXlstz7PYNr1aOtB9+JUZ0LrJBohgoYRcmfoCPnL09cAk9c/jgS2wQ3Edwe1lUxTlKM8xmfOZ4w/rsMRNmokWHm9ZyrbIioob31am84qCSaMg3TUa7mDIIkc0CfIMnI4QTE610Dm7KlWWvpmNIDOvsY+typNNxvOMwAA==",
+  "exif": "Canon EOS 7D Mark II · 200mm · ƒ/4 · 1/250s · ISO 400"
+ },
+ "georgetown/07.jpg": {
+  "etag": "80c4f8dea492173efd59401b86982cd8",
+  "hash": "33fa3eb240",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRvYAAABXRUJQVlA4IOoAAACwBQCdASoQABwAPu1iqk2ppaQiMAgBMB2JbACdMoR3JoC2XNwTCryRIQuN35UtJ/sLIbuOfOAA/nkDvwYSs6TxXlqjbhd5dWqC4adD2xwY87ZiQR5Nj2n/xiwQBWMTcL98pL7CeumPOg2B3CcoLnxI/v1yBM8qLUtTYvIPXiG4stHnNZqsJ1JwdoPJmFzRkFoDrwcPLomqeJ9LrAvWvSijuIUSN9nkEnIF4PaxzeUxH6k7eZuDBS9y4jaIkE923x0hCHM5dFWveIipD+FdknLRniFwBrQJ8kUGDNeGSRFPQvb1Porc4yucAAA=",
+  "exif": "FUJIFILM X-E1 · 21mm · ƒ/4 · 1/38s · ISO 800"
+ },
+ "georgetown/08.jpg": {
+  "etag": "d9f1406bf05bdb9cc05b3661d7a9ef6b",
+  "hash": "76cf951375",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JbACdMoMYBsADCaDLK4CQ4oAA/uOsF7CcQFe0v4qK/S2hDAMpe2QveTqSb52bORTQmH1utWkUU6RW6WwfN6LdV6m5kfZBY/pT2MfwJnXGlFTTFUd/I59XOwhJtw5H0mffiPGl58QUVPP9NMQQqQ8lTcKeEynR27MyLgGWSuddQAAA",
+  "exif": "Canon EOS 7D Mark II · 28mm · ƒ/4 · 1/50s · ISO 1600"
+ },
+ "georgetown/09.jpg": {
+  "etag": "0c1fd8a091db0ddb320cd81d91799249",
+  "hash": "be2a10f490",
+  "width": 1353,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1353
+  ],
+  "blur": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAwBACdASoQABwAPu1iqU2ppaOiMAgBMB2JYwAAXvBtZrGLQigJAg9dtkwA/f0VNSF81jkUYbb2rNBUfoNivEYTfzkBZKn/sPscuB5uqFbNOgvv65qH08/04FdDsTIw/J8VCgvgAHkyPTQ8qTimb9by6vUPE+Anj/0Ggx/mFEX3yPYKZn0+6rP5fpIlZ6GQdlV99AhAAAA=",
+  "exif": "FUJIFILM X-E1 · 20mm · ƒ/3.8 · 1/110s · ISO 800"
+ },
+ "georgetown/10.jpg": {
+  "etag": "576c774108529d619da2e53c6487ebad",
+  "hash": "61438ba092",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1600
+  ],
+  "blur": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JagCdACICF85ytykxcmoacAD+W6QiQdlH2WIxsaSgPtEb21jb+zzOvmbynPQbPzbVBxbgpeF/24rqi8fn/YVtZJqWqjcACVqJq6rR/sfDnH3+njwaRaoAAAA=",
+  "exif": "Canon EOS 7D Mark II · 47mm · ƒ/4 · 1/500s · ISO 100"
+ },
  "nature/bergen-11.jpg": {
   "etag": "63a48b62163ac455c0194563a10a8957",
   "hash": "50e18a8f62",

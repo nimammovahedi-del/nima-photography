@@ -24,7 +24,7 @@ interface ManifestEntry {
 
 export interface Photo {
   id: string; // e.g. "film/harbor-dusk.jpg"
-  category: CategorySlug;
+  category: CategorySlug | UnlistedFolder;
   width: number; // upright size of the largest web version
   height: number;
   widths: number[]; // widths available in R2, smallest first
@@ -71,6 +71,12 @@ interface Entry {
 
 const slugs = new Set<string>(categories.map((c) => c.slug));
 
+// Folders of photos that belong to one unlisted page only. They never join a tab, a place, the
+// camera counts or anything else that reads getPhotos(); their page asks for them by folder.
+export const unlistedFolders = ['georgetown'] as const;
+export type UnlistedFolder = (typeof unlistedFolders)[number];
+const unlisted = new Set<string>(unlistedFolders);
+
 function titleFromFile(file: string) {
   return path
     .basename(file, path.extname(file))
@@ -78,20 +84,20 @@ function titleFromFile(file: string) {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-async function load(): Promise<Photo[]> {
+async function load(): Promise<{ listed: Photo[]; unlisted: Photo[] }> {
   const entries = ((parseYaml(metadataSource) as Entry[] | null) ?? []).filter((e) => e?.file);
   const byFile = new Map(entries.map((e) => [e.file, e]));
   const order = new Map(entries.map((e, i) => [e.file, i]));
 
   const photos = Object.entries(manifest as Record<string, ManifestEntry>).map(([id, m]) => {
     const category = id.split('/')[0];
-    if (!slugs.has(category)) return null;
+    if (!slugs.has(category) && !unlisted.has(category)) return null;
 
     const entry = byFile.get(id);
     if (!entry) console.warn(`[photos] ${id} has no entry in photos.yaml — using defaults.`);
     else {
       if (!entry.alt) console.warn(`[photos] ${id} is missing alt text.`);
-      const subs: readonly string[] = categories.find((c) => c.slug === category)!.subs;
+      const subs: readonly string[] = categories.find((c) => c.slug === category)?.subs ?? [];
       if (entry.sub && !subs.includes(entry.sub))
         console.warn(`[photos] ${id}: sub "${entry.sub}" isn't listed for ${category} in site.config.ts.`);
       const place = places.find((p) => p.name === entry.country);
@@ -104,7 +110,7 @@ async function load(): Promise<Photo[]> {
     const title = entry?.title ?? titleFromFile(id);
     return {
       id,
-      category: category as CategorySlug,
+      category: category as Photo['category'],
       width: m.width,
       height: m.height,
       widths: m.widths,
@@ -126,16 +132,25 @@ async function load(): Promise<Photo[]> {
       console.warn(`[photos] ${e.file} is in photos.yaml but not uploaded yet (no web versions in R2).`);
 
   // photos.yaml order first, then any un-listed files alphabetically.
-  return photos
+  const sorted = photos
     .filter((p): p is Photo => p !== null)
     .sort(
       (a, b) =>
         (order.get(a.id) ?? Infinity) - (order.get(b.id) ?? Infinity) || a.id.localeCompare(b.id),
     );
+  return {
+    listed: sorted.filter((p) => !unlisted.has(p.category)),
+    unlisted: sorted.filter((p) => unlisted.has(p.category)),
+  };
 }
 
-let cache: Promise<Photo[]> | undefined;
-export const getPhotos = () => (cache ??= load());
+let cache: ReturnType<typeof load> | undefined;
+export const getPhotos = async () => (await (cache ??= load())).listed;
+
+/** The photos of one unlisted page's folder (see unlistedFolders). */
+export async function getUnlisted(folder: UnlistedFolder) {
+  return (await (cache ??= load())).unlisted.filter((p) => p.category === folder);
+}
 
 export async function getCategory(slug: CategorySlug) {
   return (await getPhotos()).filter((p) => p.category === slug);
