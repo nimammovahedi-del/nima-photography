@@ -1,10 +1,11 @@
 ---
 // Unlisted page: Nima's top 10 photos for Georgetown Law. Not in the menu or linked from
-// anywhere, and kept out of search engines. /georgetown-law shows all ten, numbered;
+// anywhere except its sister page /georgetown-law/video, and kept out of search engines. /georgetown-law shows all ten, numbered;
 // /georgetown-law/1 … /10 open that photo full screen (one link per photo for the application),
 // and the address bar follows along as you move through them.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Lightbox from '../../components/Lightbox.astro';
+import GeorgetownTabs from '../../components/GeorgetownTabs.astro';
 import { getUnlisted, photoSrcset, photoUrl } from '../../lib/photos';
 
 const BASE = '/georgetown-law';
@@ -82,6 +83,7 @@ const sizeFor = (n: number) =>
       United Kingdom, in no particular order:
     </p>
   </header>
+  <GeorgetownTabs current="photos" />
 
   <ol
     class="top"
@@ -135,7 +137,7 @@ const sizeFor = (n: number) =>
 <style>
   .top-head {
     max-width: 640px;
-    padding-bottom: 32px;
+    padding-bottom: 24px;
   }
 
   /* Phones: one photo after another, whole and uncropped, caption underneath. */
