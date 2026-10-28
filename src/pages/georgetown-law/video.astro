@@ -1,12 +1,28 @@
 ---
 // Unlisted page next to the Georgetown Law top 10: an optional video anyone with the link can
 // watch. Not in the menu, kept out of search engines; linked only from /georgetown-law.
-// The video itself will be a web MP4 on R2 (photos.nimamovahedi.com); set VIDEO below once it's
-// uploaded. Until then the page says the video is coming.
+// The video lives in R2 (photos.nimamovahedi.com/v/, uploaded by the "Photos" Action from
+// src/videos/). Nima asked for no loss of quality, so the first source is the iPhone's own HEVC
+// video and AAC audio, only repackaged as MP4 (bit-for-bit the same). Browsers that can't play
+// HEVC fall back to a near-lossless H.264 copy (CRF 16) with the same untouched audio.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GeorgetownTabs from '../../components/GeorgetownTabs.astro';
 
-const VIDEO: { src: string; poster?: string } | null = null;
+const V = `${(import.meta.env.PUBLIC_PHOTOS_URL ?? 'https://photos.nimamovahedi.com').replace(/\/$/, '')}/v`;
+const VIDEO: {
+  sources: { src: string; type: string }[];
+  poster?: string;
+  width: number;
+  height: number;
+} | null = {
+  sources: [
+    { src: `${V}/georgetown-law-bb330c89.mp4`, type: 'video/mp4; codecs="hvc1.1.6.L120.90,mp4a.40.2"' },
+    { src: `${V}/georgetown-law-h264-8f700d4e.mp4`, type: 'video/mp4; codecs="avc1.640032,mp4a.40.2"' },
+  ],
+  poster: `${V}/georgetown-law-poster-95307e36.jpg`,
+  width: 1678,
+  height: 1080,
+};
 ---
 
 <BaseLayout
@@ -27,8 +43,14 @@ const VIDEO: { src: string; poster?: string } | null = null;
         playsinline
         preload="metadata"
         poster={VIDEO.poster}
-        src={VIDEO.src}
-      />
+        width={VIDEO.width}
+        height={VIDEO.height}
+        style={`--w:${VIDEO.width};--h:${VIDEO.height}`}
+      >
+        {VIDEO.sources.map((s) => (
+          <source src={s.src} type={s.type} />
+        ))}
+      </video>
     ) : (
       <div class="player pending">
         <p>The video is coming soon.</p>
@@ -43,14 +65,17 @@ const VIDEO: { src: string; poster?: string } | null = null;
   }
   .player {
     display: block;
-    width: 100%;
+    /* Videos are as wide as fits without growing taller than the screen (no black side bars). */
+    width: min(100%, calc((100vh - 220px) * var(--w) / var(--h)));
+    aspect-ratio: var(--w) / var(--h);
     max-width: 1280px;
-    max-height: calc(100vh - 220px);
-    aspect-ratio: 16 / 9;
+    height: auto;
     margin: 0 auto;
     background: #000;
   }
   .pending {
+    --w: 16;
+    --h: 9;
     display: grid;
     place-items: center;
     background: var(--bg-raised);

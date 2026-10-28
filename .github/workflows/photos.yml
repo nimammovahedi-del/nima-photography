@@ -1,4 +1,4 @@
-# Uploads new photos to Cloudflare R2 and makes their web versions (see scripts/sync-photos.mjs).
+# Uploads new photos (and videos, untouched) to Cloudflare R2 and makes their web versions (see scripts/sync-photos.mjs).
 #
 # Runs when photos are pushed to src/photos/ on any branch, or by hand from the Actions tab
 # ("Run workflow") after uploading or deleting originals in the R2 dashboard. It commits the
@@ -8,7 +8,7 @@ name: Photos
 
 on:
   push:
-    paths: ['src/photos/**', 'scripts/sync-photos.mjs', '.github/workflows/photos.yml']
+    paths: ['src/photos/**', 'src/videos/**', 'scripts/sync-photos.mjs', '.github/workflows/photos.yml']
   workflow_dispatch:
 
 permissions:
@@ -37,7 +37,7 @@ jobs:
           R2_JURISDICTION: ${{ vars.R2_JURISDICTION }}
       - name: Commit the manifest
         run: |
-          git add -A src/photos src/data/photo-manifest.json
+          git add -A src/photos src/videos src/data/photo-manifest.json
           if git diff --cached --quiet; then echo "Nothing changed."; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

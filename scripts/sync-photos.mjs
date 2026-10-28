@@ -4,7 +4,10 @@
 //      (originals/<category>/<file>) and then removed from the repo.
 //   2. Every original in R2 without up-to-date web versions gets them: AVIF + WebP at several
 //      widths (w/<category>/<name>-<hash>-<width>.<ext>), with GPS and other metadata stripped.
-//   3. src/data/photo-manifest.json records each photo's size, widths, blurred preview and
+//   3. Videos dropped into src/videos/ are uploaded to R2 untouched (v/<file>) and removed from
+//      the repo. They're never re-encoded; name each file with something unique (e.g. a hash),
+//      since they're cached for a year.
+//   4. src/data/photo-manifest.json records each photo's size, widths, blurred preview and
 //      camera settings. The site reads only this file at build time; it never touches the images.
 //
 // Runs in the "Photos" GitHub Action. Needs R2_ACCOUNT_ID, R2_ACCESS_KEY_ID and
@@ -18,6 +21,8 @@ import sharp from 'sharp';
 import { AwsClient } from 'aws4fetch';
 
 const INBOX = 'src/photos';
+const VIDEO_INBOX = 'src/videos';
+const VIDEO = { mp4: 'video/mp4', webm: 'video/webm', jpg: 'image/jpeg', jpeg: 'image/jpeg' };
 const MANIFEST = 'src/data/photo-manifest.json';
 // 'georgetown' holds the photos of the unlisted Georgetown Law page (src/pages/georgetown-law).
 const CATEGORIES = ['architecture', 'places', 'nature', 'animals', 'film', 'georgetown'];
@@ -259,6 +264,16 @@ await pool(inbox, async (file) => {
   changed++;
   console.log(`added ${id}`);
 });
+
+// 1b. Videos (and their poster images): uploaded as they are, then removed from the repo.
+for (const file of await walk(VIDEO_INBOX).catch(() => [])) {
+  const type = VIDEO[path.extname(file).slice(1).toLowerCase()];
+  if (!type) continue;
+  const key = `v/${path.relative(VIDEO_INBOX, file).split(path.sep).join('/')}`;
+  await store.put(key, await readFile(file), type, IMMUTABLE);
+  await rm(file);
+  console.log(`uploaded ${key}`);
+}
 
 // 2. Originals already in R2 (e.g. uploaded in the Cloudflare dashboard) that are new or changed.
 const originals = await store.list('originals/');
