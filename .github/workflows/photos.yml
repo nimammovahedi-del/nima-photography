@@ -37,7 +37,9 @@ jobs:
           R2_JURISDICTION: ${{ vars.R2_JURISDICTION }}
       - name: Commit the manifest
         run: |
-          git add -A src/photos src/videos src/data/photo-manifest.json
+          git add -A src/data/photo-manifest.json
+          # The inboxes may not exist (nothing new, or every file already uploaded and removed).
+          for d in src/photos src/videos; do git add -A -- "$d" 2>/dev/null || true; done
           if git diff --cached --quiet; then echo "Nothing changed."; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
