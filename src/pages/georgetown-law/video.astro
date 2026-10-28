@@ -1,0 +1,66 @@
+---
+// Unlisted page next to the Georgetown Law top 10: an optional video anyone with the link can
+// watch. Not in the menu, kept out of search engines; linked only from /georgetown-law.
+// The video itself will be a web MP4 on R2 (photos.nimamovahedi.com); set VIDEO below once it's
+// uploaded. Until then the page says the video is coming.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GeorgetownTabs from '../../components/GeorgetownTabs.astro';
+
+const VIDEO: { src: string; poster?: string } | null = null;
+---
+
+<BaseLayout
+  title="Georgetown Law Optional Video"
+  description="An optional video for Georgetown Law."
+  noindex
+>
+  <header class="page-head video-head">
+    <h1>Georgetown Law Optional Video</h1>
+  </header>
+  <GeorgetownTabs current="video" />
+
+  {
+    VIDEO ? (
+      <video
+        class="player"
+        controls
+        playsinline
+        preload="metadata"
+        poster={VIDEO.poster}
+        src={VIDEO.src}
+      />
+    ) : (
+      <div class="player pending">
+        <p>The video is coming soon.</p>
+      </div>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .video-head {
+    padding-bottom: 20px;
+  }
+  .player {
+    display: block;
+    width: 100%;
+    max-width: 1280px;
+    max-height: calc(100vh - 220px);
+    aspect-ratio: 16 / 9;
+    margin: 0 auto;
+    background: #000;
+  }
+  .pending {
+    display: grid;
+    place-items: center;
+    background: var(--bg-raised);
+    outline: 1px solid oklch(1 0 0 / 0.1);
+    outline-offset: -1px;
+  }
+  .pending p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+  }
+</style>

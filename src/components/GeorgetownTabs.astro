@@ -1,0 +1,47 @@
+---
+// Tabs between the two unlisted Georgetown Law pages: the top 10 photos and the optional video.
+interface Props {
+  current: 'photos' | 'video';
+}
+const { current } = Astro.props;
+const tabs = [
+  { id: 'photos', label: 'Top 10 photos', href: '/georgetown-law' },
+  { id: 'video', label: 'Optional video', href: '/georgetown-law/video' },
+];
+---
+
+<nav class="gt-tabs" aria-label="Georgetown Law pages">
+  {
+    tabs.map((t) => (
+      <a href={t.href} aria-current={t.id === current ? 'page' : undefined}>
+        {t.label}
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .gt-tabs {
+    display: flex;
+    gap: 28px;
+    margin: 0 0 28px;
+    border-bottom: 1px solid oklch(1 0 0 / 0.1);
+  }
+  .gt-tabs a {
+    padding: 0 0 10px;
+    margin-bottom: -1px;
+    border-bottom: 1px solid transparent;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .gt-tabs a:hover {
+    color: var(--text);
+  }
+  .gt-tabs a[aria-current='page'] {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
+</style>
