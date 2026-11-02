@@ -1,5 +1,5 @@
 // The cameras on the About page. Each gets a 3D model (src/scripts/camera-models.ts) and its own
-// page at /about/<slug>.
+// page at /photography/cameras/<slug>.
 //
 //   exif:       how the camera names itself in a photo's EXIF (the first part of `exif` in
 //               photo-manifest.json). Photos taken on it add their countries automatically.

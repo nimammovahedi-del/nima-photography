@@ -1,12 +1,26 @@
 // Site-wide settings. Edit these values; no other code needs to change.
 export const site = {
   name: 'Nima Movahedi',
-  tagline: 'Photography',
+  tagline: 'Researcher, builder, photographer',
   intro:
     'Architecture, places, landscapes and animals — mostly on a Canon EOS, with a smaller body of work in film simulation.',
   // The welcome line on the home page, above the region panels.
   welcome:
     'I photograph buildings, cities, wild places and the animals in them, wherever I travel.',
+};
+
+// The main page (/): what follows "I am a …", where you are, and the icon links.
+// Leave a link's href empty until you have it; it shows as "coming soon".
+export const home = {
+  tagline: 'Researcher, builder, photographer',
+  roles: ['researcher', 'builder', 'photographer', 'backpacker', 'designer', 'graduate student'],
+  location: 'Currently in Irvine, CA.',
+  links: [
+    { icon: 'email', label: 'Email', href: '' },
+    { icon: 'github', label: 'GitHub', href: 'https://github.com/nimammovahedi-del' },
+    { icon: 'linkedin', label: 'LinkedIn', href: '' },
+    { icon: 'cv', label: 'CV (PDF)', href: '' },
+  ],
 };
 
 // Sub-tabs for each subject. Add or rename freely — they're shown alphabetically.
@@ -181,31 +195,9 @@ export type SortedPlace = (typeof sortedPlaces)[number];
 
 export const sortedSubs = (subs: readonly string[]) => [...subs].sort(byName);
 
-// "Where to next" on the About page: countries you plan to photograph, striped on its globe.
-// `map` is the country's name in the map data (as for `places` above).
-export const plannedPlaces: { name: string; map: string; lon?: number; lat?: number }[] = [
-  { name: 'Armenia', map: 'Armenia' },
-  { name: 'Azerbaijan', map: 'Azerbaijan' },
-  { name: 'China', map: 'China' },
-  { name: 'France', map: 'France' },
-  { name: 'Georgia', map: 'Georgia' },
-  // Too small to see from the globe's distance: it also gets a marker at this spot.
-  { name: 'Hong Kong', map: 'Hong Kong', lon: 114.17, lat: 22.32 },
-  { name: 'Japan', map: 'Japan' },
-  { name: 'Kazakhstan', map: 'Kazakhstan' },
-  { name: 'Kyrgyzstan', map: 'Kyrgyzstan' },
-  { name: 'South Korea', map: 'South Korea' },
-  { name: 'Tajikistan', map: 'Tajikistan' },
-  { name: 'Turkey', map: 'Turkey' },
-  { name: 'Turkmenistan', map: 'Turkmenistan' },
-  { name: 'Uzbekistan', map: 'Uzbekistan' },
+// The About page (top menu). A first draft from what's on the site; rewrite freely.
+export const about = [
+  'I study political science: how courts, states and governments compete, share power and respond to new pressures, from American corporate courts to power-sharing in Iran and state rules on Chinese investment. My papers are on the <a href="/research">Research</a> page.',
+  'I also build small, free apps that make something hard easier to check or practise, like Ergo for LSAT logical reasoning and Check Congress for following what Congress does. They are on the <a href="/projects">Projects</a> page.',
+  'And I photograph buildings, cities, wild places and the animals in them wherever I travel, mostly on Canon EOS bodies and a Fujifilm X-E1. That work, and the <a href="/photography/cameras">cameras</a>, are under <a href="/photography">Photography</a>.',
 ];
-
-// The About page's bio. Placeholder text for now — replace with your own.
-export const about = {
-  heading: 'About',
-  bio: [
-    'Placeholder: a short introduction goes here. Who you are, where you are based, and how photography started for you: the first camera, the trip that made it stick, the kind of pictures you kept coming back to.',
-    'Placeholder: a second paragraph about how you work. What you look for in a place, why buildings, landscapes and animals, the cameras you carry and why, and where the next trips are heading. Two paragraphs of about this length fill the space beside the portrait.',
-  ],
-};

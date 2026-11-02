@@ -1,9 +1,9 @@
 ---
 // One camera: its detailed 3D model to turn and zoom into, what makes it special, and where it
 // has been.
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { cameras } from '../../data/cameras';
-import { getCameras } from '../../lib/cameras';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { cameras } from '../../../data/cameras';
+import { getCameras } from '../../../lib/cameras';
 
 export function getStaticPaths() {
   return cameras.map((c) => ({ params: { camera: c.slug } }));
@@ -16,7 +16,7 @@ const next = all[(i + 1) % all.length];
 ---
 
 <BaseLayout title={`${c.brand} ${c.name}`} description={`${c.brand} ${c.name}: ${c.intro}`}>
-  <nav class="back"><a href="/about"><span aria-hidden="true">←</span> About</a></nav>
+  <nav class="back"><a href="/photography/cameras"><span aria-hidden="true">←</span> Cameras</a></nav>
 
   <header class="head">
     <p class="eyebrow">{c.short}</p>
@@ -108,7 +108,7 @@ const next = all[(i + 1) % all.length];
   </div>
 
   <nav class="next">
-    <a href={`/about/${next.slug}`}>Next camera: <strong>{next.brand} {next.name}</strong> <span aria-hidden="true">→</span></a>
+    <a href={`/photography/cameras/${next.slug}`}>Next camera: <strong>{next.brand} {next.name}</strong> <span aria-hidden="true">→</span></a>
   </nav>
 </BaseLayout>
 
@@ -128,7 +128,7 @@ const next = all[(i + 1) % all.length];
   const shaft = pointer.querySelector('.shaft')!;
   const head = pointer.querySelector('.head')!;
   // Point at the part from the emptier side, curving in a little.
-  function aim(p: import('../../scripts/camera-viewer').Point | null) {
+  function aim(p: import('../../../scripts/camera-viewer').Point | null) {
     if (!p) return void (pointer.style.opacity = '0');
     const r = Math.min(Math.max(p.r * 0.75, 14), Math.min(p.w, p.h) * 0.3);
     const sx = p.x > p.w / 2 ? -1 : 1;
@@ -151,7 +151,7 @@ const next = all[(i + 1) % all.length];
     pointer.style.opacity = String(p.opacity);
   }
 
-  import('../../scripts/camera-viewer').then(async ({ mountCamera }) => {
+  import('../../../scripts/camera-viewer').then(async ({ mountCamera }) => {
     const start = (window as any).__cameraStart ?? 0;
     const viewer = await mountCamera(canvas, canvas.dataset.camera as any, 'page', start, aim);
     // The model is drawn: swap it in for the About page's picture.

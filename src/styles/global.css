@@ -16,6 +16,7 @@
   --muted: #9b9b9b; /* 7:1 on --bg */
   --project-body: #dddcd3; /* running text on the Projects pages: brighter than --muted, easy to read */
   --line: #262626;
+  --nav: #d2d2cd; /* top menu text */
   --accent: var(--sage); /* active states, small highlights */
   --accent-deep: var(--grey-green);
   --accent-soft: rgb(164 189 186 / 0.1);
@@ -52,6 +53,40 @@
   --font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Roboto,
     Arial, sans-serif;
   color-scheme: dark;
+}
+
+/* Light mode: the toggle in the top bar sets data-theme="light" on <html> (dark is the default).
+   Only the page surface and text change; the maps, the globes and the Film pages keep their own
+   colours. */
+:root[data-theme='light'] {
+  --bg: #f4f2ea;
+  --bg-raised: #ebe8dc;
+  --card: #ebe8dc;
+  --text: #121210;
+  --muted: #55554f;
+  --nav: #3a3a35;
+  --line: #d9d5c6;
+  --accent: #4f6f6b;
+  --accent-deep: #6f8e8a;
+  --accent-soft: rgb(79 111 107 / 0.1);
+  --on-accent: #f4f2ea;
+  color-scheme: light;
+}
+
+/* The maps and the 3D cameras stay dark in light mode, so the words on them keep their dark-mode
+   colours too. */
+:root[data-theme='light'] :is(.explorer, .country-map, .cameras .card) {
+  --bg: #0b0b0b;
+  --bg-raised: #151515;
+  --card: #1c1c1c;
+  --text: #f7f7f5;
+  --muted: #9b9b9b;
+  --line: #262626;
+  --accent: var(--sage);
+  --accent-deep: var(--grey-green);
+  --accent-soft: rgb(164 189 186 / 0.1);
+  --on-accent: #0b0b0b;
+  color: var(--text);
 }
 
 @media (min-width: 768px) {
