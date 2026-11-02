@@ -232,8 +232,16 @@ a.accent:hover {
   animation-duration: 0.2s;
   animation-timing-function: var(--ease-out);
 }
-::view-transition-group(site-header) {
+::view-transition-group(site-bar),
+::view-transition-group(photo-tabs),
+::view-transition-new(site-bar),
+::view-transition-new(photo-tabs) {
   animation: none;
+}
+/* The old bar is swapped for the new one at once (only the current tab differs), never blended. */
+::view-transition-old(site-bar),
+::view-transition-old(photo-tabs) {
+  display: none;
 }
 /* Opening a camera from the About page (or going back): its picture grows into the camera page's
    camera, and shrinks back into its card (see pages/about). */
