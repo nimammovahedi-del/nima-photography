@@ -2,6 +2,15 @@
    Chart colours were checked with a colour-blindness validator on both surfaces.
    Dark is the default; the light values sit under :root[data-theme="light"]. */
 
+/* Research pages sit on a lighter grey than the photo pages (Nima, 2026-11-02).
+   Cards and lines are lifted with it so they still read as a step up from the page.
+   This file only loads on research pages, so the rest of the site keeps its black. */
+:root:not([data-theme='light']) {
+  --bg: #18181b;
+  --bg-raised: #222226;
+  --line: #303036;
+}
+
 :root {
   /* the three states in "The Judicial Arms Race" */
   --r-de: #3987e5;

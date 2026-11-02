@@ -6,6 +6,7 @@
   --tan: #b0a27c; /* khaki, lifted a little so it stands out on the dark green */
   --lavender: #c0b8c3;
   --grey-green: #798984;
+  --rose: #c98f7f; /* "wrong" and "no" on the project drawings */
 
   /* 500px-style neutral near-black, with the palette used as small accents */
   --bg: #0b0b0b;
@@ -13,6 +14,7 @@
   --card: #1c1c1c;
   --text: #f7f7f5;
   --muted: #9b9b9b; /* 7:1 on --bg */
+  --project-body: #dddcd3; /* running text on the Projects pages: brighter than --muted, easy to read */
   --line: #262626;
   --nav: #d2d2cd; /* top menu text */
   --accent: var(--sage); /* active states, small highlights */
@@ -85,14 +87,6 @@
   --accent-soft: rgb(164 189 186 / 0.1);
   --on-accent: #0b0b0b;
   color: var(--text);
-}
-
-/* The grey surface of the main page, Research and Projects (the photo pages stay near-black). */
-:root:not([data-theme='light']) body.grey {
-  --bg: #18181b;
-  --bg-raised: #222226;
-  --card: #222226;
-  --line: #303036;
 }
 
 @media (min-width: 768px) {
@@ -303,4 +297,14 @@ html.map-arrived .place > :not(.country-map) {
   html.map-arrived .place > :not(.country-map) {
     animation: none;
   }
+}
+
+/* Research and Projects sit on a lighter grey than the photo pages. A page opts in by putting
+   data-tone="grey" on any element; the photo pages stay on near-black. */
+html:not([data-theme='light']):has([data-tone='grey']) {
+  --bg: #18181b;
+  --bg-raised: #222226;
+  --card: #26262a;
+  --line: #303036;
+  --sea: #18181b;
 }

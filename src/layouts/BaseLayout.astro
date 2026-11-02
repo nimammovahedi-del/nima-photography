@@ -9,7 +9,7 @@ interface Props {
   film?: boolean;
   /** Keep the page out of search engines (unlisted pages). */
   noindex?: boolean;
-  /** The grey surface (#18181b) of the main page, Research and Projects. */
+  /** The grey surface (#18181b), as on Research and Projects (see global.css). */
   grey?: boolean;
   /** Keep the top bar to a narrow column (the main page). */
   narrowNav?: boolean;
@@ -55,7 +55,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
   </head>
-  <body class:list={{ film, grey }}>
+  <body class:list={{ film }} data-tone={grey ? 'grey' : undefined}>
     <a class="skip-link" href="#main">Skip to content</a>
     <Nav narrow={narrowNav} />
     <main id="main">

@@ -1,0 +1,142 @@
+---
+// A screenshot or a short clip of an app, in a plain window frame. Clips are muted and never play
+// on their own: pressing one plays it (and pressing again pauses it).
+import type { Media } from '../../data/projects';
+interface Props {
+  media: Media;
+  /** The address shown in the frame's top bar. */
+  address: string;
+  eager?: boolean;
+}
+const { media, address, eager = false } = Astro.props;
+---
+
+<figure class="shot">
+  <div class="bar" aria-hidden="true">
+    <span class="dots"><i></i><i></i><i></i></span>
+    <span class="addr">{address}</span>
+  </div>
+  {
+    media.kind === 'image' ? (
+      <img src={media.src} alt={media.alt} width="1600" height="1000" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+    ) : (
+      <button class="clip" type="button" aria-label={`Play clip: ${media.alt}`} data-clip>
+        <video src={media.src} poster={media.poster} muted playsinline preload="none" width="1600" height="1000" />
+        <span class="play" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+        </span>
+      </button>
+    )
+  }
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-clip]').forEach((btn) => {
+    const v = btn.querySelector('video')!;
+    btn.addEventListener('click', () => {
+      if (v.paused) {
+        if (v.ended) v.currentTime = 0;
+        void v.play();
+      } else v.pause();
+    });
+    v.addEventListener('play', () => btn.classList.add('playing'));
+    v.addEventListener('pause', () => btn.classList.remove('playing'));
+    v.addEventListener('ended', () => btn.classList.remove('playing'));
+  });
+</script>
+
+<style>
+  .shot {
+    margin: 0;
+    /* A lighter edge and a soft shadow, so app screenshots in their own dark greys stand off the
+       grey page. */
+    border: 1px solid #3c3c43;
+    box-shadow: 0 18px 50px rgb(0 0 0 / 0.5);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-raised);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 34px;
+    padding: 0 14px;
+    border-bottom: 1px solid #3c3c43;
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dots i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+  .addr {
+    flex: 1;
+    max-width: 340px;
+    margin: 0 auto;
+    padding: 3px 12px;
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  img,
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+  .clip {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 76px;
+    height: 76px;
+    margin: -38px 0 0 -38px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgb(11 11 11 / 0.72);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.25);
+    backdrop-filter: blur(6px);
+    transition:
+      transform 0.25s var(--ease-out),
+      opacity 0.25s var(--ease-out);
+  }
+  .play svg {
+    width: 30px;
+    height: 30px;
+    fill: #fff;
+    margin-left: 4px;
+  }
+  .clip:hover .play {
+    transform: scale(1.08);
+  }
+  .clip.playing .play {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  .clip:focus-visible {
+    outline: 2px solid var(--tan);
+    outline-offset: -2px;
+  }
+</style>
