@@ -1,0 +1,198 @@
+---
+// Projects: one row per app. The drawing acts out the app when the row is hovered; clicking the
+// row opens the app's own page (its drawing grows into that page's).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectArt from '../../components/projects/ProjectArt.astro';
+import { projects } from '../../data/projects';
+---
+
+<BaseLayout title="Projects" description="Apps I've built: Ergo for LSAT practice, Check Congress for following Congress, and Brick Rater.">
+  <header class="head">
+    <p class="eyebrow">Projects</p>
+    <h1>Things I've built</h1>
+    <p class="lede">Free tools for questions I kept asking: how to get better at the LSAT, what Congress did this week, and whether a LEGO set is worth it.</p>
+  </header>
+
+  <ol class="list">
+    {
+      projects.map((p) => (
+        <li class="row" data-art-host>
+          <a class="art-link" href={`/projects/${p.slug}`} tabindex="-1" aria-hidden="true">
+            <ProjectArt slug={p.slug} vt={`project-${p.slug}`} />
+          </a>
+          <div class="text">
+            <h2>
+              <a class="title" href={`/projects/${p.slug}`}>
+                {p.name}
+                <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </h2>
+            <p class="summary">{p.summary}</p>
+            <ul class="tags">
+              {p.tags.map((t) => <li>{t}</li>)}
+            </ul>
+            <div class="links">
+              {p.url ? (
+                <a class="btn" href={p.url} target="_blank" rel="noopener">
+                  {p.urlLabel ?? 'Visit site'} <span aria-hidden="true">↗</span>
+                </a>
+              ) : (
+                <span class="btn ghost" aria-disabled="true">Coming soon</span>
+              )}
+              <a class="more" href={`/projects/${p.slug}`}>See how it works</a>
+            </div>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</BaseLayout>
+
+<style>
+  .head,
+  .list {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+  .head {
+    padding-top: clamp(40px, 7vw, 88px);
+    padding-bottom: clamp(24px, 4vw, 48px);
+    display: grid;
+    gap: 12px;
+  }
+  .eyebrow {
+    margin: 0;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tan);
+  }
+  h1 {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(34px, 5vw, 52px);
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  .lede {
+    margin: 0;
+    max-width: 60ch;
+    font-size: 18px;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .list {
+    list-style: none;
+    padding-bottom: 80px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: clamp(24px, 5vw, 72px);
+    align-items: center;
+    padding: clamp(32px, 5vw, 56px) 0;
+    border-top: 1px solid var(--line);
+  }
+  .art-link {
+    display: block;
+    padding: clamp(16px, 3vw, 32px);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-raised);
+    transition: border-color 0.3s var(--ease-out);
+  }
+  .row:hover .art-link {
+    border-color: color-mix(in srgb, var(--tan) 55%, var(--line));
+  }
+  .text {
+    display: grid;
+    gap: 16px;
+    min-width: 0;
+  }
+  h2 {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(28px, 3.4vw, 38px);
+    line-height: 1.15;
+  }
+  .title {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .arrow {
+    display: inline-block;
+    color: var(--tan);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity 0.25s var(--ease-out),
+      transform 0.25s var(--ease-out);
+  }
+  .row:hover .arrow,
+  .title:focus-visible .arrow {
+    opacity: 1;
+    transform: none;
+  }
+  .summary {
+    margin: 0;
+    max-width: 62ch;
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .tags li {
+    font-size: 12.5px;
+    padding: 3px 11px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--project-body);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+  }
+  .btn {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    padding: 9px 16px;
+    border-radius: 6px;
+    background: var(--cream);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+  }
+  .btn.ghost {
+    background: none;
+    color: var(--muted);
+    border: 1px dashed var(--line);
+  }
+  .more {
+    color: var(--text);
+    font-size: 14px;
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 4px;
+  }
+  .more:hover {
+    text-decoration-color: var(--tan);
+  }
+  @media (max-width: 760px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
