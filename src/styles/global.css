@@ -6,6 +6,7 @@
   --tan: #b0a27c; /* khaki, lifted a little so it stands out on the dark green */
   --lavender: #c0b8c3;
   --grey-green: #798984;
+  --rose: #c98f7f; /* "wrong" and "no" on the project drawings */
 
   /* 500px-style neutral near-black, with the palette used as small accents */
   --bg: #0b0b0b;
@@ -13,6 +14,7 @@
   --card: #1c1c1c;
   --text: #f7f7f5;
   --muted: #9b9b9b; /* 7:1 on --bg */
+  --project-body: #dddcd3; /* running text on the Projects pages: brighter than --muted, easy to read */
   --line: #262626;
   --accent: var(--sage); /* active states, small highlights */
   --accent-deep: var(--grey-green);

@@ -1,0 +1,251 @@
+---
+// Projects: one compact row per app: its logo, name, three sentences and a small screenshot.
+// Hovering a row steps its screenshot through a few screens of the app; nothing moves otherwise.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AppLogo from '../../components/projects/AppLogo.astro';
+import { projects } from '../../data/projects';
+---
+
+<BaseLayout title="Projects" description="Apps I've built: Ergo for LSAT practice, Check Congress for following Congress, and Brick Rater.">
+  <header class="head">
+    <h1>Projects</h1>
+    <p class="lede">Free tools I built for questions I kept asking.</p>
+  </header>
+
+  <ol class="list">
+    {
+      projects.map((p) => (
+        <li class="row" data-row>
+          <a class="cover" href={`/projects/${p.slug}`} aria-label={`${p.name}: see how it works`} />
+          <AppLogo slug={p.slug} size={48} />
+          <div class="text">
+            <h2>
+              {p.name}
+              <span class="arrow" aria-hidden="true">→</span>
+            </h2>
+            <p class="summary">{p.summary}</p>
+            <div class="meta">
+              <ul class="tags">
+                {p.tags.map((t) => <li>{t}</li>)}
+              </ul>
+              {p.url ? (
+                <a class="visit" href={p.url} target="_blank" rel="noopener">
+                  {p.urlLabel ?? 'Visit site'} <span aria-hidden="true">↗</span>
+                </a>
+              ) : (
+                <span class="soon">Coming soon</span>
+              )}
+            </div>
+          </div>
+          <div class="thumb" aria-hidden="true">
+            {p.thumbs.length > 0 ? (
+              p.thumbs.map((src, i) => <img src={src} alt="" width="640" height="400" loading={i === 0 ? 'eager' : 'lazy'} class:list={{ on: i === 0 }} />)
+            ) : (
+              <span class="wip">In development</span>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</BaseLayout>
+
+<script>
+  // While a row is hovered, its screenshot steps through the app's screens. Back to the first on leave.
+  document.querySelectorAll<HTMLElement>('[data-row]').forEach((row) => {
+    const imgs = [...row.querySelectorAll<HTMLImageElement>('.thumb img')];
+    if (imgs.length < 2) return;
+    let i = 0;
+    let timer: number | undefined;
+    const show = (n: number) => {
+      imgs[i].classList.remove('on');
+      i = n;
+      imgs[i].classList.add('on');
+    };
+    row.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      imgs.forEach((im) => (im.loading = 'eager'));
+      show((i + 1) % imgs.length);
+      timer = window.setInterval(() => show((i + 1) % imgs.length), 1300);
+    });
+    row.addEventListener('pointerleave', () => {
+      window.clearInterval(timer);
+      show(0);
+    });
+  });
+</script>
+
+<style>
+  .head,
+  .list {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+  .head {
+    padding-top: clamp(32px, 6vw, 64px);
+    padding-bottom: clamp(20px, 3vw, 32px);
+    display: grid;
+    gap: 8px;
+  }
+  h1 {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(34px, 5vw, 48px);
+    line-height: 1.1;
+  }
+  .lede {
+    margin: 0;
+    font-size: 18px;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .list {
+    list-style: none;
+    padding-bottom: 80px;
+  }
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) 288px;
+    gap: 24px;
+    align-items: start;
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+  }
+  .cover {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .cover:focus-visible {
+    outline: 2px solid var(--tan);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
+  .text {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+  }
+  h2 {
+    margin: 0;
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.2;
+    color: var(--text);
+  }
+  .arrow {
+    display: inline-block;
+    color: var(--tan);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity 0.25s var(--ease-out),
+      transform 0.25s var(--ease-out);
+  }
+  .row:hover .arrow,
+  .row:focus-within .arrow {
+    opacity: 1;
+    transform: none;
+  }
+  .summary {
+    margin: 0;
+    max-width: 60ch;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 18px;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .tags li {
+    font-size: 13px;
+    padding: 2px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--project-body);
+  }
+  .visit {
+    position: relative;
+    z-index: 2;
+    font-size: 14px;
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 4px;
+  }
+  .visit:hover {
+    text-decoration-color: var(--tan);
+  }
+  .soon {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .thumb {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg-raised);
+    transition: border-color 0.3s var(--ease-out);
+  }
+  .row:hover .thumb {
+    border-color: color-mix(in srgb, var(--tan) 55%, var(--line));
+  }
+  .thumb img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-out);
+  }
+  .thumb img.on {
+    opacity: 1;
+  }
+  .wip {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    font-size: 14px;
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+  }
+  @media (max-width: 760px) {
+    .row {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 14px 16px;
+      padding: 24px 0;
+    }
+    .text {
+      display: contents;
+    }
+    h2 {
+      align-self: center;
+      font-size: 24px;
+    }
+    .summary,
+    .meta,
+    .thumb {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
