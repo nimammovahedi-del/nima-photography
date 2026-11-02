@@ -24,7 +24,7 @@ const photos = city ? all.filter((p) => p.city === city) : all;
 const base = `/places/${place.slug}`;
 // Back out to this country's region on the home page's globe (see CountryMap). A region of one
 // country (America) gets no button: pinching out of the map still goes there.
-const regionHref = `/#${slugify(place.region)}`;
+const regionHref = `/photography#${slugify(place.region)}`;
 const ownRegion = sortedPlaces.filter((p) => p.region === place.region).length > 1;
 
 const cityTabs = place.cities.map((c) => ({
@@ -47,7 +47,7 @@ const tabs = [
   <div class="place" data-place={base}>
     <header class="page-head">
       <nav class="crumbs" aria-label="Back to">
-        <a class="back" href="/"><span aria-hidden="true">←</span> All places</a>
+        <a class="back" href="/photography"><span aria-hidden="true">←</span> All places</a>
         {
           ownRegion && (
             <a class="back" href={regionHref} data-to-region>

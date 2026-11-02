@@ -219,7 +219,7 @@ const cityPins = place.cities.map((c) => {
       noteLeaving(fig, 'pinch', 0.4); // the home page's globe carries on from where this ends up
       document.documentElement.classList.add('pinch-leaving');
       show(0.4); // keeps shrinking as the page fades
-      setTimeout(() => location.assign(`/#${region}`), reduceMotion() ? 0 : 320);
+      setTimeout(() => location.assign(`/photography#${region}`), reduceMotion() ? 0 : 320);
     }
 
     // Trackpad pinch in Chrome, Firefox and Edge arrives as a wheel event with ctrlKey set.
