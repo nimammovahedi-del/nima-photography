@@ -19,7 +19,7 @@ const idx = papers.findIndex((x) => x.slug === slug);
 const next = papers[(idx + 1) % papers.length];
 ---
 
-<BaseLayout title={p.title} description={p.summary}>
+<BaseLayout grey title={p.title} description={p.summary}>
   <article class="paper" data-paper={slug}>
     <a class="back" href="/research">
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>

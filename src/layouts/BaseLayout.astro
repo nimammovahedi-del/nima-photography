@@ -9,9 +9,20 @@ interface Props {
   film?: boolean;
   /** Keep the page out of search engines (unlisted pages). */
   noindex?: boolean;
+  /** The grey surface (#18181b) of the main page, Research and Projects. */
+  grey?: boolean;
+  /** Keep the top bar to a narrow column (the main page). */
+  narrowNav?: boolean;
 }
 
-const { title, description = site.intro, film = false, noindex = false } = Astro.props;
+const {
+  title,
+  description = site.intro,
+  film = false,
+  noindex = false,
+  grey = false,
+  narrowNav = false,
+} = Astro.props;
 const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -20,12 +31,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script is:inline>
+      // Light / dark, before the page paints: dark unless the visitor picked light (see Nav).
+      try {
+        if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light';
+      } catch (e) {}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
-    <meta name="theme-color" content={film ? '#100f0d' : '#0b0b0b'} />
+    <meta name="theme-color" content={film ? '#100f0d' : grey ? '#18181b' : '#0b0b0b'} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,13 +55,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
   </head>
-  <body class:list={{ film }}>
+  <body class:list={{ film, grey }}>
     <a class="skip-link" href="#main">Skip to content</a>
-    <Nav />
+    <Nav narrow={narrowNav} />
     <main id="main">
       <slot />
     </main>
-    <footer>
+    <footer class:list={{ narrow: narrowNav }}>
       <p>© {new Date().getFullYear()} {site.name}</p>
     </footer>
   </body>
@@ -75,6 +92,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     width: 40px;
     height: 1px;
     background: var(--accent);
+  }
+  footer.narrow {
+    max-width: 628px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  footer.narrow::before {
+    left: 0;
+  }
+  @media (max-width: 660px) {
+    footer.narrow {
+      margin: 0 16px;
+    }
   }
   footer p {
     margin: 0;

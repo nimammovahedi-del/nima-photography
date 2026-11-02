@@ -1,6 +1,6 @@
 // 3D models of the cameras on the About page, drawn like an etching: cream ink lines on the dark
 // page, with fine diagonal hatching for shadow and on the darker parts — drawings, not photo-real
-// replicas. Two levels of detail: a simple one for the small turning models on /about, and a
+// replicas. Two levels of detail: a simple one for the small turning models on /photography/cameras, and a
 // slightly fuller one (buttons, grip lines on the lens rings, lettering) for each camera's page.
 //
 // Units are 10 cm (so a 152 mm wide camera is 1.52 wide). x runs to the right as you face the
