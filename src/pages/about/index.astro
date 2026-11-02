@@ -11,10 +11,7 @@ const links = home.links.filter((l) => l.href);
     <article class="main">
       <header>
         <img class="portrait" src="/portrait.jpg" alt={`Portrait of ${site.name}`} width="64" height="64" />
-        <div>
-          <h1>{site.name}</h1>
-          <p class="sub">{home.tagline}. {home.location.replace('Currently in ', 'Based in ')}</p>
-        </div>
+        <h1>About me</h1>
       </header>
 
       <section class="bio">
@@ -27,7 +24,7 @@ const links = home.links.filter((l) => l.href);
           {aboutPath.map((r) => (
             <li>
               <span class="year">{r.year}</span>
-              <span class="place">{r.place}</span>
+              <a class="place" href={r.href} target="_blank" rel="noopener">{r.place}</a>
               <span class="what">{r.what}</span>
             </li>
           ))}
@@ -82,8 +79,8 @@ const links = home.links.filter((l) => l.href);
       </div>
 
       <div class="now-card lego-card">
-        <p class="label">Favourite LEGO set</p>
-        <img class="lego-img" src={aboutNow.lego.image} alt={`LEGO set ${aboutNow.lego.set}, ${aboutNow.lego.name}`} width="268" height="150" />
+        <p class="label">Favorite LEGO set</p>
+        <img class="lego-img" src={aboutNow.lego.image} alt={`LEGO set ${aboutNow.lego.set}, ${aboutNow.lego.name}`} width="268" height="92" />
         <p class="title small">{aboutNow.lego.name}</p>
         <p class="by">Set {aboutNow.lego.set}</p>
       </div>
@@ -192,11 +189,6 @@ const links = home.links.filter((l) => l.href);
     letter-spacing: -0.02em;
     line-height: 1.2;
   }
-  .sub {
-    margin: 4px 0 0;
-    color: var(--muted);
-    font-size: 14px;
-  }
 
   .bio p {
     margin: 0 0 18px;
@@ -252,8 +244,18 @@ const links = home.links.filter((l) => l.href);
     font-variant-numeric: tabular-nums;
   }
   .place {
+    justify-self: start;
+    color: var(--text);
     font-size: 15px;
     font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s;
+  }
+  .place:hover {
+    text-decoration-color: var(--accent);
   }
   .what {
     color: var(--muted);
@@ -522,10 +524,8 @@ const links = home.links.filter((l) => l.href);
   .lego-img {
     display: block;
     width: 100%;
-    height: 150px;
+    height: 110px;
     margin: 4px 0 12px;
-    border-radius: 8px;
-    background: #fff;
     object-fit: contain;
     transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.2, 1);
   }

@@ -211,13 +211,13 @@ export const aboutNow = {
 
 // About page, "Along the way" list (newest first).
 export const aboutPath = [
-  { year: '2026', place: 'London School of Economics', what: 'Political Science (MSc)' },
-  { year: '2025', place: 'UC Irvine', what: 'Political Science and History' },
-  { year: '2022', place: 'Free University of Berlin', what: 'History' },
+  { year: '2026', place: 'London School of Economics and Political Science', href: 'https://www.lse.ac.uk/', what: 'Political Science' },
+  { year: '2025', place: 'University of California, Irvine', href: 'https://uci.edu/', what: 'Political Science and History' },
+  { year: '2022', place: 'Freie Universität Berlin', href: 'https://www.fu-berlin.de/en/', what: 'History' },
 ];
 
 export const about = [
   'Hi, I&rsquo;m Nima. Right now I&rsquo;m finishing my master&rsquo;s in political science at the London School of Economics, a year after graduating from UC Irvine, and the next step I&rsquo;m hoping for is law school.',
   'In the meantime, and all the way through, I want to build new things that help people and the causes I care about. So far that means small, free apps like Ergo for LSAT logical reasoning and Check Congress for following what Congress does. They are on the <a href="/projects">Projects</a> page.',
-  'In my free time I design my own LEGO builds, go backpacking, follow architecture and new urban and transit developments, and play video games like Cyberpunk 2077 and Overwatch. I also photograph the places I travel through; that work, and the <a href="/photography/cameras">cameras</a>, are under <a href="/photography">Photography</a>.',
+  'In my free time I design my own LEGO builds, go backpacking, follow architecture and new urban and transit developments, and play video games like Cyberpunk 2077 and Overwatch. I also take photos wherever I travel, and you can find that art, along with the <a href="/photography/cameras">cameras</a> I shoot on, under <a href="/photography">Photography</a>.',
 ];
