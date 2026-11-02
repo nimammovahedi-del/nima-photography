@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import InstitutionLogo from '../../components/research/InstitutionLogo.astro';
 import { institutions, papers } from '../../data/research/papers';
 import { states } from '../../data/research/fdi-states';
+import { provinces, type Group } from '../../data/research/iran-provinces';
 import '../../styles/research.css';
 
 // Mini versions of each paper's key chart, drawn from the same data as the paper pages.
@@ -14,6 +15,19 @@ for (let x = 1; x <= 4; x++)
     if (n) cells.push({ x, y, n });
   }
 const maxN = Math.max(...cells.map((c) => c.n));
+
+// Paper 2: Iran's provinces coloured by majority group, same colours as the paper page.
+const groups: [Group, string, string][] = [
+  ['persian', 'Persian', 'var(--r-neutral)'],
+  ['azeri', 'Azeri', 'var(--r-c1)'],
+  ['kurd', 'Kurd', 'var(--r-c2)'],
+  ['lur', 'Lur', 'var(--r-c3)'],
+  ['arab', 'Arab', 'var(--r-c4)'],
+  ['baloch', 'Baloch', 'var(--r-c5)'],
+  ['turkmen', 'Turkmen', 'var(--r-c6)'],
+];
+const groupColor = Object.fromEntries(groups.map(([g, , c]) => [g, c]));
+const groupIndex = Object.fromEntries(groups.map(([g], k) => [g, k]));
 ---
 
 <BaseLayout title="Research" description="Political science papers by Nima Movahedi on courts, power-sharing, AI in the courtroom and foreign investment.">
@@ -46,16 +60,15 @@ const maxN = Math.max(...cells.map((c) => c.n));
               )}
               {p.slug === 'iran-power-sharing' && (
                 <svg viewBox="0 0 200 120">
-                  {[
-                    ['Centripetal', 3],
-                    ['Consociational', 5],
-                    ['Ethno-federal', 6],
-                  ].map(([t, v], k) => (
+                  <svg x="0" y="0" width="132" height="120" viewBox="0 0 654 593">
+                    {provinces.map((pr) => (
+                      <path class="a-fade prov" d={pr.d} style={`fill:${groupColor[pr.group]};--i:${groupIndex[pr.group]}`} />
+                    ))}
+                  </svg>
+                  {groups.map(([, label, c], k) => (
                     <>
-                      <text x="0" y={22 + k * 38}>{t}</text>
-                      <rect x="0" y={30 + k * 38} width="200" height="8" rx="2" class="track" />
-                      <rect class="a-grow-x" x="0" y={30 + k * 38} width={((v as number) / 8) * 200} height="8" rx="2" style={`fill:var(--accent);--i:${k}`} />
-                      <text x="200" y={22 + k * 38} text-anchor="end" class="ink">{v}/8</text>
+                      <rect x="146" y={6 + k * 16} width="8" height="8" rx="2" style={`fill:${c}`} />
+                      <text x="160" y={14 + k * 16}>{label}</text>
                     </>
                   ))}
                 </svg>
@@ -204,6 +217,11 @@ const maxN = Math.max(...cells.map((c) => c.n));
   .mini line.axis {
     stroke: var(--line);
     stroke-width: 1;
+  }
+  .mini .prov {
+    stroke: var(--r-surface);
+    stroke-width: 6;
+    stroke-linejoin: round;
   }
   .mini .track {
     fill: var(--r-grid);
