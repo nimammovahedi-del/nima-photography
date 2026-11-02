@@ -263,3 +263,13 @@ html.map-arrived .place > :not(.country-map) {
     animation: none;
   }
 }
+
+/* Research and Projects sit on a lighter grey than the photo pages. A page opts in by putting
+   data-tone="grey" on any element; the photo pages stay on near-black. */
+html:not([data-theme='light']):has([data-tone='grey']) {
+  --bg: #18181b;
+  --bg-raised: #222226;
+  --card: #26262a;
+  --line: #303036;
+  --sea: #18181b;
+}

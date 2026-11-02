@@ -7,7 +7,7 @@ import { projects } from '../../data/projects';
 ---
 
 <BaseLayout title="Projects" description="Apps I've built: Ergo for LSAT practice, Check Congress for following Congress, and Brick Rater.">
-  <header class="head">
+  <header class="head" data-tone="grey">
     <h1>Projects</h1>
     <p class="lede">Free tools I built for questions I kept asking.</p>
   </header>
@@ -197,10 +197,11 @@ import { projects } from '../../data/projects';
   .thumb {
     position: relative;
     aspect-ratio: 16 / 10;
-    border: 1px solid var(--line);
+    border: 1px solid #3c3c43;
     border-radius: 8px;
     overflow: hidden;
     background: var(--bg-raised);
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
     transition: border-color 0.3s var(--ease-out);
   }
   .row:hover .thumb {
