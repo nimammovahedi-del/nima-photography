@@ -197,11 +197,11 @@ import { projects } from '../../data/projects';
   .thumb {
     position: relative;
     aspect-ratio: 16 / 10;
-    border: 1px solid #3c3c43;
+    border: 1px solid var(--frame-edge);
     border-radius: 8px;
     overflow: hidden;
     background: var(--bg-raised);
-    box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
+    box-shadow: 0 12px 32px var(--frame-shadow);
     transition: border-color 0.3s var(--ease-out);
   }
   .row:hover .thumb {

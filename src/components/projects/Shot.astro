@@ -50,8 +50,8 @@ const { media, address, eager = false } = Astro.props;
     margin: 0;
     /* A lighter edge and a soft shadow, so app screenshots in their own dark greys stand off the
        grey page. */
-    border: 1px solid #3c3c43;
-    box-shadow: 0 18px 50px rgb(0 0 0 / 0.5);
+    border: 1px solid var(--frame-edge);
+    box-shadow: 0 18px 50px var(--frame-shadow);
     border-radius: 12px;
     overflow: hidden;
     background: var(--bg-raised);
@@ -62,7 +62,7 @@ const { media, address, eager = false } = Astro.props;
     gap: 14px;
     height: 34px;
     padding: 0 14px;
-    border-bottom: 1px solid #3c3c43;
+    border-bottom: 1px solid var(--frame-edge);
   }
   .dots {
     display: flex;

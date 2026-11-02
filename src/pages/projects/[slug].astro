@@ -15,13 +15,37 @@ const p = projects[i];
 const prev = projects[(i - 1 + projects.length) % projects.length];
 const next = projects[(i + 1) % projects.length];
 const host = p.url ? new URL(p.url).host : '';
+
+// Every big section gets an anchor, listed in the side menu so a reader can jump around.
+const slugify = (t: string) =>
+  t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const toc = [
+  { id: 'overview', title: 'Overview' },
+  ...(p.why ? [{ id: slugify(p.why.title), title: 'Why I built it' }] : []),
+  ...p.sections.map((s) => ({ id: slugify(s.title), title: s.title })),
+  ...(p.how ? [{ id: slugify(p.how.title), title: p.how.title }] : []),
+];
 ---
 
 <BaseLayout title={p.name} description={`${p.name}: ${p.tagline}`}>
   <article class="page" data-tone="grey">
     <nav class="back"><a href="/projects"><span aria-hidden="true">←</span> Projects</a></nav>
 
-    <header class="intro">
+    {
+      toc.length > 2 && (
+        <nav class="toc" aria-label={`Sections of ${p.name}`} data-toc>
+          <ol>
+            {toc.map((t) => (
+              <li>
+                <a href={`#${t.id}`}>{t.title}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
+    <header class="intro" id="overview">
       <AppLogo slug={p.slug} size={64} />
       <h1>{p.name}</h1>
       <p class="tagline">{p.tagline}</p>
@@ -43,7 +67,7 @@ const host = p.url ? new URL(p.url).host : '';
 
     {
       p.why && (
-        <section class="block">
+        <section class="block" id={slugify(p.why.title)}>
           <h2>{p.why.title}</h2>
           {p.why.paras.map((t) => <p>{t}</p>)}
         </section>
@@ -52,7 +76,7 @@ const host = p.url ? new URL(p.url).host : '';
 
     {
       p.sections.map((s) => (
-        <section class="block">
+        <section class="block" id={slugify(s.title)}>
           <h2>{s.title}</h2>
           {s.paras.map((t) => <p>{t}</p>)}
           {s.media && <div class="wide"><Shot media={s.media} address={host} /></div>}
@@ -62,7 +86,7 @@ const host = p.url ? new URL(p.url).host : '';
 
     {
       p.how && (
-        <section class="block how">
+        <section class="block how" id={slugify(p.how.title)}>
           <h2>{p.how.title}</h2>
           <p>{p.how.intro}</p>
           <dl class="stats">
@@ -120,6 +144,51 @@ const host = p.url ? new URL(p.url).host : '';
   </article>
 </BaseLayout>
 
+<script>
+  // Side menu: the section you're reading is highlighted as you scroll, and a click glides there.
+  const nav = document.querySelector<HTMLElement>('[data-toc]');
+  if (nav) {
+    const links = [...nav.querySelectorAll<HTMLAnchorElement>('a')];
+    const targets = links.map((a) => document.getElementById(a.hash.slice(1))!);
+    let current = -1;
+    const update = () => {
+      const line = window.innerHeight * 0.35;
+      let i = 0;
+      targets.forEach((t, k) => {
+        if (t && t.getBoundingClientRect().top <= line) i = k;
+      });
+      // At the very bottom, the last section counts as read even if it is short.
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) i = targets.length - 1;
+      if (i === current) return;
+      current = i;
+      links.forEach((a, k) => (k === i ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+    };
+    let queued = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          update();
+        });
+      },
+      { passive: true },
+    );
+    window.addEventListener('resize', update);
+    update();
+    links.forEach((a, k) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        targets[k].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+        history.replaceState(null, '', a.hash);
+      }),
+    );
+  }
+</script>
+
 <style>
   .page {
     --col: 720px;
@@ -144,6 +213,55 @@ const host = p.url ? new URL(p.url).host : '';
   }
   .back {
     padding-top: 28px;
+  }
+  /* Anchored sections stop just below the sticky site header. */
+  .page [id] {
+    scroll-margin-top: 96px;
+  }
+
+  /* Side menu, in the empty margin left of the screenshots. Only where that margin is wide enough. */
+  .toc {
+    display: none;
+  }
+  @media (min-width: 1300px) {
+    /* Screenshots narrow a little on laptop screens so the menu has its own margin. */
+    .page {
+      --wide: min(1040px, calc(100vw - 480px));
+    }
+    .toc {
+      display: block;
+      position: fixed;
+      top: 128px;
+      left: max(24px, calc((100vw - var(--wide)) / 2 - 216px));
+      width: 176px;
+      max-width: none;
+      margin: 0;
+      z-index: 5;
+    }
+  }
+  .toc ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-left: 1px solid var(--line);
+  }
+  .toc a {
+    display: block;
+    margin-left: -1px;
+    padding: 7px 0 7px 16px;
+    border-left: 2px solid transparent;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.35;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .toc a:hover {
+    color: var(--text);
+  }
+  .toc a[aria-current] {
+    color: var(--text);
+    border-left-color: var(--tan);
   }
   .back a {
     color: var(--text);
@@ -209,6 +327,14 @@ const host = p.url ? new URL(p.url).host : '';
   }
   .btn:hover {
     background: var(--text);
+  }
+  /* Light mode: a dark button on the light page. */
+  :global(:root[data-theme='light']) .btn:not(.ghost) {
+    background: var(--text);
+    color: var(--bg);
+  }
+  :global(:root[data-theme='light']) .btn:not(.ghost):hover {
+    background: var(--nav);
   }
   .btn.ghost {
     background: none;
