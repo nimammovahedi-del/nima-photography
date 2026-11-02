@@ -1,0 +1,261 @@
+---
+// One app: what it is, a demo video of it in use, then a section per feature, then a link to the
+// live site. Apps without a live site (Brick Rater) show a short "being built" page.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectArt from '../../components/projects/ProjectArt.astro';
+import DemoVideo from '../../components/projects/DemoVideo.astro';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const i = projects.findIndex((p) => p.slug === Astro.params.slug);
+const p = projects[i];
+const prev = projects[(i - 1 + projects.length) % projects.length];
+const next = projects[(i + 1) % projects.length];
+const host = p.url ? new URL(p.url).host : '';
+const captions = p.features.map((f, k) => ({ t: k * 8, label: f.title }));
+---
+
+<BaseLayout title={p.name} description={`${p.name}: ${p.tagline}`}>
+  <nav class="back"><a href="/projects"><span aria-hidden="true">←</span> Projects</a></nav>
+
+  <header class="hero">
+    <div class="intro">
+      <h1>{p.name}</h1>
+      <p class="tagline">{p.tagline}</p>
+      <ul class="tags">{p.tags.map((t) => <li>{t}</li>)}</ul>
+      {
+        p.url ? (
+          <a class="btn" href={p.url} target="_blank" rel="noopener">
+            {p.urlLabel ?? 'Visit site'} <span aria-hidden="true">↗</span>
+          </a>
+        ) : (
+          <span class="btn ghost" aria-disabled="true">Coming soon</span>
+        )
+      }
+    </div>
+    <div class="media">
+      {
+        p.video ? (
+          <DemoVideo src={p.video} poster={p.poster} address={host} captions={captions} label={`${p.name} demo`} />
+        ) : (
+          <div class="art-box">
+            <ProjectArt slug={p.slug} vt={`project-${p.slug}`} size="hero" />
+          </div>
+        )
+      }
+    </div>
+  </header>
+
+  {
+    p.features.length > 0 ? (
+      <section class="features" aria-label="Features">
+        {p.features.map((f, k) => (
+          <article class="feature">
+            <div class="f-text">
+              <p class="f-num">{String(k + 1).padStart(2, '0')}</p>
+              <h2>{f.title}</h2>
+              <p>{f.text}</p>
+            </div>
+            {f.clip && (
+              <div class="f-media">
+                <DemoVideo src={f.clip} address={host} clip label={f.title} />
+              </div>
+            )}
+          </article>
+        ))}
+      </section>
+    ) : (
+      <section class="wip">
+        <p>{p.summary}</p>
+        <p class="muted">This page will fill in once there's something to try.</p>
+      </section>
+    )
+  }
+
+  <footer class="end">
+    {
+      p.url && (
+        <a class="btn big" href={p.url} target="_blank" rel="noopener">
+          Try {p.name} yourself <span aria-hidden="true">↗</span>
+        </a>
+      )
+    }
+    <nav class="pager" aria-label="Other projects">
+      <a href={`/projects/${prev.slug}`}><span aria-hidden="true">←</span> {prev.name}</a>
+      <a href="/projects">All projects</a>
+      <a href={`/projects/${next.slug}`}>{next.name} <span aria-hidden="true">→</span></a>
+    </nav>
+  </footer>
+</BaseLayout>
+
+<style>
+  .back,
+  .hero,
+  .features,
+  .wip,
+  .end {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+  .back {
+    padding-top: 28px;
+  }
+  .back a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .back a span {
+    color: var(--tan);
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+    padding-top: clamp(28px, 5vw, 56px);
+    padding-bottom: clamp(48px, 7vw, 88px);
+  }
+  .intro {
+    display: grid;
+    gap: 18px;
+    justify-items: start;
+  }
+  h1 {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 64px);
+    line-height: 1.05;
+  }
+  .tagline {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--project-body);
+    font-weight: 300;
+    max-width: 34ch;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .tags li {
+    font-size: 12.5px;
+    padding: 3px 11px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--project-body);
+  }
+  .btn {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    padding: 10px 18px;
+    border-radius: 6px;
+    background: var(--cream);
+    color: var(--bg);
+    font-size: 14.5px;
+    font-weight: 400;
+    text-decoration: none;
+  }
+  .btn.ghost {
+    background: none;
+    color: var(--muted);
+    border: 1px dashed var(--line);
+  }
+  .btn.big {
+    font-size: 16px;
+    padding: 14px 24px;
+  }
+  .art-box {
+    padding: clamp(20px, 4vw, 44px);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-raised);
+  }
+  .features {
+    display: grid;
+  }
+  .feature {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(24px, 5vw, 64px);
+    align-items: center;
+    padding: clamp(32px, 5vw, 56px) 0;
+    border-top: 1px solid var(--line);
+  }
+  .feature:not(:has(.f-media)) .f-text {
+    grid-column: 1 / -1;
+    max-width: 70ch;
+  }
+  .f-text {
+    display: grid;
+    gap: 10px;
+  }
+  .f-num {
+    margin: 0;
+    color: var(--tan);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+  }
+  .feature h2 {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(24px, 2.6vw, 30px);
+  }
+  .feature p:not(.f-num),
+  .wip p {
+    margin: 0;
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: var(--project-body);
+    font-weight: 300;
+    max-width: 62ch;
+  }
+  .wip {
+    display: grid;
+    gap: 12px;
+    padding-bottom: 48px;
+  }
+  .wip .muted {
+    color: var(--muted);
+  }
+  .end {
+    display: grid;
+    justify-items: center;
+    gap: 40px;
+    padding-top: 56px;
+    padding-bottom: 64px;
+    border-top: 1px solid var(--line);
+  }
+  .pager {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+  }
+  .pager a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .pager a span {
+    color: var(--tan);
+  }
+  @media (max-width: 860px) {
+    .hero,
+    .feature {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
