@@ -10,15 +10,15 @@ export const site = {
 };
 
 // The main page (/): what follows "I am a …", where you are, and the icon links.
-// Leave a link's href empty until you have it; it shows as "coming soon".
+// A link with an empty href is hidden until you fill it in.
 export const home = {
   tagline: 'Researcher, builder, photographer',
   roles: ['researcher', 'builder', 'photographer', 'backpacker', 'designer', 'graduate student'],
   location: 'Currently in Irvine, CA.',
   links: [
-    { icon: 'email', label: 'Email', href: '' },
+    { icon: 'email', label: 'Email', href: 'mailto:movahedn@uci.edu' },
     { icon: 'github', label: 'GitHub', href: 'https://github.com/nimammovahedi-del' },
-    { icon: 'linkedin', label: 'LinkedIn', href: '' },
+    { icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/nima-movahedi/' },
     { icon: 'cv', label: 'CV (PDF)', href: '' },
   ],
 };
