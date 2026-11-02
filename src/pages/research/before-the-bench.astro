@@ -1,0 +1,617 @@
+---
+import PaperLayout from '../../components/research/PaperLayout.astro';
+import Fig from '../../components/research/Fig.astro';
+
+const sections = [
+  { id: 'problem', label: 'AI that invents law' },
+  { id: 'vacuum', label: 'Nobody is coming' },
+  { id: 'ladder', label: 'Three court-side checks' },
+  { id: 'pipeline', label: 'Follow a filing' },
+  { id: 'adopt', label: 'How courts can adopt it' },
+];
+
+const aims = [
+  'Show how often AI tools <strong>fabricate case law</strong>, and who is most exposed.',
+  'Explain why US federal and state politics leave <strong>courts on their own</strong>.',
+  'Recommend <strong>three checks</strong> courts can adopt now, through bodies they already have.',
+];
+
+const rates = [
+  { g: 'Public chatbots', name: 'ChatGPT-4', v: 58 },
+  { g: 'Public chatbots', name: 'Llama 2', v: 88 },
+  { g: 'Legal AI tools', name: 'Lexis+ AI', v: 17, claim: 0, claimText: 'Marketed as “100% hallucination-free” citations' },
+  { g: 'Legal AI tools', name: 'Westlaw AI', v: 34, claim: 5, claimText: 'Marketed with “over 95% accuracy”' },
+];
+
+const timeline = [
+  { d: 'Jun 2023', t: 'First judicial standing order', n: 'Judge Brantley Starr (N.D. Texas) requires lawyers to certify AI-drafted text was checked.', k: 'court' },
+  { d: '2024', t: 'Colorado AI Act', n: 'First comprehensive state AI law, aimed at consumers, not courts. Other states follow.', k: 'state' },
+  { d: '2025', t: 'Senate kills the moratorium 99–1', n: 'The House had passed a 10-year ban on enforcing state AI laws.', k: 'fed' },
+  { d: '2025', t: 'Executive Order 14179', n: 'AI companies “shall be free without state-by-state regulation.”', k: 'fed' },
+  { d: '2025', t: 'DOJ AI Litigation Task Force', n: 'Set up to challenge state AI laws.', k: 'fed' },
+];
+
+const rungs = [
+  {
+    k: 'base',
+    tag: 'Baseline',
+    name: 'Reinforce existing conduct rules',
+    what: 'Standing orders and local rules that remind lawyers of their existing duties and the sanctions for breaking them.',
+    pros: ['Cheap and already common', 'A barrier against careless, unintentional errors'],
+    cons: ['Declarations alone have not slowed the rise in fabricated filings', 'Only 39 of about 900 federal judges have issued one'],
+  },
+  {
+    k: 'r1',
+    tag: 'Recommendation 1',
+    name: 'Mandatory hyperlinks to every authority',
+    what: 'Every e-filed brief, motion and memo must link each cited case, statute or regulation to its source.',
+    pros: ['Self-executing at the point of filing', 'Stops fabricated cases before they enter the record', 'Needs no new technology or expertise', 'Proven: New York Commercial Division, Administrative Order 133/20'],
+    cons: ['A working link proves a case exists, not that it was described accurately'],
+  },
+  {
+    k: 'r2',
+    tag: 'Recommendation 2',
+    name: 'Random citation audits',
+    what: 'Screen a random selection of filings with CourtListener’s free Citation Lookup API before a judge reads them.',
+    pros: ['Works whatever the filer does', 'Deterrence by probability, like the IRS auditing under 1% of returns', 'Free, open-source and already tested', 'Usable by hand or built into e-filing'],
+    cons: ['Does not cover every decision, statute or secondary source', 'Cannot catch misdescribed cases', 'Only deters people who know about it'],
+  },
+  {
+    k: 'r3',
+    tag: 'Recommendation 3',
+    name: 'Screen and educate self-represented litigants',
+    what: 'Check pro se filings systematically and hand every pro se litigant a plain-language guide to AI before proceedings.',
+    pros: ['Targets the largest source of fabricated content', 'Prevention rather than punishment', 'Keeps AI’s real benefits for people without lawyers', 'A paper handout works for everyone'],
+    cons: ['More judicial attention than random audits', 'Quality will vary between courts', 'AI and citation rules are still hard to explain'],
+  },
+];
+
+const handout = [
+  'What AI hallucinations are, in plain language',
+  'A checklist for verifying every citation on CourtListener or Google Scholar',
+  'A warning that fabricated citations can be detected and penalised',
+  'Contacts for local legal aid and the court’s self-help centre',
+];
+
+// waffle: ~900 federal judges, 39 with AI standing orders
+const JUDGES = 900;
+const ORDERS = 39;
+const COLS = 45;
+const rows = Math.ceil(JUDGES / COLS);
+---
+
+<PaperLayout slug="before-the-bench" aims={aims} sections={sections}>
+  <section class="rsec" id="problem">
+    <p class="r-eyebrow">01 · The problem</p>
+    <h2>Lawyers use AI. AI invents law.</h2>
+    <p class="lede">
+      Generative AI has made the legal system navigable for millions of people who can’t afford a lawyer. It also
+      fabricates cases, invents citations and reasons wrongly, and those errors are reaching courtrooms.
+    </p>
+    <div class="r-stats">
+      <div class="r-stat"><span class="n">77%</span><span class="l">of legal professionals use generative AI</span><span class="s">Thomson Reuters, 2025</span></div>
+      <div class="r-stat"><span class="n">58–88%</span><span class="l">hallucination rate of public chatbots on US case law</span><span class="s">Dahl et al.</span></div>
+      <div class="r-stat"><span class="n">17–34%</span><span class="l">hallucination rate of legal-specific AI tools</span><span class="s">Stanford RegLab / HAI</span></div>
+      <div class="r-stat"><span class="n">≈ 60%</span><span class="l">of US incidents come from people representing themselves</span><span class="s">Charlotin database</span></div>
+    </div>
+
+    <Fig title="How often each tool made up legal answers" hint="Hover a bar" replay caption="Rates from Dahl et al. (public chatbots, on verifiable questions about US cases) and Stanford RegLab/HAI (legal tools), as cited in the memo. The ◆ marks the error rate implied by each vendor’s marketing.">
+      <div class="hr r-dim-others">
+        {rates.map((r, i) => (
+          <>
+            {(i === 0 || rates[i - 1].g !== r.g) && <p class="hr-g">{r.g}</p>}
+            <div class="hr-row" data-tip={`${r.name}: ${r.v}% hallucinated${r.claimText ? `|${r.claimText}` : ''}`}>
+              <span class="hr-l">{r.name}</span>
+              <span class="hr-t">
+                <span class="hr-b a-grow-x" style={`width:${r.v}%;--i:${i}`} />
+                {r.claim !== undefined && <span class="hr-claim" style={`left:${r.claim}%`} />}
+              </span>
+              <span class="hr-v">{r.v}%</span>
+            </div>
+          </>
+        ))}
+        <div class="hr-axis" aria-hidden="true"><span></span><span class="ticks"><span>0</span><span>50%</span><span>100%</span></span><span></span></div>
+      </div>
+    </Fig>
+    <p>
+      Research suggests the problem is built in, not a bug awaiting a fix: “hallucination is inevitable for any computable
+      LLM.” Better models will lower the rate but cannot guarantee a filing is real.
+    </p>
+  </section>
+
+  <section class="rsec" id="vacuum">
+    <p class="r-eyebrow">02 · The policy vacuum</p>
+    <h2>Washington won’t act, and won’t let states act</h2>
+    <p class="lede">
+      Congress is gridlocked, the executive is deregulating and pre-empting state AI laws, and state laws target consumers
+      rather than courts. Judges have been left to improvise one standing order at a time.
+    </p>
+    <Fig title="How the vacuum formed" hint="Hover an event">
+      <ol class="tl r-dim-others">
+        {timeline.map((e) => (
+          <li class={e.k} data-tip={`${e.t}|${e.n}`}><span class="d">{e.d}</span><b>{e.t}</b><p>{e.n}</p></li>
+        ))}
+      </ol>
+      <ul class="rfig-legend">
+        <li><span class="r-dot" style="color:var(--r-c3)"></span>Courts</li>
+        <li><span class="r-dot" style="color:var(--r-c1)"></span>States</li>
+        <li><span class="r-dot" style="color:var(--r-c5)"></span>Federal government</li>
+      </ul>
+    </Fig>
+
+    <div class="two">
+      <Fig title="Federal judges with an AI standing order" hint="Hover the grid" replay caption="Bloomberg Law (2025): 39 judges, against a federal bench of about 900. Each square is one judge.">
+        <div class="waffle" style={`--cols:${COLS}`} data-tip={`${ORDERS} of about ${JUDGES} federal judges|have a standing order on AI`}>
+          {Array.from({ length: rows * COLS }, (_, i) => i < JUDGES && <span class:list={['w', i < ORDERS && 'on a-pop']} style={i < ORDERS ? `--i:${i}` : undefined} />)}
+        </div>
+        <p class="big"><b>39</b> of ~900</p>
+      </Fig>
+      <Fig title="Who files the hallucinations" hint="Hover the bar" replay caption="Charlotin’s database: 559 of 916 documented US incidents came from pro se (self-represented) litigants.">
+        <div class="split" data-tip="559 of 916 US incidents|from self-represented litigants (61%)">
+          <span class="seg pro a-grow-x" style="width:61%"><b>559</b> pro se</span>
+          <span class="seg rep">357 others</span>
+        </div>
+        <p class="big"><b>61%</b> pro se</p>
+      </Fig>
+    </div>
+    <p class="r-note">
+      The memo cites the same database twice from different points in time: “more than doubled in the past year, with over
+      800 cases worldwide and more than 300 in the United States,” and later 916 US incidents. The chart uses the later
+      figure.
+    </p>
+  </section>
+
+  <section class="rsec" id="ladder">
+    <p class="r-eyebrow">03 · Recommendations</p>
+    <h2>A ladder of court-side checks</h2>
+    <p class="lede">
+      Each step asks a little more of a court. Every one can be adopted through existing judicial governance, without
+      waiting for Congress or the White House.
+    </p>
+    <Fig title="From low cost to high commitment" hint="Tap a rung">
+      <div class="lad" data-ladder>
+        <ol class="rungs">
+          {rungs.map((r, i) => (
+            <li style={`--lvl:${i}`}>
+              <button type="button" aria-pressed={i === 1 ? 'true' : 'false'} data-k={r.k}>
+                <span class="tag">{r.tag}</span>
+                <span class="nm">{r.name}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+        <div class="rung-read">
+          {rungs.map((r, i) => (
+            <div data-read={r.k} hidden={i !== 1}>
+              <p class="what">{r.what}</p>
+              <div class="pc">
+                <div><p class="r-eyebrow pos">Strengths</p><ul>{r.pros.map((p) => <li>{p}</li>)}</ul></div>
+                <div><p class="r-eyebrow neg">Limits</p><ul>{r.cons.map((p) => <li>{p}</li>)}</ul></div>
+              </div>
+              {r.k === 'r3' && (
+                <div class="handout">
+                  <p class="r-eyebrow">The four-point handout</p>
+                  <ol>{handout.map((h) => <li>{h}</li>)}</ol>
+                </div>
+              )}
+              {r.k === 'r2' && (
+                <div class="api">
+                  <span><b>18M+</b> US case citations in CourtListener</span>
+                  <span><b>50M</b> citations it was tested against</span>
+                  <span><b>250</b> citations checked per request</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      <figcaption>The baseline and three recommendations, in the memo’s order of increasing institutional commitment.</figcaption>
+    </Fig>
+  </section>
+
+  <section class="rsec" id="pipeline">
+    <p class="r-eyebrow">04 · How it works together</p>
+    <h2>Follow a filing to the judge</h2>
+    <p class="lede">The three checks sit at different points between a draft and a judge’s desk.</p>
+    <Fig title="A filing’s path through the checks" hint="Choose who is filing">
+      <div class="r-seg who" role="group" aria-label="Who is filing">
+        <button type="button" aria-pressed="true" data-who="lawyer">A lawyer files</button>
+        <button type="button" aria-pressed="false" data-who="prose">Someone without a lawyer files</button>
+      </div>
+      <ol class="pipe" data-pipe="lawyer">
+        <li class="st all"><span class="ic">✎</span><b>Draft</b><p>Written with help from an AI tool</p></li>
+        <li class="st prose-only"><span class="ic">R3</span><b>Handout</b><p>Plain-language guide before proceedings</p></li>
+        <li class="st all"><span class="ic">R1</span><b>File</b><p>Every authority must be hyperlinked, or the filing fails</p></li>
+        <li class="st lawyer-only"><span class="ic">R2</span><b>Random audit</b><p>Some filings are checked on CourtListener</p></li>
+        <li class="st prose-only"><span class="ic">R2+3</span><b>Screening</b><p>Pro se filings are checked systematically</p></li>
+        <li class="st all end"><span class="ic">⚖</span><b>Judge</b><p>Reads a filing whose citations exist</p></li>
+      </ol>
+    </Fig>
+  </section>
+
+  <section class="rsec" id="adopt">
+    <p class="r-eyebrow">05 · Implementation</p>
+    <h2>Two channels, no new law needed</h2>
+    <div class="r-cards c2">
+      <div class="r-card">
+        <p class="r-eyebrow">State courts</p>
+        <h4>National Center for State Courts</h4>
+        <p>Already trains judges on AI; can turn the proposals into model rules courts adapt to their own procedures.</p>
+      </div>
+      <div class="r-card">
+        <p class="r-eyebrow">Federal courts</p>
+        <h4>Judicial Conference of the United States</h4>
+        <p>Sets practice rules for all 94 federal districts; its rules committee could amend the Federal Rules or advise districts to adopt the checks.</p>
+      </div>
+    </div>
+    <blockquote class="r-quote">
+      These measures cannot eliminate every fabrication, but they can substantially reduce what reaches a judge: low cost,
+      built on existing infrastructure, and usable without technical expertise.
+      <cite>From the memo’s conclusion</cite>
+    </blockquote>
+  </section>
+</PaperLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ladder]').forEach((l) => {
+    const btns = l.querySelectorAll<HTMLButtonElement>('.rungs button');
+    btns.forEach((b) =>
+      b.addEventListener('click', () => {
+        btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        l.querySelectorAll<HTMLElement>('[data-read]').forEach((r) => (r.hidden = r.dataset.read !== b.dataset.k));
+      }),
+    );
+  });
+  document.querySelectorAll<HTMLElement>('.who').forEach((seg) => {
+    const pipe = seg.parentElement!.querySelector<HTMLElement>('[data-pipe]')!;
+    const btns = seg.querySelectorAll<HTMLButtonElement>('button');
+    btns.forEach((b) =>
+      b.addEventListener('click', () => {
+        btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        pipe.dataset.pipe = b.dataset.who!;
+        pipe.classList.remove('flash');
+        void pipe.offsetWidth;
+        pipe.classList.add('flash');
+      }),
+    );
+  });
+</script>
+
+<style>
+  /* hallucination bars */
+  .hr {
+    display: grid;
+    gap: 6px;
+  }
+  .hr-g {
+    margin: 10px 0 2px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hr-row,
+  .hr-axis {
+    display: grid;
+    grid-template-columns: 96px 1fr 44px;
+    align-items: center;
+    gap: 10px;
+    min-height: 32px;
+    font-size: 13px;
+  }
+  .hr-axis {
+    min-height: 0;
+  }
+  .hr-axis .ticks {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .hr-t {
+    position: relative;
+    height: 16px;
+    border-radius: 3px;
+    background: var(--r-grid);
+  }
+  .hr-b {
+    display: block;
+    height: 100%;
+    border-radius: 0 3px 3px 0;
+    background: var(--r-neg);
+  }
+  .hr-claim {
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    margin: -5px 0 0 -5px;
+    transform: rotate(45deg);
+    background: var(--text);
+    box-shadow: 0 0 0 2px var(--r-surface);
+  }
+  .hr-v {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* timeline */
+  .tl {
+    display: grid;
+    gap: 10px;
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 760px) {
+    .tl {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  .tl li {
+    padding: 10px 0 10px 12px;
+    border-left: 2px solid var(--c);
+    font-size: 13px;
+  }
+  .tl li.court {
+    --c: var(--r-c3);
+  }
+  .tl li.state {
+    --c: var(--r-c1);
+  }
+  .tl li.fed {
+    --c: var(--r-c5);
+  }
+  .tl .d {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .tl b {
+    font-weight: 500;
+  }
+  .tl p {
+    margin: 2px 0 0;
+    color: var(--r-ink-2);
+  }
+
+  .two {
+    display: grid;
+    gap: 0 16px;
+  }
+  @media (min-width: 760px) {
+    .two {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .waffle {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 2px;
+  }
+  .w {
+    aspect-ratio: 1;
+    border-radius: 1px;
+    background: var(--r-grid);
+  }
+  .w.on {
+    background: var(--r-c3);
+  }
+  .big {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .big b {
+    color: var(--text);
+    font-size: 28px;
+    font-weight: 300;
+  }
+  .split {
+    display: flex;
+    gap: 2px;
+    height: 44px;
+    overflow: hidden;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  .split .seg {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    white-space: nowrap;
+  }
+  .split .pro {
+    background: var(--r-c4);
+    color: #0b0b0b;
+  }
+  .split .pro b {
+    margin-right: 4px;
+    font-weight: 500;
+  }
+  .split .rep {
+    flex: 1;
+    background: var(--r-grid);
+    color: var(--r-ink-2);
+  }
+
+  /* ladder */
+  .lad {
+    display: grid;
+    gap: 20px;
+  }
+  @media (min-width: 760px) {
+    .lad {
+      grid-template-columns: 300px 1fr;
+      align-items: start;
+    }
+  }
+  .rungs {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .rungs li {
+    margin-left: calc(var(--lvl) * 14px);
+  }
+  .rungs button {
+    display: grid;
+    gap: 2px;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--r-ink-2);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      border-color 0.2s var(--ease-out),
+      background 0.2s var(--ease-out);
+  }
+  .rungs button:hover {
+    border-color: var(--muted);
+  }
+  .rungs button[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--text);
+  }
+  .rungs .tag {
+    color: var(--accent);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .rungs .nm {
+    font-size: 14px;
+  }
+  .rung-read .what {
+    margin: 0 0 14px;
+    font-size: 16px;
+  }
+  .pc {
+    display: grid;
+    gap: 14px;
+  }
+  @media (min-width: 560px) {
+    .pc {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .pc ul {
+    margin: 6px 0 0;
+    padding-left: 18px;
+    color: var(--r-ink-2);
+    font-size: 13px;
+  }
+  .pc li + li {
+    margin-top: 4px;
+  }
+  .r-eyebrow.pos {
+    color: var(--r-pos);
+  }
+  .r-eyebrow.neg {
+    color: var(--r-neg);
+  }
+  .handout,
+  .api {
+    margin-top: 16px;
+    padding: 14px;
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    font-size: 13px;
+  }
+  .handout ol {
+    margin: 6px 0 0;
+    padding-left: 18px;
+    color: var(--r-ink-2);
+  }
+  .api {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    color: var(--r-ink-2);
+  }
+  .api b {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* pipeline */
+  .who {
+    margin-bottom: 18px;
+    border-radius: 18px;
+  }
+  .pipe {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: s;
+  }
+  @media (min-width: 760px) {
+    .pipe {
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
+    }
+  }
+  .pipe .st {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 13px;
+    transition:
+      opacity 0.3s var(--ease-out),
+      border-color 0.3s var(--ease-out);
+  }
+  .pipe .st b {
+    font-weight: 500;
+  }
+  .pipe .st p {
+    margin: 0;
+    color: var(--r-ink-2);
+  }
+  .pipe .ic {
+    width: fit-content;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+  }
+  .pipe .st.end {
+    border-color: var(--accent);
+  }
+  .pipe[data-pipe='lawyer'] .prose-only,
+  .pipe[data-pipe='prose'] .lawyer-only {
+    display: none;
+  }
+  .pipe.flash .st {
+    animation: r-fade-up 0.4s var(--ease-out) both;
+  }
+  .pipe.flash .st:nth-child(2) {
+    animation-delay: 60ms;
+  }
+  .pipe.flash .st:nth-child(3) {
+    animation-delay: 120ms;
+  }
+  .pipe.flash .st:nth-child(4) {
+    animation-delay: 180ms;
+  }
+  .pipe.flash .st:nth-child(5) {
+    animation-delay: 240ms;
+  }
+  .pipe.flash .st:nth-child(6) {
+    animation-delay: 300ms;
+  }
+</style>

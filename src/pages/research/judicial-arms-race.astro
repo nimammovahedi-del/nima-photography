@@ -1,0 +1,1891 @@
+---
+import PaperLayout from '../../components/research/PaperLayout.astro';
+import Fig from '../../components/research/Fig.astro';
+
+const sections = [
+  { id: 'puzzle', label: 'Why Delaware' },
+  { id: 'theory', label: 'Exit, voice and the stalking horse' },
+  { id: 'loop', label: 'The four-stage loop' },
+  { id: 'stage-1', label: 'I · The rulings' },
+  { id: 'stage-2', label: 'II · Elites signal exit' },
+  { id: 'stage-3', label: 'III · Texas and Nevada move in' },
+  { id: 'stage-4', label: 'IV · Delaware hits back' },
+  { id: 'strategies', label: 'Three strategies' },
+  { id: 'convergence', label: 'Same destination' },
+  { id: 'bottom', label: 'A race to the bottom' },
+];
+
+const aims = [
+  'Explain why <strong>Texas and Nevada</strong> rebuilt their business courts and corporate codes after Delaware’s court unsettled its corporate clients in 2023–24 (“DExit”).',
+  'Trace, stage by stage, how court rulings, exit threats and law-firm advice pushed <strong>all three states</strong> to redesign their courts.',
+  'Test whether this new competition over <strong>courts themselves</strong> is a race to the top or a race to the bottom.',
+];
+
+// ---------- Fig 1: exit, voice, loyalty game (payoffs as (citizen, government)) ----------
+const evln = {
+  exit: { pay: '(E, 1)', read: 'The firm reincorporates elsewhere and gets the value of exit, E. The state keeps only its baseline.' },
+  respond: { pay: '(1 − c, L)', read: 'The firm complains, paying the cost of voice c, and the state reforms. This is the reform-through-pressure path DExit opened.' },
+  ignoreExit: { pay: '(E − c, 1)', read: 'The firm complains, is ignored, and leaves anyway, poorer by the cost of voice.' },
+  ignoreLoyal: { pay: '(0 − c, 1 + L)', read: 'The firm complains, is ignored, and stays. The state collects the loyalty payoff L.' },
+  loyalty: { pay: '(0, 1 + L)', read: 'The firm stays quiet and stays. For decades this was Delaware’s equilibrium.' },
+};
+
+// ---------- Fig 3: the stalking-horse trap ----------
+const horse = [
+  ['Challenger invests', 'A rival state commits real resources to a better court or code.'],
+  ['Firms are slow to respond', 'Reincorporating takes time, votes and legal work.'],
+  ['Delaware reacts', 'Delaware copies the innovation and keeps its firms.'],
+  ['Challenger loses', 'The rival’s investment cannot be recovered.'],
+  ['No state invests', 'Rational states see the trap coming and never enter.'],
+  ['Equilibrium persists', 'Delaware’s dominance renews itself, until 2023.'],
+];
+
+// ---------- Table 3: the rulings ----------
+const rulings = [
+  { m: 0, date: 'Jan 2023', name: 'McDonald’s derivative litigation', held: 'Extended personal liability to corporate officers, not just directors, who fail to address misconduct.', why: 'Raised personal exposure for executives and alarmed the C-suite.' },
+  { m: 12, date: 'Jan 2024', name: 'Tornetta v. Musk', tag: '$56B voided', held: 'Voided Musk’s $56 billion Tesla pay package despite 2018 shareholder approval.', why: 'Signalled heightened scrutiny of executive pay and drew Musk’s public ire.' },
+  { m: 13, date: 'Feb 2024', name: 'Palkon v. Maffei (TripAdvisor)', held: 'Blocked a Delaware exit pursued to secure weaker oversight.', why: 'Made departure harder, deepening frustration among firms weighing exit.' },
+  { m: 13, date: 'Feb 2024', name: 'AP-Fonden v. Activision Blizzard', tag: '$68.7B deal', held: 'Let a challenge to Microsoft’s $68.7 billion Activision acquisition proceed over technical disclosure defects.', why: 'Recast a routine M&A practice as a hard compliance line.' },
+  { m: 13, date: 'Feb 2024', name: 'West Palm Beach Firefighters v. Moelis', held: 'Struck down founder veto power over board decisions; boards must keep control.', why: 'Cast doubt on thousands of existing agreements, especially at VC-backed and founder-led firms.' },
+  { m: 13, date: 'Feb 2024', name: 'Tornetta v. Musk (ratification denied)', tag: '$345M fees', held: 'Rejected Tesla’s bid to reinstate the package by a second shareholder vote, despite overwhelming approval.', why: 'Deepened frustration with the new Chancellor; Tesla ordered to pay $345 million in fees.' },
+];
+// stack rulings that share a month on the mini timeline
+const stackAt: Record<number, number> = {};
+const rulingDots = rulings.map((r, i) => {
+  const k = stackAt[r.m] ?? 0;
+  stackAt[r.m] = k + 1;
+  return { ...r, i, k };
+});
+
+// ---------- Fig 4: media coverage vs searches, Q3 2020 – Q4 2025 (index, peak = 100) ----------
+const news = [10, 8, 10, 14, 20, 10, 2, 1, 8, 11, 5.5, 11, 13, 16.5, 22, 100, 30, 36.5, 52, 59, 46.5, 39];
+const google = [63, 47, 50, 52, 49, 43, 73, 61, 58, 73, 61, 59, 61, 89, 80, 72, 65, 74, 80, 80, 100, 99];
+const quarters = news.map((_, i) => {
+  const q = ((2 + i) % 4) + 1; // starts at Q3
+  const y = 2020 + Math.floor((2 + i) / 4);
+  return `Q${q} ${y}`;
+});
+const N = news.length;
+const linePts = google.map((v, i) => `${i + 0.5},${100 - v}`).join(' ');
+const yearTicks = [
+  { i: 2, y: '2021' },
+  { i: 6, y: '2022' },
+  { i: 10, y: '2023' },
+  { i: 14, y: '2024' },
+  { i: 18, y: '2025' },
+];
+
+// ---------- Fig 5: exit grievances (unpredictability, liabilities, litigation) ----------
+const exits: [string, number[]][] = [
+  ['Andreessen Horowitz', [1, 1, 1]],
+  ['Tesla, SpaceX, Neuralink', [1, 1, 1]],
+  ['Coinbase', [1, 0, 1]],
+  ['Dropbox', [1, 0, 1]],
+  ['Simon Property Group', [1, 0, 1]],
+  ['MercadoLibre', [1, 0, 0]],
+  ['The Trade Desk', [1, 0, 0]],
+  ['Pershing Square', [0, 1, 0]],
+  ['TripAdvisor', [0, 1, 0]],
+  ['Trump Media', [0, 1, 0]],
+];
+const grievNames = ['Unpredictable rulings', 'Expanded liabilities', 'Excessive litigation'];
+const grievTotals = [0, 1, 2].map((j) => exits.reduce((s, [, g]) => s + g[j], 0));
+
+// ---------- Fig 7 + Tables 4, 5, 10: tone of four elite law firms ----------
+type Tone = { word: string; fam: 'pos' | 'neg' | 'mix'; lvl: 1 | 2 | 3; notes: { d: string; t: string; q: string }[] };
+const periods = [
+  { k: 'pre', name: 'Before', span: 'Mar 2020 – Dec 2023' },
+  { k: 'post', name: 'After the rulings', span: 'Jan – Jul 2024' },
+  { k: 'reform', name: 'After the reforms', span: 'May – Oct 2025' },
+];
+const tone: { firm: string; cells: Tone[] }[] = [
+  {
+    firm: 'Gibson Dunn',
+    cells: [
+      { word: 'Reassuring', fam: 'pos', lvl: 1, notes: [
+        { d: 'Feb 2023', t: 'McDonald’s officer-liability ruling', q: 'Downplayed the decision as “unlikely to change derivative litigation materially.”' },
+        { d: 'Aug 2023', t: 'Mid-year litigation review', q: 'Acknowledged a “merger tax of deal litigation” but judged it offset by other improvements.' },
+      ] },
+      { word: 'Bracing', fam: 'neg', lvl: 1, notes: [
+        { d: 'Feb 2024', t: 'Tornetta v. Musk ($56B voided)', q: 'Advised clients to “expect extra scrutiny of independent directors,” while suggesting the ruling might prove specific to Tesla.' },
+      ] },
+      { word: 'Mixed', fam: 'mix', lvl: 1, notes: [
+        { d: 'May 2025', t: 'Delaware vs. Texas M&A update', q: 'Endorsed both states’ M&A frameworks; cast Delaware as the “default governing law” against “greater uncertainty” in Texas.' },
+        { d: 'Jun 2025', t: 'Developments in Texas and Nevada law', q: 'Saw no “one-size-fits-all” answer: “Delaware remains the gold-standard, but Texas is expected to close the gaps fast.”' },
+      ] },
+    ],
+  },
+  {
+    firm: 'Wilson Sonsini',
+    cells: [
+      { word: 'Endorsing', fam: 'pos', lvl: 2, notes: [
+        { d: 'Jan 2022', t: 'Annual Delaware review', q: 'Praised the Chancery Court’s “welcome flexibility and predictability” for private companies.' },
+      ] },
+      { word: 'Alarmed', fam: 'neg', lvl: 3, notes: [
+        { d: 'Jul 2024', t: 'Analysis of McCormick-era rulings', q: 'Described recent decisions as “inconsistent with prevailing market practice” and distrusted the trajectory of Delaware litigation.' },
+      ] },
+      { word: 'Cautious', fam: 'mix', lvl: 2, notes: [
+        { d: 'Oct 2025', t: 'Advisory on recent corporate-law changes', q: 'Saw “market actors … in wait-and-see mode as corporate-law developments further unfold.”' },
+      ] },
+    ],
+  },
+  {
+    firm: 'Sullivan & Cromwell',
+    cells: [
+      { word: 'Optimistic', fam: 'pos', lvl: 3, notes: [
+        { d: 'Mar 2020', t: 'Corporate governance memo', q: 'Told clients that Delaware “courts will not second-guess the directors’ decision.”' },
+      ] },
+      { word: 'Warning', fam: 'neg', lvl: 2, notes: [
+        { d: 'Feb 2024', t: 'Palkon v. Maffei (TripAdvisor exit)', q: '“Time will tell if … new hurdles associated with exiting Delaware will affect [its] position as jurisdiction of choice.”' },
+        { d: 'Feb 2024', t: 'Sears Hometown controller ruling', q: 'Expanded controller duties “may increase the volume of litigation.”' },
+      ] },
+      { word: 'Cautious', fam: 'mix', lvl: 2, notes: [
+        { d: 'Jun 2025', t: 'Memo on changes to U.S. corporate law', q: 'Framed the three-way contest as ongoing; backed the changes but urged “wait-and-see” until they are tested.' },
+      ] },
+    ],
+  },
+  {
+    firm: 'Cooley',
+    cells: [
+      { word: 'Endorsing', fam: 'pos', lvl: 2, notes: [
+        { d: 'Feb 2022', t: 'Charter amendment', q: 'Praised the legislature’s responsiveness, expecting “more Delaware corporations will consider” the venue.' },
+      ] },
+      { word: 'Alarmed', fam: 'neg', lvl: 3, notes: [
+        { d: 'Apr 2024', t: 'Moelis and Activision rulings', q: 'Said the rulings cast “doubt on M&A practices”; Delaware’s “long-standing acceptance … doesn’t offer any protection.”' },
+      ] },
+      { word: 'Hedging', fam: 'mix', lvl: 3, notes: [
+        { d: 'Jun 2025', t: 'Venue advisory for pre-IPO companies', q: 'Flagged “changing tides” and new competitors; credited SB 21 with “greater clarity.”' },
+      ] },
+    ],
+  },
+];
+const famName = { pos: 'Positive', neg: 'Negative', mix: 'Mixed' };
+const famLabel = (c: Tone) => `${famName[c.fam]}, intensity ${c.lvl} of 3`;
+
+// ---------- Stage III: Texas and Nevada ----------
+const G = { P: 'Predictability', L: 'Liability', X: 'Excessive litigation' } as const;
+const sb29: [string, string, (keyof typeof G)[]][] = [
+  ['Statutory business judgment rule', 'Good faith is presumed in statute; misconduct must be pled with particularity. A judicial standard becomes a statutory shield.', ['L']],
+  ['Higher ownership thresholds', 'Companies may require up to 3% ownership to bring a derivative suit, narrowing who can sue.', ['X']],
+  ['Jury-trial waivers', 'Allowed in certificates or bylaws, copying Delaware’s bench-trial predictability.', ['P']],
+  ['Books-and-records limits', 'Inspection excludes emails, texts and social-media messages: no electronic “fishing expeditions.”', ['X']],
+  ['Interpretive firewall', 'Texas’s code cannot be displaced by other states’ law, insulating firms from adverse case law elsewhere.', ['P']],
+];
+const hb40 = [
+  ['Sunset clauses removed', 'Non-operating court divisions will no longer dissolve: a lasting commitment.'],
+  ['Arbitration enforcement', 'The business courts may enforce arbitration agreements and review awards of any size.'],
+  ['Wider IP jurisdiction', 'Trade secrets, licensing and related IP disputes move into the business courts.'],
+  ['Judicial integration', 'The courts are embedded in Texas’s civil court structure: permanent, not experimental.'],
+  ['Clearer procedure', 'The Texas Supreme Court must adopt rules for prompt, efficient proceedings.'],
+];
+const nvTimeline = [
+  ['1987', 'Exculpation statute', 'Liability protection for every category except fraud, broader than Delaware.'],
+  ['2001', 'Exculpation by default', 'All corporations protected automatically; no shareholder vote needed.'],
+  ['2003', 'Business judgment rule codified', 'Delaware’s enhanced scrutiny of defensive tactics rejected.'],
+  ['2017', 'Anti-supplantation', 'Nevada law insulated from other states’ laws and rulings.'],
+];
+const ab239: [string, string, 'E' | 'G'][] = [
+  ['Controlling stockholders’ duties', 'Clarifies and narrows controllers’ fiduciary duties and voting influence.', 'E'],
+  ['Appraisal as the only remedy', 'Challenges to a deal are barred unless fraudulent or unvoted.', 'E'],
+  ['Jury-trial waiver', 'Corporations may require bench trials in their articles.', 'E'],
+  ['Controller defined by votes', 'A controller is whoever can “elect a majority of a corporation’s directors.”', 'G'],
+  ['Board merger approvals', 'Boards may approve agreements in preliminary or final form, answering the Activision ruling.', 'G'],
+];
+
+// ---------- Stage IV: Delaware ----------
+const sb21: [string, string, (keyof typeof G)[]][] = [
+  ['Safe harbours for controller deals', 'Relaxes the “dual-cleansing” model that invited litigation, matching Nevada’s low liability.', ['X', 'L']],
+  ['Controller redefined', 'Majority voting power, the power to appoint directors, or at least ⅓ of votes. Narrows Tornetta’s broader test.', ['X', 'P']],
+  ['Books-and-records limits', 'Inspectable records limited to set categories, with good faith and proper purpose required.', ['L', 'X']],
+  ['Director independence presumed', 'Directors are independent under NYSE/Nasdaq rules unless particular facts show otherwise.', ['X', 'P']],
+  ['Controller duty-of-care exculpation', 'Controllers shielded from duty-of-care claims; exposure limited to loyalty breaches.', ['L']],
+];
+const race2025 = [
+  { m: 2, s: 'de', d: 'Mar 2025', t: 'Delaware SB 21', n: 'Safe harbours; controller narrowed; signed a month after introduction.' },
+  { m: 4, s: 'tx', d: 'May 2025', t: 'Texas SB 29', n: 'Statutory protections; bipartisan supermajorities.' },
+  { m: 4, s: 'nv', d: 'May 2025', t: 'Nevada AB 239 + AJR 8', n: 'Code rewrite; first vote toward a constitutional business court.' },
+  { m: 5, s: 'tx', d: 'Jun 2025', t: 'Texas HB 40', n: 'Business courts made permanent and widened.' },
+];
+
+// ---------- Table 11 + Fig 8 + Table 12 ----------
+const courtDims = [
+  { k: 'est', label: 'Established', v: ['1792; business focus from the early 1900s', 'Created 2023; running since Sept 2024', '2025; interim, inside the existing judiciary', 'None yet; earliest passage of AJR 8 in 2027'] },
+  { k: 'sel', label: 'Judges chosen by', v: ['Governor, with Senate approval', 'Governor, with Senate approval', 'Election, then assigned by the chief judge', 'Governor, with committee approval'] },
+  { k: 'jur', label: 'Reach', v: ['Statewide', 'Statewide (5 of 11 divisions active)', 'Clark County only', 'Statewide'] },
+  { k: 'jury', label: 'Juries', v: ['None: an equity court, bench trials only', 'Guaranteed; SB 29 permits waivers', 'Guaranteed; AB 239 permits waivers', 'Guaranteed; AB 239 permits waivers'] },
+  { k: 'dec', label: 'Written decisions', v: ['Yes: extensive published case law', 'Yes: mandatory (about 20 issued)', 'No: only appellate decisions published', 'Yes: required under AJR 8'] },
+];
+const courts = [
+  { s: 'de', name: 'Delaware Court of Chancery' },
+  { s: 'tx', name: 'Texas Business Court' },
+  { s: 'nv', name: 'Nevada Eighth District (interim)' },
+  { s: 'nv', name: 'Proposed Nevada business court', dashed: true },
+];
+const lv = { Low: 85, Moderate: 50, High: 15 } as const; // y in % from the top
+const slope = [
+  { s: 'de', name: 'Delaware', a: 'High', b: 'Low', inst: 'Judicial credibility', target: 'Public companies whose investors expect governance oversight', logic: 'A deep court ecosystem needs little statutory change; it aims to keep the firms it has rather than chase new ones.' },
+  { s: 'tx', name: 'Texas', a: 'Moderate', b: 'Moderate', inst: 'Courts and statutes', target: 'Aggrieved corporations seeking credible institutional backing', logic: 'Statutes supply the certainty its young business courts cannot yet offer.' },
+  { s: 'nv', name: 'Nevada', a: 'Low', b: 'High', inst: 'Statutory permissiveness', target: 'Controller-dominated firms avoiding oversight and litigation costs', logic: 'With no permanent specialised court, statute is the main competitive tool.' },
+] as const;
+
+// ---------- Table 13 ----------
+const conv: [string, string][] = [
+  ['Specialised business courts altered or created', 'o●●'],
+  ['Safe harbours for conflicted deals', '●●●'],
+  ['Controller liability or duties reduced', '●●●'],
+  ['Shareholder access to records restricted', '●●o'],
+  ['“Controlling stockholder” narrowed', '●●●'],
+  ['Bench-trial mechanisms adopted or expanded', 'o●●'],
+];
+const convNew = conv.reduce((s, [, c]) => s + [...c].filter((x) => x === '●').length, 0);
+const stateNames = { de: 'Delaware', tx: 'Texas', nv: 'Nevada' } as const;
+const stKeys = ['de', 'tx', 'nv'] as const;
+
+// ---------- Fig 9 ----------
+const flow = [
+  { d: 'Judicial independence', m: ['Courts’ decision-making autonomy narrowed', 'Courts designed for competition, not adjudication'], o: 'Conditional authority', od: 'Courts lose independent powers, open to change whenever they fall out of line.' },
+  { d: 'Corporate liabilities revised', m: ['Litigation avenues closed or complicated', 'Fiduciary duties reduced; claims harder to win'], o: 'Limited accountability', od: 'Aggrieved parties lose recourse while corporate actors get looser standards.' },
+  { d: 'Selective governance', m: ['Two court types with different resources and procedures', 'Deliberative lawmaking bypassed'], o: 'Neglect of the public', od: 'Public interests and institutions are subordinated to corporate demand.' },
+];
+---
+
+<PaperLayout slug="judicial-arms-race" aims={aims} sections={sections}>
+  <!-- 01 -->
+  <section class="rsec" id="puzzle">
+    <p class="r-eyebrow">01 · The puzzle</p>
+    <h2>A tiny state that runs corporate America</h2>
+    <p class="lede">
+      Delaware’s grip on incorporations rests on one institution: the Court of Chancery, a specialist business court with
+      no juries, expert judges and two centuries of case law. In 2023–24 that court itself became the problem.
+    </p>
+    <div class="r-stats">
+      <div class="r-stat"><span class="n">0.3%</span><span class="l">of Americans live in Delaware</span></div>
+      <div class="r-stat"><span class="n">68%</span><span class="l">of Fortune 500 companies incorporate there</span></div>
+      <div class="r-stat"><span class="n">≈ ⅓</span><span class="l">of the state’s general fund comes from franchise taxes and fees</span></div>
+      <div class="r-stat"><span class="n">1792</span><span class="l">Court of Chancery founded</span></div>
+    </div>
+    <p>
+      States used to compete for companies by rewriting statutes. The paper argues something new is happening: states now
+      compete by <em>redesigning their courts</em>. Not forum shopping, where litigants choose among fixed courts, but <strong>forum creation</strong>, where courts are built as products.
+    </p>
+  </section>
+
+  <!-- 02 -->
+  <section class="rsec" id="theory">
+    <p class="r-eyebrow">02 · Theory</p>
+    <h2>Leave, stay, or threaten to leave</h2>
+    <p class="lede">
+      Competitive federalism starts from Tiebout and Hirschman: an unhappy firm can exit to another state, use its voice to
+      demand change, or stay loyal. The paper models this as a game.
+    </p>
+
+    <Fig title="Exit, voice and loyalty as a game" hint="Tap an ending to read it" caption="Redrawn from Figure 1. Payoffs are (firm, state). E is the value of exit, c the cost of voice, L the loyalty payoff.">
+      <div class="evln" data-evln>
+        <div class="node chooser">Firm</div>
+        <ul class="branches">
+          <li>
+            <span class="edge">Exit</span>
+            <button class="leaf" data-k="exit" type="button"><b>{evln.exit.pay}</b></button>
+          </li>
+          <li>
+            <span class="edge">Voice</span>
+            <div class="node chooser gov">State</div>
+            <ul class="branches">
+              <li>
+                <span class="edge">Respond</span>
+                <button class="leaf" data-k="respond" type="button"><b>{evln.respond.pay}</b></button>
+              </li>
+              <li>
+                <span class="edge">Ignore</span>
+                <div class="node chooser">Firm</div>
+                <ul class="branches">
+                  <li><span class="edge">Exit</span><button class="leaf" data-k="ignoreExit" type="button"><b>{evln.ignoreExit.pay}</b></button></li>
+                  <li><span class="edge">Loyalty</span><button class="leaf" data-k="ignoreLoyal" type="button"><b>{evln.ignoreLoyal.pay}</b></button></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <span class="edge">Loyalty</span>
+            <button class="leaf" data-k="loyalty" type="button"><b>{evln.loyalty.pay}</b></button>
+          </li>
+        </ul>
+        <p class="evln-read" aria-live="polite">{evln.respond.read}</p>
+        <script is:inline type="application/json" data-evln-text set:html={JSON.stringify(Object.fromEntries(Object.entries(evln).map(([k, v]) => [k, v.read])))} />
+      </div>
+    </Fig>
+
+    <p>
+      Exit only disciplines a state if leaving is credible. For decades it wasn’t, because any rival that innovated walked
+      into a trap.
+    </p>
+
+    <Fig title="Delaware’s “stalking horse” trap" hint="Tap a step" caption="Redrawn from Figure 3 (after Bebchuk & Hamdani, 2002). The dashed return marks the loop that kept rivals out.">
+      <ol class="horse" data-steps>
+        {
+          horse.map(([t, d], i) => (
+            <li>
+              <button type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-d={d}>
+                <span class="hn">{i + 1}</span>
+                <span class="ht">{t}</span>
+              </button>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="horse-read" aria-live="polite">{horse[0][1]}</p>
+      <div class="horse-back" aria-hidden="true"><span>back to the start: Delaware keeps its lead</span></div>
+    </Fig>
+  </section>
+
+  <!-- 03 -->
+  <section class="rsec" id="loop">
+    <p class="r-eyebrow">03 · Method</p>
+    <h2>A loop with no exit</h2>
+    <p class="lede">
+      The paper uses process tracing across Delaware, Texas and Nevada, the only states that answered DExit by redesigning
+      courts. It follows a four-stage cycle in time order rather than state by state, so the chain of cause and effect stays
+      visible.
+    </p>
+
+    <Fig title="The competitive feedback loop" hint="Tap a stage to jump to it" caption="Redrawn from Figure 2. The cycle begins from a stable equilibrium (dashed); once disrupted, each defensive response re-enters as a new disruption.">
+      <div class="loop">
+        <svg class="loop-ring" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M0 0 10 5 0 10z" fill="currentColor" />
+            </marker>
+          </defs>
+          <path d="M137.1 40.6 A70 70 0 0 1 163.9 71.5" class="seg" marker-end="url(#ah)" />
+          <path d="M163.9 128.5 A70 70 0 0 1 137.1 159.4" class="seg" marker-end="url(#ah)" />
+          <path d="M62.9 159.4 A70 70 0 0 1 36.1 128.5" class="seg" marker-end="url(#ah)" />
+          <path d="M36.1 71.5 A70 70 0 0 1 62.9 40.6" class="seg" marker-end="url(#ah)" />
+        </svg>
+        <span class="eq">Stable equilibrium</span>
+        <a class="st s1" href="#stage-1"><span class="rn">I</span>Competitive disruption</a>
+        <a class="st s2" href="#stage-2"><span class="rn">II</span>Elite signalling</a>
+        <a class="st s3" href="#stage-3"><span class="rn">III</span>Challengers emerge</a>
+        <a class="st s4" href="#stage-4"><span class="rn">IV</span>Defensive response</a>
+      </div>
+    </Fig>
+
+    <div class="r-cards c3">
+      <div class="r-card"><h4>Statutes</h4><p>What changed, provision by provision, matched against the grievances behind DExit.</p></div>
+      <div class="r-card"><h4>Legislative records</h4><p>Why it changed: the timing, and the competitive reasons politicians gave.</p></div>
+      <div class="r-card"><h4>Law-firm advisories</h4><p>How it landed: the tone of four elite firms tracked through every stage.</p></div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="rsec" id="stage-1">
+    <p class="r-eyebrow">04 · Stage I · Competitive disruption</p>
+    <h2>Six rulings that broke the spell</h2>
+    <p class="lede">
+      After Kathleen McCormick became Chancellor in 2021, the court’s rulings turned against long-standing market practice.
+      Five of these six landmark rulings came within two months.
+    </p>
+
+    <Fig title="Landmark Chancery rulings, 2023–24" hint="Tap a ruling for what it held" replay caption="From Table 3. Dollar figures as stated in the paper.">
+      <div class="rtl" aria-hidden="true">
+        <div class="rtl-axis">
+          {['Jan 2023', 'Jul 2023', 'Jan 2024'].map((l, i) => <span style={`left:${(i * 6 / 13) * 100}%`}>{l}</span>)}
+        </div>
+        {
+          rulingDots.map((r) => (
+            <span
+              class="rtl-dot a-pop"
+              style={`left:${(r.m / 13) * 100}%;bottom:${8 + r.k * 18}px;--i:${r.i}`}
+              data-tip={`${r.name}|${r.date}`}
+            />
+          ))
+        }
+        <span class="rtl-brace" style={`left:${(12 / 13) * 100}%`}>5 in 2 months</span>
+      </div>
+      <div class="rlist">
+        {
+          rulings.map((r) => (
+            <details class="rrow">
+              <summary>
+                <span class="rd">{r.date}</span>
+                <span class="rn2">{r.name}</span>
+                {r.tag && <span class="r-chip">{r.tag}</span>}
+              </summary>
+              <div class="rbody">
+                <p><span class="lbl">Held</span>{r.held}</p>
+                <p><span class="lbl">Why it mattered</span>{r.why}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </Fig>
+
+    <div class="r-stats two">
+      <div class="r-stat"><span class="n">51.3M</span><span class="l">views on Musk’s X poll asking whether Tesla should leave Delaware</span></div>
+      <div class="r-stat"><span class="n">87%</span><span class="l">voted yes. Within weeks Musk filed to move SpaceX to Texas.</span></div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="rsec" id="stage-2">
+    <p class="r-eyebrow">05 · Stage II · Elite signalling</p>
+    <h2>Exit becomes thinkable</h2>
+    <p class="lede">
+      DExit ran on two planes. In public, reincorporations and executive statements made headlines. In private, the law
+      firms that advise nearly every incorporation started to doubt Delaware.
+    </p>
+
+    <Fig title="Attention to leaving Delaware" hint="Hover or tap a quarter" replay caption="Redrawn from Figure 4. Both series are indexed so their peak = 100, read off the paper’s chart, so values are approximate. Media coverage of possible Delaware departures more than tripled after the Tesla ruling.">
+      <ul class="rfig-legend">
+        <li><span class="r-sw" style="background:var(--r-c1)"></span>News articles on leaving Delaware</li>
+        <li><span class="r-sw line" style="background:var(--r-c2)"></span>Google searches for “Delaware reincorporation”</li>
+      </ul>
+      <div class="ts">
+        <div class="ts-y" aria-hidden="true">
+          {[100, 50, 0].map((v) => <span style={`top:${100 - v}%`}>{v}</span>)}
+        </div>
+        <div class="ts-plot">
+          {[0, 50, 100].map((v) => <span class="ts-grid" style={`top:${100 - v}%`} />)}
+          <div class="ts-bars">
+            {
+              news.map((v, i) => (
+                <div class="ts-col" data-tip={`${quarters[i]}|News coverage: ${v}|Searches: ${google[i]}`}>
+                  <span class="ts-bar a-grow-y" style={`height:${v}%;--i:${i}`} />
+                </div>
+              ))
+            }
+          </div>
+          <svg class="ts-line" viewBox={`0 0 ${N} 100`} preserveAspectRatio="none" aria-hidden="true">
+            <polyline points={linePts} pathLength="1" class="a-draw" vector-effect="non-scaling-stroke" />
+          </svg>
+          <span class="ts-mark" style={`left:${(14 / N) * 100}%`}><span>Tornetta v. Musk</span></span>
+        </div>
+        <div class="ts-x" aria-hidden="true">
+          {yearTicks.map((t) => <span style={`left:${(t.i / N) * 100}%`}>{t.y}</span>)}
+        </div>
+      </div>
+      <details class="r-data">
+        <summary>Show the numbers</summary>
+        <div class="r-table-wrap">
+          <table class="r-table">
+            <thead><tr><th>Quarter</th><th>News (index)</th><th>Searches (index)</th></tr></thead>
+            <tbody>{quarters.map((q, i) => <tr><td>{q}</td><td>{news[i]}</td><td>{google[i]}</td></tr>)}</tbody>
+          </table>
+        </div>
+      </details>
+    </Fig>
+
+    <Fig title="Why ten high-profile firms said they would leave" hint="Hover a firm" replay caption="Redrawn from Figure 5: exit signals, 2024–25, by the grievance each firm cited.">
+      <div class="xm r-dim-others">
+        <div class="xm-head">
+          <span></span>
+          {
+            grievNames.map((g, j) => (
+              <span class="xm-h">
+                <span class="xm-tot"><span class="xm-totbar a-grow-x" style={`width:${grievTotals[j] * 10}%;--i:${j}`} /></span>
+                {g}<b>{grievTotals[j]}/10</b>
+              </span>
+            ))
+          }
+        </div>
+        {
+          exits.map(([firm, g], i) => (
+            <div class="xm-row" data-tip={`${firm}|${grievNames.filter((_, j) => g[j]).join(' · ')}`}>
+              <span class="xm-firm">{firm}</span>
+              {g.map((v, j) => (
+                <span class="xm-cell">
+                  <span class:list={['xm-dot', v ? 'on a-pop' : 'off']} style={`--i:${i + j}`} aria-label={v ? grievNames[j] : undefined} />
+                </span>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+      <blockquote class="r-quote">
+        Delaware is “injecting an unprecedented level of subjectivity into judicial decisions, undermining the court’s reputation for unbiased expertise.”
+        <cite>Andreessen Horowitz, on leaving Delaware</cite>
+      </blockquote>
+    </Fig>
+
+    <Fig title="How four elite law firms talked about Delaware" hint="Tap a cell to read what they wrote" caption="Redrawn from Figure 7 and Tables 4, 5 and 10. Shade shows intensity, 1 to 3. The arc runs from advocacy, to alarm, to wait-and-see.">
+      <ul class="rfig-legend">
+        <li><span class="r-sw" style="background:var(--r-pos)"></span>Positive</li>
+        <li><span class="r-sw" style="background:var(--r-neg)"></span>Negative</li>
+        <li><span class="r-sw" style="background:var(--r-mix)"></span>Mixed</li>
+      </ul>
+      <div class="tone" data-tone>
+        <span></span>
+        {periods.map((p) => <span class="tone-p">{p.name}<small>{p.span}</small></span>)}
+        {
+          tone.map((row, r) => (
+            <>
+              <span class="tone-firm">{row.firm}</span>
+              {row.cells.map((c, j) => (
+                <button
+                  type="button"
+                  class:list={['tone-cell', c.fam, `l${c.lvl}`]}
+                  aria-pressed={r === 3 && j === 1 ? 'true' : 'false'}
+                  data-r={r}
+                  data-c={j}
+                  aria-label={`${row.firm}, ${periods[j].name}: ${c.word}. ${famLabel(c)}`}
+                >
+                  {c.word}
+                </button>
+              ))}
+            </>
+          ))
+        }
+      </div>
+      <div class="tone-read" aria-live="polite"></div>
+      <script is:inline type="application/json" data-tone-json set:html={JSON.stringify(tone.map((t) => ({ firm: t.firm, cells: t.cells.map((c) => ({ word: c.word, notes: c.notes })) })))} />
+      <script is:inline type="application/json" data-period-json set:html={JSON.stringify(periods)} />
+    </Fig>
+  </section>
+
+  <!-- 06 -->
+  <section class="rsec" id="stage-3">
+    <p class="r-eyebrow">06 · Stage III · Challengers emerge</p>
+    <h2>Texas builds courts. Nevada rewrites law.</h2>
+    <p class="lede">
+      With the stalking-horse trap broken, both challengers moved, but in opposite ways. Texas invested in new business
+      courts and backed them with statute. Nevada, with no specialist court, leaned on an already permissive code.
+    </p>
+
+    <ul class="rfig-legend gkey">
+      <li><span class="gb P">P</span>Answers unpredictability</li>
+      <li><span class="gb L">L</span>Answers liability</li>
+      <li><span class="gb X">X</span>Answers excessive litigation</li>
+    </ul>
+
+    <div class="tabs" data-tabs>
+      <div class="r-seg" role="group" aria-label="Choose a state">
+        <button type="button" aria-pressed="true" data-tab="tx"><span class="r-dot" style="color:var(--r-tx)"></span> Texas</button>
+        <button type="button" aria-pressed="false" data-tab="nv"><span class="r-dot" style="color:var(--r-nv)"></span> Nevada</button>
+      </div>
+
+      <div class="tab" data-panel="tx">
+        <Fig title="Texas SB 29 · May 2025" caption="From Table 6. Passed with bipartisan supermajorities; Lt. Gov. Dan Patrick wanted “companies to incorporate in Texas instead of Delaware.”">
+          <ul class="prov">
+            {sb29.map(([t, d, g]) => (
+              <li><span class="gbs">{g.map((x) => <span class:list={['gb', x]} title={G[x]}>{x}</span>)}</span><div><b>{t}</b><p>{d}</p></div></li>
+            ))}
+          </ul>
+        </Fig>
+        <Fig title="Texas HB 40 · June 2025" caption="From Table 7. A second phase to make the business courts permanent and broader.">
+          <ul class="prov plain">
+            {hb40.map(([t, d]) => <li><div><b>{t}</b><p>{d}</p></div></li>)}
+          </ul>
+        </Fig>
+        <Fig title="The Texas Business Court is filling up" caption="Reported filings. Weaknesses remain: two-year judicial terms, procedural gaps, partial jurisdiction and no body of precedent yet.">
+          <div class="flow3">
+            <div><span class="n">56</span><span class="l">filings in the first four months</span></div>
+            <span class="ar" aria-hidden="true">→</span>
+            <div><span class="n">95</span><span class="l">filings in the first half of 2025</span></div>
+            <span class="ar" aria-hidden="true">→</span>
+            <div><span class="n">200+</span><span class="l">on pace by the end of year two</span></div>
+          </div>
+          <div class="divs">
+            <span class="divs-dots">{Array.from({ length: 11 }, (_, i) => <span class:list={['dd', i < 5 && 'on']} />)}</span>
+            <span>5 of 11 court divisions active</span>
+          </div>
+        </Fig>
+      </div>
+
+      <div class="tab" data-panel="nv" hidden>
+        <Fig title="Nevada was already permissive" hint="Hover a year" caption="Redrawn from Figure 6. Scholars call the result “a shockingly lax corporate law” that mainly drew small-cap and micro-cap firms.">
+          <ol class="nvt">
+            {nvTimeline.map(([y, t, d]) => <li data-tip={`${y} · ${t}|${d}`}><span class="y">{y}</span><b>{t}</b><p>{d}</p></li>)}
+          </ol>
+        </Fig>
+        <Fig title="Nevada AB 239 · May 2025" caption="From Table 8. Drafted by the Nevada State Bar’s Business Law Section and passed with bipartisan support.">
+          <ul class="rfig-legend">
+            <li><span class="gb E">E</span>Expands the permissive framework</li>
+            <li><span class="gb Gd">G</span>Answers a Delaware grievance</li>
+          </ul>
+          <ul class="prov">
+            {ab239.map(([t, d, k]) => <li><span class="gbs"><span class:list={['gb', k === 'G' ? 'Gd' : 'E']}>{k}</span></span><div><b>{t}</b><p>{d}</p></div></li>)}
+          </ul>
+        </Fig>
+        <Fig title="The long road to a Nevada business court" caption="AJR 8 is a constitutional amendment, so it must pass twice and then win a referendum. Meanwhile an interim court in Clark County is a rebranded state court with no appointed specialists.">
+          <ol class="road">
+            <li class="done"><b>May 2025</b><span>AJR 8 passes once</span></li>
+            <li><b>2027</b><span>Must pass the legislature again</span></li>
+            <li><b>Then</b><span>Voter referendum</span></li>
+            <li><b>Finally</b><span>A permanent business court</span></li>
+          </ol>
+        </Fig>
+      </div>
+    </div>
+    <p class="takeaway"><strong>The pattern:</strong> “the weaker the court, the harder the legislature must work to compensate.”</p>
+  </section>
+
+  <!-- 07 -->
+  <section class="rsec" id="stage-4">
+    <p class="r-eyebrow">07 · Stage IV · Defensive response</p>
+    <h2>Delaware overrules its own court</h2>
+    <p class="lede">
+      With about a third of its budget at stake, Delaware answered by legislating against its own judges. SB 313 (2024)
+      overrode the Moelis ruling through a fast-tracked emergency process, opposed by 50 Delaware law professors yet passed
+      unanimously. SB 21 followed in March 2025.
+    </p>
+
+    <Fig title="Three states, four major laws, about three months" hint="Hover a law" replay caption="Each state enacted major code changes within roughly three months of 2025.">
+      <div class="race r-dim-others">
+        <div class="race-axis">{['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'].map((m) => <span>{m}</span>)}</div>
+        {
+          race2025.map((e, i) => (
+            <div class="race-row" style={`--x:${((e.m - 0.5) / 6) * 100}%;--c:var(--r-${e.s});--i:${i}`} data-tip={`${e.t} · ${e.d}|${e.n}`}>
+              <span class="race-pin a-pop" />
+              <span class="race-lbl">{e.t}</span>
+            </div>
+          ))
+        }
+      </div>
+    </Fig>
+
+    <Fig title="Delaware SB 21 · March 2025" caption="From Table 9. Governor Matt Meyer said it would “reinforce Delaware’s reputation for equitable, predictable, and efficient corporate oversight.” Critics called it the “billionaire’s bill.”">
+      <ul class="prov">
+        {sb21.map(([t, d, g]) => (
+          <li><span class="gbs">{g.map((x) => <span class:list={['gb', x]} title={G[x]}>{x}</span>)}</span><div><b>{t}</b><p>{d}</p></div></li>
+        ))}
+      </ul>
+    </Fig>
+    <blockquote class="r-quote">
+      “The fact that ‘everyone is doing it’ is not a reason to do something.”
+      <cite>Chancellor McCormick, in the Moelis ruling SB 313 overrode</cite>
+    </blockquote>
+  </section>
+
+  <!-- 08 -->
+  <section class="rsec" id="strategies">
+    <p class="r-eyebrow">08 · Comparison</p>
+    <h2>Statutory aggression tracks judicial weakness</h2>
+    <p class="lede">
+      Each state played to what it had. The stronger its court, the less its statutes had to bend toward corporations.
+    </p>
+
+    <Fig title="Court credibility vs how far statutes accommodate firms" hint="Hover a state" replay caption="Redrawn from Figure 8, with the strategy of each state from Table 12.">
+      <ul class="rfig-legend">
+        {slope.map((s) => <li><span class="r-dot" style={`color:var(--r-${s.s})`}></span>{s.name}: {s.a} → {s.b}</li>)}
+      </ul>
+      <div class="slope r-dim-others">
+        <div class="slope-axes" aria-hidden="true">
+          <span class="ax a">Credibility of the business court</span>
+          <span class="ax b">How far statutes accommodate firms</span>
+        </div>
+        <div class="slope-plot">
+          {Object.entries(lv).map(([k, y]) => (
+            <>
+              <span class="lv l" style={`top:${y}%`}>{k}</span>
+              <span class="lv r" style={`top:${y}%`}>{k}</span>
+            </>
+          ))}
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            {slope.map((s, i) => (
+              <line x1="0" x2="100" y1={lv[s.a]} y2={lv[s.b]} pathLength="1" class="a-draw" style={`stroke:var(--r-${s.s});--i:${i}`} vector-effect="non-scaling-stroke" />
+            ))}
+          </svg>
+          {slope.map((s) => (
+            <span class="sl-hit" data-tip={`${s.name}: ${s.inst}|Targets: ${s.target}|${s.logic}`} style={`--y1:${lv[s.a]}%;--y2:${lv[s.b]}%;--c:var(--r-${s.s})`}>
+              <span class="sl-dot" style={`top:${lv[s.a]}%;left:0`} />
+              <span class="sl-dot" style={`top:${lv[s.b]}%;left:100%`} />
+            </span>
+          ))}
+        </div>
+      </div>
+      <div class="r-cards c3 strat">
+        {slope.map((s) => (
+          <div class="r-card" style={`border-top:2px solid var(--r-${s.s})`}>
+            <h4>{s.name} · {s.inst}</h4>
+            <p>{s.logic}</p>
+          </div>
+        ))}
+      </div>
+    </Fig>
+
+    <Fig title="The courts side by side" hint="Pick a dimension" caption="From Table 11.">
+      <div class="r-seg dims" role="group" aria-label="Compare courts by">
+        {courtDims.map((d, i) => <button type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-dim={i}>{d.label}</button>)}
+      </div>
+      <div class="courts">
+        {courts.map((c, ci) => (
+          <div class:list={['court', c.dashed && 'dashed']} style={`--c:var(--r-${c.s})`}>
+            <span class="cn">{c.name}</span>
+            {courtDims.map((d, i) => <span class="cv" data-dimv={i} hidden={i !== 0}>{d.v[ci]}</span>)}
+          </div>
+        ))}
+      </div>
+    </Fig>
+  </section>
+
+  <!-- 09 -->
+  <section class="rsec" id="convergence">
+    <p class="r-eyebrow">09 · Finding</p>
+    <h2>Different routes, the same destination</h2>
+    <p class="lede">
+      The three states “diverged in strategy but converged in substance.” By late 2025 every one of them had all six of
+      these protections, and {convNew} of the 18 were new or expanded in response to DExit.
+    </p>
+
+    <Fig title="Where the three states converged" hint="Hover a mark" replay caption="Redrawn from Table 13.">
+      <ul class="rfig-legend">
+        <li><span class="cm-dot new"></span>Enacted or expanded in response to DExit</li>
+        <li><span class="cm-dot old"></span>Already in place</li>
+      </ul>
+      <div class="cm r-dim-others">
+        <span></span>
+        {stKeys.map((s) => <span class="cm-h" style={`--c:var(--r-${s})`}>{stateNames[s]}</span>)}
+        {conv.map(([t, c], r) => (
+          <>
+            <span class="cm-t">{t}</span>
+            {[...c].map((x, j) => (
+              <span class="cm-cell" data-tip={`${stateNames[stKeys[j]]}: ${t}|${x === '●' ? 'New or expanded after DExit' : 'Already in place before DExit'}`}>
+                <span class:list={['cm-dot', x === '●' ? 'new a-pop' : 'old']} style={`--c:var(--r-${stKeys[j]});--i:${r * 3 + j}`} />
+              </span>
+            ))}
+          </>
+        ))}
+      </div>
+    </Fig>
+  </section>
+
+  <!-- 10 -->
+  <section class="rsec" id="bottom">
+    <p class="r-eyebrow">10 · Conclusion</p>
+    <h2>A race to the bottom, run through the courts</h2>
+    <p class="lede">
+      Competitive federalism assumes rivalry corrects itself. Here it did the opposite: courts came to be judged by their
+      usefulness to the state’s economy rather than their independence, and the costs fell on people without market power.
+    </p>
+
+    <Fig title="How the cycle degrades institutions" hint="Hover a row" caption="Redrawn from Figure 9. Degradation feeds back into the competitive cycle, which makes it self-reinforcing.">
+      <div class="f9">
+        <div class="f9-top">Competitive feedback cycle</div>
+        <div class="f9-rows r-dim-others">
+          {flow.map((f) => (
+            <div class="f9-row" data-tip={`${f.o}|${f.od}`}>
+              <div class="f9-d"><b>{f.d}</b><ul>{f.m.map((m) => <li>{m}</li>)}</ul></div>
+              <span class="f9-ar" aria-hidden="true">→</span>
+              <div class="f9-o"><b>{f.o}</b><p>{f.od}</p></div>
+            </div>
+          ))}
+        </div>
+        <div class="f9-end">
+          <b>Systemic institutional degradation</b>
+          <span>A self-reinforcing erosion of standards, which re-enters the cycle</span>
+        </div>
+      </div>
+    </Fig>
+
+    <blockquote class="r-quote">
+      Left unchecked, the competition makes competitive federalism “less symbiotic than parasitic,” the “competitive lowering
+      of standards” Justice Brandeis warned of in 1933.
+      <cite>From the paper’s conclusion</cite>
+    </blockquote>
+    <p class="r-note">
+      Limits the paper names: three cases in an unresolved contest, an interpretive measure of law-firm tone, and a moving
+      target (one ruling examined has since been reversed). The account explains how the contest began; it does not predict
+      where it ends.
+    </p>
+  </section>
+</PaperLayout>
+
+<script>
+  // Exit, voice, loyalty: pick an ending to read it.
+  const ev = document.querySelector<HTMLElement>('[data-evln]');
+  if (ev) {
+    const text = JSON.parse(ev.querySelector('[data-evln-text]')!.textContent!);
+    const read = ev.querySelector('.evln-read')!;
+    const leaves = ev.querySelectorAll<HTMLButtonElement>('.leaf');
+    const pick = (b: HTMLButtonElement) => {
+      leaves.forEach((l) => l.setAttribute('aria-pressed', String(l === b)));
+      read.textContent = text[b.dataset.k!];
+    };
+    leaves.forEach((b) => b.addEventListener('click', () => pick(b)));
+    pick(ev.querySelector<HTMLButtonElement>('[data-k="respond"]')!);
+  }
+
+  // Stalking horse steps.
+  document.querySelectorAll<HTMLElement>('[data-steps]').forEach((ol) => {
+    const read = ol.parentElement!.querySelector('.horse-read')!;
+    const btns = ol.querySelectorAll<HTMLButtonElement>('button');
+    btns.forEach((b) =>
+      b.addEventListener('click', () => {
+        btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        read.textContent = b.dataset.d!;
+      }),
+    );
+  });
+
+  // Law-firm tone: tap a cell to read the advisories behind it.
+  const toneEl = document.querySelector<HTMLElement>('[data-tone]');
+  if (toneEl) {
+    const fig = toneEl.parentElement!;
+    const data = JSON.parse(fig.querySelector('[data-tone-json]')!.textContent!);
+    const per = JSON.parse(fig.querySelector('[data-period-json]')!.textContent!);
+    const out = fig.querySelector<HTMLElement>('.tone-read')!;
+    const cells = toneEl.querySelectorAll<HTMLButtonElement>('.tone-cell');
+    const show = (b: HTMLButtonElement) => {
+      cells.forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+      const r = +b.dataset.r!;
+      const c = +b.dataset.c!;
+      const cell = data[r].cells[c];
+      out.innerHTML =
+        `<p class="tr-h"><b>${data[r].firm}</b> · ${per[c].name} · <span>${cell.word}</span></p>` +
+        cell.notes
+          .map((n: { d: string; t: string; q: string }) => `<div class="tr-n"><span class="tr-d">${n.d} · ${n.t}</span><p>${n.q}</p></div>`)
+          .join('');
+    };
+    cells.forEach((b) => b.addEventListener('click', () => show(b)));
+    show(toneEl.querySelector<HTMLButtonElement>('.tone-cell[aria-pressed="true"]')!);
+  }
+
+  // Texas / Nevada tabs.
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((t) => {
+    const btns = t.querySelectorAll<HTMLButtonElement>('[data-tab]');
+    btns.forEach((b) =>
+      b.addEventListener('click', () => {
+        btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        t.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => (p.hidden = p.dataset.panel !== b.dataset.tab));
+      }),
+    );
+  });
+
+  // Courts compared by one dimension at a time.
+  document.querySelectorAll<HTMLElement>('.dims').forEach((seg) => {
+    const fig = seg.closest('.rfig')!;
+    const btns = seg.querySelectorAll<HTMLButtonElement>('button');
+    btns.forEach((b) =>
+      b.addEventListener('click', () => {
+        btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        fig.querySelectorAll<HTMLElement>('[data-dimv]').forEach((v) => (v.hidden = v.dataset.dimv !== b.dataset.dim));
+      }),
+    );
+  });
+</script>
+
+<style>
+  /* ---- EVLN tree ---- */
+  .evln {
+    font-size: 14px;
+  }
+  .evln .node {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .evln .node.gov {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .evln .branches {
+    margin: 6px 0 0 14px;
+    padding: 0 0 0 16px;
+    border-left: 1px solid var(--line);
+    list-style: none;
+  }
+  .evln .branches > li {
+    position: relative;
+    padding: 8px 0;
+  }
+  .evln .branches > li::before {
+    content: '';
+    position: absolute;
+    left: -16px;
+    top: 21px;
+    width: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .evln .edge {
+    display: inline-block;
+    min-width: 64px;
+    margin-right: 8px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .evln .leaf {
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition:
+      border-color 0.2s var(--ease-out),
+      background 0.2s var(--ease-out);
+  }
+  .evln .leaf b {
+    font-weight: 400;
+  }
+  .evln .leaf:hover {
+    border-color: var(--muted);
+  }
+  .evln .leaf[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .evln-read,
+  .horse-read {
+    margin: 16px 0 0;
+    min-height: 3em;
+    color: var(--r-ink-2);
+    font-size: 14px;
+  }
+
+  /* ---- stalking horse ---- */
+  .horse {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: h;
+  }
+  @media (min-width: 700px) {
+    .horse {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+  .horse button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--r-ink-2);
+    font: inherit;
+    font-size: 13px;
+    line-height: 1.3;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      border-color 0.2s var(--ease-out),
+      color 0.2s var(--ease-out);
+  }
+  @media (min-width: 700px) {
+    .horse button {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  .horse button:hover {
+    color: var(--text);
+  }
+  .horse button[aria-pressed='true'] {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+  .horse .hn {
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .horse-back {
+    position: relative;
+    margin-top: 6px;
+    height: 22px;
+    border: 1px dashed var(--muted);
+    border-top: 0;
+    border-radius: 0 0 10px 10px;
+    opacity: 0.6;
+  }
+  .horse-back span {
+    position: absolute;
+    left: 50%;
+    bottom: -9px;
+    transform: translateX(-50%);
+    padding: 0 8px;
+    background: var(--r-surface);
+    color: var(--muted);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  /* ---- loop ---- */
+  .loop {
+    position: relative;
+    width: min(100%, 440px);
+    aspect-ratio: 1;
+    margin: 8px auto;
+  }
+  .loop-ring {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    color: var(--muted);
+  }
+  .loop-ring .seg {
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 1;
+  }
+  .loop .eq {
+    position: absolute;
+    left: 0;
+    top: 15%;
+    width: 32%;
+    transform: translateY(-100%);
+    padding-bottom: 4px;
+    border-bottom: 1px dashed var(--muted);
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .loop .st {
+    position: absolute;
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    width: 32%;
+    padding: 10px 8px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.25;
+    text-align: center;
+    text-decoration: none;
+    transform: translate(-50%, -50%);
+    transition:
+      border-color 0.2s var(--ease-out),
+      background 0.2s var(--ease-out);
+  }
+  .loop .st:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .loop .rn {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .loop .s1 {
+    left: 50%;
+    top: 15%;
+  }
+  .loop .s2 {
+    left: 85%;
+    top: 50%;
+  }
+  .loop .s3 {
+    left: 50%;
+    top: 85%;
+  }
+  .loop .s4 {
+    left: 15%;
+    top: 50%;
+  }
+
+  /* ---- rulings ---- */
+  .rtl {
+    position: relative;
+    height: 120px;
+    margin: 0 8px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .rtl-axis span {
+    position: absolute;
+    bottom: -22px;
+    transform: translateX(-10%);
+    color: var(--muted);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .rtl-axis span:last-child {
+    transform: translateX(-60%);
+  }
+  .rtl-dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    margin-left: -6px;
+    border-radius: 50%;
+    background: var(--r-de);
+    box-shadow: 0 0 0 2px var(--r-surface);
+  }
+  .rtl-brace {
+    position: absolute;
+    top: 0;
+    transform: translateX(-85%);
+    color: var(--muted);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .rlist {
+    margin-top: 36px;
+  }
+  .rrow {
+    border-top: 1px solid var(--line);
+  }
+  .rrow summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    min-height: 48px;
+    padding: 8px 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  .rrow summary::-webkit-details-marker {
+    display: none;
+  }
+  .rrow summary::after {
+    content: '+';
+    margin-left: auto;
+    color: var(--muted);
+  }
+  .rrow[open] summary::after {
+    content: '–';
+  }
+  .rd {
+    width: 72px;
+    color: var(--muted);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .rn2 {
+    font-size: 15px;
+  }
+  .rbody {
+    padding: 0 0 14px 84px;
+  }
+  @media (max-width: 600px) {
+    .rbody {
+      padding-left: 0;
+    }
+  }
+  .rbody p {
+    margin: 0 0 8px;
+    color: var(--r-ink-2);
+    font-size: 14px;
+  }
+  .rbody .lbl {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .r-stats.two {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ---- time series ---- */
+  .r-sw.line {
+    height: 2px;
+    width: 16px;
+    border-radius: 0;
+  }
+  .ts {
+    position: relative;
+    padding: 8px 0 24px 28px;
+  }
+  .ts-y span {
+    position: absolute;
+    left: 0;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+  .ts-y {
+    position: absolute;
+    top: 8px;
+    bottom: 24px;
+    left: 0;
+  }
+  .ts-plot {
+    position: relative;
+    height: 220px;
+  }
+  .ts-grid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--r-grid);
+  }
+  .ts-bars {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+  .ts-col {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .ts-col:hover {
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+  }
+  .ts-bar {
+    display: block;
+    width: 62%;
+    max-width: 22px;
+    border-radius: 3px 3px 0 0;
+    background: var(--r-c1);
+  }
+  .ts-line {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none;
+  }
+  .ts-line polyline {
+    fill: none;
+    stroke: var(--r-c2);
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+  .ts-mark {
+    position: absolute;
+    top: -6px;
+    bottom: 0;
+    border-left: 1px dashed var(--text);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .ts-mark span {
+    position: absolute;
+    top: -12px;
+    right: 6px;
+    color: var(--text);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .ts-x span {
+    position: absolute;
+    bottom: 0;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .ts-x {
+    position: absolute;
+    left: 28px;
+    right: 0;
+    bottom: 0;
+    height: 20px;
+  }
+
+  /* ---- exit matrix ---- */
+  .xm {
+    display: grid;
+    font-size: 13px;
+  }
+  .xm-head,
+  .xm-row {
+    display: grid;
+    grid-template-columns: minmax(110px, 1.6fr) repeat(3, 1fr);
+    align-items: center;
+    gap: 8px;
+  }
+  .xm-head {
+    align-items: end;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .xm-h {
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.25;
+    text-align: center;
+  }
+  .xm-h b {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .xm-tot {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--r-grid);
+  }
+  .xm-totbar {
+    display: block;
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .xm-row {
+    min-height: 34px;
+    border-bottom: 1px solid var(--r-grid);
+  }
+  .xm-firm {
+    color: var(--r-ink-2);
+  }
+  .xm-cell {
+    display: grid;
+    place-items: center;
+  }
+  .xm-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+  }
+  .xm-dot.on {
+    background: var(--accent);
+  }
+  .xm-dot.off {
+    border: 1px solid var(--line);
+    width: 6px;
+    height: 6px;
+  }
+
+  /* ---- tone heatmap ---- */
+  .tone {
+    display: grid;
+    grid-template-columns: minmax(84px, 1fr) repeat(3, minmax(0, 1.2fr));
+    gap: 4px;
+    font-size: 13px;
+  }
+  .tone-p {
+    display: grid;
+    padding: 0 4px 6px;
+    color: var(--text);
+    font-size: 12px;
+    line-height: 1.3;
+  }
+  .tone-p small {
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .tone-firm {
+    display: flex;
+    align-items: center;
+    color: var(--r-ink-2);
+    font-size: 12px;
+    line-height: 1.3;
+  }
+  .tone-cell {
+    min-height: 48px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease-out);
+  }
+  .tone-cell.pos {
+    --c: var(--r-pos);
+  }
+  .tone-cell.neg {
+    --c: var(--r-neg);
+  }
+  .tone-cell.mix {
+    --c: var(--r-mix);
+  }
+  .tone-cell.l1 {
+    background: color-mix(in srgb, var(--c) 28%, var(--r-surface));
+  }
+  .tone-cell.l2 {
+    background: color-mix(in srgb, var(--c) 55%, var(--r-surface));
+  }
+  .tone-cell.l3 {
+    background: color-mix(in srgb, var(--c) 85%, var(--r-surface));
+    font-weight: 500;
+  }
+  .tone-cell:hover {
+    border-color: color-mix(in srgb, var(--text) 40%, transparent);
+  }
+  .tone-cell[aria-pressed='true'] {
+    border-color: var(--text);
+  }
+  .tone-read {
+    margin-top: 16px;
+    min-height: 120px;
+  }
+  .tone-read :global(.tr-h) {
+    margin: 0 0 8px;
+    font-size: 14px;
+  }
+  .tone-read :global(.tr-h b) {
+    font-weight: 500;
+  }
+  .tone-read :global(.tr-n) {
+    padding: 8px 0 8px 12px;
+    border-left: 2px solid var(--line);
+  }
+  .tone-read :global(.tr-d) {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .tone-read :global(.tr-n p) {
+    margin: 2px 0 0;
+    color: var(--r-ink-2);
+    font-size: 14px;
+  }
+
+  /* ---- provisions ---- */
+  .gkey {
+    margin-top: 24px;
+  }
+  .gb {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    color: #0b0b0b;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .gb.P {
+    background: var(--r-c3);
+  }
+  .gb.L {
+    background: var(--r-c1);
+  }
+  .gb.X {
+    background: var(--r-c5);
+  }
+  .gb.E {
+    background: var(--r-nv);
+  }
+  .gb.Gd {
+    background: var(--r-c6);
+  }
+  .tabs {
+    margin-top: 20px;
+  }
+  .prov {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .prov li {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid var(--r-grid);
+  }
+  .prov.plain li {
+    grid-template-columns: 1fr;
+  }
+  .prov li:first-child {
+    border-top: 0;
+  }
+  .prov .gbs {
+    display: flex;
+    gap: 4px;
+    padding-top: 2px;
+  }
+  .prov b {
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .prov p {
+    margin: 2px 0 0;
+    color: var(--r-ink-2);
+    font-size: 14px;
+  }
+  .flow3 {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+    gap: 8px;
+  }
+  .flow3 > div {
+    display: grid;
+  }
+  .flow3 .n {
+    font-size: clamp(28px, 6vw, 40px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--r-tx);
+  }
+  .flow3 .l {
+    color: var(--r-ink-2);
+    font-size: 13px;
+    line-height: 1.35;
+  }
+  .flow3 .ar {
+    color: var(--muted);
+  }
+  .divs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    color: var(--r-ink-2);
+    font-size: 13px;
+  }
+  .divs-dots {
+    display: flex;
+    gap: 5px;
+  }
+  .dd {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+  .dd.on {
+    border-color: var(--r-tx);
+    background: var(--r-tx);
+  }
+  .nvt {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 700px) {
+    .nvt {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+  }
+  .nvt li {
+    padding: 12px 0 12px 14px;
+    border-left: 2px solid var(--r-nv);
+  }
+  .nvt .y {
+    display: block;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--r-nv);
+  }
+  .nvt b {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .nvt p {
+    margin: 2px 0 0;
+    color: var(--r-ink-2);
+    font-size: 13px;
+  }
+  .road {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 700px) {
+    .road {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .road li {
+    display: grid;
+    gap: 2px;
+    padding: 12px;
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--r-ink-2);
+  }
+  .road li.done {
+    border: 1px solid var(--r-nv);
+  }
+  .road b {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ---- 2025 race ---- */
+  .race {
+    position: relative;
+    padding-top: 24px;
+  }
+  .race-axis {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .race-axis span {
+    padding-left: 4px;
+    border-left: 1px solid var(--r-grid);
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .race-row {
+    position: relative;
+    height: 40px;
+    border-bottom: 1px solid var(--r-grid);
+  }
+  .race-pin {
+    position: absolute;
+    left: var(--x);
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: 0 0 0 2px var(--r-surface);
+  }
+  .race-lbl {
+    position: absolute;
+    left: calc(var(--x) + 14px);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .race-row:nth-child(n + 4) .race-lbl {
+    left: auto;
+    right: calc(100% - var(--x) + 14px);
+  }
+
+  /* ---- slope ---- */
+  .slope-axes {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+    color: var(--text);
+    font-size: 12px;
+  }
+  .slope-axes .b {
+    text-align: right;
+  }
+  .slope-plot {
+    position: relative;
+    height: 220px;
+    margin: 0 76px 0 70px;
+  }
+  .slope-plot svg {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none;
+  }
+  .slope-plot line {
+    stroke-width: 3;
+  }
+  .lv {
+    position: absolute;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .lv.l {
+    right: calc(100% + 14px);
+  }
+  .lv.r {
+    left: calc(100% + 14px);
+  }
+  .sl-hit {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .sl-dot {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: 0 0 0 3px var(--r-surface);
+    pointer-events: auto;
+    cursor: default;
+  }
+  .sl-name {
+    position: absolute;
+    left: calc(100% + 16px);
+    transform: translateY(-50%);
+    color: var(--text);
+    font-size: 13px;
+    pointer-events: auto;
+  }
+  .sl-hit:hover .sl-dot {
+    transform: scale(1.15);
+  }
+  .strat {
+    margin-top: 20px;
+  }
+  .dims {
+    margin-bottom: 16px;
+    border-radius: 18px;
+  }
+  .courts {
+    display: grid;
+    gap: 8px;
+  }
+  @media (min-width: 700px) {
+    .courts {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .court {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--c);
+    border-radius: 10px;
+  }
+  .court.dashed {
+    border-style: dashed;
+    border-top-style: dashed;
+  }
+  .court .cn {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .court .cv {
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  /* ---- convergence matrix ---- */
+  .cm {
+    display: grid;
+    grid-template-columns: minmax(0, 2.4fr) repeat(3, minmax(56px, 1fr));
+    align-items: center;
+    font-size: 14px;
+  }
+  .cm > * {
+    min-height: 44px;
+    border-bottom: 1px solid var(--r-grid);
+  }
+  .cm-h {
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--c);
+    font-size: 13px;
+  }
+  .cm > span:first-child {
+    border-bottom-color: transparent;
+  }
+  .cm-t {
+    display: flex;
+    align-items: center;
+    padding-right: 8px;
+    color: var(--r-ink-2);
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  .cm-cell {
+    display: grid;
+    place-items: center;
+  }
+  .cm-dot {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+  }
+  .cm-dot.new {
+    background: var(--c, var(--text));
+  }
+  .cm-dot.old {
+    border: 2px solid var(--c, var(--muted));
+  }
+  .rfig-legend .cm-dot {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* ---- fig 9 ---- */
+  .f9 {
+    display: grid;
+    gap: 10px;
+  }
+  .f9-top,
+  .f9-end {
+    padding: 12px 16px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .f9-top {
+    border: 1px dashed var(--muted);
+    color: var(--r-ink-2);
+    font-size: 13px;
+  }
+  .f9-end {
+    display: grid;
+    gap: 2px;
+    background: color-mix(in srgb, var(--r-neg) 22%, var(--r-surface));
+    border: 1px solid var(--r-neg);
+  }
+  .f9-end b {
+    font-weight: 500;
+  }
+  .f9-end span {
+    color: var(--r-ink-2);
+    font-size: 13px;
+  }
+  .f9-rows {
+    display: grid;
+    gap: 8px;
+  }
+  .f9-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .f9-d,
+  .f9-o {
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 13px;
+  }
+  .f9-o {
+    border-color: color-mix(in srgb, var(--r-neg) 50%, var(--line));
+  }
+  .f9-d b,
+  .f9-o b {
+    display: block;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .f9-d ul {
+    margin: 4px 0 0;
+    padding-left: 16px;
+    color: var(--r-ink-2);
+  }
+  .f9-o p {
+    margin: 4px 0 0;
+    color: var(--r-ink-2);
+  }
+  .f9-ar {
+    align-self: center;
+    color: var(--muted);
+  }
+  @media (max-width: 600px) {
+    .f9-row {
+      grid-template-columns: 1fr;
+    }
+    .f9-ar {
+      justify-self: center;
+      transform: rotate(90deg);
+    }
+    .slope-plot {
+      margin: 0 70px 0 64px;
+    }
+  }
+</style>
