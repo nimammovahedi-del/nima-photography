@@ -220,6 +220,24 @@ import { projects } from '../../data/projects';
   .thumb img.on {
     opacity: 1;
   }
+  /* Desktop: a wider list with bigger screenshots, still two rows on the first screen. */
+  @media (min-width: 1100px) {
+    .head,
+    .list {
+      max-width: 1240px;
+    }
+    .row {
+      grid-template-columns: auto minmax(0, 1fr) 380px;
+      gap: 32px;
+    }
+    h2 {
+      font-size: 28px;
+    }
+    .summary {
+      max-width: 64ch;
+      font-size: 17px;
+    }
+  }
   .wip {
     position: absolute;
     inset: 0;
