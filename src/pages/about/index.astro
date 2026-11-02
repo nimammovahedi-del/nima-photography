@@ -15,28 +15,28 @@ import { about, home, site } from '../../site.config';
 
 <style>
   .about {
-    max-width: 660px;
+    max-width: 820px;
     margin: 0 auto;
     padding: 72px 0 24px;
   }
   .portrait {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 28px;
+    width: 140px;
+    height: 140px;
+    margin-bottom: 32px;
     border: 1px solid var(--line);
     border-radius: 50%;
     object-fit: cover;
   }
   h1 {
     margin: 0 0 18px;
-    font-size: 34px;
+    font-size: 42px;
     font-weight: 500;
     letter-spacing: -0.02em;
   }
   p {
     margin: 0 0 16px;
     color: var(--muted);
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 300;
     line-height: 1.75;
   }
@@ -46,6 +46,17 @@ import { about, home, site } from '../../site.config';
   }
   p :global(a:hover) {
     color: var(--text);
+  }
+  @media (max-width: 600px) {
+    .about {
+      padding-top: 48px;
+    }
+    h1 {
+      font-size: 32px;
+    }
+    p {
+      font-size: 17px;
+    }
   }
   .where {
     margin-top: 24px;
