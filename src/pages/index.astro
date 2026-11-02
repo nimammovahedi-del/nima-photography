@@ -67,7 +67,7 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
   <div class="home">
     <header class="hello">
       <h1>
-        Hello there, <img class="avatar" src="/portrait.jpg" alt="" width="43" height="43" /> I'm {site.name}.
+        Hello there, <img class="avatar" src="/portrait.jpg" alt="" width="57" height="57" /> I'm {site.name}.
       </h1>
       <p class="role">
         I am a <b data-roles={JSON.stringify(home.roles)}>{home.roles[0]}</b><span class="cursor" aria-hidden="true"></span>
@@ -256,13 +256,13 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
   }
   .avatar {
     display: inline-block;
-    width: 54px;
-    height: 54px;
+    width: 57px;
+    height: 57px;
     margin: 0 8px;
     border: 1px solid var(--line);
     border-radius: 50%;
     object-fit: cover;
-    vertical-align: -12px;
+    vertical-align: -13px;
   }
   .role {
     margin: 8px 0 0;
