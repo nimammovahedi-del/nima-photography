@@ -15,7 +15,12 @@ const links = home.links.filter((l) => l.href);
       </header>
 
       <section class="bio">
-        {about.map((p) => <p set:html={p} />)}
+        {about.map((p) => (
+          <>
+            <p class="full" set:html={p.full} />
+            <p class="short" set:html={p.short} />
+          </>
+        ))}
       </section>
 
       <section>
@@ -196,6 +201,9 @@ const links = home.links.filter((l) => l.href);
     font-size: 17px;
     font-weight: 300;
     line-height: 1.75;
+  }
+  .bio .short {
+    display: none;
   }
   .bio :global(a),
   .elsewhere a {
@@ -563,6 +571,8 @@ const links = home.links.filter((l) => l.href);
     .stage { height: 200px; }
     .main section:not(.bio) { order: 4; }
     .now-card { padding: 14px; }
+    .bio .full { display: none; }
+    .bio .short { display: block; }
     .stage-card .sleeve, .stage-card .disc { width: 110px; height: 110px; margin: -55px 0 0 -55px; }
     .stage-card .sleeve { transform: translateX(-18px); }
     .stage-card .disc { transform: translateX(18px); }

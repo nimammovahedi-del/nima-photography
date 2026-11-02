@@ -216,8 +216,18 @@ export const aboutPath = [
   { year: '2022', place: 'Freie Universität Berlin', href: 'https://www.fu-berlin.de/en/', what: 'History' },
 ];
 
+// Each paragraph has a full version (desktop) and a short one (iPhone, about 30% less text).
 export const about = [
-  'Hi, I&rsquo;m Nima. Right now I&rsquo;m finishing my master&rsquo;s in political science at the London School of Economics, a year after graduating from UC Irvine, and the next step I&rsquo;m hoping for is law school.',
-  'In the meantime, and all the way through, I want to build new things that help people and the causes I care about. So far that means small, free apps like Ergo for LSAT logical reasoning and Check Congress for following what Congress does. They are on the <a href="/projects">Projects</a> page.',
-  'In my free time I design my own LEGO builds, go backpacking, follow architecture and new urban and transit developments, and play video games like Cyberpunk 2077 and Overwatch. I also take photos wherever I travel, and you can find that art, along with the <a href="/photography/cameras">cameras</a> I shoot on, under <a href="/photography">Photography</a>.',
+  {
+    full: 'Hi, I&rsquo;m Nima. Right now I&rsquo;m finishing my master&rsquo;s in political science at the London School of Economics, a year after graduating from UC Irvine, and the next step I&rsquo;m hoping for is law school.',
+    short: 'Hi, I&rsquo;m Nima. I&rsquo;m finishing my political science master&rsquo;s at the LSE, a year after graduating from UC Irvine, and hoping for law school next.',
+  },
+  {
+    full: 'On the side I build free <a href="/projects">apps</a>: Ergo, for drilling LSAT logical reasoning, and Check Congress, for keeping up with what Congress actually does.',
+    short: 'On the side I build free <a href="/projects">apps</a>: Ergo, for drilling LSAT logical reasoning, and Check Congress, for keeping up with what Congress actually does.',
+  },
+  {
+    full: 'In my free time I design my own LEGO builds, go backpacking, follow architecture and new urban and transit developments, and play video games like Cyberpunk 2077 and Overwatch. I also take photos wherever I travel, and you can find that art, along with the <a href="/photography/cameras">cameras</a> I shoot on, under <a href="/photography">Photography</a>.',
+    short: 'In my free time I design LEGO, go backpacking, follow architecture and transit, and play Cyberpunk 2077 and Overwatch. My travel photos are under <a href="/photography">Photography</a>.',
+  },
 ];
