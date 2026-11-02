@@ -223,21 +223,16 @@ const toc = [
   .toc {
     display: none;
   }
-  /* Desktop: the menu gets its own column on the left and the page fills the rest of the site's
-     content area, so text and screenshots run larger. */
   @media (min-width: 1300px) {
+    /* Screenshots narrow a little on laptop screens so the menu has its own margin. */
     .page {
-      --col: 780px;
-      --wide: 1200px;
-      padding-left: 212px;
-      padding-right: 0;
+      --wide: min(1040px, calc(100vw - 480px));
     }
     .toc {
       display: block;
       position: fixed;
       top: 128px;
-      /* Lines up with the left edge of the site's (max 1440px) content area. */
-      left: calc(max(0px, (100vw - var(--max)) / 2) + var(--gutter));
+      left: max(24px, calc((100vw - var(--wide)) / 2 - 216px));
       width: 176px;
       max-width: none;
       margin: 0;
@@ -510,21 +505,6 @@ const toc = [
   }
   .pager a:hover {
     color: var(--tan);
-  }
-  @media (min-width: 1100px) {
-    .block p {
-      font-size: 19px;
-    }
-    h2 {
-      font-size: 40px;
-    }
-    .tagline {
-      font-size: 22px;
-    }
-    .steps p,
-    .notes p {
-      font-size: 17.5px;
-    }
   }
   @media (max-width: 760px) {
     .stats {
