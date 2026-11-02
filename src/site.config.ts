@@ -196,21 +196,28 @@ export type SortedPlace = (typeof sortedPlaces)[number];
 export const sortedSubs = (subs: readonly string[]) => [...subs].sort(byName);
 
 // The About page (top menu). A first draft from what's on the site; rewrite freely.
-// About page, right-hand column. Change the book and the song whenever you like.
+// About page, right-hand column. Change the book, song, rank or set whenever you like.
+// Images live in public/about/.
 export const aboutNow = {
-  reading: { title: 'Dune', by: 'Frank Herbert' },
-  listening: { title: 'Black', by: 'Pearl Jam', album: 'Ten' },
+  reading: { title: 'Dune', by: 'Frank Herbert', cover: '/about/dune.jpg' },
+  listening: { title: 'Black', by: 'Pearl Jam', album: 'Ten', cover: '/about/ten.jpg' },
+  rank: { game: 'Overwatch 2', rank: 'Diamond 2', icon: '/about/ow-diamond.png' },
+  lego: {
+    name: 'UCS Venator-Class Republic Attack Cruiser',
+    set: '75367',
+    image: '/about/venator.png',
+  },
 };
 
 // About page, "Along the way" list (newest first).
 export const aboutPath = [
-  { year: '2026', place: 'London School of Economics', what: 'MSc dissertation on courts that compete for companies' },
+  { year: '2026', place: 'London School of Economics', what: 'MSc, graduating soon. Dissertation on courts that compete for companies' },
   { year: '2026', place: 'Encode, London', what: 'Policy memo on AI hallucinations in court' },
-  { year: '2025', place: 'UC Irvine', what: 'Honors thesis on state rules and Chinese investment' },
+  { year: '2025', place: 'UC Irvine', what: 'Graduated. Honors thesis on state rules and Chinese investment' },
 ];
 
 export const about = [
-  'I study political science: how courts, states and governments compete, share power and respond to new pressures, from American corporate courts to power-sharing in Iran and state rules on Chinese investment. My papers are on the <a href="/research">Research</a> page.',
-  'I also build small, free apps that make something hard easier to check or practise, like Ergo for LSAT logical reasoning and Check Congress for following what Congress does. They are on the <a href="/projects">Projects</a> page.',
-  'And I photograph buildings, cities, wild places and the animals in them wherever I travel, mostly on Canon EOS bodies and a Fujifilm X-E1. That work, and the <a href="/photography/cameras">cameras</a>, are under <a href="/photography">Photography</a>.',
+  'I&rsquo;m about to finish my MSc at the London School of Economics, after graduating from UC Irvine, and I&rsquo;m hoping to go to law school next. My research is in political science: how courts, states and governments compete, share power and respond to new pressures. The papers are on the <a href="/research">Research</a> page.',
+  'In the meantime, and all the way through, I want to build new things that help people and the causes I care about. So far that means small, free apps like Ergo for LSAT logical reasoning and Check Congress for following what Congress does. They are on the <a href="/projects">Projects</a> page.',
+  'In my free time I design my own LEGO builds, go backpacking, follow architecture and new urban and transit developments, and play video games like Cyberpunk 2077 and Overwatch. I also photograph the places I travel through; that work, and the <a href="/photography/cameras">cameras</a>, are under <a href="/photography">Photography</a>.',
 ];
