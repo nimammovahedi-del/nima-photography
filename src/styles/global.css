@@ -9,13 +9,13 @@
   --rose: #c98f7f; /* "wrong" and "no" on the project drawings */
 
   /* 500px-style neutral near-black, with the palette used as small accents */
-  --bg: #0b0b0b;
-  --bg-raised: #151515;
-  --card: #1c1c1c;
+  --bg: #18181b; /* the grey shared by every page (was near-black #0b0b0b) */
+  --bg-raised: #222226;
+  --card: #26262a;
   --text: #f7f7f5;
   --muted: #9b9b9b; /* 7:1 on --bg */
   --project-body: #dddcd3; /* running text on the Projects pages: brighter than --muted, easy to read */
-  --line: #262626;
+  --line: #303036;
   --nav: #d2d2cd; /* top menu text */
   --accent: var(--sage); /* active states, small highlights */
   --accent-deep: var(--grey-green);
@@ -23,7 +23,7 @@
   --on-accent: #0b0b0b;
 
   /* Maps — an antique-globe look: light tan land on a near-black sea, your countries in cream */
-  --sea: #111111;
+  --sea: #18181b;
   --sea-light: #1b1b1a;
   --land: #c9bc98;
   --land-edge: #a89b78;
@@ -76,12 +76,12 @@
 /* The maps and the 3D cameras stay dark in light mode, so the words on them keep their dark-mode
    colours too. */
 :root[data-theme='light'] :is(.explorer, .country-map, .cameras .card) {
-  --bg: #0b0b0b;
-  --bg-raised: #151515;
-  --card: #1c1c1c;
+  --bg: #18181b;
+  --bg-raised: #222226;
+  --card: #26262a;
   --text: #f7f7f5;
   --muted: #9b9b9b;
-  --line: #262626;
+  --line: #303036;
   --accent: var(--sage);
   --accent-deep: var(--grey-green);
   --accent-soft: rgb(164 189 186 / 0.1);
