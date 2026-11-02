@@ -1,0 +1,52 @@
+---
+// The institution's real logo on a small white tile, so each mark keeps its own colours
+// in both light and dark mode.
+import { institutions, type Institution } from '../../data/research/papers';
+
+interface Props {
+  id: Institution;
+  size?: number; // tile height in px
+}
+const { id, size = 44 } = Astro.props;
+const inst = institutions[id];
+---
+
+<span class:list={['logo-tile', id]} style={`--h:${size}px`} title={inst.name}>
+  <img src={inst.logo} alt={inst.name} loading="lazy" decoding="async" />
+</span>
+
+<style>
+  .logo-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--h);
+    padding: calc(var(--h) * 0.16);
+    border-radius: calc(var(--h) * 0.22);
+    background: #fff;
+    flex: none;
+  }
+  .logo-tile img {
+    height: 100%;
+    width: auto;
+  }
+  /* LSE's square fills its tile edge to edge, like the real mark */
+  .logo-tile.lse {
+    padding: 0;
+    overflow: hidden;
+    aspect-ratio: 1;
+  }
+  .logo-tile.lse img {
+    width: 100%;
+    height: 100%;
+  }
+  .logo-tile.encode {
+    padding-inline: calc(var(--h) * 0.28);
+  }
+  .logo-tile.encode img {
+    height: 60%;
+  }
+  .logo-tile.uci img {
+    height: 70%;
+  }
+</style>

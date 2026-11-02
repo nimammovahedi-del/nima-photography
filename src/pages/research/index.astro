@@ -1,0 +1,283 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InstitutionLogo from '../../components/research/InstitutionLogo.astro';
+import { institutions, papers } from '../../data/research/papers';
+import { states } from '../../data/research/fdi-states';
+import '../../styles/research.css';
+
+// Mini versions of each paper's key chart, drawn from the same data as the paper pages.
+// Paper 4: restriction level (x) vs FDI tier (y), circle area = number of states.
+const cells: { x: number; y: number; n: number }[] = [];
+for (let x = 1; x <= 4; x++)
+  for (let y = 1; y <= 5; y++) {
+    const n = states.filter((s) => s.level === x && s.tier === y).length;
+    if (n) cells.push({ x, y, n });
+  }
+const maxN = Math.max(...cells.map((c) => c.n));
+---
+
+<BaseLayout title="Research" description="Political science papers by Nima Movahedi on courts, power-sharing, AI in the courtroom and foreign investment.">
+  <header class="rhead">
+    <p class="r-eyebrow">Research</p>
+    <h1>Papers</h1>
+    <p class="intro">Political science on how institutions compete, share power and cope with new pressures. Each page walks through a paper in a few minutes; the full PDF is one click away.</p>
+  </header>
+
+  <ol class="plist">
+    {
+      papers.map((p, i) => (
+        <li>
+          <a class="prow" href={`/research/${p.slug}`} data-row>
+            <div class="mini" aria-hidden="true">
+              {p.slug === 'judicial-arms-race' && (
+                <svg viewBox="0 0 200 120">
+                  <text x="0" y="12">Court</text>
+                  <text x="200" y="12" text-anchor="end">Statutes</text>
+                  <line class="a-draw" pathLength="1" x1="22" y1="30" x2="178" y2="104" style="stroke:var(--r-de)" />
+                  <line class="a-draw" pathLength="1" x1="22" y1="67" x2="178" y2="67" style="stroke:var(--r-tx);--i:1" />
+                  <line class="a-draw" pathLength="1" x1="22" y1="104" x2="178" y2="30" style="stroke:var(--r-nv);--i:2" />
+                  {[30, 67, 104].map((y, k) => (
+                    <>
+                      <circle cx="22" cy={y} r="5" style={`fill:var(--r-${['de', 'tx', 'nv'][k]})`} />
+                      <circle cx="178" cy={[104, 67, 30][k]} r="5" style={`fill:var(--r-${['de', 'tx', 'nv'][k]})`} />
+                    </>
+                  ))}
+                </svg>
+              )}
+              {p.slug === 'iran-power-sharing' && (
+                <svg viewBox="0 0 200 120">
+                  {[
+                    ['Centripetal', 3],
+                    ['Consociational', 5],
+                    ['Ethno-federal', 6],
+                  ].map(([t, v], k) => (
+                    <>
+                      <text x="0" y={22 + k * 38}>{t}</text>
+                      <rect x="0" y={30 + k * 38} width="200" height="8" rx="2" class="track" />
+                      <rect class="a-grow-x" x="0" y={30 + k * 38} width={((v as number) / 8) * 200} height="8" rx="2" style={`fill:var(--accent);--i:${k}`} />
+                      <text x="200" y={22 + k * 38} text-anchor="end" class="ink">{v}/8</text>
+                    </>
+                  ))}
+                </svg>
+              )}
+              {p.slug === 'before-the-bench' && (
+                <svg viewBox="0 0 200 120">
+                  {[
+                    ['ChatGPT-4', 58],
+                    ['Llama 2', 88],
+                    ['Lexis+ AI', 17],
+                    ['Westlaw AI', 34],
+                  ].map(([t, v], k) => (
+                    <>
+                      <text x="0" y={14 + k * 29}>{t}</text>
+                      <rect x="0" y={19 + k * 29} width="200" height="6" rx="2" class="track" />
+                      <rect class="a-grow-x" x="0" y={19 + k * 29} width={(v as number) * 2} height="6" rx="2" style={`fill:var(--r-neg);--i:${k}`} />
+                      <text x="200" y={14 + k * 29} text-anchor="end" class="ink">{v}%</text>
+                    </>
+                  ))}
+                </svg>
+              )}
+              {p.slug === 'chinese-fdi' && (
+                <svg viewBox="0 0 200 120">
+                  <line x1="30" y1="4" x2="30" y2="104" class="axis" />
+                  <line x1="30" y1="104" x2="200" y2="104" class="axis" />
+                  <text x="200" y="118" text-anchor="end">Stricter rules →</text>
+                  <text x="0" y="10">FDI</text>
+                  {cells.map((c, k) => (
+                    <circle class="a-pop" cx={30 + c.x * 40 - 14} cy={104 - c.y * 19.5 + 9} r={2.5 + 7 * Math.sqrt(c.n / maxN)} style={`fill:var(--r-heat-${c.x});--i:${k}`} />
+                  ))}
+                </svg>
+              )}
+            </div>
+
+            <div class="body">
+              <p class="num">{String(i + 1).padStart(2, '0')}</p>
+              <h2>{p.title}</h2>
+              <p class="sub">{p.subtitle}</p>
+              <p class="sum">{p.summary}</p>
+              <p class="foot">
+                <span>{p.kind} · {p.date}</span>
+                <span class="go">Read in {p.readMinutes} min <span aria-hidden="true">→</span></span>
+              </p>
+            </div>
+
+            <div class="inst">
+              <InstitutionLogo id={p.institution} size={44} />
+              <span>{p.institution === 'encode' ? 'Policy Fellow, Encode AI (London)' : institutions[p.institution].name}</span>
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</BaseLayout>
+
+<script>
+  // The mini chart in a row rebuilds when the row is hovered or focused; nothing moves on its own.
+  const last = new WeakMap<Element, number>();
+  document.querySelectorAll<HTMLElement>('[data-row]').forEach((row) => {
+    const play = () => {
+      const now = performance.now();
+      if (now - (last.get(row) ?? -1e9) < 2000) return;
+      last.set(row, now);
+      row.classList.remove('play');
+      void row.offsetWidth;
+      row.classList.add('play');
+    };
+    row.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && play());
+    row.addEventListener('focus', play);
+  });
+</script>
+
+<style>
+  .rhead {
+    max-width: 760px;
+    padding: 48px 0 32px;
+  }
+  .rhead h1 {
+    margin: 8px 0 0;
+    font-size: clamp(40px, 8vw, 64px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+  .intro {
+    margin: 14px 0 0;
+    color: var(--r-ink-2);
+    font-size: 17px;
+  }
+  .plist {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .prow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+    color: inherit;
+    text-decoration: none;
+  }
+  @media (min-width: 900px) {
+    .prow {
+      grid-template-columns: 240px minmax(0, 1fr) 200px;
+      gap: 40px;
+      align-items: center;
+      padding: 36px 0;
+    }
+  }
+  .mini {
+    order: 2;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--r-surface);
+    transition: border-color 0.25s var(--ease-out);
+  }
+  @media (min-width: 900px) {
+    .mini {
+      order: 0;
+    }
+  }
+  .mini svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 140px;
+    overflow: visible;
+    font-family: var(--font);
+  }
+  .mini text {
+    fill: var(--muted);
+    font-size: 11px;
+  }
+  .mini text.ink {
+    fill: var(--text);
+  }
+  .mini line {
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+  .mini line.axis {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .mini .track {
+    fill: var(--r-grid);
+  }
+  .body {
+    min-width: 0;
+  }
+  .num {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  h2 {
+    margin: 4px 0 0;
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: 300;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    transition: color 0.25s var(--ease-out);
+  }
+  .sub {
+    margin: 6px 0 0;
+    color: var(--r-ink-2);
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .sum {
+    margin: 12px 0 0;
+    max-width: 620px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: 14px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .go {
+    color: var(--accent);
+  }
+  .go span {
+    display: inline-block;
+    transition: transform 0.25s var(--ease-out);
+  }
+  .inst {
+    order: -1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  @media (min-width: 900px) {
+    .inst {
+      order: 0;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+    }
+  }
+  @media (hover: hover) {
+    .prow:hover h2 {
+      color: var(--accent);
+    }
+    .prow:hover .mini {
+      border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
+    }
+    .prow:hover .go span {
+      transform: translateX(4px);
+    }
+  }
+</style>

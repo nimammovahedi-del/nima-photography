@@ -1,0 +1,678 @@
+---
+import PaperLayout from '../../components/research/PaperLayout.astro';
+import Fig from '../../components/research/Fig.astro';
+import { states } from '../../data/research/fdi-states';
+import { geoPath } from 'd3-geo';
+import { feature } from 'topojson-client';
+import usTopo from 'us-atlas/states-albers-10m.json';
+
+const sections = [
+  { id: 'context', label: 'Why states matter' },
+  { id: 'measure', label: 'Three measures' },
+  { id: 'map', label: 'The map' },
+  { id: 'finding-1', label: 'Rules vs investment' },
+  { id: 'finding-2', label: 'Politics vs rules' },
+  { id: 'cases', label: 'Three states up close' },
+  { id: 'conclusion', label: 'What it means' },
+];
+
+const aims = [
+  'Test whether states with <strong>stricter rules</strong> on foreign investment received <strong>less Chinese FDI</strong> from 2010 to 2020.',
+  'Test whether a state’s <strong>partisan lean</strong> predicts how strict those rules are.',
+  'Explain the exceptions, and trace both patterns through <strong>Illinois, Wisconsin and Florida</strong>.',
+];
+
+// ---------------- data helpers ----------------
+const by = Object.fromEntries(states.map((s) => [s.name, s]));
+const levelNames = ['Minimal', 'Transparent', 'Selective', 'High'];
+const levelDesc = [
+  'Very open, few barriers, streamlined for investors',
+  'Moderately transparent, some frameworks, not deterring',
+  'Targeted limits on certain industries or countries',
+  'Significant barriers, strict compliance, broad ownership limits',
+];
+const levelEg = ['Nevada, Utah', 'California, New York', 'Florida, Alabama', 'Texas, Idaho'];
+const tierNames = ['Under $100M', '$100–500M', '$0.5–2B', '$2–10B', 'Over $10B'];
+const fmt$ = (v: number) => (v >= 1e9 ? `$${(v / 1e9).toFixed(2).replace(/\.?0+$/, '')}B` : `$${Math.round(v / 1e6)}M`);
+const pol = (v: number) => (v > 0 ? `+${v}` : `${v}`);
+const polClass = (v: number) =>
+  v === 8 ? 'Strong Democratic' : v >= 4 ? 'Lean Democratic' : v === 0 ? 'Mixed' : v >= -6 && v <= -4 ? 'Lean Republican' : v === -8 ? 'Strong Republican' : v > 0 ? 'Lean Democratic' : 'Lean Republican';
+const tipFor = (n: string) => {
+  const s = by[n];
+  if (!s) return `${n}|No data`;
+  return `${n}|${levelNames[s.level - 1]} restrictions (${s.level})|Chinese FDI ${fmt$(s.fdi)} · $${s.perCapita.toFixed(0)} per person|Politics ${pol(s.politics)}, ${polClass(s.politics)}`;
+};
+
+// ---------------- map ----------------
+const geo = feature(usTopo as any, (usTopo as any).objects.states) as any;
+const path = geoPath(null);
+const shapes = geo.features
+  .map((f: any) => ({ name: f.properties.name as string, d: path(f) as string }))
+  .filter((s: { d: string }) => s.d);
+const heat = (l: number) => `var(--r-heat-${l})`;
+const seq = (t: number) => `var(--r-seq-${t})`;
+// diverging: −8 … +8 in steps of 2 → red … grey … blue
+const div = (v: number) => {
+  if (v === 0) return 'var(--r-mid)';
+  const c = v > 0 ? 'var(--r-dem)' : 'var(--r-rep)';
+  const k = Math.abs(v) === 8 ? 100 : Math.abs(v) >= 6 ? 75 : Math.abs(v) >= 4 ? 55 : 35;
+  return `color-mix(in srgb, ${c} ${k}%, var(--r-mid))`;
+};
+const counts = {
+  level: [1, 2, 3, 4].map((l) => states.filter((s) => s.level === l).length),
+  tier: [1, 2, 3, 4, 5].map((t) => states.filter((s) => s.tier === t).length),
+};
+const polVals = [-8, -6, -4, -2, 0, 2, 4, 6, 8];
+const polCounts = polVals.map((v) => states.filter((s) => s.politics === v).length);
+
+// ---------------- bubble grids ----------------
+type Cell = { x: number; y: number; names: string[] };
+function grid(xs: number[], ys: number[], fx: (s: (typeof states)[0]) => number, fy: (s: (typeof states)[0]) => number) {
+  const cells: Cell[] = [];
+  for (const x of xs) for (const y of ys) {
+    const names = states.filter((s) => fx(s) === x && fy(s) === y).map((s) => s.name);
+    if (names.length) cells.push({ x, y, names });
+  }
+  return cells;
+}
+const g1 = grid([1, 2, 3, 4], [1, 2, 3, 4, 5], (s) => s.level, (s) => s.tier);
+const g2 = grid(polVals, [1, 2, 3, 4], (s) => s.politics, (s) => s.level);
+const maxN = Math.max(...g1.map((c) => c.names.length), ...g2.map((c) => c.names.length));
+const size = (n: number) => 14 + 34 * Math.sqrt(n / maxN);
+
+const out1 = [
+  { n: 'Virginia', lvl: 'Minimal', fdi: '$14.48B', sd: '+1.38 SD', why: 'Next to Washington, strong infrastructure and generous incentive grants (VIP, VEDIG and a governor’s deal-closing fund).' },
+  { n: 'California', lvl: 'Transparent', fdi: '$36.43B', sd: '+4.53 SD', why: 'By far the largest recipient: sheer market size, an innovation economy and GO-Biz support for investors.' },
+  { n: 'Kentucky', lvl: 'Selective', fdi: '$9.46B', sd: '+0.92 SD', why: 'High investment despite low national rankings and a farmland ban on China-tied buyers (HB 575).' },
+  { n: 'Texas', lvl: 'High', fdi: '$8.8B', sd: '+1.03 SD', why: 'Some of the fiercest anti-China laws (HB 17, SB 147), yet its economy still draws capital.' },
+];
+const out2 = [
+  { n: 'Utah', p: '−8, Strong Republican', lvl: 'Minimal', sd: '−3.19 SD', why: 'Governor Jon Huntsman Jr. (2005–09), fluent in Mandarin and later ambassador to China, set an open course.' },
+  { n: 'Pennsylvania', p: '0, Mixed', lvl: 'Minimal', sd: '−2.13 SD', why: 'A swing state where control of the governorship keeps alternating, so restrictive bills rarely stick.' },
+  { n: 'Hawaii', p: '+8, Strong Democratic', lvl: 'High', sd: '+2.13 SD', why: 'A one-party Democratic state whose land and foreign-reliant economy made it guard ownership closely.' },
+];
+---
+
+<PaperLayout slug="chinese-fdi" aims={aims} sections={sections}>
+  <section class="rsec" id="context">
+    <p class="r-eyebrow">01 · Context</p>
+    <h2>Washington gets the headlines. States set the terms.</h2>
+    <p class="lede">
+      Debate about Chinese investment in the US focuses on federal review. But land, incentives and licensing are decided
+      state by state, and states have taken very different lines.
+    </p>
+    <div class="r-stats">
+      <div class="r-stat"><span class="n">$46B</span><span class="l">Chinese FDI into the US at its 2016 peak</span></div>
+      <div class="r-stat"><span class="n">$528.4B</span><span class="l">US–China goods trade in 2024</span></div>
+      <div class="r-stat"><span class="n">50</span><span class="l">states compared</span></div>
+      <div class="r-stat"><span class="n">2010–20</span><span class="l">Chinese FDI by state, from the Rhodium Group</span></div>
+    </div>
+  </section>
+
+  <section class="rsec" id="measure">
+    <p class="r-eyebrow">02 · Method</p>
+    <h2>Three measures for every state</h2>
+    <p class="lede">
+      Each state gets a restriction level, an FDI tier and a political score. Because all three are ranked categories, the
+      thesis tests them with Spearman’s rank correlation (ρ), then studies the outliers and three typical states.
+    </p>
+    <div class="r-cards c2">
+      <div class="r-card">
+        <p class="r-eyebrow">Restriction level (1–4)</p>
+        <ol class="lv">
+          {levelNames.map((n, i) => (
+            <li><span class="r-sw" style={`background:${heat(i + 1)}`}></span><div><b>{i + 1} · {n}</b><p>{levelDesc[i]}. e.g. {levelEg[i]}</p></div></li>
+          ))}
+        </ol>
+      </div>
+      <div class="r-card">
+        <p class="r-eyebrow">Chinese FDI tier (1–5), 2010–20 total</p>
+        <ol class="lv">
+          {tierNames.map((n, i) => (
+            <li><span class="r-sw" style={`background:${seq(i + 1)}`}></span><div><b>{i + 1} · {n}</b><p>{counts.tier[i]} states</p></div></li>
+          ))}
+        </ol>
+      </div>
+    </div>
+
+    <Fig title="How a political score is built" hint="Change the controls">
+      <div class="calc" data-calc>
+        {[
+          ['gov', 'Governor', true],
+          ['house', 'State house', true],
+          ['senate', 'State senate', true],
+          ['pres', '2020 presidential vote', false],
+        ].map(([k, label, split]) => (
+          <div class="calc-row">
+            <span class="calc-l">{label}</span>
+            <div class="r-seg" role="group" aria-label={label as string}>
+              <button type="button" data-k={k} data-v="-2" aria-pressed={k === 'gov' || k === 'pres' ? 'false' : 'true'}>Rep −2</button>
+              {split && <button type="button" data-k={k} data-v="0" aria-pressed="false">Split 0</button>}
+              <button type="button" data-k={k} data-v="2" aria-pressed={k === 'gov' || k === 'pres' ? 'true' : 'false'}>Dem +2</button>
+            </div>
+          </div>
+        ))}
+        <div class="calc-out">
+          <span class="calc-n" data-out>0</span>
+          <span class="calc-c" data-cls>Mixed</span>
+          <span class="calc-s" data-states></span>
+        </div>
+      </div>
+      <script is:inline type="application/json" data-pol-json set:html={JSON.stringify(Object.fromEntries(polVals.map((v) => [v, states.filter((s) => s.politics === v).map((s) => s.name)])))} />
+      <figcaption>From the thesis’s Chapter II method: four offices, ±2 each, summed from −8 (strongly Republican) to +8 (strongly Democratic). It starts on Wisconsin’s mix.</figcaption>
+    </Fig>
+  </section>
+
+  <section class="rsec" id="map">
+    <p class="r-eyebrow">03 · The data</p>
+    <h2>Fifty states, three maps</h2>
+    <p class="lede">Switch layers to compare them. The strict-rules map and the Republican map overlap far more than chance would suggest.</p>
+    <Fig title="Chinese FDI and state policy, 2010–20" hint="Switch layer · hover a state" caption="Data from the thesis appendix. Map: US Census boundaries via us-atlas.">
+      <div class="r-seg layers" role="group" aria-label="Map layer">
+        <button type="button" aria-pressed="true" data-layer="level">Restriction level</button>
+        <button type="button" aria-pressed="false" data-layer="tier">Chinese FDI</button>
+        <button type="button" aria-pressed="false" data-layer="politics">Politics</button>
+      </div>
+      <div class="usmap" data-map="level">
+        <svg viewBox="0 0 975 610" role="img" aria-label="Map of US states">
+          {shapes.map((s: { name: string; d: string }) => {
+            const r = by[s.name];
+            return (
+              <path
+                d={s.d}
+                data-tip={tipFor(s.name)}
+                style={r ? `--f-level:${heat(r.level)};--f-tier:${seq(r.tier)};--f-politics:${div(r.politics)}` : '--f-level:var(--r-grid);--f-tier:var(--r-grid);--f-politics:var(--r-grid)'}
+              />
+            );
+          })}
+        </svg>
+        <ul class="rfig-legend lg" data-legend="level">
+          {levelNames.map((n, i) => <li><span class="r-sw" style={`background:${heat(i + 1)}`}></span>{n} <span class="c">{counts.level[i]}</span></li>)}
+        </ul>
+        <ul class="rfig-legend lg" data-legend="tier">
+          {tierNames.map((n, i) => <li><span class="r-sw" style={`background:${seq(i + 1)}`}></span>{n} <span class="c">{counts.tier[i]}</span></li>)}
+        </ul>
+        <ul class="rfig-legend lg" data-legend="politics">
+          {polVals.map((v, i) => <li><span class="r-sw" style={`background:${div(v)}`}></span>{pol(v)} <span class="c">{polCounts[i]}</span></li>)}
+          <li class="ends">Republican ← → Democratic</li>
+        </ul>
+      </div>
+      <details class="r-data">
+        <summary>Show all 50 states</summary>
+        <div class="r-table-wrap">
+          <table class="r-table">
+            <thead><tr><th>State</th><th>Restriction</th><th>Chinese FDI</th><th>Per person</th><th>Politics</th></tr></thead>
+            <tbody>
+              {states.map((s) => <tr><td>{s.name}</td><td>{s.level} · {levelNames[s.level - 1]}</td><td>{fmt$(s.fdi)}</td><td>${s.perCapita.toFixed(2)}</td><td>{pol(s.politics)}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </Fig>
+  </section>
+
+  <section class="rsec" id="finding-1">
+    <p class="r-eyebrow">04 · Chapter I</p>
+    <h2>Stricter rules, less Chinese money</h2>
+    <p class="lede">
+      Across the 50 states, higher restriction levels went with lower FDI tiers. The relationship is moderate but
+      statistically significant.
+    </p>
+    <Fig title="Restriction level vs Chinese FDI tier" hint="Hover a circle" replay caption="Each circle is a group of states sharing a cell; its area shows how many. Spearman’s ρ computed on all 50 states.">
+      <div class="bub r-dim-others" style="--cols:4;--rows:5">
+        <span class="bub-ylab">Chinese FDI tier</span>
+        <div class="bub-y">{[5, 4, 3, 2, 1].map((t) => <span>{tierNames[t - 1]}</span>)}</div>
+        <div class="bub-plot">
+          {g1.map((c, i) => (
+            <span class="bub-cell" style={`grid-column:${c.x};grid-row:${6 - c.y}`}>
+              <span class="bub-dot a-pop" style={`--s:${size(c.names.length)}px;--i:${i};background:${heat(c.x)}`} data-tip={`${levelNames[c.x - 1]} · ${tierNames[c.y - 1]}|${c.names.length} state${c.names.length > 1 ? 's' : ''}: ${c.names.join(', ')}`}>
+                <span>{c.names.length}</span>
+              </span>
+            </span>
+          ))}
+        </div>
+        <div class="bub-x">{levelNames.map((n) => <span>{n}</span>)}</div>
+        <span class="bub-xlab">Restriction level →</span>
+      </div>
+      <div class="stat-pill"><b>ρ = −0.32</b><span>p = 0.024</span><span>n = 50</span></div>
+    </Fig>
+
+    <p>Four states received far more than their rules predicted. The thesis explains each.</p>
+    <div class="r-cards c2 outl">
+      {out1.map((o) => (
+        <div class="r-card">
+          <div class="oh"><h4>{o.n}</h4><span class="r-chip">{o.lvl} · {o.fdi}</span><span class="sd up">{o.sd}</span></div>
+          <p>{o.why}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="rsec" id="finding-2">
+    <p class="r-eyebrow">05 · Chapter II</p>
+    <h2>Republican states wrote the stricter rules</h2>
+    <p class="lede">
+      The more Republican a state, the higher its restriction level. This link is stronger than the first, and very
+      unlikely to be chance.
+    </p>
+    <Fig title="Political score vs restriction level" hint="Hover a circle" replay caption="Each circle is a group of states; its area shows how many. Spearman’s ρ computed on all 50 states.">
+      <div class="bub r-dim-others two" style="--cols:9;--rows:4">
+        <span class="bub-ylab">Restriction level</span>
+        <div class="bub-y">{[4, 3, 2, 1].map((l) => <span>{levelNames[l - 1]}</span>)}</div>
+        <div class="bub-plot">
+          {g2.map((c, i) => (
+            <span class="bub-cell" style={`grid-column:${polVals.indexOf(c.x) + 1};grid-row:${5 - c.y}`}>
+              <span class="bub-dot a-pop" style={`--s:${size(c.names.length)}px;--i:${i};background:${div(c.x)}`} data-tip={`Politics ${pol(c.x)} · ${levelNames[c.y - 1]}|${c.names.length} state${c.names.length > 1 ? 's' : ''}: ${c.names.join(', ')}`}>
+                <span>{c.names.length}</span>
+              </span>
+            </span>
+          ))}
+        </div>
+        <div class="bub-x">{polVals.map((v) => <span>{pol(v)}</span>)}</div>
+        <span class="bub-xlab">← Republican · Political score · Democratic →</span>
+      </div>
+      <div class="stat-pill"><b>ρ ≈ −0.55</b><span>p ≈ 0.000036</span><span>n = 50</span></div>
+    </Fig>
+
+    <p>Three states broke the partisan pattern, each for local reasons.</p>
+    <div class="r-cards c3 outl">
+      {out2.map((o) => (
+        <div class="r-card">
+          <div class="oh"><h4>{o.n}</h4><span class="sd">{o.sd}</span></div>
+          <p class="meta">{o.p} · {o.lvl} restrictions</p>
+          <p>{o.why}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="rsec" id="cases">
+    <p class="r-eyebrow">06 · Case studies</p>
+    <h2>Three states that fit the pattern</h2>
+    <p class="lede">One Democratic, one split, one Republican.</p>
+    <div class="cases">
+      <article class="case" style={`--c:${div(8)}`}>
+        <p class="r-eyebrow">Politics +8 · Minimal</p>
+        <h3>Illinois</h3>
+        <ul>
+          <li>Chicago’s 2013 Gateway Cities Agreement, the first of its kind, helped draw 150+ mainland Chinese companies.</li>
+          <li>CRRC’s Chicago railcar plant revived local railcar production with hundreds of jobs.</li>
+          <li>Governor Pritzker’s $536M award to battery maker Gotion drew national-security and taxpayer backlash.</li>
+        </ul>
+      </article>
+      <article class="case" style={`--c:${div(0)}`}>
+        <p class="r-eyebrow">Politics 0 · Mixed signals</p>
+        <h3>Wisconsin</h3>
+        <ul>
+          <li>An 1887 law (§710.02) still limits land ownership by foreign corporations, tightened several times since.</li>
+          <li>Acts 98 and 19 (2023) added incentives and steered foreign capital into local businesses.</li>
+          <li>Its development agency reports $2.4B invested and 170 FDI projects from 2014 to 2024.</li>
+        </ul>
+      </article>
+      <article class="case" style={`--c:${div(-8)}`}>
+        <p class="r-eyebrow">Politics −8 · High</p>
+        <h3>Florida</h3>
+        <ul>
+          <li>SB 264 bans Chinese-linked buyers near military sites and critical infrastructure and bars state contracts with them.</li>
+          <li>It passed 31–8 and 95–17, then faced a constitutional challenge in court.</li>
+          <li>HB 7071 and SB 846 widened restrictions across nearly every sector.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="rsec" id="conclusion">
+    <p class="r-eyebrow">07 · Conclusion</p>
+    <h2>Partisanship shapes policy, and policy shapes investment</h2>
+    <div class="chain">
+      <span class="node">Republican lean</span>
+      <span class="edge"><b>ρ ≈ −0.55</b>more restrictive rules</span>
+      <span class="node">Stricter rules</span>
+      <span class="edge"><b>ρ = −0.32</b>less Chinese FDI</span>
+      <span class="node">Lower investment</span>
+    </div>
+    <p>
+      States are not bit players in US–China economic relations. Where a state sits politically predicts how open it is,
+      and how open it is predicts what it receives, with exceptions explained by incentives, geography, industry and
+      local leaders.
+    </p>
+    <p class="r-note">
+      Both tests are correlations between ranked categories, so they show association, not cause. Restriction levels were
+      assigned by the author from legislation, reports and news coverage.
+    </p>
+  </section>
+</PaperLayout>
+
+<script>
+  // Map layers.
+  document.querySelectorAll<HTMLElement>('.layers').forEach((seg) => {
+    const map = seg.parentElement!.querySelector<HTMLElement>('[data-map]')!;
+    const btns = seg.querySelectorAll<HTMLButtonElement>('button');
+    btns.forEach((b) =>
+      b.addEventListener('click', () => {
+        btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        map.dataset.map = b.dataset.layer!;
+      }),
+    );
+  });
+
+  // Political-score calculator.
+  document.querySelectorAll<HTMLElement>('[data-calc]').forEach((calc) => {
+    const fig = calc.closest('.rfig')!;
+    const byScore: Record<string, string[]> = JSON.parse(fig.querySelector('[data-pol-json]')!.textContent!);
+    const out = calc.querySelector('[data-out]')!;
+    const cls = calc.querySelector('[data-cls]')!;
+    const sts = calc.querySelector('[data-states]')!;
+    const name = (v: number) =>
+      v === 8 ? 'Strong Democratic' : v >= 4 ? 'Lean Democratic' : v === -8 ? 'Strong Republican' : v <= -4 ? 'Lean Republican' : v === 0 ? 'Mixed' : v > 0 ? 'Leans Democratic' : 'Leans Republican';
+    const update = () => {
+      let sum = 0;
+      calc.querySelectorAll<HTMLButtonElement>('button[aria-pressed="true"]').forEach((b) => (sum += +b.dataset.v!));
+      out.textContent = sum > 0 ? `+${sum}` : String(sum);
+      cls.textContent = name(sum);
+      const list = byScore[String(sum)] || [];
+      sts.textContent = list.length ? `${list.length} state${list.length > 1 ? 's' : ''}: ${list.join(', ')}` : 'No state has this score';
+    };
+    calc.querySelectorAll<HTMLButtonElement>('button').forEach((b) =>
+      b.addEventListener('click', () => {
+        calc.querySelectorAll<HTMLButtonElement>(`button[data-k="${b.dataset.k}"]`).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        update();
+      }),
+    );
+    update();
+  });
+</script>
+
+<style>
+  .lv {
+    display: grid;
+    gap: 10px;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lv li {
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    gap: 10px;
+  }
+  .lv .r-sw {
+    margin-top: 5px;
+  }
+  .lv b {
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .lv p {
+    margin: 0 !important;
+    font-size: 13px !important;
+  }
+
+  /* calculator */
+  .calc {
+    display: grid;
+    gap: 10px;
+  }
+  .calc-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    align-items: center;
+  }
+  @media (min-width: 640px) {
+    .calc-row {
+      grid-template-columns: 190px 1fr;
+    }
+  }
+  .calc-row .r-seg {
+    width: fit-content;
+  }
+  .calc-l {
+    color: var(--r-ink-2);
+    font-size: 14px;
+  }
+  .calc-out {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    margin-top: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .calc-n {
+    font-size: 44px;
+    font-weight: 300;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .calc-c {
+    font-size: 16px;
+  }
+  .calc-s {
+    flex-basis: 100%;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* map */
+  .layers {
+    margin-bottom: 14px;
+  }
+  .usmap path {
+    stroke: var(--r-surface);
+    stroke-width: 1;
+    stroke-linejoin: round;
+    transition: fill 0.4s var(--ease-out);
+  }
+  .usmap path:hover {
+    stroke: var(--text);
+    stroke-width: 1.5;
+  }
+  .usmap[data-map='level'] path {
+    fill: var(--f-level);
+  }
+  .usmap[data-map='tier'] path {
+    fill: var(--f-tier);
+  }
+  .usmap[data-map='politics'] path {
+    fill: var(--f-politics);
+  }
+  .usmap .lg {
+    margin-top: 12px;
+  }
+  .usmap .lg .c {
+    color: var(--muted);
+  }
+  .usmap .lg .ends {
+    color: var(--muted);
+  }
+  .usmap[data-map='level'] .lg:not([data-legend='level']),
+  .usmap[data-map='tier'] .lg:not([data-legend='tier']),
+  .usmap[data-map='politics'] .lg:not([data-legend='politics']) {
+    display: none;
+  }
+
+  /* bubble grids */
+  .bub {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 6px 8px;
+    align-items: stretch;
+  }
+  .bub-ylab {
+    grid-row: 1;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    align-self: center;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .bub-y {
+    display: grid;
+    grid-template-rows: repeat(var(--rows), 1fr);
+    color: var(--muted);
+    font-size: 11px;
+    text-align: right;
+  }
+  .bub-y span {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .bub-plot {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-template-rows: repeat(var(--rows), 58px);
+    border-left: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background-image: linear-gradient(var(--r-grid) 1px, transparent 1px);
+    background-size: 100% calc(100% / var(--rows));
+  }
+  .bub-cell {
+    display: grid;
+    place-items: center;
+  }
+  .bub-dot {
+    display: grid;
+    place-items: center;
+    width: var(--s);
+    height: var(--s);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--r-surface);
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: default;
+  }
+  .bub-dot span {
+    padding: 0 3px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--r-surface) 70%, transparent);
+  }
+  .bub-x,
+  .bub-xlab {
+    grid-column: 3;
+  }
+  .bub-x {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+  }
+  .bub-xlab {
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+  }
+  .bub.two .bub-plot {
+    grid-template-rows: repeat(var(--rows), 64px);
+  }
+  .stat-pill {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    align-items: baseline;
+    width: fit-content;
+    margin-top: 16px;
+    padding: 8px 14px;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .stat-pill b {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 15px;
+  }
+
+  /* outliers */
+  .outl .oh {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    margin-bottom: 6px;
+  }
+  .outl h4 {
+    margin: 0 !important;
+  }
+  .outl .sd {
+    margin-left: auto;
+    color: var(--r-neg);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .outl .sd.up {
+    color: var(--r-pos);
+  }
+  .outl .meta {
+    color: var(--muted) !important;
+    font-size: 12px !important;
+  }
+
+  /* cases */
+  .cases {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  @media (min-width: 760px) {
+    .cases {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .case {
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--c);
+    border-radius: 14px;
+    background: var(--r-surface);
+  }
+  .case h3 {
+    margin: 4px 0 8px;
+    font-size: 22px;
+    font-weight: 300;
+  }
+  .case ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--r-ink-2);
+    font-size: 14px;
+  }
+  .case li + li {
+    margin-top: 6px;
+  }
+
+  /* conclusion chain */
+  .chain {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 24px 0;
+  }
+  .chain .node {
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--r-surface);
+  }
+  .chain .edge {
+    display: grid;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+  }
+  .chain .edge::after {
+    content: '→';
+    color: var(--muted);
+  }
+  .chain .edge b {
+    color: var(--text);
+    font-weight: 500;
+  }
+</style>
