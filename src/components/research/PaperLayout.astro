@@ -31,7 +31,7 @@ const next = papers[(idx + 1) % papers.length];
         <InstitutionLogo id={p.institution} size={40} />
         <div>
           <p class="inst">{inst.name}</p>
-          <p class="kind">{[p.kind, p.dept, p.date].filter(Boolean).join(' · ')}</p>
+          <p class="kind">{[p.dept, p.date].filter(Boolean).join(' · ')}</p>
         </div>
       </div>
       <h1>{p.title}</h1>

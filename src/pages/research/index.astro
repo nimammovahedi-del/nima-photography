@@ -109,7 +109,7 @@ const groupIndex = Object.fromEntries(groups.map(([g], k) => [g, k]));
               <p class="sub">{p.subtitle}</p>
               <p class="sum">{p.summary}</p>
               <p class="foot">
-                <span>{p.kind} · {p.date}</span>
+                <span>{p.dept ?? institutions[p.institution].name} · {p.date}</span>
                 <span class="go">Read in {p.readMinutes} min <span aria-hidden="true">→</span></span>
               </p>
             </div>
