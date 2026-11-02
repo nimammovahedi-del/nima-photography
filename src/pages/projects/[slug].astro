@@ -1,9 +1,9 @@
 ---
-// One app: what it is, a demo video of it in use, then a section per feature, then a link to the
-// live site. Apps without a live site (Brick Rater) show a short "being built" page.
+// One app, laid out like a short story: what it is, why I built it, a few big sections each with
+// a real screenshot or clip of the app, then how it works under the hood.
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ProjectArt from '../../components/projects/ProjectArt.astro';
-import DemoVideo from '../../components/projects/DemoVideo.astro';
+import AppLogo from '../../components/projects/AppLogo.astro';
+import Shot from '../../components/projects/Shot.astro';
 import { projects } from '../../data/projects';
 
 export function getStaticPaths() {
@@ -15,92 +15,132 @@ const p = projects[i];
 const prev = projects[(i - 1 + projects.length) % projects.length];
 const next = projects[(i + 1) % projects.length];
 const host = p.url ? new URL(p.url).host : '';
-const captions = p.features.map((f, k) => ({ t: k * 8, label: f.title }));
 ---
 
 <BaseLayout title={p.name} description={`${p.name}: ${p.tagline}`}>
-  <nav class="back"><a href="/projects"><span aria-hidden="true">←</span> Projects</a></nav>
+  <article class="page">
+    <nav class="back"><a href="/projects"><span aria-hidden="true">←</span> Projects</a></nav>
 
-  <header class="hero">
-    <div class="intro">
+    <header class="intro">
+      <AppLogo slug={p.slug} size={64} />
       <h1>{p.name}</h1>
       <p class="tagline">{p.tagline}</p>
-      <ul class="tags">{p.tags.map((t) => <li>{t}</li>)}</ul>
-      {
-        p.url ? (
-          <a class="btn" href={p.url} target="_blank" rel="noopener">
-            {p.urlLabel ?? 'Visit site'} <span aria-hidden="true">↗</span>
-          </a>
-        ) : (
-          <span class="btn ghost" aria-disabled="true">Coming soon</span>
-        )
-      }
-    </div>
-    <div class="media">
-      {
-        p.video ? (
-          <DemoVideo src={p.video} poster={p.poster} address={host} captions={captions} label={`${p.name} demo`} />
-        ) : (
-          <div class="art-box">
-            <ProjectArt slug={p.slug} vt={`project-${p.slug}`} size="hero" />
-          </div>
-        )
-      }
-    </div>
-  </header>
+      <div class="actions">
+        {
+          p.url ? (
+            <a class="btn" href={p.url} target="_blank" rel="noopener">
+              {p.urlLabel ?? 'Visit site'} <span aria-hidden="true">↗</span>
+            </a>
+          ) : (
+            <span class="btn ghost" aria-disabled="true">Coming soon</span>
+          )
+        }
+        <ul class="tags">{p.tags.map((t) => <li>{t}</li>)}</ul>
+      </div>
+    </header>
 
-  {
-    p.features.length > 0 ? (
-      <section class="features" aria-label="Features">
-        {p.features.map((f, k) => (
-          <article class="feature">
-            <div class="f-text">
-              <p class="f-num">{String(k + 1).padStart(2, '0')}</p>
-              <h2>{f.title}</h2>
-              <p>{f.text}</p>
-            </div>
-            {f.clip && (
-              <div class="f-media">
-                <DemoVideo src={f.clip} address={host} clip label={f.title} />
-              </div>
-            )}
-          </article>
-        ))}
-      </section>
-    ) : (
-      <section class="wip">
-        <p>{p.summary}</p>
-        <p class="muted">This page will fill in once there's something to try.</p>
-      </section>
-    )
-  }
+    {p.hero && <div class="wide hero"><Shot media={p.hero} address={host} eager /></div>}
 
-  <footer class="end">
     {
-      p.url && (
-        <a class="btn big" href={p.url} target="_blank" rel="noopener">
-          Try {p.name} yourself <span aria-hidden="true">↗</span>
-        </a>
+      p.why && (
+        <section class="block">
+          <h2>{p.why.title}</h2>
+          {p.why.paras.map((t) => <p>{t}</p>)}
+        </section>
       )
     }
-    <nav class="pager" aria-label="Other projects">
-      <a href={`/projects/${prev.slug}`}><span aria-hidden="true">←</span> {prev.name}</a>
-      <a href="/projects">All projects</a>
-      <a href={`/projects/${next.slug}`}>{next.name} <span aria-hidden="true">→</span></a>
-    </nav>
-  </footer>
+
+    {
+      p.sections.map((s) => (
+        <section class="block">
+          <h2>{s.title}</h2>
+          {s.paras.map((t) => <p>{t}</p>)}
+          {s.media && <div class="wide"><Shot media={s.media} address={host} /></div>}
+        </section>
+      ))
+    }
+
+    {
+      p.how && (
+        <section class="block how">
+          <h2>{p.how.title}</h2>
+          <p>{p.how.intro}</p>
+          <dl class="stats">
+            {p.how.stats.map((s) => (
+              <div>
+                <dt>{s.value}</dt>
+                <dd>{s.label}</dd>
+              </div>
+            ))}
+          </dl>
+
+          {p.how.flows.map((f) => (
+            <div class="flow">
+              <h3>{f.title}</h3>
+              <ol class="chain" aria-hidden="true">
+                {f.steps.map((st) => <li>{st.name}</li>)}
+              </ol>
+              <ol class="steps">
+                {f.steps.map((st) => (
+                  <li>
+                    <h4>{st.name}</h4>
+                    <p>{st.text}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+
+          <div class="notes">
+            {p.how.notes.map((n) => (
+              <div>
+                <h4>{n.title}</h4>
+                <p>{n.text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <footer class="end">
+      {
+        p.url && (
+          <a class="btn big" href={p.url} target="_blank" rel="noopener">
+            Try {p.name} yourself <span aria-hidden="true">↗</span>
+          </a>
+        )
+      }
+      <nav class="pager" aria-label="Other projects">
+        <a href={`/projects/${prev.slug}`}><span aria-hidden="true">←</span> {prev.name}</a>
+        <a href="/projects">All projects</a>
+        <a href={`/projects/${next.slug}`}>{next.name} <span aria-hidden="true">→</span></a>
+      </nav>
+    </footer>
+  </article>
 </BaseLayout>
 
 <style>
-  .back,
-  .hero,
-  .features,
-  .wip,
-  .end {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding-left: var(--gutter);
-    padding-right: var(--gutter);
+  .page {
+    --col: 720px;
+    --wide: 1040px;
+    padding: 0 var(--gutter) 40px;
+  }
+  .page > *,
+  .block > * {
+    max-width: var(--col);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .page > .wide,
+  .block > .wide,
+  .how > .stats,
+  .how > .flow,
+  .how > .notes {
+    max-width: var(--wide);
+  }
+  .page > .block {
+    max-width: none;
   }
   .back {
     padding-top: 28px;
@@ -108,37 +148,36 @@ const captions = p.features.map((f, k) => ({ t: k * 8, label: f.title }));
   .back a {
     color: var(--text);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
   }
   .back a span {
     color: var(--tan);
   }
-  .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    gap: clamp(28px, 5vw, 64px);
-    align-items: center;
-    padding-top: clamp(28px, 5vw, 56px);
-    padding-bottom: clamp(48px, 7vw, 88px);
-  }
   .intro {
     display: grid;
-    gap: 18px;
     justify-items: start;
+    gap: 16px;
+    padding: clamp(32px, 6vw, 64px) 0 clamp(28px, 4vw, 44px);
   }
   h1 {
-    margin: 0;
+    margin: 6px 0 0;
     font-weight: 400;
-    font-size: clamp(40px, 6vw, 64px);
+    font-size: clamp(40px, 6vw, 60px);
     line-height: 1.05;
   }
   .tagline {
     margin: 0;
-    font-size: 19px;
-    line-height: 1.5;
+    font-size: 21px;
+    line-height: 1.45;
     color: var(--project-body);
     font-weight: 300;
-    max-width: 34ch;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 18px;
+    margin-top: 6px;
   }
   .tags {
     display: flex;
@@ -149,8 +188,8 @@ const captions = p.features.map((f, k) => ({ t: k * 8, label: f.title }));
     list-style: none;
   }
   .tags li {
-    font-size: 12.5px;
-    padding: 3px 11px;
+    font-size: 14px;
+    padding: 3px 12px;
     border: 1px solid var(--line);
     border-radius: 999px;
     color: var(--project-body);
@@ -159,13 +198,17 @@ const captions = p.features.map((f, k) => ({ t: k * 8, label: f.title }));
     display: inline-flex;
     gap: 6px;
     align-items: center;
-    padding: 10px 18px;
-    border-radius: 6px;
+    padding: 11px 18px;
+    border-radius: 8px;
     background: var(--cream);
     color: var(--bg);
-    font-size: 14.5px;
+    font-size: 15px;
     font-weight: 400;
     text-decoration: none;
+    transition: background 0.2s var(--ease-out);
+  }
+  .btn:hover {
+    background: var(--text);
   }
   .btn.ghost {
     background: none;
@@ -173,89 +216,192 @@ const captions = p.features.map((f, k) => ({ t: k * 8, label: f.title }));
     border: 1px dashed var(--line);
   }
   .btn.big {
-    font-size: 16px;
-    padding: 14px 24px;
+    padding: 15px 26px;
+    font-size: 17px;
   }
-  .art-box {
-    padding: clamp(20px, 4vw, 44px);
+  .hero {
+    padding-bottom: clamp(24px, 4vw, 40px);
+  }
+  .block {
+    padding: clamp(40px, 6vw, 72px) 0 0;
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-weight: 400;
+    font-size: clamp(28px, 3.6vw, 36px);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .block p {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .block .wide {
+    margin-top: 30px;
+  }
+
+  /* How it works */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 30px;
+    margin-bottom: 8px;
+  }
+  .stats div {
+    padding: 20px 18px;
     border: 1px solid var(--line);
     border-radius: 10px;
     background: var(--bg-raised);
   }
-  .features {
-    display: grid;
+  .stats dt {
+    font-size: 38px;
+    line-height: 1;
+    color: var(--text);
+    font-weight: 300;
   }
-  .feature {
-    display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    gap: clamp(24px, 5vw, 64px);
-    align-items: center;
-    padding: clamp(32px, 5vw, 56px) 0;
-    border-top: 1px solid var(--line);
-  }
-  .feature:not(:has(.f-media)) .f-text {
-    grid-column: 1 / -1;
-    max-width: 70ch;
-  }
-  .f-text {
-    display: grid;
-    gap: 10px;
-  }
-  .f-num {
-    margin: 0;
-    color: var(--tan);
-    font-size: 13px;
-    letter-spacing: 0.14em;
-  }
-  .feature h2 {
-    margin: 0;
-    font-weight: 400;
-    font-size: clamp(24px, 2.6vw, 30px);
-  }
-  .feature p:not(.f-num),
-  .wip p {
-    margin: 0;
-    font-size: 16.5px;
-    line-height: 1.7;
+  .stats dd {
+    margin: 10px 0 0;
+    font-size: 15px;
+    line-height: 1.45;
     color: var(--project-body);
     font-weight: 300;
-    max-width: 62ch;
   }
-  .wip {
+  .flow {
+    margin-top: 48px;
+  }
+  h3 {
+    margin: 0 0 18px;
+    font-weight: 400;
+    font-size: 24px;
+    color: var(--text);
+  }
+  /* The steps at a glance: a row of named stops joined by a line. */
+  .chain {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 0;
+    margin: 0 0 26px;
+    padding: 0;
+    list-style: none;
+    counter-reset: c;
+  }
+  .chain li {
+    counter-increment: c;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .chain li::before {
+    content: counter(c);
     display: grid;
-    gap: 12px;
-    padding-bottom: 48px;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    margin-right: 8px;
+    border: 1px solid var(--tan);
+    border-radius: 50%;
+    color: var(--tan);
+    font-size: 13px;
   }
-  .wip .muted {
-    color: var(--muted);
+  .chain li:not(:last-child)::after {
+    content: '';
+    width: 26px;
+    height: 1px;
+    margin: 0 10px;
+    background: var(--tan);
+    opacity: 0.6;
   }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 40px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: s;
+  }
+  .steps li {
+    counter-increment: s;
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    column-gap: 14px;
+  }
+  .steps li::before {
+    content: counter(s);
+    grid-row: 1 / span 2;
+    font-size: 20px;
+    line-height: 1.3;
+    color: var(--tan);
+    font-weight: 300;
+  }
+  h4 {
+    margin: 0 0 6px;
+    font-weight: 400;
+    font-size: 19px;
+    color: var(--text);
+  }
+  .steps p,
+  .notes p {
+    margin: 0;
+    font-size: 17px;
+  }
+  .notes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    max-width: var(--wide);
+    margin-top: 48px;
+  }
+  .notes div {
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
   .end {
     display: grid;
     justify-items: center;
     gap: 40px;
-    padding-top: 56px;
-    padding-bottom: 64px;
-    border-top: 1px solid var(--line);
+    padding: clamp(56px, 8vw, 96px) 0 24px;
   }
   .pager {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 16px;
     width: 100%;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
   }
   .pager a {
     color: var(--text);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
   }
-  .pager a span {
+  .pager a:hover {
     color: var(--tan);
   }
-  @media (max-width: 860px) {
-    .hero,
-    .feature {
+  @media (max-width: 760px) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .notes {
       grid-template-columns: 1fr;
+    }
+    .chain {
+      display: none;
+    }
+    .steps {
+      grid-template-columns: 1fr;
+    }
+    .block p {
+      font-size: 17px;
     }
   }
 </style>
