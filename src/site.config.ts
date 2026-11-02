@@ -196,6 +196,19 @@ export type SortedPlace = (typeof sortedPlaces)[number];
 export const sortedSubs = (subs: readonly string[]) => [...subs].sort(byName);
 
 // The About page (top menu). A first draft from what's on the site; rewrite freely.
+// About page, right-hand column. Change the book and the song whenever you like.
+export const aboutNow = {
+  reading: { title: 'Dune', by: 'Frank Herbert' },
+  listening: { title: 'Black', by: 'Pearl Jam', album: 'Ten' },
+};
+
+// About page, "Along the way" list (newest first).
+export const aboutPath = [
+  { year: '2026', place: 'London School of Economics', what: 'MSc dissertation on courts that compete for companies' },
+  { year: '2026', place: 'Encode, London', what: 'Policy memo on AI hallucinations in court' },
+  { year: '2025', place: 'UC Irvine', what: 'Honors thesis on state rules and Chinese investment' },
+];
+
 export const about = [
   'I study political science: how courts, states and governments compete, share power and respond to new pressures, from American corporate courts to power-sharing in Iran and state rules on Chinese investment. My papers are on the <a href="/research">Research</a> page.',
   'I also build small, free apps that make something hard easier to check or practise, like Ergo for LSAT logical reasoning and Check Congress for following what Congress does. They are on the <a href="/projects">Projects</a> page.',

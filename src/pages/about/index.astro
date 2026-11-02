@@ -1,54 +1,325 @@
 ---
-// About (top menu): a short introduction. The cameras now live under Photography.
+// About (top menu): a short introduction with a "now" column on the right.
+// Text lives in `about`, `aboutPath` and `aboutNow` in src/site.config.ts.
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { about, home, site } from '../../site.config';
+import { about, aboutNow, aboutPath, home, site } from '../../site.config';
+const links = home.links.filter((l) => l.href);
 ---
 
 <BaseLayout grey title="About" description={`About ${site.name}: ${home.tagline.toLowerCase()}.`}>
-  <article class="about">
-    <img class="portrait" src="/portrait.jpg" alt={`Portrait of ${site.name}`} width="120" height="120" />
-    <h1>About</h1>
-    {about.map((p) => <p set:html={p} />)}
-    <p class="where">{home.location}</p>
-  </article>
+  <div class="about">
+    <article class="main">
+      <header>
+        <img class="portrait" src="/portrait.jpg" alt={`Portrait of ${site.name}`} width="64" height="64" />
+        <div>
+          <h1>{site.name}</h1>
+          <p class="sub">{home.tagline}. {home.location.replace('Currently in ', 'Based in ')}</p>
+        </div>
+      </header>
+
+      <section class="bio">
+        {about.map((p) => <p set:html={p} />)}
+      </section>
+
+      <section>
+        <h2>Along the way</h2>
+        <ol class="path">
+          {aboutPath.map((r) => (
+            <li>
+              <span class="year">{r.year}</span>
+              <span class="place">{r.place}</span>
+              <span class="what">{r.what}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section>
+        <h2>Elsewhere</h2>
+        <ul class="elsewhere">
+          {links.map((l) => (
+            <li><a href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener">{l.label}<span aria-hidden="true"> ↗</span></a></li>
+          ))}
+        </ul>
+      </section>
+    </article>
+
+    <aside class="now" aria-label="Right now">
+      <div class="now-card book-card" tabindex="0">
+        <svg class="book" viewBox="0 0 64 80" aria-hidden="true">
+          <rect class="pages" x="12" y="8" width="44" height="64" rx="2" />
+          <g class="cover">
+            <rect x="8" y="6" width="44" height="66" rx="2" />
+            <line x1="14" y1="6" x2="14" y2="72" />
+            <path d="M20 54 Q30 46 40 54 T52 52" />
+            <path d="M20 60 Q32 54 46 60" />
+            <circle cx="38" cy="24" r="6" />
+          </g>
+        </svg>
+        <div>
+          <p class="label">Currently reading</p>
+          <p class="title">{aboutNow.reading.title}</p>
+          <p class="by">{aboutNow.reading.by}</p>
+        </div>
+      </div>
+
+      <div class="now-card record-card" tabindex="0">
+        <svg class="record" viewBox="0 0 80 80" aria-hidden="true">
+          <g class="disc">
+            <circle cx="40" cy="40" r="34" />
+            <circle cx="40" cy="40" r="26" />
+            <circle cx="40" cy="40" r="19" />
+            <circle class="centre" cx="40" cy="40" r="9" />
+            <circle cx="40" cy="40" r="1.6" />
+            <path d="M40 14 A26 26 0 0 1 62 28" class="shine" />
+          </g>
+        </svg>
+        <div>
+          <p class="label">Recently listened</p>
+          <p class="title">{aboutNow.listening.title}</p>
+          <p class="by">{aboutNow.listening.by}{aboutNow.listening.album && ` · ${aboutNow.listening.album}`}</p>
+        </div>
+      </div>
+    </aside>
+  </div>
 </BaseLayout>
 
 <style>
+  :global(main:has(> .about)) {
+    max-width: 1032px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
   .about {
-    max-width: 660px;
-    margin: 0 auto;
-    padding: 72px 0 24px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 72px;
+    align-items: start;
+    padding: 72px 0 32px;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 36px;
   }
   .portrait {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 28px;
+    flex: none;
+    width: 64px;
+    height: 64px;
     border: 1px solid var(--line);
     border-radius: 50%;
     object-fit: cover;
   }
   h1 {
-    margin: 0 0 18px;
-    font-size: 34px;
+    margin: 0;
+    font-size: 30px;
     font-weight: 500;
     letter-spacing: -0.02em;
+    line-height: 1.2;
   }
-  p {
-    margin: 0 0 16px;
+  .sub {
+    margin: 4px 0 0;
     color: var(--muted);
+    font-size: 14px;
+  }
+
+  .bio p {
+    margin: 0 0 18px;
+    color: var(--project-body);
     font-size: 17px;
     font-weight: 300;
     line-height: 1.75;
   }
-  p :global(a) {
-    color: var(--accent);
-    text-underline-offset: 3px;
-  }
-  p :global(a:hover) {
+  .bio :global(a),
+  .elsewhere a {
     color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s;
   }
-  .where {
-    margin-top: 24px;
+  .bio :global(a:hover),
+  .elsewhere a:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  section + section,
+  .bio + section {
+    margin-top: 48px;
+  }
+  h2 {
+    margin: 0 0 16px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .path {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .path li {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 2px 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .year {
+    grid-row: span 2;
+    color: var(--muted);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .place {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .what {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .elsewhere {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+  }
+
+  /* Right column */
+  .now {
+    position: sticky;
+    top: 96px;
+    display: grid;
+    gap: 14px;
+  }
+  .now-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--bg-raised);
+    outline: none;
+    transition: border-color 0.25s;
+  }
+  .now-card:hover,
+  .now-card:focus-visible {
+    border-color: var(--accent-deep);
+  }
+  .now-card p {
+    margin: 0;
+  }
+  .label {
+    margin-bottom: 6px !important;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .title {
+    font-size: 17px;
+    font-weight: 500;
+  }
+  .by {
+    color: var(--muted);
     font-size: 13px;
+    font-weight: 300;
+  }
+
+  svg {
+    flex: none;
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .book {
+    width: 58px;
+    height: 58px;
+    overflow: visible;
+  }
+  .book .pages {
+    stroke: var(--muted);
+  }
+  .book .cover rect {
+    fill: var(--bg-raised);
+  }
+  .book .cover {
+    transform-origin: 8px 40px;
+    transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.2, 1);
+  }
+  .book circle {
+    stroke: var(--accent);
+  }
+  .book-card:hover .cover,
+  .book-card:focus-visible .cover {
+    transform: perspective(200px) rotateY(-28deg);
+  }
+
+  .record {
+    width: 58px;
+    height: 58px;
+  }
+  .record .disc circle:not(:first-child) {
+    stroke: var(--muted);
+  }
+  .record .centre {
+    stroke: var(--accent) !important;
+  }
+  .record .shine {
+    stroke: var(--accent);
+    opacity: 0.6;
+  }
+  .disc {
+    transform-origin: 40px 40px;
+  }
+  .record-card:hover .disc,
+  .record-card:focus-visible .disc {
+    animation: spin 1.8s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .record-card:hover .disc { animation: none; }
+    .book .cover { transition: none; }
+  }
+
+  /* iPhone: one column, the "now" cards come right after the intro. */
+  @media (max-width: 760px) {
+    .about {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding-top: 40px;
+    }
+    .main { display: contents; }
+    header { order: 1; }
+    .bio { order: 2; }
+    .now {
+      order: 3;
+      position: static;
+      grid-template-columns: 1fr;
+      margin: 12px 0 8px;
+    }
+    .main section:not(.bio) { order: 4; }
+    .now-card { padding: 14px; }
   }
 </style>
