@@ -43,7 +43,7 @@ export async function mountCamera(
   scene.add(fill);
 
   // The drawing's surfaces are filled with the colour behind it (so hidden lines stay hidden).
-  setPaper(canvas.dataset.paper ?? '#0b0b0b', renderer.getPixelRatio());
+  setPaper(canvas.dataset.paper ?? '#18181b', renderer.getPixelRatio());
   const { group, size, offset, glows } = buildCamera(model, mode === 'card' ? 'simple' : 'full');
   scene.add(group);
   group.rotation.y = startRotation;

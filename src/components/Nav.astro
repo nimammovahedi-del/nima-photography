@@ -113,13 +113,22 @@ const photoTabs = [
     background: color-mix(in srgb, var(--bg) 92%, transparent);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    /* Its own page-transition group, so it holds still rather than crossfading. */
-    view-transition-name: site-header;
+  }
+  /* Page changes: the top row and the photography tabs are their own transition groups, so they
+     hold still while the page underneath crossfades. They are named separately because the
+     photography tabs are only on some pages: as one group, the taller bar was squeezed into the
+     shorter one and its tabs ghosted over the page. The main page's narrow bar has a different
+     shape, so it simply crossfades with its page. */
+  .site-header:not(.narrow) .bar {
+    view-transition-name: site-bar;
+  }
+  .photo-tabs {
+    view-transition-name: photo-tabs;
   }
   /* The main page: the bar sits in the page's narrow column, with no rule under it. */
   .site-header.narrow {
     position: relative;
-    max-width: 660px;
+    max-width: 852px;
     padding: 0 16px;
     border-bottom: 0;
     background: none;

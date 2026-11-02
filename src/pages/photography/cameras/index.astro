@@ -20,7 +20,7 @@ const cameras = await getCameras();
         cameras.map((c) => (
           <li>
             <a href={`/photography/cameras/${c.slug}`} class="card">
-              <canvas data-camera={c.model} data-slug={c.slug} data-paper="#151515" style={`view-transition-name: camera-${c.slug}`} aria-label={`3D model of the ${c.brand} ${c.name}`} role="img" />
+              <canvas data-camera={c.model} data-slug={c.slug} data-paper="#222226" style={`view-transition-name: camera-${c.slug}`} aria-label={`3D model of the ${c.brand} ${c.name}`} role="img" />
               <span class="name">
                 <span class="brand">{c.brand}</span> {c.name}
               </span>
