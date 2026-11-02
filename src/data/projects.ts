@@ -49,6 +49,7 @@ export interface Project {
 }
 
 const ergo = (f: string) => `/projects/ergo/${f}`;
+const cc = (f: string) => `/projects/check-congress/${f}`;
 
 export const projects: Project[] = [
   {
@@ -200,36 +201,132 @@ export const projects: Project[] = [
     url: 'https://checkcongress.com/',
     urlLabel: 'Visit checkcongress.com',
     tagline: 'Every bill, vote and member of Congress, in plain view.',
-    thumbs: [],
+    thumbs: [cc('home-sm.webp'), cc('vote-selected-sm.webp'), cc('bill-sm.webp')],
+    hero: { kind: 'image', src: cc('home.webp'), alt: 'The Check Congress home page: search, Find your representatives, and topics' },
     why: {
       title: 'Congress works for you. You should be able to check.',
       paras: [
         'A lot happens in Congress, and very little of it is easy to see. Nearly 20,000 bills have been introduced in the 119th Congress, and fewer than 1 in 100 becomes law. The rest stall quietly, and that’s where most of the story is.',
-        'Check Congress is free, nonpartisan, has no ads and no tracking, and takes its data straight from official sources every hour.',
+        'Check Congress puts the whole record in one place. It is free and nonpartisan, with no ads, no accounts and no tracking, and its data comes straight from official sources every hour.',
       ],
     },
     sections: [
       {
         title: 'Congress in one weekly page',
-        paras: ['The home page sums up the week: bills introduced, bills that moved forward, new laws and votes held, each compared with the week before.'],
+        paras: [
+          'The home page sums up the week: bills introduced, bills that moved forward, new laws and votes held, each compared with the week before, with the busiest topics and the latest votes a tab away.',
+        ],
+        media: { kind: 'image', src: cc('week.webp'), alt: 'This week in Congress: bills introduced, moved forward, signed into law and votes held' },
       },
       {
         title: 'Find who represents you',
-        paras: ['Type where you live and see your senators and your member of the House, with how often they vote with their party and how many votes they miss.'],
+        paras: [
+          'Type an address, a city, a ZIP code or a name, and see your two senators and your member of the House, with how often each votes with their party, how many votes they miss, and their phone number.',
+        ],
+        media: { kind: 'clip', src: cc('find.mp4'), poster: cc('find-poster.webp'), alt: 'Typing an address and finding its senators and representative' },
       },
       {
         title: 'Every vote, seat by seat',
-        paras: ['Every House and Senate roll call has its own page with a seat chart of the chamber, the tally and how each member voted.'],
+        paras: [
+          'Every House and Senate roll call has its own page. A seat chart of the chamber shows how each member voted; point at a seat to see who sat there and how often they side with their party.',
+        ],
+        media: { kind: 'clip', src: cc('vote.mp4'), poster: cc('vote-poster.webp'), alt: 'Pointing at seats on a Senate vote’s seat chart' },
       },
       {
         title: 'Follow a bill to law',
-        paras: ['Each bill shows where it stands, from introduced to committee to the floor to signed, with its sponsors, its summary and the official text.'],
+        paras: [
+          'Each bill shows where it stands, from introduced to committee to both chambers to the President’s desk, with its sponsor, its cosponsors by party, a plain summary and the official text.',
+        ],
+        media: { kind: 'image', src: cc('bill.webp'), alt: 'A bill page with its status from introduced to law' },
+      },
+      {
+        title: 'Every member’s record',
+        paras: [
+          'Each member of Congress has a page with how often they vote with their party, how often they show up, how bipartisan their bills are, and every vote they’ve cast.',
+        ],
+        media: { kind: 'image', src: cc('member.webp'), alt: 'A senator’s page with party loyalty, attendance and bipartisanship' },
       },
       {
         title: 'The numbers behind Congress',
-        paras: ['Analytics show how few bills become law, how often votes split along party lines and who misses the most votes.'],
+        paras: [
+          'Analytics follow the whole Congress: how far bills get (0.81% become law), how many are introduced each month, how often votes split along party lines and who misses the most votes.',
+        ],
+        media: { kind: 'image', src: cc('analytics.webp'), alt: 'Analytics: 0.81% of bills became law, and how far bills get' },
       },
     ],
+    how: {
+      title: 'How Check Congress works',
+      intro:
+        'Check Congress has two halves that share one database. A scheduled data pipeline does all the fetching, parsing and computation ahead of time, and a server-rendered website only reads, so every page shows the latest data without ever calling a government API.',
+      stats: [
+        { value: '7', label: 'official public data sources' },
+        { value: 'Hourly', label: 'automatic updates' },
+        { value: '18', label: 'database tables, plus full-text search' },
+        { value: '$10', label: 'a year to run, for the domain' },
+      ],
+      flows: [
+        {
+          title: 'The data pipeline',
+          steps: [
+            {
+              name: 'Collect',
+              text: 'Every hour, a scheduled job pulls public records from GovInfo (Congress.gov’s data), the House Clerk, Voteview at UCLA, the @unitedstates project and the Federal Register. Files that haven’t changed are skipped.',
+            },
+            {
+              name: 'Parse and link',
+              text: 'Bulk XML and CSV files are parsed into a local SQLite database, and each vote is linked to its bill, even when the source didn’t connect them.',
+            },
+            {
+              name: 'Derive',
+              text: 'Every bill gets a status from its official action codes, from introduced to law or veto. Party-unity scores, missed-vote rates, bipartisanship and site-wide statistics are all computed here, ahead of time.',
+            },
+            {
+              name: 'Index for search',
+              text: 'Each bill gets search text from its policy area, subject tags and summaries, so everyday words find bills whose titles don’t contain them. A full-text index ranks the results.',
+            },
+            {
+              name: 'Upload what changed',
+              text: 'Changes go to the live database in units, such as a bill with its actions and cosponsors, or a vote with every member’s vote. Each table is fingerprinted, so only what changed is sent.',
+            },
+            {
+              name: 'Stay within budget',
+              text: 'Cloudflare’s free plan allows 100,000 database writes a day. The uploader paces 95,000 across the day and learns what each batch really costs, so the site never goes over.',
+            },
+          ],
+        },
+        {
+          title: 'The website',
+          steps: [
+            {
+              name: 'Built on request',
+              text: 'An Astro site on Cloudflare’s global network queries the database for every page, so each one reflects the latest upload. A home page reads about 1,500 rows.',
+            },
+            {
+              name: 'Light by design',
+              text: 'Pages are plain HTML and CSS with a few small scripts, and no framework. The state map is drawn in advance from Census boundaries, so no mapping library loads.',
+            },
+            {
+              name: 'Find my rep',
+              text: 'A street address goes to the Census Bureau’s geocoder to find its district, a city or ZIP is placed with OpenStreetMap, and a name is matched against all 539 serving members. Addresses are never stored.',
+            },
+          ],
+        },
+      ],
+      notes: [
+        {
+          title: 'Plain-English summaries',
+          text: 'Bills without an official summary get a plain-English overview with the strongest case for and against, written by a language model from the bill’s official text. 760 bills have one, kept as reviewable files.',
+        },
+        {
+          title: 'No dead ends',
+          text: 'A bill number typed any common way, like “hr 1” or “H.R.1”, goes straight to the bill. A bill or vote not in the database yet sends you to its official page instead of an error.',
+        },
+        {
+          title: 'Nothing to sell',
+          text: 'Free and nonpartisan, with no ads, no accounts, no cookies and no tracking. It runs on Cloudflare’s free plan, and the only cost is the domain.',
+        },
+      ],
+    },
   },
   {
     slug: 'brick-rater',
