@@ -1,5 +1,5 @@
 ---
-// The top bar on every page: a small line-drawn house (home), the four sections and the light/dark
+// The top bar on every page: the NM monogram (home), the four sections and the light/dark
 // switch. Inside Photography a second row holds its own tabs (Places, the photo subjects, Cameras).
 import { categories } from '../site.config';
 
@@ -8,6 +8,9 @@ interface Props {
   narrow?: boolean;
 }
 const { narrow = false } = Astro.props;
+
+// The NM monogram (also the favicon): N and M drawn as one line that shares a stem.
+const NM = 'M5 23V9l9.5 14V9l6 8 6-8v14';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const under = (href: string) => path === href || path.startsWith(href + '/');
@@ -35,12 +38,9 @@ const photoTabs = [
 <header class:list={['site-header', { narrow, 'has-sub': inPhotography }]}>
   <div class="bar">
     <a class="home" href="/" aria-label="Home" aria-current={path === '/' ? 'page' : undefined}>
-      <svg viewBox="0 0 28 24" width="28" height="24" aria-hidden="true">
-        <path class="roof" d="M3 11 14 3l11 8" />
-        <path d="M6 9.5V21h16V9.5" />
-        <path d="M12 21v-6h4v6" />
-        <path class="door" d="M12 21v-6h4v6z" />
-        <path d="M19 7V4h2v4.5" />
+      <svg viewBox="3 6 26 20" width="34" height="26" aria-hidden="true">
+        <path class="nm" d={NM} />
+        <path class="flow" d={NM} pathLength="1" />
       </svg>
     </a>
     <nav class="sections" aria-label="Main">
@@ -148,7 +148,7 @@ const photoTabs = [
     padding-top: 28px;
   }
 
-  /* House: the roof turns sage and the door swings open on hover. */
+  /* NM monogram: on hover, focus or click a sage line runs through the letters, start to end. */
   .home {
     display: flex;
     color: var(--text);
@@ -157,26 +157,40 @@ const photoTabs = [
     display: block;
     overflow: visible;
     fill: none;
-    stroke: currentColor;
-    stroke-width: 1.3;
+    stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  .home .roof {
+  .home .nm {
+    stroke: currentColor;
+  }
+  .home .flow {
     stroke: var(--accent);
+    stroke-width: 1.9;
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+    transition:
+      opacity 250ms ease,
+      stroke-dashoffset 0ms linear 250ms;
   }
-  .home .door {
-    fill: var(--text);
-    transform-origin: 12px 18px;
-    transform-box: view-box;
-    transition: transform 350ms var(--ease-out);
+  .home:hover .flow,
+  .home:focus-visible .flow,
+  .home:active .flow {
+    opacity: 1;
+    stroke-dashoffset: 0;
+    transition:
+      opacity 0ms,
+      stroke-dashoffset 700ms var(--ease-out);
   }
-  .home:hover .door,
-  .home:focus-visible .door {
-    transform: scaleX(0.25);
-  }
-  .home:hover svg path:not(.roof) {
-    stroke: var(--accent);
+  @media (prefers-reduced-motion: reduce) {
+    .home .flow,
+    .home:hover .flow,
+    .home:focus-visible .flow,
+    .home:active .flow {
+      stroke-dashoffset: 0;
+      transition: opacity 150ms ease;
+    }
   }
 
   .sections {
