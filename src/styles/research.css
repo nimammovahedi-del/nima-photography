@@ -1,0 +1,509 @@
+/* Research pages: /research and one page per paper.
+   Chart colours were checked with a colour-blindness validator on both surfaces.
+   Dark is the default; the light values sit under :root[data-theme="light"]. */
+
+:root {
+  /* the three states in "The Judicial Arms Race" */
+  --r-de: #3987e5;
+  --r-tx: #c98500;
+  --r-nv: #d55181;
+  /* tone of the law-firm advisories */
+  --r-pos: #199e70;
+  --r-neg: #e66767;
+  --r-mix: #c98500;
+  /* single-hue ramp (blue), light to dark ink on the dark surface = low to high */
+  --r-seq-1: #183454;
+  --r-seq-2: #1f4f86;
+  --r-seq-3: #2a6bb8;
+  --r-seq-4: #4f93e6;
+  --r-seq-5: #9cc6f5;
+  /* second ramp (orange) for restriction levels */
+  --r-heat-1: #4a2a17;
+  --r-heat-2: #7a3d17;
+  --r-heat-3: #b5561d;
+  --r-heat-4: #f08a4b;
+  /* diverging: Republican (−) red, Democratic (+) blue, grey middle */
+  --r-rep: #e66767;
+  --r-dem: #3987e5;
+  --r-mid: #3a3a37;
+  /* categorical, fixed order */
+  --r-c1: #3987e5;
+  --r-c2: #d95926;
+  --r-c3: #199e70;
+  --r-c4: #c98500;
+  --r-c5: #d55181;
+  --r-c6: #9085e9;
+  --r-neutral: #6f6a5e;
+
+  --r-surface: var(--bg-raised);
+  --r-grid: #242423;
+  --r-ink-2: #c9c9c4;
+  --r-tip-bg: #f7f7f5;
+  --r-tip-ink: #0b0b0b;
+  --r-rail: 188px;
+}
+
+:root[data-theme='light'] {
+  --r-de: #2a78d6;
+  --r-tx: #b07400;
+  --r-nv: #c43f70;
+  --r-pos: #13865e;
+  --r-neg: #d23f3e;
+  --r-mix: #b07400;
+  --r-seq-1: #dbe8f8;
+  --r-seq-2: #a9c9ef;
+  --r-seq-3: #5d9be3;
+  --r-seq-4: #2a6fc4;
+  --r-seq-5: #123f78;
+  --r-heat-1: #fbe3d1;
+  --r-heat-2: #f4b386;
+  --r-heat-3: #df7535;
+  --r-heat-4: #a1440f;
+  --r-rep: #d23f3e;
+  --r-dem: #2a78d6;
+  --r-mid: #e4e2dc;
+  --r-c1: #2a78d6;
+  --r-c2: #eb6834;
+  --r-c3: #1baf7a;
+  --r-c4: #c98500;
+  --r-c5: #d55181;
+  --r-c6: #6250d6;
+  --r-neutral: #b9b3a4;
+  --r-grid: #e6e4de;
+  --r-ink-2: #3b3b38;
+  --r-tip-bg: #1c1c1c;
+  --r-tip-ink: #f7f7f5;
+}
+
+/* ---------- shared bits ---------- */
+
+.r-eyebrow {
+  margin: 0;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.r-logo {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text);
+}
+.r-logo svg {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+.r-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease-out),
+    background 0.2s var(--ease-out);
+}
+.r-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.r-btn.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.r-btn.primary:hover {
+  background: color-mix(in srgb, var(--accent) 85%, var(--text));
+}
+.r-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.r-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.r-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.r-sw {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex: none;
+}
+
+/* segmented control for chart toggles */
+.r-seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.r-seg button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+.r-seg button:hover {
+  color: var(--text);
+}
+.r-seg button[aria-pressed='true'] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* ---------- figures ---------- */
+
+.rfig {
+  margin: 28px 0 0;
+  padding: 20px 16px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--r-surface);
+}
+@media (min-width: 768px) {
+  .rfig {
+    padding: 24px 24px 20px;
+  }
+}
+.rfig-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 16px;
+  margin-bottom: 16px;
+}
+.rfig-head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+.rfig-hint {
+  color: var(--muted);
+  font-size: 12px;
+}
+.rfig figcaption,
+.rfig .rfig-cap {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.rfig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font);
+}
+.rfig svg text {
+  fill: var(--muted);
+  font-size: 12px;
+}
+.rfig svg .ink {
+  fill: var(--text);
+}
+.rfig svg .grid {
+  stroke: var(--r-grid);
+  stroke-width: 1;
+}
+.rfig-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+  color: var(--r-ink-2);
+  font-size: 12px;
+}
+.rfig-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Hover targets get a soft highlight; the rest dim a little. */
+[data-tip] {
+  cursor: default;
+}
+.r-dim-others:has([data-tip]:hover) [data-tip]:not(:hover) {
+  opacity: 0.45;
+}
+[data-tip] {
+  transition: opacity 0.2s var(--ease-out);
+}
+
+/* Tooltip shared by every chart on the page */
+.r-tip {
+  position: fixed;
+  z-index: 60;
+  max-width: min(300px, calc(100vw - 32px));
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--r-tip-bg);
+  color: var(--r-tip-ink);
+  font-size: 13px;
+  line-height: 1.45;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.15s var(--ease-out),
+    transform 0.15s var(--ease-out);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 0.35);
+}
+.r-tip.on {
+  opacity: 1;
+  transform: none;
+}
+.r-tip b {
+  font-weight: 500;
+}
+.r-tip .t-sub {
+  display: block;
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+/* ---------- motion: charts are complete at rest; .play replays them ---------- */
+
+@keyframes r-grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes r-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes r-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@keyframes r-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes r-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+.play .a-grow-y {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: r-grow-y 0.7s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 25ms);
+}
+.play .a-grow-x {
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+  animation: r-grow-x 0.7s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+.play .a-draw {
+  stroke-dasharray: 1;
+  animation: r-draw 1.2s var(--ease-in-out) both;
+  animation-delay: calc(var(--i, 0) * 120ms);
+}
+.play .a-fade {
+  animation: r-fade-up 0.5s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+.play .a-pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: r-pop 0.45s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 50ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .play * {
+    animation: none !important;
+  }
+}
+
+/* ---------- prose blocks inside sections ---------- */
+
+.r-cards {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+@media (min-width: 700px) {
+  .r-cards.c2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .r-cards.c3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.r-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--r-surface);
+}
+.r-card h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.r-card p {
+  margin: 0;
+  color: var(--r-ink-2);
+  font-size: 14px;
+}
+.r-card p + p {
+  margin-top: 8px;
+}
+
+.r-quote {
+  margin: 24px 0 0;
+  padding: 4px 0 4px 18px;
+  border-left: 2px solid var(--accent);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+.r-quote cite {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.r-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+@media (min-width: 860px) {
+  .r-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.r-stat {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--r-surface);
+}
+.r-stat .n {
+  display: block;
+  font-size: clamp(28px, 6vw, 40px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.r-stat .l {
+  display: block;
+  margin-top: 6px;
+  color: var(--r-ink-2);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.r-stat .s {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.r-note {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* tables shown as a fallback view of a chart, or for small comparisons */
+.r-table-wrap {
+  overflow-x: auto;
+  margin-top: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.r-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.r-table th,
+.r-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.r-table th {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 12px;
+}
+.r-table td {
+  color: var(--r-ink-2);
+}
+.r-table td:first-child {
+  color: var(--text);
+}
+details.r-data {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+details.r-data summary {
+  cursor: pointer;
+  width: fit-content;
+}
+details.r-data summary:hover {
+  color: var(--text);
+}

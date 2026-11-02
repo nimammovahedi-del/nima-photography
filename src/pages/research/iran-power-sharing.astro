@@ -1,0 +1,1003 @@
+---
+import PaperLayout from '../../components/research/PaperLayout.astro';
+import Fig from '../../components/research/Fig.astro';
+import { provinces, IRAN_VIEWBOX, type Group } from '../../data/research/iran-provinces';
+
+const sections = [
+  { id: 'puzzle', label: 'Holding together by force' },
+  { id: 'map', label: 'Who lives where' },
+  { id: 'grievances', label: 'Three kinds of grievance' },
+  { id: 'options', label: 'Three ways to share power' },
+  { id: 'scores', label: 'The scorecard' },
+  { id: 'hybrid', label: 'A hybrid for Iran' },
+  { id: 'weigh', label: 'Promise and risk' },
+];
+
+const aims = [
+  'Show why Iran’s centuries-old strategy of <strong>holding together by suppressing difference</strong> no longer works.',
+  'Score three <strong>power-sharing designs</strong> (centripetalism, consociationalism, ethno-federalism) against Iran’s ethnic map, its grievances and the record elsewhere.',
+  'Propose a <strong>hybrid</strong> for a post-transition Iran that keeps it whole by empowering its diversity.',
+];
+
+const eras = [
+  ['Safavid', 'Made Shi’ism the state religion, a boundary against Sunni neighbours.'],
+  ['Qajar', 'Centralised provincial power and restricted tribal rights.'],
+  ['Pahlavi', 'Built coercive capacity to fold every group into one national identity.'],
+  ['Islamic Republic', 'Mandated a single Shia Persian identity; excluded and repressed minorities.'],
+];
+
+// ---- groups: colour, label, kin state ----
+const groups: Record<Group, { label: string; color: string; kin: string; where: string }> = {
+  persian: { label: 'Persian', color: 'var(--r-neutral)', kin: 'None', where: 'Central provinces' },
+  azeri: { label: 'Azeri Turk', color: 'var(--r-c1)', kin: 'Azerbaijan', where: 'Northwest' },
+  kurd: { label: 'Kurd', color: 'var(--r-c2)', kin: 'Iraqi Kurdistan', where: 'West' },
+  lur: { label: 'Lur', color: 'var(--r-c3)', kin: 'None', where: 'Between Persian, Kurdish and Arab regions' },
+  arab: { label: 'Arab', color: 'var(--r-c4)', kin: 'Iraq', where: 'Khuzestan, southwest' },
+  baloch: { label: 'Baloch', color: 'var(--r-c5)', kin: 'Pakistan, Afghanistan', where: 'Sistan and Baluchestan, southeast' },
+  turkmen: { label: 'Turkmen', color: 'var(--r-c6)', kin: 'Turkmenistan', where: 'Northeast' },
+};
+const groupKeys = Object.keys(groups) as Group[];
+
+// ---- the population pie (non-government estimates; last ethnic census 1976) ----
+const pop: { k: string; label: string; v: number; color: string }[] = [
+  { k: 'persian', label: 'Persian', v: 61, color: groups.persian.color },
+  { k: 'azeri', label: 'Azeri Turk', v: 16, color: groups.azeri.color },
+  { k: 'kurd', label: 'Kurd', v: 10, color: groups.kurd.color },
+  { k: 'lur', label: 'Lur', v: 6, color: groups.lur.color },
+  { k: 'baloch', label: 'Baloch', v: 2, color: groups.baloch.color },
+  { k: 'arab', label: 'Arab', v: 2, color: groups.arab.color },
+  { k: 'turkic', label: 'Turkic tribes', v: 2, color: 'var(--r-ink-2)' },
+  { k: 'other', label: 'Other', v: 1, color: 'var(--muted)' },
+];
+const R = 80;
+const r0 = 52;
+let acc = 0;
+const arcs = pop.map((s, i) => {
+  const a0 = (acc / 100) * Math.PI * 2 - Math.PI / 2;
+  acc += s.v;
+  const a1 = (acc / 100) * Math.PI * 2 - Math.PI / 2;
+  const gap = 0.012;
+  const p = (r: number, a: number) => `${(100 + r * Math.cos(a)).toFixed(2)} ${(100 + r * Math.sin(a)).toFixed(2)}`;
+  const s0 = a0 + gap;
+  const s1 = a1 - gap;
+  const large = s1 - s0 > Math.PI ? 1 : 0;
+  const d = `M${p(R, s0)} A${R} ${R} 0 ${large} 1 ${p(R, s1)} L${p(r0, s1)} A${r0} ${r0} 0 ${large} 0 ${p(r0, s0)}Z`;
+  return { ...s, d, i };
+});
+
+// ---- grievances ----
+const disparity = [
+  { who: 'Baloch', pop: 2, share: 25, what: 'of people executed' },
+  { who: 'Kurds', pop: 10, share: 50, what: 'of state killings', plus: true },
+];
+
+// ---- scorecard ----
+const criteria = ['Ethnic complexity fit', 'Territorial integrity', 'Grievance responsiveness', 'Comparative record'];
+const models = [
+  {
+    k: 'centri',
+    name: 'Centripetalism',
+    short: 'Make moderation pay',
+    idea: 'Redesign elections (alternative vote, single transferable vote) so candidates must win votes across ethnic lines.',
+    who: 'Horowitz',
+    s: [1, 2, 0, 0],
+    a: [
+      'Vote-pooling needs mixed constituencies, which Iran’s ethnically segregated provinces rarely provide; small minorities carry little second-preference weight.',
+      'Creates no secessionist infrastructure, but offers no way to meet the regional demands that drive separatism.',
+      'Tackles electoral polarisation, not the structural causes of cultural, economic and political exclusion.',
+      'Too thin and too unlike Iran to be useful: Malaysia was fortuitous, Nigeria parallels one element, Sri Lanka’s test was disrupted, Lebanon used fixed groups.',
+    ],
+    cases: ['Lebanon', 'Malaysia', 'Nigeria', 'Sri Lanka'],
+  },
+  {
+    k: 'conso',
+    name: 'Consociationalism',
+    short: 'A cartel of elites',
+    idea: 'Share power at the centre through four pillars: grand coalition, proportionality, mutual veto and segmental autonomy.',
+    who: 'Lijphart',
+    s: [1, 1, 2, 1],
+    a: [
+      'Depends on the variant: a liberal design fits Iran’s cross-cutting identities, a corporate one would freeze groups and exclude small minorities. Liberal can drift into corporate practice, as in Iraq.',
+      'Non-territorial autonomy adds little secession risk while meeting cultural grievances; territorial autonomy would carry high risk.',
+      'The four pillars map onto exclusion, economic discrimination, minority protection and cultural self-determination.',
+      'Corporate designs fail while liberal ones last; Iraq, the closest parallel, shows promise and drift. The success stories are bipolar and gridlock-prone.',
+    ],
+    cases: ['Lebanon', 'Cyprus', 'Bosnia', 'Belgium', 'South Africa', 'Northern Ireland', 'Iraq'],
+  },
+  {
+    k: 'ethno',
+    name: 'Ethno-federalism',
+    short: 'Self-rule by territory',
+    idea: 'Give regionally concentrated groups constitutionally protected self-government. The paper favours a partial design.',
+    who: 'Anderson',
+    s: [2, 1, 1, 2],
+    a: [
+      'A partial, asymmetric federation fits Iran’s concentrated groups without new borders or needless categories, though small groups such as the Turkmen are left out.',
+      'Secession risk is real: armed groups (PJAK, PFF) may not settle for limited autonomy. Risky, but manageable in comparable cases.',
+      'The only design that answers territorial and regional grievances, but it cannot reform the national centre alone.',
+      'Every partial ethno-federation in Anderson’s dataset survived where unitary rule had failed.',
+    ],
+    cases: ['Switzerland', 'Canada', 'India', 'Nigeria', 'Spain', 'Iraq'],
+  },
+];
+const total = (s: number[]) => s.reduce((a, b) => a + b, 0);
+
+const anderson = [
+  { t: 'Full ethno-federations', v: 33, eg: 'Soviet Union, Yugoslavia, Ethiopia' },
+  { t: 'Partial ethno-federations', v: 100, eg: 'Canada, India, Iraq, Switzerland' },
+  { t: 'Ethnic federacies', v: 96, eg: 'Scotland and Wales in the UK, Greenland' },
+];
+
+// ---- hybrid ----
+const tiers = [
+  { t: 1, name: 'Tier 1 · Greatest autonomy', powers: 'Education, language, and resource and revenue investment', color: 'var(--r-seq-5)' },
+  { t: 2, name: 'Tier 2 · Limited autonomy', powers: 'Cultural and limited administrative autonomy', color: 'var(--r-seq-3)' },
+  { t: 3, name: 'Tier 3 · Standard', powers: 'Standard federal administration; no redesign', color: 'var(--r-mid)' },
+];
+const tierCount = (t: number) => provinces.filter((p) => p.tier === t).length;
+const tierNames = (t: number) => provinces.filter((p) => p.tier === t).map((p) => p.name).sort();
+const centre = [
+  ['Executive', 'Persian-Shia monopoly; some minorities kept out of the cabinet', 'Grand-coalition cabinet drawn from proportional results'],
+  ['Legislature', 'Majoritarian rules let the Persian majority win everywhere', 'D’Hondt proportional representation guarantees minority seats'],
+  ['Minority protection', 'No safeguard against majority overreach', 'Mutual veto, limited to cultural, linguistic and religious law'],
+  ['Cultural rights', 'Teaching a minority culture can be treated as a crime', 'Non-territorial autonomy, constitutionally protected'],
+];
+
+const advantages = [
+  'Meets grievances at both the regional (federal) and national (consociational) level',
+  'Asymmetric autonomy matches varying demands without uniform reform',
+  'Constitutional entrenchment protects minority rights from future governments',
+  'Proportional results feed straight into legislative and cabinet inclusion',
+  'Non-territorial autonomy protects communities of any size',
+  'Narrow mutual vetoes guard against majority overreach',
+  'Elections reward cross-ethnic campaigning',
+  'Builds on the existing 31 provinces, with no new borders',
+];
+const risks = [
+  'Tier 1 provinces could give secessionists (PJAK, PFF) institutional resources',
+  'Getting autonomy levels wrong could create new grievances',
+  'No reliable ethnic census, so any population-based rule can be contested',
+  'Needs a transition with the authority to bind future governments',
+  'Old discrimination may persist inside reformed institutions',
+  'Even narrow vetoes can be abused into paralysis',
+];
+---
+
+<PaperLayout slug="iran-power-sharing" aims={aims} sections={sections}>
+  <section class="rsec" id="puzzle">
+    <p class="r-eyebrow">01 · The problem</p>
+    <h2>Four regimes, one assumption</h2>
+    <p class="lede">
+      For centuries Iran has stayed whole where comparable states fractured. Every regime has believed the same thing:
+      territorial integrity requires forcing everyone into one identity. Each pushed further than the last.
+    </p>
+    <Fig title="Centralisation, regime by regime" hint="Hover an era" replay>
+      <ol class="eras r-dim-others">
+        {eras.map(([n, d], i) => (
+          <li class="a-fade" style={`--i:${i}`} data-tip={`${n}|${d}`}>
+            <span class="step">{String(i + 1).padStart(2, '0')}{i < eras.length - 1 && <span class="arr" aria-hidden="true" />}</span>
+            <b>{n}</b>
+            <p>{d}</p>
+          </li>
+        ))}
+      </ol>
+      <figcaption>From the paper’s introduction: each era intensified the centralising logic of the one before.</figcaption>
+    </Fig>
+    <p>
+      That model is breaking. After mass protests, economic collapse and the killing of its most senior leaders, the
+      Islamic Republic’s ability to coerce has weakened, and the risk of fragmentation “is no longer theoretical.” The
+      alternatives on offer, a gentler regime or simple majority rule, either leave the institutions untouched or let a
+      Persian majority shut minorities out again.
+    </p>
+  </section>
+
+  <section class="rsec" id="map">
+    <p class="r-eyebrow">02 · Iran’s ethnic puzzle</p>
+    <h2>The minorities live on the borders</h2>
+    <p class="lede">
+      Persians are about 61% of Iranians. Nearly every large minority lives in border provinces next to a neighbouring
+      state where its own people live.
+    </p>
+    <Fig title="Population and where each group is the majority" hint="Hover a group or a province" caption="Redrawn from the paper’s population chart and its “Ethnic Distribution by Province” map. Iran stopped recording ethnicity after the 1976 census, so all shares are non-government estimates. Province shapes: iran-map-simple (MIT).">
+      <div class="pm" data-linked>
+        <div class="donut-wrap">
+          <svg class="donut" viewBox="0 0 200 200" role="img" aria-label="Iran’s population by ethnic group">
+            {arcs.map((a) => (
+              <path d={a.d} fill={a.color} data-g={a.k} data-tip={`${a.label}|${a.v}% of Iranians`} class="a-pop" style={`--i:${a.i}`} />
+            ))}
+            <text x="100" y="98" text-anchor="middle" class="ink big">61%</text>
+            <text x="100" y="116" text-anchor="middle">Persian</text>
+          </svg>
+          <ul class="pop-list">
+            {pop.map((s) => (
+              <li data-g={s.k}><span class="r-sw" style={`background:${s.color}`}></span>{s.label}<b>{s.v}%</b></li>
+            ))}
+          </ul>
+        </div>
+        <svg class="iran" viewBox={IRAN_VIEWBOX} role="img" aria-label="Map of Iran’s provinces coloured by majority group">
+          {provinces.map((p) => (
+            <path d={p.d} fill={groups[p.group].color} data-g={p.group} data-tip={`${p.name}|Majority: ${groups[p.group].label}`} />
+          ))}
+        </svg>
+      </div>
+      <div class="r-table-wrap">
+        <table class="r-table kin">
+          <thead><tr><th>Group</th><th>Where</th><th>Kin state across the border</th></tr></thead>
+          <tbody>
+            {(['turkmen', 'arab', 'baloch', 'lur', 'kurd', 'azeri', 'persian'] as Group[]).map((g) => (
+              <tr data-g={g}><td><span class="r-sw" style={`background:${groups[g].color}`}></span> {groups[g].label}</td><td>{groups[g].where}</td><td>{groups[g].kin}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Fig>
+  </section>
+
+  <section class="rsec" id="grievances">
+    <p class="r-eyebrow">03 · Grievance structure</p>
+    <h2>Diversity isn’t the problem. Discrimination is.</h2>
+    <p class="lede">
+      Following Cederman et al., the paper sorts minority grievances into three kinds of inequality between groups, the
+      kind that makes states vulnerable to civil war.
+    </p>
+    <div class="r-cards c3">
+      <div class="r-card"><p class="r-eyebrow">Cultural</p><h4>Languages banned in schools</h4><p>Article 15 of the constitution allows regional languages in schools, yet Kurdish, Baloch, Arabic and Turkish are barred. Teachers who push back are exiled or arrested.</p></div>
+      <div class="r-card"><p class="r-eyebrow">Economic</p><h4>Oil wealth, local poverty</h4><p>Khuzestan’s oil is almost a quarter of Iran’s GDP, yet it ranks second-most “miserable” province and last in employment. The Gozinesh law screens jobs by ideology and religion.</p></div>
+      <div class="r-card"><p class="r-eyebrow">Political</p><h4>Violence out of all proportion</h4><p>2025 saw the most executions since 1989. The 2025–26 protests left an estimated 6,425 to 36,500 dead.</p></div>
+    </div>
+    <Fig title="Share of the population vs share of state violence" hint="Hover a bar" replay caption="From the paper’s political-discrimination section. Kurds account for “over 50%” of state killings, drawn here at 50%.">
+      <div class="disp r-dim-others">
+        {disparity.map((d, i) => (
+          <div class="disp-g">
+            <p class="disp-h">{d.who}</p>
+            <div class="disp-row" data-tip={`${d.who}|${d.pop}% of Iran’s population`}>
+              <span class="disp-l">Population</span>
+              <span class="disp-t"><span class="disp-b pop a-grow-x" style={`width:${d.pop}%;--i:${i * 2}`} /></span>
+              <span class="disp-v">{d.pop}%</span>
+            </div>
+            <div class="disp-row" data-tip={`${d.who}|${d.plus ? 'Over ' : ''}${d.share}% ${d.what}`}>
+              <span class="disp-l">{d.what.replace('of ', '')}</span>
+              <span class="disp-t"><span class="disp-b hit a-grow-x" style={`width:${d.share}%;--i:${i * 2 + 1}`} /></span>
+              <span class="disp-v">{d.plus ? '50%+' : `${d.share}%`}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Fig>
+  </section>
+
+  <section class="rsec" id="options">
+    <p class="r-eyebrow">04 · Theory</p>
+    <h2>From integration to accommodation</h2>
+    <p class="lede">
+      Integration, which ignores group differences, is roughly what Iran already does. The paper looks only at
+      accommodation: designs that let identities be expressed rather than suppressed, ordered by how far they go.
+    </p>
+    <Fig title="The power-sharing spectrum" hint="Tap a model">
+      <div class="spec" data-spec>
+        <div class="spec-axis"><span>Integration</span><span>Accommodation</span></div>
+        <div class="spec-line" aria-hidden="true"><span class="zone"></span></div>
+        <div class="spec-models">
+          {models.map((m, i) => (
+            <button type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-i={i} style={`--x:${46 + i * 20}%`}>
+              <span class="dot"></span>
+              <span class="nm">{m.name}</span>
+            </button>
+          ))}
+        </div>
+        <div class="spec-read" aria-live="polite">
+          {models.map((m, i) => (
+            <div data-read={i} hidden={i !== 0}>
+              <p class="r-eyebrow">{m.short} · {m.who}</p>
+              <p>{m.idea}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <figcaption>After McGarry, O’Leary and Simeon (2008). The shaded band is the accommodationist end the paper evaluates.</figcaption>
+    </Fig>
+  </section>
+
+  <section class="rsec" id="scores">
+    <p class="r-eyebrow">05 · Evaluation</p>
+    <h2>No single model is enough</h2>
+    <p class="lede">
+      Each model is scored 0 (fails), 1 (partly) or 2 (satisfies) on four criteria. The scale is ordinal: it structures the
+      comparison rather than measuring it.
+    </p>
+    <Fig title="The scorecard" hint="Tap a score to read why" replay>
+      <div class="sc" data-sc>
+        <span></span>
+        {criteria.map((c) => <span class="sc-h">{c}</span>)}
+        <span class="sc-h tot">Total</span>
+        {models.map((m, r) => (
+          <>
+            <span class="sc-m">{m.name}</span>
+            {m.s.map((v, c) => (
+              <button type="button" class:list={['sc-c', `v${v}`]} data-r={r} data-c={c} aria-pressed={r === 2 && c === 1 ? 'true' : 'false'} aria-label={`${m.name}, ${criteria[c]}: ${v} of 2`}>
+                <span class="pips">{[0, 1].map((k) => <span class:list={['pip', k < v && 'on a-pop']} style={`--i:${r * 8 + c * 2 + k}`} />)}</span>
+                <span class="n">{v}</span>
+              </button>
+            ))}
+            <span class="sc-t">
+              <span class="tb"><span class="tf a-grow-x" style={`width:${(total(m.s) / 8) * 100}%;--i:${r}`} /></span>
+              <b>{total(m.s)}/8</b>
+            </span>
+          </>
+        ))}
+      </div>
+      <div class="sc-read" aria-live="polite"></div>
+      <script is:inline type="application/json" data-sc-json set:html={JSON.stringify({ criteria, models: models.map((m) => ({ name: m.name, s: m.s, a: m.a, cases: m.cases })) })} />
+      <figcaption>From the three “Mechanism Evaluation” tables. Key: 0 fails to meet, 1 partially addresses, 2 satisfies.</figcaption>
+    </Fig>
+
+    <Fig title="Why partial ethno-federations look safer" hint="Hover a bar" replay caption="Anderson (2014), as cited in the paper. Failures cluster among full ethno-federations, all of them authoritarian.">
+      <div class="and r-dim-others">
+        {anderson.map((a, i) => (
+          <div class="and-row" data-tip={`${a.t}: ${a.v}% succeeded|e.g. ${a.eg}`}>
+            <span class="and-l">{a.t}</span>
+            <span class="and-t"><span class="and-b a-grow-x" style={`width:${a.v}%;--i:${i}`} /></span>
+            <span class="and-v">{a.v}%</span>
+          </div>
+        ))}
+      </div>
+    </Fig>
+  </section>
+
+  <section class="rsec" id="hybrid">
+    <p class="r-eyebrow">06 · Synthesis</p>
+    <h2>Federal provinces, a shared centre, cross-ethnic elections</h2>
+    <p class="lede">
+      The proposal combines the strongest part of each model: a partial ethno-federation as the foundation, liberal
+      consociational rules at the centre, and centripetal incentives in elections.
+    </p>
+
+    <Fig title="1 · A partial ethno-federation in three tiers" hint="Hover a province or a tier" caption="Redrawn from the paper’s “Post-Transition Iranian Partial Ethno-federation by Province” map. An illustrative projection: a real design would first need a new ethnic census.">
+      <div class="tm" data-tiers>
+        <svg class="iran" viewBox={IRAN_VIEWBOX} role="img" aria-label="Map of Iran’s provinces by proposed autonomy tier">
+          {provinces.map((p) => (
+            <path d={p.d} fill={tiers[p.tier - 1].color} data-t={p.tier} data-tip={`${p.name}|Tier ${p.tier} · majority ${groups[p.group].label}`} />
+          ))}
+        </svg>
+        <ul class="tier-list">
+          {tiers.map((t) => (
+            <li data-t={t.t}>
+              <span class="r-sw" style={`background:${t.color}`}></span>
+              <div>
+                <b>{t.name}</b> <span class="cnt">{tierCount(t.t)} of 31</span>
+                <p>{t.powers}</p>
+                {t.t < 3 && <p class="names">{tierNames(t.t).join(', ')}</p>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Fig>
+
+    <Fig title="2 · A shared centre" caption="From the paper’s comparison of the current design with the proposed consociational reform.">
+      <div class="cmp">
+        <span class="cmp-h"></span><span class="cmp-h">Today</span><span class="cmp-h">Proposed</span>
+        {centre.map(([d, now, next]) => (
+          <>
+            <span class="cmp-d">{d}</span>
+            <span class="cmp-now">{now}</span>
+            <span class="cmp-next">{next}</span>
+          </>
+        ))}
+      </div>
+    </Fig>
+
+    <Fig title="3 · Elections that reward reaching across" caption="Centripetal element: the alternative vote with a geographic distribution requirement for executive elections.">
+      <div class="elect">
+        <div class="ballot" aria-hidden="true">
+          <span class="row"><b>1</b>Candidate A</span>
+          <span class="row"><b>2</b>Candidate C</span>
+          <span class="row"><b>3</b>Candidate B</span>
+        </div>
+        <div>
+          <p>Voters rank candidates, so second preferences from other groups matter. A winner must also carry support across several provinces, not just an ethnic home base.</p>
+          <p class="muted">The aim: voters mobilised by platforms rather than by cultural allegiance alone.</p>
+        </div>
+      </div>
+    </Fig>
+  </section>
+
+  <section class="rsec" id="weigh">
+    <p class="r-eyebrow">07 · Conclusion</p>
+    <h2>Promise, with conditions</h2>
+    <div class="pr">
+      <div class="pr-col adv">
+        <p class="r-eyebrow">Advantages</p>
+        <ul>{advantages.map((a) => <li>{a}</li>)}</ul>
+      </div>
+      <div class="pr-col risk">
+        <p class="r-eyebrow">Risks</p>
+        <ul>{risks.map((a) => <li>{a}</li>)}</ul>
+      </div>
+    </div>
+    <p>
+      Generations of compounding inequality demand an institutional answer of the same depth. The alternatives, a
+      coercive centralised state or a majoritarian democracy, carry far greater risk because they leave the core
+      grievances unresolved.
+    </p>
+    <blockquote class="r-quote">
+      A hybrid that can sustain Iran’s territorial integrity “not by suppressing its diversity, but by empowering it.”
+      <cite>From the paper’s conclusion</cite>
+    </blockquote>
+  </section>
+</PaperLayout>
+
+<script>
+  // Hovering a group in the pie, list or table lights up its provinces (and vice versa).
+  document.querySelectorAll<HTMLElement>('[data-linked]').forEach((box) => {
+    const fig = box.closest('.rfig')!;
+    const all = () => fig.querySelectorAll<HTMLElement | SVGElement>('[data-g]');
+    const set = (g: string | null) => {
+      all().forEach((el) => el.classList.toggle('dim', !!g && el.dataset.g !== g));
+    };
+    fig.addEventListener('pointerover', (e) => {
+      const el = (e.target as Element).closest<HTMLElement>('[data-g]');
+      set(el ? el.dataset.g! : null);
+    });
+    fig.addEventListener('pointerleave', () => set(null));
+  });
+
+  // Tiers: hover a tier to light its provinces.
+  document.querySelectorAll<HTMLElement>('[data-tiers]').forEach((box) => {
+    const set = (t: string | null) =>
+      box.querySelectorAll<HTMLElement | SVGElement>('[data-t]').forEach((el) => el.classList.toggle('dim', !!t && el.dataset.t !== t));
+    box.addEventListener('pointerover', (e) => {
+      const el = (e.target as Element).closest<HTMLElement>('[data-t]');
+      set(el ? el.dataset.t! : null);
+    });
+    box.addEventListener('pointerleave', () => set(null));
+  });
+
+  // Spectrum: tap a model.
+  document.querySelectorAll<HTMLElement>('[data-spec]').forEach((s) => {
+    const btns = s.querySelectorAll<HTMLButtonElement>('button');
+    btns.forEach((b) =>
+      b.addEventListener('click', () => {
+        btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        s.querySelectorAll<HTMLElement>('[data-read]').forEach((r) => (r.hidden = r.dataset.read !== b.dataset.i));
+      }),
+    );
+  });
+
+  // Scorecard: tap a score to read the assessment.
+  const sc = document.querySelector<HTMLElement>('[data-sc]');
+  if (sc) {
+    const fig = sc.closest('.rfig')!;
+    const data = JSON.parse(fig.querySelector('[data-sc-json]')!.textContent!);
+    const out = fig.querySelector<HTMLElement>('.sc-read')!;
+    const cells = sc.querySelectorAll<HTMLButtonElement>('.sc-c');
+    const word = ['Fails to meet', 'Partially addresses', 'Satisfies'];
+    const show = (b: HTMLButtonElement) => {
+      cells.forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+      const m = data.models[+b.dataset.r!];
+      const c = +b.dataset.c!;
+      out.innerHTML =
+        `<p class="sr-h"><b>${m.name}</b> · ${data.criteria[c]} · <span>${m.s[c]}/2, ${word[m.s[c]]}</span></p><p>${m.a[c]}</p>` +
+        (c === 3 ? `<p class="sr-cases">Cases weighed: ${m.cases.join(', ')}</p>` : '');
+    };
+    cells.forEach((b) => b.addEventListener('click', () => show(b)));
+    show(sc.querySelector<HTMLButtonElement>('.sc-c[aria-pressed="true"]')!);
+  }
+</script>
+
+<style>
+  /* eras */
+  .eras {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 760px) {
+    .eras {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .eras .step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    color: var(--r-neg);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .eras .arr {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--r-neg), transparent);
+  }
+  .eras b {
+    font-weight: 500;
+  }
+  .eras p {
+    margin: 2px 0 0;
+    color: var(--r-ink-2);
+    font-size: 13px;
+  }
+
+  /* population + map */
+  .pm {
+    display: grid;
+    gap: 24px;
+    align-items: center;
+  }
+  @media (min-width: 760px) {
+    .pm {
+      grid-template-columns: 260px 1fr;
+    }
+  }
+  .donut-wrap {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  @media (min-width: 760px) {
+    .donut-wrap {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+    .donut {
+      max-width: 200px;
+    }
+  }
+  .donut text.big {
+    font-size: 24px !important;
+    font-weight: 300;
+  }
+  .donut path {
+    stroke: none;
+    transition: opacity 0.2s var(--ease-out);
+  }
+  .pop-list {
+    display: grid;
+    gap: 4px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+  }
+  .pop-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--r-ink-2);
+    transition: opacity 0.2s var(--ease-out);
+  }
+  .pop-list b {
+    margin-left: auto;
+    color: var(--text);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+  .iran path {
+    stroke: var(--r-surface);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    transition: opacity 0.2s var(--ease-out);
+  }
+  .iran path:hover {
+    stroke: var(--text);
+  }
+  :global(.dim) {
+    opacity: 0.22;
+  }
+  .kin {
+    margin-top: 16px;
+  }
+  .kin .r-sw {
+    vertical-align: -1px;
+  }
+
+  /* disparity */
+  .disp {
+    display: grid;
+    gap: 20px;
+  }
+  @media (min-width: 760px) {
+    .disp {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+  }
+  .disp-h {
+    margin: 0 0 6px;
+    font-weight: 500;
+  }
+  .disp-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 44px;
+    align-items: center;
+    gap: 10px;
+    min-height: 32px;
+    font-size: 13px;
+  }
+  .disp-l {
+    color: var(--muted);
+  }
+  .disp-l::first-letter {
+    text-transform: uppercase;
+  }
+  .disp-t {
+    height: 14px;
+    border-radius: 3px;
+    background: var(--r-grid);
+  }
+  .disp-b {
+    display: block;
+    height: 100%;
+    min-width: 4px;
+    border-radius: 0 3px 3px 0;
+  }
+  .disp-b.pop {
+    background: var(--r-neutral);
+  }
+  .disp-b.hit {
+    background: var(--r-neg);
+  }
+  .disp-v {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* spectrum */
+  .spec-axis {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .spec-line {
+    position: relative;
+    height: 2px;
+    margin: 10px 0 0;
+    background: linear-gradient(90deg, var(--line), var(--muted));
+  }
+  .spec-line .zone {
+    position: absolute;
+    left: 40%;
+    right: 0;
+    top: -10px;
+    height: 22px;
+    border-radius: 6px;
+    background: var(--accent-soft);
+  }
+  .spec-models {
+    position: relative;
+    height: 64px;
+  }
+  .spec-models button {
+    position: absolute;
+    left: var(--x);
+    top: -8px;
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    transform: translateX(-50%);
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .spec-models .dot {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--muted);
+    border-radius: 50%;
+    background: var(--r-surface);
+  }
+  .spec-models button[aria-pressed='true'] {
+    color: var(--text);
+  }
+  .spec-models button[aria-pressed='true'] .dot {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  @media (max-width: 560px) {
+    .spec-models .nm {
+      max-width: 84px;
+      line-height: 1.2;
+      text-align: center;
+    }
+  }
+  .spec-read {
+    min-height: 80px;
+    margin-top: 8px;
+  }
+  .spec-read p {
+    margin: 0 0 4px;
+    color: var(--r-ink-2);
+  }
+
+  /* scorecard */
+  .sc {
+    display: grid;
+    grid-template-columns: minmax(96px, 1.2fr) repeat(4, minmax(0, 1fr)) minmax(64px, 0.9fr);
+    gap: 6px;
+    align-items: center;
+  }
+  .sc-h {
+    padding-bottom: 4px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.25;
+    text-align: center;
+  }
+  .sc-m {
+    font-size: 13px;
+    line-height: 1.25;
+  }
+  .sc-c {
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    min-height: 54px;
+    padding: 8px 2px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    transition:
+      border-color 0.2s var(--ease-out),
+      background 0.2s var(--ease-out);
+  }
+  .sc-c:hover {
+    border-color: var(--muted);
+  }
+  .sc-c[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .pips {
+    display: flex;
+    gap: 4px;
+  }
+  .pip {
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--muted);
+    border-radius: 50%;
+  }
+  .pip.on {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .sc-c .n {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .sc-t {
+    display: grid;
+    gap: 4px;
+    justify-items: center;
+  }
+  .sc-t b {
+    font-weight: 400;
+    font-size: 15px;
+  }
+  .tb {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--r-grid);
+  }
+  .tf {
+    display: block;
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+  .sc-read {
+    min-height: 110px;
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-left: 2px solid var(--accent);
+    color: var(--r-ink-2);
+    font-size: 14px;
+  }
+  .sc-read :global(p) {
+    margin: 0 0 6px;
+  }
+  .sc-read :global(.sr-h) {
+    color: var(--text);
+  }
+  .sc-read :global(.sr-h b) {
+    font-weight: 500;
+  }
+  .sc-read :global(.sr-cases) {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* anderson */
+  .and {
+    display: grid;
+    gap: 8px;
+  }
+  .and-row {
+    display: grid;
+    grid-template-columns: minmax(120px, 0.9fr) 2fr 44px;
+    align-items: center;
+    gap: 10px;
+    min-height: 32px;
+    font-size: 13px;
+  }
+  .and-t {
+    height: 14px;
+    border-radius: 3px;
+    background: var(--r-grid);
+  }
+  .and-b {
+    display: block;
+    height: 100%;
+    border-radius: 0 3px 3px 0;
+    background: var(--r-c3);
+  }
+  .and-v {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* tiers */
+  .tm {
+    display: grid;
+    gap: 24px;
+    align-items: center;
+  }
+  @media (min-width: 760px) {
+    .tm {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+  .tier-list {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .tier-list li {
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    gap: 10px;
+    font-size: 14px;
+    transition: opacity 0.2s var(--ease-out);
+  }
+  .tier-list .r-sw {
+    margin-top: 5px;
+  }
+  .tier-list b {
+    font-weight: 500;
+  }
+  .tier-list .cnt {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .tier-list p {
+    margin: 2px 0 0;
+    color: var(--r-ink-2);
+    font-size: 13px;
+  }
+  .tier-list .names {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* centre comparison */
+  .cmp {
+    display: grid;
+    grid-template-columns: minmax(90px, 0.7fr) 1fr 1fr;
+    gap: 0;
+    font-size: 13px;
+  }
+  .cmp > span {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--r-grid);
+  }
+  .cmp-h {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .cmp-d {
+    color: var(--text);
+  }
+  .cmp-now {
+    color: var(--muted);
+  }
+  .cmp-next {
+    color: var(--text);
+    border-left: 2px solid var(--accent) !important;
+  }
+
+  /* elections */
+  .elect {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 20px;
+    align-items: center;
+    font-size: 14px;
+  }
+  @media (max-width: 520px) {
+    .elect {
+      grid-template-columns: 1fr;
+    }
+  }
+  .ballot {
+    display: grid;
+    gap: 6px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .ballot .row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .ballot b {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 12px;
+  }
+  .elect p {
+    margin: 0 0 8px;
+    color: var(--r-ink-2);
+  }
+  .elect .muted {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* promise and risk */
+  .pr {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  @media (min-width: 760px) {
+    .pr {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .pr-col {
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--r-surface);
+  }
+  .pr-col.adv {
+    border-top: 2px solid var(--r-pos);
+  }
+  .pr-col.risk {
+    border-top: 2px solid var(--r-neg);
+  }
+  .pr-col ul {
+    margin: 10px 0 0;
+    padding-left: 18px;
+    color: var(--r-ink-2);
+    font-size: 14px;
+  }
+  .pr-col li + li {
+    margin-top: 6px;
+  }
+</style>
