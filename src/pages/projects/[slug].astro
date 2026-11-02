@@ -328,6 +328,14 @@ const toc = [
   .btn:hover {
     background: var(--text);
   }
+  /* Light mode: a dark button on the light page. */
+  :global(:root[data-theme='light']) .btn:not(.ghost) {
+    background: var(--text);
+    color: var(--bg);
+  }
+  :global(:root[data-theme='light']) .btn:not(.ghost):hover {
+    background: var(--nav);
+  }
   .btn.ghost {
     background: none;
     color: var(--muted);

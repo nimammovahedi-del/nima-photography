@@ -15,6 +15,8 @@
   --text: #f7f7f5;
   --muted: #9b9b9b; /* 7:1 on --bg */
   --project-body: #dddcd3; /* running text on the Projects pages: brighter than --muted, easy to read */
+  --frame-edge: #3c3c43; /* edge and shadow of the app screenshots on the Projects pages */
+  --frame-shadow: rgb(0 0 0 / 0.5);
   --line: #262626;
   --nav: #d2d2cd; /* top menu text */
   --accent: var(--sage); /* active states, small highlights */
@@ -70,6 +72,9 @@
   --accent-deep: #6f8e8a;
   --accent-soft: rgb(79 111 107 / 0.1);
   --on-accent: #f4f2ea;
+  --project-body: #2c2c28;
+  --frame-edge: #cdc8b8;
+  --frame-shadow: rgb(60 50 30 / 0.14);
   color-scheme: light;
 }
 
