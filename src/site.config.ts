@@ -196,8 +196,28 @@ export type SortedPlace = (typeof sortedPlaces)[number];
 export const sortedSubs = (subs: readonly string[]) => [...subs].sort(byName);
 
 // The About page (top menu). A first draft from what's on the site; rewrite freely.
+// About page, right-hand column. Change the book, song, rank or set whenever you like.
+// Images live in public/about/.
+export const aboutNow = {
+  reading: { title: 'Dune', by: 'Frank Herbert', cover: '/about/dune.jpg' },
+  listening: { title: 'Black', by: 'Pearl Jam', album: 'Ten', cover: '/about/ten.jpg' },
+  rank: { game: 'Overwatch 2', rank: 'Diamond 2', icon: '/about/ow-diamond.png' },
+  lego: {
+    name: 'UCS Venator-Class Republic Attack Cruiser',
+    set: '75367',
+    image: '/about/venator.png',
+  },
+};
+
+// About page, "Along the way" list (newest first).
+export const aboutPath = [
+  { year: '2026', place: 'London School of Economics and Political Science', href: 'https://www.lse.ac.uk/', what: 'Political Science' },
+  { year: '2025', place: 'University of California, Irvine', href: 'https://uci.edu/', what: 'Political Science and History' },
+  { year: '2022', place: 'Freie Universität Berlin', href: 'https://www.fu-berlin.de/en/', what: 'History' },
+];
+
 export const about = [
-  'I study political science: how courts, states and governments compete, share power and respond to new pressures, from American corporate courts to power-sharing in Iran and state rules on Chinese investment. My papers are on the <a href="/research">Research</a> page.',
-  'I also build small, free apps that make something hard easier to check or practise, like Ergo for LSAT logical reasoning and Check Congress for following what Congress does. They are on the <a href="/projects">Projects</a> page.',
-  'And I photograph buildings, cities, wild places and the animals in them wherever I travel, mostly on Canon EOS bodies and a Fujifilm X-E1. That work, and the <a href="/photography/cameras">cameras</a>, are under <a href="/photography">Photography</a>.',
+  'Hi, I&rsquo;m Nima. Right now I&rsquo;m finishing my master&rsquo;s in political science at the London School of Economics, a year after graduating from UC Irvine, and the next step I&rsquo;m hoping for is law school.',
+  'In the meantime, and all the way through, I want to build new things that help people and the causes I care about. So far that means small, free apps like Ergo for LSAT logical reasoning and Check Congress for following what Congress does. They are on the <a href="/projects">Projects</a> page.',
+  'In my free time I design my own LEGO builds, go backpacking, follow architecture and new urban and transit developments, and play video games like Cyberpunk 2077 and Overwatch. I also take photos wherever I travel, and you can find that art, along with the <a href="/photography/cameras">cameras</a> I shoot on, under <a href="/photography">Photography</a>.',
 ];
