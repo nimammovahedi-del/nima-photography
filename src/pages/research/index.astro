@@ -298,4 +298,34 @@ const groupIndex = Object.fromEntries(groups.map(([g], k) => [g, k]));
       transform: translateX(4px);
     }
   }
+  @media (min-width: 1280px) {
+    .rhead {
+      max-width: 960px;
+      padding: 64px 0 40px;
+    }
+    .intro {
+      font-size: 19px;
+    }
+    .prow {
+      grid-template-columns: 340px minmax(0, 1fr) 220px;
+      gap: 56px;
+      padding: 44px 0;
+    }
+    .mini {
+      padding: 20px;
+    }
+    .mini svg {
+      max-height: 190px;
+    }
+    h2 {
+      font-size: 40px;
+    }
+    .sub {
+      font-size: 18px;
+    }
+    .sum {
+      max-width: 760px;
+      font-size: 16px;
+    }
+  }
 </style>

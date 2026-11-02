@@ -51,6 +51,11 @@
   --r-tip-ink: #0b0b0b;
   --r-rail: 188px;
 }
+@media (min-width: 1280px) {
+  :root {
+    --r-rail: 220px;
+  }
+}
 
 :root[data-theme='light'] {
   --r-de: #2a78d6;

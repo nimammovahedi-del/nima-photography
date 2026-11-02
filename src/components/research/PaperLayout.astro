@@ -380,7 +380,6 @@ const next = papers[(idx + 1) % papers.length];
     min-width: 0;
     max-width: 920px;
   }
-
   /* each section of a paper page */
   .content :global(.rsec) {
     padding: 56px 0 8px;
@@ -551,4 +550,46 @@ const next = papers[(idx + 1) % papers.length];
     color: var(--muted);
     font-variant-numeric: tabular-nums;
   }
+  /* Wider screens: sections use more of the page, text stays at a readable measure. */
+  @media (min-width: 1280px) {
+    .body {
+      gap: 72px;
+    }
+    .content {
+      max-width: 1100px;
+    }
+    .hero {
+      max-width: 1100px;
+    }
+    .sub,
+    .aims li {
+      max-width: 820px;
+    }
+    .content :global(.rsec) {
+      padding-top: 64px;
+    }
+    .content :global(.rsec > h2) {
+      font-size: 44px;
+    }
+    .content :global(.rsec > .lede) {
+      max-width: 780px;
+      font-size: 19px;
+    }
+    .content :global(.rsec > p:not(.lede):not(.r-eyebrow)) {
+      max-width: 780px;
+      font-size: 17px;
+    }
+    /* Maps keep a comfortable size instead of filling the wider card. */
+    .content :global(svg.iran) {
+      display: block;
+      max-height: 540px;
+      margin: 0 auto;
+    }
+    .content :global(.usmap svg) {
+      display: block;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+  }
+
 </style>
