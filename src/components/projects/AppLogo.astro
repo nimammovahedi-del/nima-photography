@@ -1,8 +1,9 @@
 ---
-// Each app's own icon, taken from its live site (Ergo's and Check Congress's favicons).
+// Each app's own icon, taken from its live site (the Ergo, Check Congress and Federal Money
+// Atlas favicons).
 // Brick Rater has no logo yet, so it gets a plain stand-in brick until it does.
 interface Props {
-  slug: 'ergo' | 'check-congress' | 'brick-rater';
+  slug: 'ergo' | 'check-congress' | 'fed-money' | 'brick-rater';
   size?: number;
 }
 const { slug, size = 56 } = Astro.props;
@@ -29,6 +30,17 @@ const seats = [
         <g fill="#fff" transform="translate(0 9)">
           {seats.map(([x, y]) => <circle cx={x} cy={y} r="3" />)}
         </g>
+      </svg>
+    )
+  }
+  {
+    slug === 'fed-money' && (
+      <svg viewBox="0 0 32 32">
+        <rect width="32" height="32" fill="#f6f6f6" />
+        <rect x="6" y="6" width="9.5" height="9.5" fill="#0a0a0a" />
+        <rect x="16.5" y="6" width="9.5" height="9.5" fill="#51da4c" />
+        <rect x="6" y="16.5" width="9.5" height="9.5" fill="#51da4c" />
+        <rect x="16.5" y="16.5" width="9.5" height="9.5" fill="#0a0a0a" />
       </svg>
     )
   }

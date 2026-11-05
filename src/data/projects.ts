@@ -24,12 +24,23 @@ export interface HowItWorks {
   stats: { value: string; label: string }[];
   /** Each flow is drawn as a row of steps, then explained step by step. */
   flows: { title: string; steps: Step[] }[];
+  /** A real calculation walked through from start to finish, drawn as sums. */
+  example?: Example;
   /** Closing paragraphs, each with a short heading. */
   notes: { title: string; text: string }[];
 }
 
+export interface Example {
+  title: string;
+  intro: string;
+  /** Each sum: terms added together, then its total. */
+  sums: { terms: { label: string; value: string }[]; total: { label: string; value: string } }[];
+  /** The last line, the answer the sums lead to. */
+  answer: string;
+}
+
 export interface Project {
-  slug: 'ergo' | 'check-congress' | 'brick-rater';
+  slug: 'ergo' | 'check-congress' | 'fed-money' | 'brick-rater';
   name: string;
   /** Three sentences, shown on the Projects row. */
   summary: string;
@@ -50,6 +61,7 @@ export interface Project {
 
 const ergo = (f: string) => `/projects/ergo/${f}`;
 const cc = (f: string) => `/projects/check-congress/${f}`;
+const fm = (f: string) => `/projects/fed-money/${f}`;
 
 export const projects: Project[] = [
   {
@@ -324,6 +336,183 @@ export const projects: Project[] = [
         {
           title: 'Nothing to sell',
           text: 'Free and nonpartisan, with no ads, no accounts, no cookies and no tracking. It runs on Cloudflare’s free plan, and the only cost is the domain.',
+        },
+      ],
+    },
+  },
+  {
+    slug: 'fed-money',
+    name: 'Federal Money Atlas',
+    summary:
+      'For every $1 a county’s residents pay in federal taxes, how much federal money comes back? Federal Money Atlas answers that for all 3,144 US counties, counting Social Security, grants and contracts from public data. Search your county, explore the map, or compare two places side by side.',
+    tags: ['Free', 'Nonpartisan', '3,144 counties'],
+    url: 'https://fedmoney.pages.dev/',
+    urlLabel: 'Open Federal Money Atlas',
+    tagline: 'How much federal money comes back to every US county, for each $1 of tax.',
+    thumbs: [fm('home-sm.webp'), fm('map-sm.webp'), fm('county-sm.webp')],
+    hero: { kind: 'image', src: fm('home.webp'), alt: 'The Federal Money Atlas home page: "What does $1 get you?" with a county search' },
+    why: {
+      title: 'One fair number for every county',
+      paras: [
+        'Arguments about which places “give” and which “take” from Washington are everywhere, but they are usually about states, and they rarely show their working. I wanted to see it county by county, with every number traceable to a public source.',
+        'Federal Money Atlas does one division, the same way for every county, and always shows the result next to the national figure and the typical county. It is free and nonpartisan: no red or blue, no winners or losers, and every estimate is labeled.',
+      ],
+    },
+    sections: [
+      {
+        title: 'Every county on one line',
+        paras: [
+          'The home page lines up all 3,143 counties with a figure, from the least money back per $1 to the most. The typical county gets $1.12 back, while the country as a whole gets $0.73, because the places that pay the most get back far less.',
+        ],
+        media: { kind: 'image', src: fm('chart.webp'), alt: 'Every county from lowest to highest dollars back per $1, and how many counties fall in each range' },
+      },
+      {
+        title: 'A map you can take apart',
+        paras: [
+          'Show all federal money or just one kind of it, filter counties by population or by dollars back, and switch between a land map, a map sized by people, and an even grid where every county counts the same.',
+        ],
+        media: { kind: 'clip', src: fm('map.mp4'), poster: fm('map-poster.webp'), alt: 'Switching the map between kinds of money and between the Land, People and Grid views' },
+      },
+      {
+        title: 'Your county, in one number',
+        paras: [
+          'Type a county and its page leads with one figure, how much comes back for every $1 of tax, beside the typical county. Below it are its ranks and the top recipients, agencies and programs, pulled live from USAspending, with a button to cite the page.',
+        ],
+        media: { kind: 'clip', src: fm('search.mp4'), poster: fm('search-poster.webp'), alt: 'Searching for Franklin County, Ohio and opening its page' },
+      },
+      {
+        title: 'Two places, side by side',
+        paras: [
+          'Compare any two counties on money back, money in and taxes paid per person, and how much of it is Social Security. Every comparison has its own link to share.',
+        ],
+        media: { kind: 'image', src: fm('compare.webp'), alt: 'Franklin County, Ohio and Pima County, Arizona compared side by side' },
+      },
+      {
+        title: 'The bigger picture',
+        paras: [
+          'Analytics put every county on one chart, with what residents paid per person against what came back, alongside the mix of money by type and five years of totals. All the figures download as a single CSV.',
+        ],
+        media: { kind: 'image', src: fm('analytics.webp'), alt: 'A scatter chart of taxes paid per person against money in per person for every county' },
+      },
+      {
+        title: 'Every step shown',
+        paras: [
+          'A Method page walks through the calculation with a real county, lists every source and its year, shows how the totals were checked, and keeps a version number and a changelog so any figure can be cited.',
+        ],
+        media: { kind: 'image', src: fm('method.webp'), alt: 'The worked example for Franklin County, Ohio on the Method page' },
+      },
+    ],
+    how: {
+      title: 'How Federal Money Atlas works',
+      intro:
+        'Every figure is one division: federal money that came into a county in fiscal year 2023, divided by the federal taxes its residents paid. A Python pipeline does all the counting ahead of time from public files, and a static website shows the results.',
+      stats: [
+        { value: '12.9M', label: 'federal transactions read, for fiscal year 2023' },
+        { value: '$3.14T', label: 'counted: 44% Social Security, 35% grants, 21% contracts' },
+        { value: '$1.12', label: 'back per $1 in the typical county, against $0.73 for the U.S.' },
+        { value: '3,152', label: 'static pages, one for every county' },
+      ],
+      flows: [
+        {
+          title: 'Money in',
+          steps: [
+            {
+              name: 'Read every award',
+              text: 'The pipeline downloads USAspending’s full files for the year, about 3.3 GB, and reads all 12.9 million contract, grant and payment transactions. It counts Social Security and SSI, grants and contracts, as committed that year.',
+            },
+            {
+              name: 'Where the money lands',
+              text: 'Money goes to the county where the work happens or the payment is made, not where the company or agency has its office. Only the main award is counted, never the sub-awards inside it, so nothing is counted twice.',
+            },
+            {
+              name: 'Set aside national contracts',
+              text: 'Four nationwide health-benefit contracts for veterans’ care and TRICARE, $35.6 billion in all, are booked to the contractor’s office. They are moved to their own line, which takes Spotsylvania County, Virginia from $14.85 back per $1 to $0.69.',
+            },
+            {
+              name: 'Share statewide grants by need',
+              text: 'About three-quarters of grant money, mostly Medicaid, goes to a state with no county attached. Each county gets a share by the people each program serves: Medicaid by people covered, school programs by children, TANF and child care by people in poverty, food programs by SNAP households, and the rest by population. These are labeled “est.”',
+            },
+          ],
+        },
+        {
+          title: 'Taxes paid',
+          steps: [
+            {
+              name: 'Start from the Treasury',
+              text: 'The total is the Treasury’s $4.44 trillion in federal receipts for fiscal year 2023. 97.3% of it is shared out to counties; customs and other receipts are left out, as in the Rockefeller Institute’s state study.',
+            },
+            {
+              name: 'Income tax, measured',
+              text: 'Each county’s share of income tax comes straight from the IRS’s county data for tax year 2023, including the net investment income tax.',
+            },
+            {
+              name: 'Payroll tax, estimated',
+              text: 'Payroll taxes follow an estimate of each county’s taxable wages, with the Social Security wage cap applied to high earners, plus self-employment tax and the additional Medicare tax.',
+            },
+            {
+              name: 'Everything else',
+              text: 'Corporate tax is shared 75% by investment income and 25% by wages. Estate tax follows investment income and excise taxes follow population.',
+            },
+          ],
+        },
+        {
+          title: 'The website',
+          steps: [
+            {
+              name: 'Build the data',
+              text: 'Python scripts write a spreadsheet with every county, the checks and the sources, then turn it into the small data files the site reads. The same rules rebuild all five years, 2019 to 2023.',
+            },
+            {
+              name: 'Static pages',
+              text: 'An Astro build writes 3,152 plain pages, one for every county, in about a second. Map shapes and chart code are served with the site, so nothing loads from elsewhere.',
+            },
+            {
+              name: 'Edge hosting',
+              text: 'Cloudflare Pages serves the site and publishes a new version on every push. Only the top recipients on a county page come live from the USAspending API, in your browser.',
+            },
+            {
+              name: 'Monthly refresh, planned',
+              text: 'The data is from USAspending’s files of October 2026. A free scheduled job that rebuilds the site each month from USAspending’s updates is planned next.',
+            },
+          ],
+        },
+      ],
+      example: {
+        title: 'A worked example: Franklin County, Ohio',
+        intro: 'Franklin County, home to Columbus and 1.34 million people, run through the whole calculation.',
+        sums: [
+          {
+            terms: [
+              { label: 'Social Security & SSI', value: '$3.9B' },
+              { label: 'Grants (incl. $3.6B est.)', value: '$6.6B' },
+              { label: 'Contracts', value: '$0.9B' },
+            ],
+            total: { label: 'Money in', value: '$11.4B' },
+          },
+          {
+            terms: [
+              { label: 'Income tax', value: '$7.1B' },
+              { label: 'Payroll (est.)', value: '$6.4B' },
+              { label: 'Other (est.)', value: '$1.6B' },
+            ],
+            total: { label: 'Taxes paid', value: '$15.1B' },
+          },
+        ],
+        answer:
+          '$11.4B ÷ $15.1B = $0.75 back for every $1, below the typical county’s $1.12. That ranks Franklin 2,530th of 3,143. Its contracts would be seven times larger counted by where companies are based, which is why the location rule matters.',
+      },
+      notes: [
+        {
+          title: 'Checked against outside numbers',
+          text: 'Social Security in the data is within 0.3% of the Treasury’s payments, contracts match USAspending’s published $760 billion, and state results line up with the Rockefeller Institute’s study at a correlation of 0.97.',
+        },
+        {
+          title: 'Nonpartisan by design',
+          text: 'No red or blue, no party colors and no “giver” or “taker” language. Social Security is shown as an earned benefit, and every county gets the same method.',
+        },
+        {
+          title: 'Honest about its limits',
+          text: 'Medicare, federal salaries and interest on the debt aren’t tied to a county, which is why the U.S. figure is under $1. Estimates are labeled, and each data release has a version number to cite.',
         },
       ],
     },
