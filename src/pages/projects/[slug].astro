@@ -115,6 +115,32 @@ const toc = [
             </div>
           ))}
 
+          {p.how.example && (
+            <div class="example">
+              <h3>{p.how.example.title}</h3>
+              <p>{p.how.example.intro}</p>
+              {p.how.example.sums.map((sum) => (
+                <dl class="sum">
+                  {sum.terms.map((t, j) => (
+                    <>
+                      {j > 0 && <span class="op" aria-hidden="true">+</span>}
+                      <div>
+                        <dt>{t.label}</dt>
+                        <dd>{t.value}</dd>
+                      </div>
+                    </>
+                  ))}
+                  <span class="op" aria-hidden="true">=</span>
+                  <div class="total">
+                    <dt>{sum.total.label}</dt>
+                    <dd>{sum.total.value}</dd>
+                  </div>
+                </dl>
+              ))}
+              <p class="answer">{p.how.example.answer}</p>
+            </div>
+          )}
+
           <div class="notes">
             {p.how.notes.map((n) => (
               <div>
@@ -205,6 +231,7 @@ const toc = [
   .block > .wide,
   .how > .stats,
   .how > .flow,
+  .how > .example,
   .how > .notes {
     max-width: var(--wide);
   }
@@ -492,6 +519,53 @@ const toc = [
     border-radius: 10px;
   }
 
+  /* A worked example: two sums drawn as figures joined by + and =, then the answer. */
+  .example {
+    margin-top: 48px;
+    padding: 28px clamp(20px, 3vw, 32px) 8px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-raised);
+  }
+  .sum {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px 18px;
+    margin: 0;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+  }
+  .sum dt {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .sum dd {
+    margin: 6px 0 0;
+    font-size: 32px;
+    line-height: 1;
+    font-weight: 300;
+    color: var(--text);
+  }
+  .sum .total dd {
+    color: var(--tan);
+  }
+  :global(:root[data-theme='light']) .sum .total dd {
+    color: var(--text);
+    font-weight: 400;
+  }
+  .sum .op {
+    font-size: 24px;
+    line-height: 1.1;
+    color: var(--tan);
+  }
+  .example .answer {
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    color: var(--text);
+  }
+
   .end {
     display: grid;
     justify-items: center;
@@ -520,6 +594,29 @@ const toc = [
     }
     .notes {
       grid-template-columns: 1fr;
+    }
+    /* On a phone each sum reads as a short list: label on the left, figure on the right. */
+    .sum {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .sum div {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .sum dd {
+      margin: 0;
+      font-size: 22px;
+    }
+    .sum .op {
+      display: none;
+    }
+    .sum .total {
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
     }
     .chain {
       display: none;
