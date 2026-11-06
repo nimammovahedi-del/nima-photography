@@ -78,9 +78,9 @@
   color-scheme: light;
 }
 
-/* The maps and the 3D cameras stay dark in light mode, so the words on them keep their dark-mode
-   colours too. */
-:root[data-theme='light'] :is(.explorer, .country-map, .cameras .card) {
+/* The maps, the 3D cameras and the full-screen photo viewer stay dark in light mode, so the words
+   on them keep their dark-mode colours too. */
+:root[data-theme='light'] :is(.explorer, .country-map, .cameras .card, .pswp) {
   --bg: #18181b;
   --bg-raised: #222226;
   --card: #26262a;
