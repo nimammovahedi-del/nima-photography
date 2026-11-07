@@ -542,35 +542,42 @@ export const projects: Project[] = [
         paras: [
           'Search any set by name or number and its page leads with a value score out of 100, its rank among similar sets, and a short explanation of why it scored that way. A price check shows what a set with the same contents usually costs.',
         ],
-        media: { kind: 'clip', src: bb('search.mp4'), poster: bb('search-poster.webp'), alt: 'Searching for a set and opening its page' },
+        media: { kind: 'clip', src: bb('search.mp4'), poster: bb('search-poster.webp'), alt: 'Searching for the Venator and opening its page: 76 out of 100, Great value' },
+      },
+      {
+        title: 'See it among similar sets',
+        paras: [
+          'A chart on every set page places it among the sets it was compared with, by price and value score. Hover any stud to see that set, and the builder rating sits below as its own quality score.',
+        ],
+        media: { kind: 'clip', src: bb('compare.mp4'), poster: bb('compare-poster.webp'), alt: 'Hovering the chart of 83 large Star Wars sets on the Venator page' },
       },
       {
         title: 'Find the best value for you',
         paras: [
           'Explore filters every rated set by theme, budget, size, verdict and year, can hide motorized sets or show only sets with minifigures, and sorts by value, builder quality, plastic per dollar or price. Every filter is saved in the link.',
         ],
-        media: { kind: 'clip', src: bb('explore.mp4'), poster: bb('explore-poster.webp'), alt: 'Filtering sets on the Explore page' },
+        media: { kind: 'clip', src: bb('explore.mp4'), poster: bb('explore-poster.webp'), alt: 'Filtering Explore to Star Wars sets from $100 to $200 rated Great value' },
       },
       {
         title: 'Theme by theme',
         paras: [
           'Each of the 37 themes has its own page with every set ranked, how many are good value, and how its plastic per dollar and price per piece have moved since 2010.',
         ],
-        media: { kind: 'image', src: bb('themes.webp'), alt: 'The Themes page, one stack of bricks per theme' },
+        media: { kind: 'image', src: bb('themes.webp'), alt: 'The Themes page: every theme with its plastic per dollar' },
       },
       {
         title: 'Six questions, six charts',
         paras: [
           'Insights answers what buyers actually ask: which themes give the most plastic, whether licensed sets cost more (12% less plastic per dollar), whether LEGO has got pricier (no, a dollar buys 60% more pieces than in 2010), and the best sets at every budget.',
         ],
-        media: { kind: 'image', src: bb('insights.webp'), alt: 'A chart on the Insights page' },
+        media: { kind: 'image', src: bb('insights.webp'), alt: 'Insights: Minecraft gives the most plastic per dollar, one tower per theme' },
       },
       {
         title: 'Every step shown',
         paras: [
           'How it works walks through the score in six steps with a real set, lists every source, and spells out what is left out and why.',
         ],
-        media: { kind: 'image', src: bb('method.webp'), alt: 'The How it works page' },
+        media: { kind: 'image', src: bb('method.webp'), alt: 'How a score is built, step 1: gather every set' },
       },
     ],
     how: {
@@ -642,21 +649,21 @@ export const projects: Project[] = [
         sums: [
           {
             terms: [
-              { label: 'Contents per dollar (beats 100%, × 75)', value: '75' },
-              { label: 'Minifigures per $100 (beats 96%, × 25)', value: '24' },
+              { label: 'Contents per dollar: 100th percentile × 75%', value: '75' },
+              { label: 'Minifigures per $100: 96th percentile × 25%', value: '24' },
             ],
             total: { label: 'Value score', value: '99' },
           },
           {
             terms: [
               { label: 'You pay', value: '$29.99' },
-              { label: 'Similar sets usually', value: '$52.08' },
+              { label: 'Saved against similar sets', value: '$22.09' },
             ],
-            total: { label: 'Price check', value: '$22 less' },
+            total: { label: 'Similar sets usually cost', value: '$52.08' },
           },
         ],
         answer:
-          '99 out of 100, Great value, near the top of its group. Its builder quality is scored apart at 79, from a 4.1 rating by 161 Brickset members.',
+          '99 out of 100, Great value: the best-value City set of its size, and 42% cheaper than its contents usually cost. Its builder quality is scored apart at 79, from a 4.1 rating by 161 Brickset members.',
       },
       notes: [
         {
