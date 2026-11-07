@@ -40,7 +40,7 @@ export interface Example {
 }
 
 export interface Project {
-  slug: 'ergo' | 'check-congress' | 'fed-money' | 'brick-rater';
+  slug: 'ergo' | 'check-congress' | 'fed-money' | 'best-bricks';
   name: string;
   /** Three sentences, shown on the Projects row. */
   summary: string;
@@ -62,6 +62,7 @@ export interface Project {
 const ergo = (f: string) => `/projects/ergo/${f}`;
 const cc = (f: string) => `/projects/check-congress/${f}`;
 const fm = (f: string) => `/projects/fed-money/${f}`;
+const bb = (f: string) => `/projects/best-bricks/${f}`;
 
 export const projects: Project[] = [
   {
@@ -518,19 +519,166 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: 'brick-rater',
-    name: 'Brick Rater',
+    slug: 'best-bricks',
+    name: 'Best Bricks',
     summary:
-      'LEGO has been a hobby of mine for as long as I can remember. Brick Rater will show buyers how set prices have changed and what a set is really worth, so they know when they’re getting good value. It’s still being built.',
-    tags: ['In development'],
-    tagline: 'Know what a LEGO set is really worth.',
-    thumbs: [],
+      'Which LEGO sets are actually worth the money? Best Bricks scores 4,600 sets from 2010 to 2027 out of 100, each against similar sets from its own theme, on how much plastic, pieces and minifigures you get per dollar. Search a set, filter by budget and size, or see which themes give the most for your money.',
+    tags: ['Free', 'No sign-up', '4,600 sets'],
+    url: 'https://bestbricks.pages.dev/',
+    urlLabel: 'Open Best Bricks',
+    tagline: 'Which LEGO sets are actually worth the money, scored 0 to 100.',
+    thumbs: [bb('home-sm.webp'), bb('set-sm.webp'), bb('themes-sm.webp')],
+    hero: { kind: 'image', src: bb('home.webp'), alt: 'The Best Bricks home page: "Which LEGO sets are actually worth the money?" with a set search' },
     why: {
       title: 'Know what a set is really worth',
       paras: [
-        'LEGO has always been a hobby of mine. Prices change a lot, before and after a set retires, and most buyers never see it. Brick Rater will show how a set’s price has moved and how to get the most for your money.',
+        'LEGO has always been a hobby of mine. Prices change a lot from set to set and from year to year, and most buyers never see it: a big box or a low price per piece can hide a set that gives you very little for your money.',
+        'Best Bricks compares every set only with similar sets, the same theme and a similar size, so a Star Wars set scoring 80 is great value for Star Wars. It shows its working on every page and keeps the builder rating as a separate score, so value and quality never get mixed up.',
       ],
     },
-    sections: [],
+    sections: [
+      {
+        title: 'Every set, one score',
+        paras: [
+          'Search any set by name or number and its page leads with a value score out of 100, its rank among similar sets, and a short explanation of why it scored that way. A price check shows what a set with the same contents usually costs.',
+        ],
+        media: { kind: 'clip', src: bb('search.mp4'), poster: bb('search-poster.webp'), alt: 'Searching for the Venator and opening its page: 76 out of 100, Great value' },
+      },
+      {
+        title: 'See it among similar sets',
+        paras: [
+          'A chart on every set page places it among the sets it was compared with, by price and value score. Hover any stud to see that set, and the builder rating sits below as its own quality score.',
+        ],
+        media: { kind: 'clip', src: bb('compare.mp4'), poster: bb('compare-poster.webp'), alt: 'Hovering the chart of 83 large Star Wars sets on the Venator page' },
+      },
+      {
+        title: 'Find the best value for you',
+        paras: [
+          'Explore filters every rated set by theme, budget, size, verdict and year, can hide motorized sets or show only sets with minifigures, and sorts by value, builder quality, plastic per dollar or price. Every filter is saved in the link.',
+        ],
+        media: { kind: 'clip', src: bb('explore.mp4'), poster: bb('explore-poster.webp'), alt: 'Filtering Explore to Star Wars sets from $100 to $200 rated Great value' },
+      },
+      {
+        title: 'Theme by theme',
+        paras: [
+          'Each of the 37 themes has its own page with every set ranked, how many are good value, and how its plastic per dollar and price per piece have moved since 2010.',
+        ],
+        media: { kind: 'image', src: bb('themes.webp'), alt: 'The Themes page: every theme with its plastic per dollar' },
+      },
+      {
+        title: 'Six questions, six charts',
+        paras: [
+          'Insights answers what buyers actually ask: which themes give the most plastic, whether licensed sets cost more (12% less plastic per dollar), whether LEGO has got pricier (no, a dollar buys 60% more pieces than in 2010), and the best sets at every budget.',
+        ],
+        media: { kind: 'image', src: bb('insights.webp'), alt: 'Insights: Minecraft gives the most plastic per dollar, one tower per theme' },
+      },
+      {
+        title: 'Every step shown',
+        paras: [
+          'How it works walks through the score in six steps with a real set, lists every source, and spells out what is left out and why.',
+        ],
+        media: { kind: 'image', src: bb('method.webp'), alt: 'How a score is built, step 1: gather every set' },
+      },
+    ],
+    how: {
+      title: 'How Best Bricks works',
+      intro:
+        'A Python pipeline downloads every set’s details and parts list, works out how much you get for the price, and scores each set against similar sets. A static website shows the results, with a page for every set and theme.',
+      stats: [
+        { value: '4,600', label: 'sets scored, from 37 themes, 2010 to 2027' },
+        { value: '97.5%', label: 'of sets measured from their full parts list' },
+        { value: '95%', label: 'of price differences explained by the price check' },
+        { value: '4,600', label: 'written explanations, one for every set' },
+      ],
+      flows: [
+        {
+          title: 'The data',
+          steps: [
+            {
+              name: 'Gather every set',
+              text: 'Brickset gives each set’s pieces, minifigures, US price and builder ratings. Gear, books, polybags, promotional items and sets under 25 pieces are left out, 2,548 in all.',
+            },
+            {
+              name: 'Count the plastic',
+              text: 'Rebrickable gives every set’s full parts list. From it the pipeline works out how much plastic is in the box, minifigures included and spare parts and packaging left out, and spots sets with motors.',
+            },
+            {
+              name: 'Fair prices across years',
+              text: 'Prices are adjusted for inflation to September 2026 dollars with the US consumer price index, from the year LEGO last sold the set at that price, not from its launch.',
+            },
+          ],
+        },
+        {
+          title: 'The score',
+          steps: [
+            {
+              name: 'Compare with similar sets',
+              text: 'Each set is grouped with sets of the same theme and size: under 200, 200 to 499, 500 to 999 or 1,000+ pieces. A set is only ever ranked within its own group.',
+            },
+            {
+              name: 'Measure what you get',
+              text: 'Contents per dollar, a mix of plastic and pieces per dollar, counts for 75%; minifigures per $100 counts for 25%. Each minifigure counts as $2 of contents. Display models swap minifigures for how big the finished build is for its price.',
+            },
+            {
+              name: 'Rank, then add up',
+              text: 'Beat 90% of the group on contents per dollar and a set earns 90% of those 75 points. 75 and up is Great value, 50 is typical, and under 25 is Poor value.',
+            },
+            {
+              name: 'Quality, kept apart',
+              text: 'The Brickset builder rating becomes its own 0 to 100 quality score, steadied with 30 average ratings so a few early votes can’t dominate. It is shown beside the value score and never mixed into it.',
+            },
+          ],
+        },
+        {
+          title: 'The website',
+          steps: [
+            {
+              name: 'Static pages',
+              text: 'An Astro build writes a page for every set and theme, with a share card for each, drawn at build time. Search and Explore run in the browser from small data files.',
+            },
+            {
+              name: 'Edge hosting',
+              text: 'Cloudflare Pages serves the site. New scores are a single command: download, re-score, check, then publish.',
+            },
+          ],
+        },
+      ],
+      example: {
+        title: 'A worked example: Double-Decker Sightseeing Bus',
+        intro: 'City set 60407, 384 pieces and 5 minifigures for $29.99, ranked against 212 other City sets of 200 to 499 pieces.',
+        sums: [
+          {
+            terms: [
+              { label: 'Contents per dollar: 100th percentile × 75%', value: '75' },
+              { label: 'Minifigures per $100: 96th percentile × 25%', value: '24' },
+            ],
+            total: { label: 'Value score', value: '99' },
+          },
+          {
+            terms: [
+              { label: 'You pay', value: '$29.99' },
+              { label: 'Saved against similar sets', value: '$22.09' },
+            ],
+            total: { label: 'Similar sets usually cost', value: '$52.08' },
+          },
+        ],
+        answer:
+          '99 out of 100, Great value: the best-value City set of its size, and 42% cheaper than its contents usually cost. Its builder quality is scored apart at 79, from a 4.1 rating by 161 Brickset members.',
+      },
+      notes: [
+        {
+          title: 'Plastic, not just pieces',
+          text: 'Price per piece is easy to game: a set full of tiny pieces looks cheap. Plastic per dollar measures how much material you actually get, shown as an index where 100 is a typical set.',
+        },
+        {
+          title: 'Two methods that agree',
+          text: 'The price check is a separate model fitted on every set. Its ranking agrees closely with the value score, at a rank correlation of 0.84.',
+        },
+        {
+          title: 'Honest about its limits',
+          text: 'Prices are US list prices, so store discounts aren’t counted yet. Motorized sets are scored but flagged, since motors cost a lot and add little plastic. A resale view is planned next.',
+        },
+      ],
+    },
   },
 ];

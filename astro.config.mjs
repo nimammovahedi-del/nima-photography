@@ -13,6 +13,8 @@ export default defineConfig({
   redirects: {
     '/places': '/photography',
     '/cities': '/photography',
+    // Best Bricks was listed as "Brick Rater" while it was being built.
+    '/projects/brick-rater': '/projects/best-bricks',
     ...Object.fromEntries(cameraSlugs.map((s) => [`/about/${s}`, `/photography/cameras/${s}`])),
   },
 });
