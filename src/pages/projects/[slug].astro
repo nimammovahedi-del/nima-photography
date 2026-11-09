@@ -59,6 +59,13 @@ const toc = [
             <span class="btn ghost" aria-disabled="true">Coming soon</span>
           )
         }
+        {
+          p.more && (
+            <a class="btn alt" href={p.more.url} target="_blank" rel="noopener">
+              {p.more.label} <span aria-hidden="true">↗</span>
+            </a>
+          )
+        }
         <ul class="tags">{p.tags.map((t) => <li>{t}</li>)}</ul>
       </div>
     </header>
@@ -123,7 +130,7 @@ const toc = [
                 <dl class="sum">
                   {sum.terms.map((t, j) => (
                     <>
-                      {j > 0 && <span class="op" aria-hidden="true">+</span>}
+                      {j > 0 && <span class="op" aria-hidden="true">{t.op ?? '+'}</span>}
                       <div>
                         <dt>{t.label}</dt>
                         <dd>{t.value}</dd>
@@ -362,6 +369,18 @@ const toc = [
   }
   :global(:root[data-theme='light']) .btn:not(.ghost):hover {
     background: var(--nav);
+  }
+  /* A second, quieter link beside the main button. */
+  .btn.alt,
+  :global(:root[data-theme='light']) .btn.alt {
+    background: none;
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .btn.alt:hover,
+  :global(:root[data-theme='light']) .btn.alt:hover {
+    background: none;
+    box-shadow: inset 0 0 0 1px var(--text);
   }
   .btn.ghost {
     background: none;

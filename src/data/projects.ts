@@ -33,14 +33,14 @@ export interface HowItWorks {
 export interface Example {
   title: string;
   intro: string;
-  /** Each sum: terms added together, then its total. */
-  sums: { terms: { label: string; value: string }[]; total: { label: string; value: string } }[];
+  /** Each sum: terms joined by + (or × where a term says so), then its total. */
+  sums: { terms: { label: string; value: string; op?: '+' | '×' }[]; total: { label: string; value: string } }[];
   /** The last line, the answer the sums lead to. */
   answer: string;
 }
 
 export interface Project {
-  slug: 'ergo' | 'check-congress' | 'fed-money' | 'best-bricks';
+  slug: 'ergo' | 'check-congress' | 'fairclaim' | 'fed-money' | 'best-bricks';
   name: string;
   /** Three sentences, shown on the Projects row. */
   summary: string;
@@ -48,6 +48,8 @@ export interface Project {
   /** The live site. Absent = "Coming soon". */
   url?: string;
   urlLabel?: string;
+  /** A second link on the project's own page, beside the main button. */
+  more?: { label: string; url: string };
   /** One line under the name on the project's own page. */
   tagline: string;
   /** Small screenshots for the row; they take turns while the row is hovered. */
@@ -61,6 +63,7 @@ export interface Project {
 
 const ergo = (f: string) => `/projects/ergo/${f}`;
 const cc = (f: string) => `/projects/check-congress/${f}`;
+const fc = (f: string) => `/projects/fairclaim/${f}`;
 const fm = (f: string) => `/projects/fed-money/${f}`;
 const bb = (f: string) => `/projects/best-bricks/${f}`;
 
@@ -337,6 +340,163 @@ export const projects: Project[] = [
         {
           title: 'Nothing to sell',
           text: 'Free and nonpartisan, with no ads, no accounts, no cookies and no tracking. It runs on Cloudflare’s free plan, and the only cost is the domain.',
+        },
+      ],
+    },
+  },
+  {
+    slug: 'fairclaim',
+    name: 'Fair Claim',
+    summary:
+      'Is it worth taking someone to small claims court, and how do you do it? Fair Claim explains the five steps and gives the rules for all 50 states and DC, each with its source and the date it was checked. A cost calculator, a demand-letter writer and printable checklists help you decide and prepare.',
+    tags: ['Free', 'No sign-up', '50 states + DC'],
+    url: 'https://fairclaim.pages.dev/',
+    urlLabel: 'Open Fair Claim',
+    more: { label: 'Try the tools', url: 'https://fairclaim.pages.dev/tools/' },
+    tagline: 'Small claims court, explained, with a source for every rule.',
+    thumbs: [fc('home-sm.webp'), fc('calculator-sm.webp'), fc('letter-sm.webp')],
+    hero: { kind: 'image', src: fc('home.webp'), alt: 'The Fair Claim home page: "Small claims, explained." with a search for your state’s rules' },
+    why: {
+      title: 'Information that isn’t selling anything',
+      paras: [
+        'Small claims court can settle a money dispute without a lawyer, like a deposit a landlord kept, a refund a business won’t give or an invoice nobody paid. It can also cost more than it returns, and winning doesn’t mean being paid. Most guides either push you to sue or bury the rules in legal language.',
+        'Fair Claim is calm and neutral. It won’t talk you into suing, or out of it: the costs and the odds of being paid sit right next to the steps. It’s free, with no ads, sponsors or accounts, and it tracks nothing. It gives legal information, not legal advice.',
+      ],
+    },
+    sections: [
+      {
+        title: 'Five steps, start to finish',
+        paras: [
+          'How it works walks through a case from asking for the money in writing to filing, serving the papers, the hearing and collecting the judgment. It’s frank about what each step costs in time and money, and a “Before you decide” section covers the options besides court.',
+        ],
+        media: { kind: 'image', src: fc('steps.webp'), alt: 'How it works: five steps, from asking to getting paid' },
+      },
+      {
+        title: 'Every state’s rules, with sources',
+        paras: [
+          'Type a ZIP code, city or county, or filter the table of all 50 states and DC. Each state has its own page with the most you can claim, the filing fee, who can appeal and whether lawyers are allowed, every figure linked to the law or the court and dated. Printable checklists bring the same rules to each step.',
+        ],
+        media: { kind: 'clip', src: fc('states.mp4'), poster: fc('states-poster.webp'), alt: 'Filtering the states table for “new” and opening New York’s rules' },
+      },
+      {
+        title: 'Is it worth it?',
+        paras: [
+          'The cost calculator asks six questions, one at a time: your state, who’s suing, the amount, what you’d spend, your time and your odds. It then sets what you might get back beside what you’d spend, line by line, and warns you when a claim is over your state’s limit.',
+        ],
+        media: { kind: 'clip', src: fc('calculator.mp4'), poster: fc('calculator-poster.webp'), alt: 'Answering the cost calculator for a $3,200 California claim and seeing the result' },
+      },
+      {
+        title: 'Ask before you sue',
+        paras: [
+          'Many disputes end with a clear written request. The demand letter writer builds a calm letter in seven steps, for a deposit, a refund, an unpaid invoice or damage, and adds the state law that applies. The letter updates as you type and downloads as a PDF, prints or copies, all in your browser.',
+        ],
+        media: { kind: 'clip', src: fc('letter.mp4'), poster: fc('letter-poster.webp'), alt: 'Filling in the demand letter for a security deposit while the letter updates beside it' },
+      },
+      {
+        title: 'California, county by county',
+        paras: [
+          'California goes deeper: fee tiers by claim size, the 40 official forms by step, deadlines, and a page for each of its 58 counties with courthouses, the free small claims advisor and whether you can file online. A “last day to sue” estimator turns the type of claim and a date into a rough deadline, with the statute behind it.',
+        ],
+        media: { kind: 'clip', src: fc('deadline.mp4'), poster: fc('deadline-poster.webp'), alt: 'California’s page: a written contract broken on March 15, 2024 gives a last day to sue of about March 15, 2028' },
+      },
+      {
+        title: 'The numbers behind the rules',
+        paras: [
+          'Charts on the home and About pages show what the checked rules add up to: limits from $2,500 in Kentucky to $25,000 in Delaware and Tennessee, which states raised theirs, who can appeal, and how often winners actually collect. Each chart has its source, its date and a data table.',
+        ],
+        media: { kind: 'image', src: fc('limits.webp'), alt: 'A map of small claims limits: in 39 of 51 jurisdictions the limit is $10,000 or less' },
+      },
+    ],
+    how: {
+      title: 'How Fair Claim works',
+      intro:
+        'Every rule is researched from primary sources into cited, dated research files. A Python script turns them into the site’s data, and a static website shows them, with a page for every state, California county and checklist. The tools run entirely in your browser.',
+      stats: [
+        { value: '51', label: 'states and DC, each with its own page' },
+        { value: '706', label: 'state rules, each with a source and a date' },
+        { value: '58', label: 'California counties, each with its own page' },
+        { value: '0', label: 'ads, accounts or trackers' },
+      ],
+      flows: [
+        {
+          title: 'The research',
+          steps: [
+            {
+              name: 'Primary sources first',
+              text: 'Every limit, fee and deadline comes from the statute, the court rules or the court’s own website, saved with its link and the date it was checked.',
+            },
+            {
+              name: 'Checked again',
+              text: 'Two more rounds of checks went back over the facts: 197 values were confirmed and 161 corrected. Rules that are about to change are listed with their dates.',
+            },
+            {
+              name: 'Build the data',
+              text: 'A Python script merges the research files into the website’s data, plus a review spreadsheet with a row for every state and California county.',
+            },
+          ],
+        },
+        {
+          title: 'The tools',
+          steps: [
+            {
+              name: 'One question at a time',
+              text: 'The calculator and the letter ask one thing per screen, with your state’s rules filled in for you, and show the result updating as you answer.',
+            },
+            {
+              name: 'Nothing leaves your tab',
+              text: 'What you type is never stored or sent. The PDF letter is made in your browser, and each tool opens with a short note that this is information, not advice.',
+            },
+          ],
+        },
+        {
+          title: 'The website',
+          steps: [
+            {
+              name: 'Static pages',
+              text: 'An Astro build writes a page for every state, county, checklist and glossary term. The location search runs in your browser on Census files.',
+            },
+            {
+              name: 'Private by design',
+              text: 'Cloudflare Pages serves the site with its own fonts, and there are no analytics, cookies or third-party scripts.',
+            },
+          ],
+        },
+      ],
+      example: {
+        title: 'A worked example: a kept security deposit',
+        intro: 'A tenant in California is owed $3,200, thinks they have a 75% chance of winning and a 70% chance of collecting, and would pay $90 up front in fees.',
+        sums: [
+          {
+            terms: [
+              { label: 'You can claim', value: '$3,200' },
+              { label: 'Fees added if you win', value: '$90' },
+            ],
+            total: { label: 'Owed if you win', value: '$3,290' },
+          },
+          {
+            terms: [
+              { label: 'Owed if you win', value: '$3,290' },
+              { label: 'Chance of winning', value: '75%', op: '×' },
+              { label: 'Chance of collecting', value: '70%', op: '×' },
+            ],
+            total: { label: 'Expected back', value: '$1,727' },
+          },
+        ],
+        answer:
+          'On those numbers, cases like this bring back about $1,727 on average against $90 spent. Fair Claim calls that “expected recovery exceeds costs”, not a verdict, and a break-even line shows how low the chance of collecting could fall before it stops paying.',
+      },
+      notes: [
+        {
+          title: 'Neutral on purpose',
+          text: 'The calculator was renamed from “Is it worth it?” to “Small claims cost calculator”, and it shows what the numbers say instead of telling you what to do.',
+        },
+        {
+          title: 'Winning isn’t getting paid',
+          text: 'Courts don’t track whether winners collect. In one study of Denver’s small claims court, 55% of winners never collected anything, so collecting gets its own step.',
+        },
+        {
+          title: 'Kept up to date',
+          text: 'Each rule shows the date it was checked, and dated changes like Wisconsin’s higher limit in 2027 are on a calendar. California has full county detail; the other states have the statewide rules.',
         },
       ],
     },
