@@ -241,6 +241,10 @@ const tabs = [
     text-decoration: none;
     transition: color 160ms ease;
   }
+  /* The pale grey above vanishes on the light page: a dark grey with the same role there. */
+  :global(:root[data-theme='light']) .back:not(:hover, :focus-visible) {
+    color: #55554f;
+  }
   .back:hover,
   .back:focus-visible {
     color: var(--accent);

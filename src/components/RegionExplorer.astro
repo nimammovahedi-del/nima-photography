@@ -174,7 +174,8 @@ const config = {
 
   const insetFor = (el: Element) => {
     const r = el.getBoundingClientRect();
-    return `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px)`;
+    // Rounded like the panels themselves, so the frame opens out of (and back into) the same shape.
+    return `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round 12px)`;
   };
 
   async function open(panel: HTMLElement, fromHistory = false, fromStrip?: Arrival) {
@@ -553,6 +554,7 @@ const config = {
     padding: 0;
     overflow: hidden;
     border: 1px solid var(--line);
+    border-radius: 12px;
     background: var(--sea);
     color: var(--text);
     font: inherit;
@@ -610,13 +612,13 @@ const config = {
   .cta {
     justify-self: start;
     margin-top: 12px;
-    padding: 7px 14px;
+    padding: 6px 14px;
     border: 1px solid var(--accent-deep);
+    border-radius: 999px;
     background: var(--label-bg);
     color: var(--accent);
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.02em;
     transition:
       background-color 150ms ease,
       color 150ms ease,
