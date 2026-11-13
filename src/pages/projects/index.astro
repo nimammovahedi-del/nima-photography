@@ -12,10 +12,14 @@ import { projects } from '../../data/projects';
     <p class="lede">Free tools I built for questions I kept asking.</p>
   </header>
 
+  <nav class="jump" aria-label="Jump to a project" data-jump>
+    {projects.map((p) => <a href={`#${p.slug}`}>{p.name}</a>)}
+  </nav>
+
   <ol class="list">
     {
       projects.map((p) => (
-        <li class="row" data-row>
+        <li class="row" id={p.slug} data-row>
           <a class="cover" href={`/projects/${p.slug}`} aria-label={`${p.name}: see how it works`} />
           <AppLogo slug={p.slug} size={48} />
           <div class="text">
@@ -51,6 +55,29 @@ import { projects } from '../../data/projects';
 </BaseLayout>
 
 <script>
+  // Phones: the jump chips mark the project in view. The chip row scrolls sideways to keep it shown.
+  const jump = document.querySelector<HTMLElement>('[data-jump]');
+  if (jump) {
+    const chips = new Map([...jump.querySelectorAll<HTMLAnchorElement>('a')].map((a) => [a.hash.slice(1), a]));
+    const mark = (id: string) => {
+      chips.forEach((a, key) => (key === id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+      const on = chips.get(id);
+      if (on && getComputedStyle(jump).display !== 'none') {
+        jump.scrollLeft = on.offsetLeft - (jump.clientWidth - on.offsetWidth) / 2;
+      }
+    };
+    const seen = new Set<string>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => (e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id)));
+        const first = [...chips.keys()].find((id) => seen.has(id));
+        if (first) mark(first);
+      },
+      { rootMargin: '-130px 0px -55% 0px' },
+    );
+    document.querySelectorAll<HTMLElement>('[data-row]').forEach((row) => io.observe(row));
+  }
+
   // While a row is hovered, its screenshot steps through the app's screens. Back to the first on leave.
   document.querySelectorAll<HTMLElement>('[data-row]').forEach((row) => {
     const imgs = [...row.querySelectorAll<HTMLImageElement>('.thumb img')];
@@ -230,7 +257,67 @@ import { projects } from '../../data/projects';
     border: 1px dashed var(--line);
     border-radius: 8px;
   }
+  .jump {
+    display: none;
+  }
   @media (max-width: 760px) {
+    /* Phones: a row of project names under the top bar (the desktop page has none; the list is short
+       there), and the one real action per project as a full-width button. */
+    .jump {
+      position: sticky;
+      top: 61px;
+      z-index: 30;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin: 0 calc(var(--gutter) * -1);
+      padding: 10px calc(var(--gutter) * 2);
+      scroll-padding-inline: calc(var(--gutter) * 2);
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .jump::-webkit-scrollbar {
+      display: none;
+    }
+    .jump a {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      height: 36px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 14px;
+      color: var(--project-body);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .jump a[aria-current] {
+      background: var(--text);
+      border-color: transparent;
+      color: var(--bg);
+    }
+    .row {
+      scroll-margin-top: 118px;
+    }
+    .visit {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      min-height: 48px;
+      margin-top: 6px;
+      border-radius: 12px;
+      background: var(--text);
+      color: var(--bg);
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+    }
     .row {
       grid-template-columns: auto minmax(0, 1fr);
       gap: 14px 16px;
