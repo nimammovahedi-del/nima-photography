@@ -373,6 +373,13 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
     width: 100%;
     height: 150px;
   }
+  /* The resting brick is drawn low to leave room for the hover stack; lift and enlarge it so it
+     sits on the same centre line as the globe and the book. */
+  .lego-card svg {
+    overflow: visible;
+    transform: translateY(-22px) scale(1.18);
+    transform-origin: 50% 60%;
+  }
   .card h2 {
     margin: 12px 0 2px;
     font-size: 17px;
@@ -604,6 +611,9 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
       grid-row: span 3;
       width: 110px;
       height: 96px;
+    }
+    .lego-card svg {
+      transform: translateY(-14px) scale(1.12);
     }
     .card h2 {
       align-self: end;

@@ -91,7 +91,9 @@ const cameras = await getCameras();
     display: grid;
     gap: 4px;
     padding: 0 0 18px;
+    overflow: hidden;
     border: 1px solid var(--line);
+    border-radius: 12px;
     background: var(--bg-raised);
     text-decoration: none;
     transition: border-color 200ms ease;
@@ -129,9 +131,8 @@ const cameras = await getCameras();
   .cta {
     margin-top: 8px;
     color: var(--accent);
-    font-size: 12px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.02em;
   }
   .arrow {
     display: inline-block;
