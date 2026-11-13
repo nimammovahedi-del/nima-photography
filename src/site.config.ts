@@ -15,6 +15,14 @@ export const home = {
   tagline: 'Researcher, builder, photographer',
   roles: ['researcher', 'builder', 'photographer', 'backpacker', 'designer', 'graduate student'],
   location: 'Currently in Irvine, CA.',
+  // The three cards under the hello. {n} is filled in with the live count (papers, projects,
+  // countries, cities), so the captions stay right as things are added. `newest` is the slug of the
+  // paper or project shown on the card's "New" line; leave it empty to hide that line.
+  cards: {
+    photography: '{countries} countries and {cities} cities, from Norway&rsquo;s fjords to Luxor.',
+    research: { caption: '{n} papers on courts, power-sharing, AI and investment.', newest: 'judicial-arms-race' },
+    projects: { caption: '{n} free tools, from LSAT practice to small claims court.', newest: 'fairclaim' },
+  },
   links: [
     { icon: 'email', label: 'Email', href: 'mailto:movahedn@uci.edu' },
     { icon: 'github', label: 'GitHub', href: 'https://github.com/nimammovahedi-del' },

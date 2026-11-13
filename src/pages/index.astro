@@ -6,7 +6,24 @@ import { merge } from 'topojson-client';
 import { filter, filterWeight, presimplify, quantile, simplify, sphericalRingArea, sphericalTriangleArea } from 'topojson-simplify';
 import world from 'world-atlas/countries-110m.json';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { home, site } from '../site.config';
+import { home, places, site } from '../site.config';
+import { papers } from '../data/research/papers';
+import { projects } from '../data/projects';
+
+// ── Card captions: counts come from the data, so they stay current ──────────
+const WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
+const word = (n: number) => WORDS[n] ?? String(n);
+const captions = {
+  photography: home.cards.photography
+    .replace('{countries}', String(places.length))
+    .replace('{cities}', String(places.reduce((t, p) => t + p.cities.length, 0))),
+  research: home.cards.research.caption.replace('{n}', word(papers.length)),
+  projects: home.cards.projects.caption.replace('{n}', word(projects.length)),
+};
+const newest = {
+  research: papers.find((p) => p.slug === home.cards.research.newest)?.title,
+  projects: projects.find((p) => p.slug === home.cards.projects.newest)?.name,
+};
 
 // ── Globe: every country's land, with North America filled in cream ──────────
 // Simplified for a 76px globe, and tiny islands dropped, so the page stays light.
@@ -127,7 +144,7 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
           <circle class="ln accent" cx={GLOBE.cx} cy={GLOBE.cy} r={GLOBE.r} />
         </svg>
         <h2>Photography</h2>
-        <p>The globe, the film, the places.</p>
+        <p set:html={captions.photography} />
       </a>
 
       <a class="card book-card" href="/research">
@@ -142,7 +159,8 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
           <path class="ln accent" d="M60 30v56" />
         </svg>
         <h2>Research</h2>
-        <p>Papers, drafts, data.</p>
+        <p>{captions.research}</p>
+        {newest.research && <p class="new"><span>New</span>{newest.research}</p>}
       </a>
 
       <a class="card lego-card" href="/projects">
@@ -150,7 +168,8 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
           {bricks.map((b, k) => <g class:list={['brick', `b${k}`]} set:html={b} />)}
         </svg>
         <h2>Projects</h2>
-        <p>Logic app, Congress tracker, LEGO rater.</p>
+        <p>{captions.projects}</p>
+        {newest.projects && <p class="new"><span>New</span>{newest.projects}</p>}
       </a>
     </nav>
   </div>
@@ -378,6 +397,22 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
     color: var(--muted);
     font-size: 14px;
   }
+  /* "New" line: the latest paper or project */
+  .card .new {
+    margin-top: 10px;
+    color: var(--text);
+    font-size: 13px;
+  }
+  .card .new span {
+    margin-right: 8px;
+    padding: 1px 7px;
+    border: 1px solid currentColor;
+    border-radius: 99px;
+    color: var(--accent);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
 
   /* Line-drawing look */
   .ln {
@@ -550,6 +585,10 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
     .card p {
       font-size: 12px;
     }
+    .card .new {
+      grid-column: 2;
+      margin-top: 6px;
+    }
     .cards {
       grid-template-columns: 1fr;
     }
@@ -562,7 +601,7 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
       padding: 10px 14px;
     }
     .card svg {
-      grid-row: span 2;
+      grid-row: span 3;
       width: 110px;
       height: 96px;
     }
