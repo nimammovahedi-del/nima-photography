@@ -9,6 +9,7 @@ import Stepper from '../../components/games/Stepper.astro';
 import UmbaraMap from '../../components/games/UmbaraMap.astro';
 import AssetBrowser, { type Asset } from '../../components/games/AssetBrowser.astro';
 import m from '../../data/umbara-level3.json';
+import bot from '../../data/umbara-l3-bot.json';
 import { games } from '../../data/games';
 
 const game = games.find((g) => g.slug === 'umbara')!;
@@ -81,6 +82,42 @@ const maxRow = Math.max(...rows.map((r) => r.total));
 const soldiersAll = battles.reduce((x, b) => x + b.soldiers, 0) + fin.soldiers;
 const tanksAll = battles.reduce((x, b) => x + b.crawlers + b.hovers, 0) + fin.tanks.length;
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+
+// Per battle: mines and ambushes that fall in its stretch of road.
+const inBattle = (sv: number) => (enc.findIndex((e) => sv >= e.from && sv <= e.to + 30) + 1 || enc.length) - 1;
+const minesPer = enc.map((_, i) => (m.mines as number[][]).filter((x) => inBattle(x[2]) === i).length);
+const ambushPer = enc.map((_, i) => (m.ambushes as any[]).filter((x) => inBattle(x.s) === i).length);
+const kinds = (e: any, k: string) => e.defences.filter((d: any) => d.kind === k).length;
+const newThing = [
+  'The jammer: no scan pulse and no bombers until it falls',
+  'Beacons that each draw an attack, and the level’s first hover tank',
+  'Two hover tanks, and fighters bombing the road',
+  'Everything left, from three directions',
+];
+
+// ---- The test bot's final Level 3 run (a point every 10 s) ----
+const BW = 1000, BH = 300, bx0 = 44, bx1 = BW - 44, by0 = 24, by1 = BH - 40;
+const tMax = Math.ceil(bot.total / 60) * 60;
+const aMax = Math.ceil(Math.max(...bot.trace.map((p) => p.alive)) / 10) * 10;
+const bx = (t: number) => bx0 + (t / tMax) * (bx1 - bx0);
+const byA = (v: number) => by1 - (v / aMax) * (by1 - by0);
+const byH = (v: number) => by1 - (v / 100) * (by1 - by0);
+const tr = [{ t: 0, alive: 0, health: 100 }, ...bot.trace];
+const aliveArea = `M${bx(0)} ${by1} ` + tr.map((p) => `L${bx(p.t).toFixed(1)} ${byA(p.alive).toFixed(1)}`).join(' ') + ` L${bx(tr[tr.length - 1].t)} ${by1} Z`;
+const healthLine = tr.map((p, i) => `${i ? 'L' : 'M'}${bx(p.t).toFixed(1)} ${byH(p.health).toFixed(1)}`).join(' ');
+const bands = bot.lines.map((l: any, i: number) => ({ x0: bx(l.start), x1: bx(l.secured), n: i + 1, taken: bx(l.taken) }));
+const deathsAt = bot.events.filter((e: any) => e.kind === 'death').map((e: any) => bx(e.t));
+const st = bot.stats as any;
+const scans = bot.lines.reduce((x: number, l: any) => x + l.scans, 0);
+const reveals = bot.lines.reduce((x: number, l: any) => x + l.scan_reveals, 0);
+const dets = bot.lines.reduce((x: number, l: any) => x + l.dets, 0);
+const strikes = bot.lines.reduce((x: number, l: any) => x + l.strikes, 0);
+const deathsAll = bot.lines.reduce((x: number, l: any) => x + l.deaths, 0);
+
+// ---- Every Level 3 run on the day it was reworked ----
+const hist = (bot.history as any[]).filter((h) => h.run !== 'baseline' && h.run !== 'appcheck');
+const hMax = Math.max(...hist.map((h) => h.total));
+const SEG = ['#8d7a99', '#c98f7f', '#b0a27c'];
 const b2 = battles[1];
 const pct = (k: string) => Math.round((b2.e.mix[k] || 0) * 100);
 
@@ -175,11 +212,12 @@ const assets: Asset[] = [
 const toc = [
   { id: 'overview', title: 'Overview' },
   { id: 'trailer', title: 'Trailer' },
-  { id: 'level-3', title: 'Level 3 up close' },
+  { id: 'the-game', title: 'The game' },
+  { id: 'level-3', title: 'Level 3, compared' },
   { id: 'assets', title: 'Assets' },
   { id: 'look', title: 'Look and style' },
   { id: 'models', title: 'Blender models' },
-  { id: 'testing', title: 'Trailer and testing' },
+  { id: 'testing', title: 'Testing with a bot' },
 ];
 
 const pairs = [
@@ -240,85 +278,93 @@ const tanks = [
           <span class="dots"><i></i><i></i><i></i></span>
           <span class="addr">Umbara · trailer</span>
         </div>
-        <video controls preload="none" playsinline poster={f('trailer-poster')} width="2560" height="1440">
-          <source src={TRAILER} type="video/mp4" />
-        </video>
+        <div class="tv" data-tv>
+          <video preload="none" playsinline poster={f('trailer-poster')} width="2560" height="1440">
+            <source src={TRAILER} type="video/mp4" />
+          </video>
+          <button type="button" class="tv-play" aria-label="Play the Umbara trailer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+          </button>
+        </div>
       </figure>
-      <p class="caption">The real game running a fight I scripted and timed beat by beat, recorded at 2560 × 1440 and 60 fps. It starts as the gunship comes down and ends on the title card. Sound on.</p>
+      <p class="caption">The real game running a scripted fight, recorded at 2560 × 1440 and 60 fps. Sound on.</p>
+    </section>
+
+    <section class="block" id="the-game">
+      <p class="kicker">The game</p>
+      <h2>One road to the capital, and an enemy you can't see</h2>
+      <p>You fight down a single road to the Umbaran capital, across five levels. Each level is three battles, each with one objective, and then a final fight for everything they have left. Between you and the gate:</p>
+      <ul class="wide obstacles">
+        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><circle r="2.6" fill="#b98cff" /><path d="M-4.5-4.5a6.4 6.4 0 0 0 0 9M4.5-4.5a6.4 6.4 0 0 1 0 9M-7.5-7.5a10.6 10.6 0 0 0 0 15M7.5-7.5a10.6 10.6 0 0 1 0 15" stroke="#b98cff" stroke-width="1.6" fill="none" /></svg><b>The dark</b>The Umbarans see in it and you don't. A scan pulse shows them, and the mines, for a few seconds.</li>
+        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0-8.5L8 6.5H-8Z" fill="#2a0a22" stroke="#ff6fd0" stroke-width="1.8" stroke-linejoin="round" /><circle cy="1.8" r="2" fill="#ff6fd0" /></svg><b>Dug-in positions</b>Gun posts pin you down, mortars shell the road, and snipers in the canopy fire one heavy shot after a red beam.</li>
+        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><circle cx="-4" cy="-3" r="3" fill="#ff8a9a" /><circle cx="4" cy="-3" r="3" fill="#ff8a9a" /><circle cy="4" r="3" fill="#ff8a9a" /></svg><b>Ambushes</b>Parties break cover from the trees when the squad passes, and mines wait on the road.</li>
+        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><rect x="-8.5" y="-5.5" width="17" height="11" rx="4.5" fill="#2a080e" stroke="#ff3348" stroke-width="1.8" /><circle r="3.2" fill="#ff3348" /><path d="M-1 0H-10" stroke="#ff3348" stroke-width="2.2" /></svg><b>Armor</b>Crawlers crack under massed fire, hover tanks shrug rifles off from the front, and the heavy walker needs a tracker strike.</li>
+        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><circle r="6.5" fill="none" stroke="#7ec8ff" stroke-width="1.8" /><path d="M0-10v6M0 4v6M-10 0h6M4 0h6" stroke="#7ec8ff" stroke-width="1.8" /></svg><b>Help you have to earn</b>Your squad fights beside you, and Y-wing bombers come when you call them, but only when the general allows it.</li>
+      </ul>
     </section>
 
     <section class="block" id="level-3">
-      <p class="kicker">Level 3 up close · The Landing Site</p>
+      <p class="kicker">Level 3 · The Landing Site</p>
       <h2>A jammer blinds your helmet: no scan, no bombers, until you find it</h2>
-      <p>Each level is one road with three battles and a last fight. In Level 3 something is jamming the squad, so you find the jammer in the trees, mark a clearing with beacons, then silence the anti-air battery so a dropship can set an AT-TE down. This is the level's own map, drawn from the game's level file.</p>
+      <p>Level 3 takes your best tools away. You find the jammer in the trees, mark a clearing with beacons, then silence the anti-air battery so a dropship can set an AT-TE down. This is the level's own map, drawn from its level file: pick a battle to see only its part of the road, and hover or tap any symbol for what it is.</p>
       <dl class="wide strip">
         <div><dt>{Math.round(m.length)} m</dt><dd>of road</dd></div>
         <div><dt>3 + 1</dt><dd>battles and a final fight</dd></div>
         <div><dt>{soldiersAll}</dt><dd>Umbarans</dd></div>
         <div><dt>{tanksAll}</dt><dd>tanks</dd></div>
         <div><dt>{(m.mines as unknown[]).length}</dt><dd>mines, seen only by scanning</dd></div>
-        <div><dt>{fmt(level.bot.total)}</dt><dd>test bot's run, {level.bot.deaths} death</dd></div>
+        <div><dt>{(m.ambushes as unknown[]).length}</dt><dd>ambush parties</dd></div>
       </dl>
       <div class="wide"><UmbaraMap lines={level.lines.map((l) => l[0])} /></div>
 
-      <h3 class="sub-h">How a battle runs</h3>
-      <p>No fight is placed by hand, soldier by soldier. Each battle is a few numbers in the level file, and a director runs it from them. Here is Battle 2, the clearing, on Medium:</p>
-      <ol class="wide director">
-        <li><b>Build-up</b><span class="big">{b2.e.ramp[0]} → {b2.e.active}</span><p>It starts with {b2.e.ramp[0]} Umbarans alive and builds to a cap of {b2.e.active} at once over {b2.e.ramp[1]} seconds, so the fight opens lighter.</p></li>
-        <li><b>Waves</b><span class="big">{b2.e.sent}</span><p>It keeps feeding soldiers in until {b2.e.sent} have been sent: {pct('hider')}% hide in cover, {pct('prone')}% go prone, {pct('rusher')}% rush you and {pct('rocketeer')}% carry rockets.</p></li>
-        <li><b>Last stand</b><span class="big">+{b2.e.lastStand}</span><p>{b2.e.lastStand} more are dug in at the objective, so taking it is the peak of the fight.</p></li>
-        <li><b>Counterattack</b><span class="big">+{b2.e.surge}</span><p>When it falls, {b2.e.surge} come back in three waves about 9 s apart: down the road, then the left flank, then the right. Reserve tanks drive in during the battle.</p></li>
-      </ol>
-      <p class="after">The same numbers make the levels harder: on Medium the soldiers sent, the last stand and the counterattack are 1.5 times the base, and the cap on how many are alive at once is 1.15 times.</p>
-
-      <ol class="wide battles">
-        {
-          battles.map((b, i) => (
-            <li>
-              <img src={f(level.shots[i][0])} alt={level.shots[i][1]} width="1600" height="900" loading="lazy" decoding="async" />
-              <p class="b-kick">Battle {b.n} · {b.e.from}–{Math.round(b.e.objective.s)} m</p>
-              <h4>{level.lines[i][0]}</h4>
-              <p>{level.lines[i][1]}</p>
-              <dl>
-                <div><dt>Umbarans</dt><dd>{b.soldiers}, up to {b.e.active} at once</dd></div>
-                <div><dt>Armor</dt><dd>{[b.crawlers && `${b.crawlers} crawler${b.crawlers > 1 ? 's' : ''}`, b.hovers && `${b.hovers} hover tank${b.hovers > 1 ? 's' : ''}`].filter(Boolean).join(', ')}</dd></div>
-                <div><dt>Dug in</dt><dd>{b.guns} gun posts, mortars and snipers</dd></div>
-              </dl>
-            </li>
-          ))
-        }
-      </ol>
-
-      <div class="wide charts">
-        <div class="chart">
-          <h3>Who you fight</h3>
-          <p class="sub">Umbarans per battle, by kind.</p>
-          <div class="mix">
-            {rows.map((r) => (
-              <>
-                <span class="lb">{r.label}</span>
-                <span class="mbar" style={`width:${(r.total / maxRow) * 100}%`}>
-                  {r.segs.filter((s) => s[0] > 0).map((s) => <i style={`width:${(s[0] / r.total) * 100}%;background:${s[2]}`} title={`${s[1]}: ${s[0]}`} />)}
-                </span>
-                <span class="v">{r.total}</span>
-              </>
-            ))}
-          </div>
-          <p class="keys">{[...MIX.map(([, n, c]) => [n, c]), ...EXTRA].map(([n, c]) => <span><i style={`background:${c}`} />{n}</span>)}</p>
-        </div>
-        <div class="chart">
-          <h3>The test bot's run</h3>
-          <p class="sub">An average-player bot on Medium: {fmt(level.bot.total)}, {level.bot.deaths} death. A second run took 13:11, with two deaths at the beacons.</p>
-          <div class="tl">
-            {level.bot.lines.map(([t, d], i) => (
-              <span style={`width:${(t / level.bot.total) * 100}%;background:${['#5a2a3a', '#8a2a3e', '#c4303f'][i]}`}>
-                B{i + 1} · {fmt(t)}{d > 0 ? ' · ✕' : ''}
-              </span>
-            ))}
-          </div>
-          <p class="keys"><span>✕ = a death</span><span>Battle 3 includes the final fight</span></p>
-        </div>
+      <h3 class="sub-h">The four stages, side by side</h3>
+      <p>No fight is placed by hand. Each battle is a handful of numbers in the level file, and a director runs it from them: it starts light and builds up to a cap on how many are alive at once, keeps feeding soldiers in until its budget is spent, digs more in at the objective, and sends a counterattack in three waves once it falls (down the road, then each flank). These are Level 3's numbers on Medium.</p>
+      <div class="wide cmp-wrap">
+        <table class="cmp">
+          <thead>
+            <tr>
+              <th scope="col"><span class="sr">Stage</span></th>
+              {battles.map((b, i) => (
+                <th scope="col">
+                  <img src={f(level.shots[i][0])} alt={level.shots[i][1]} width="1600" height="900" loading="lazy" decoding="async" />
+                  <span class="c-kick">Battle {b.n}</span>
+                  {level.lines[i][0]}
+                </th>
+              ))}
+              <th scope="col" class="fin">
+                <img src={f('l3')} alt="The road through the forest in Level 3" width="1600" height="900" loading="lazy" decoding="async" />
+                <span class="c-kick">Final fight</span>
+                Hold the road for the drop
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">New here</th>{newThing.map((t) => <td>{t}</td>)}</tr>
+            <tr><th scope="row">Road</th>{battles.map((b) => <td>{b.e.from}–{Math.round(b.e.objective.s)} m</td>)}<td>{Math.round(fin.from)} m on</td></tr>
+            <tr><th scope="row">Build-up</th>{battles.map((b) => <td><b>{b.e.ramp[0]} → {b.e.active}</b> alive at once, over {b.e.ramp[1]} s</td>)}<td>{fin.waves} waves, {fin.gap} s apart</td></tr>
+            <tr><th scope="row">Sent in waves</th>{battles.map((b) => <td><b>{b.e.sent}</b></td>)}<td><b>{fin.soldiers}</b></td></tr>
+            <tr>
+              <th scope="row">Who</th>
+              {rows.map((r) => (
+                <td>
+                  <span class="mbar" style={`width:${(r.total / maxRow) * 100}%`}>
+                    {r.segs.filter((sg) => sg[0] > 0).map((sg) => <i style={`width:${(sg[0] / r.total) * 100}%;background:${sg[2]}`} title={`${sg[1]}: ${sg[0]}`} />)}
+                  </span>
+                  <span class="mtot">{r.total} in all</span>
+                </td>
+              ))}
+            </tr>
+            <tr><th scope="row">Dug in at the objective</th>{battles.map((b) => <td>+{b.e.lastStand}</td>)}<td>–</td></tr>
+            <tr><th scope="row">Counterattack</th>{battles.map((b, i) => <td>{b.e.surge ? `+${b.e.surge}, in 3 waves` : i === 2 ? 'none: the final fight follows' : '–'}</td>)}<td>–</td></tr>
+            <tr><th scope="row">Armor</th>{battles.map((b) => <td>{[b.crawlers && `${b.crawlers} crawler${b.crawlers > 1 ? 's' : ''}`, b.hovers && `${b.hovers} hover tank${b.hovers > 1 ? 's' : ''}`].filter(Boolean).join(', ')}</td>)}<td>1 hover tank, 1 crawler</td></tr>
+            <tr><th scope="row">Positions</th>{enc.map((e) => <td>{[kinds(e, 'gun') && `${kinds(e, 'gun')} guns`, kinds(e, 'mortar') && `${kinds(e, 'mortar')} mortar${kinds(e, 'mortar') > 1 ? 's' : ''}`, kinds(e, 'sniper') && `${kinds(e, 'sniper')} snipers`, kinds(e, 'barrier') && 'a barricade'].filter(Boolean).join(', ')}</td>)}<td>–</td></tr>
+            <tr><th scope="row">Mines and ambushes</th>{enc.map((_, i) => <td>{minesPer[i]} mines, {ambushPer[i]} ambush{ambushPer[i] === 1 ? '' : 'es'}</td>)}<td>–</td></tr>
+            <tr><th scope="row">From above</th>{enc.map((e) => <td>{[e.shelling ? `shells every ${e.shelling} s` : '', e.airstrike ? `fighters every ${e.airstrike} s` : ''].filter(Boolean).join(', ') || 'quiet'}</td>)}<td>–</td></tr>
+          </tbody>
+        </table>
       </div>
+      <p class="keys">{[...MIX.map(([, n, c]) => [n, c]), ...EXTRA].map(([n, c]) => <span><i style={`background:${c}`} />{n}</span>)}</p>
+      <p class="after">The same numbers set the difficulty: on Medium the soldiers sent, the last stand and the counterattack are 1.5 times the level file's base, and the cap on how many are alive at once is 1.15 times.</p>
     </section>
 
     <section class="block" id="assets">
@@ -428,60 +474,80 @@ const tanks = [
     </section>
 
     <section class="block" id="testing">
-      <p class="kicker">03 · Trailer and testing</p>
-      <h2>I directed the trailer inside the game, and let a bot play every level</h2>
-      <p>The camera path in the trailer steers clear of every trunk and wreck, and enemies are moved to spots the lens can see. Here is how the full 68-second cut is laid out.</p>
-      <div class="wide chart beats-chart">
-        <h3>Trailer beats</h3>
-        <p class="sub">Seconds into the trailer. The fight starts when the opening ride touches down.</p>
-        <div class="beats">
-          <div class="lane"><span class="ln">Picture</span>
-            <div class="track-row">
-              <span class="seg s1" style="left:0;width:30.9%">Opening ride</span>
-              <span class="seg s2" style="left:30.9%;width:19.8%">Fight in the trees</span>
-              <span class="seg s3" style="left:50.7%;width:10.3%">Crawler</span>
-              <span class="seg s4" style="left:61%;width:14.4%">Crash</span>
-              <span class="seg s5" style="left:75.4%;width:8%">Dust</span>
-              <span class="seg s6" style="left:83.4%;width:16.6%">Title card</span>
-            </div>
-          </div>
-          <div class="lane"><span class="ln">Camera</span>
-            <div class="track-row marks">
-              <span class="mk" style="left:30.9%">run</span>
-              <span class="mk" style="left:57.4%">rocket</span>
-              <span class="mk" style="left:67%">look up</span>
-              <span class="mk" style="left:74.3%">impact</span>
-            </div>
-          </div>
-          <div class="lane"><span class="ln">Sound</span>
-            <div class="track-row">
-              <span class="seg s7" style="left:0;width:79.3%">Battle and music</span>
-              <span class="seg s6" style="left:79.3%;width:20.7%">Music only</span>
-            </div>
-          </div>
-          <div class="lane axis-lane"><span class="ln"></span>
-            <div class="axis">{[0, 10, 20, 30, 40, 50, 60].map((s) => <span style={`left:${(s / 68) * 100}%`}>{s}</span>)}<span style="left:100%">68 s</span></div>
-          </div>
+      <p class="kicker">03 · Testing with a bot</p>
+      <h2>A bot played every level, and its numbers decided what changed</h2>
+      <p>The test bot plays whole levels through the real controls: it moves between cover, aims with human-like error and reaction time, fires in bursts, scans, throws detonators and calls in strikes. When it played too well I gave it an "average player" setting. Every 10 seconds it logs how many Umbarans are alive, its health, damage taken, kills, where it is on the road and the frame rate, and it photographs every key moment.</p>
+
+      <div class="wide chart run">
+        <h3>Level 3, the final run</h3>
+        <p class="sub">Average-player bot on Medium. Shaded: Umbarans alive. Line: the bot's health. Bands mark each battle.</p>
+        <div class="pwrap">
+          <svg class="runchart" viewBox={`0 0 ${BW} ${BH}`} role="img" aria-label={`Level 3 bot run: ${fmt(bot.total)}, up to ${aMax} Umbarans alive at once, one death in battle 3`}>
+            {bands.map((bd) => (
+              <g>
+                <rect x={bd.x0} y={by0} width={bd.x1 - bd.x0} height={by1 - by0} class="band" />
+                <text x={bd.x0 + 6} y={by0 + 14} class="bl">Battle {bd.n}</text>
+                <path d={`M${bd.taken} ${by0}V${by1}`} class="taken" />
+              </g>
+            ))}
+            {[0, aMax / 2, aMax].map((v) => <g><path d={`M${bx0} ${byA(v)}H${bx1}`} class="grid" /><text x={bx0 - 8} y={byA(v) + 4} class="ax" text-anchor="end">{v}</text></g>)}
+            {[0, 50, 100].map((v) => <text x={bx1 + 8} y={byH(v) + 4} class="ax hp">{v}</text>)}
+            {Array.from({ length: tMax / 60 + 1 }, (_, i) => i * 60).map((t) => <text x={bx(t)} y={by1 + 18} class="ax" text-anchor="middle">{t / 60} min</text>)}
+            <path d={aliveArea} class="alive" />
+            <path d={healthLine} class="health" />
+            {deathsAt.map((x) => <g><path d={`M${x} ${by0}V${by1}`} class="death" /><text x={x} y={by0 - 6} class="dl" text-anchor="middle">✕ death</text></g>)}
+            <text x={bx0 - 8} y={by0 - 8} class="ax" text-anchor="end">alive</text>
+            <text x={bx1 + 8} y={by0 - 8} class="ax hp">health</text>
+          </svg>
         </div>
-        <div class="thumbs">
-          {
-            [
-              ['t-fight', '0:31 fight', 'The fight among the trees'],
-              ['hero-crawler-blast', '0:39 crawler', 'The crawler explodes on the road'],
-              ['t-impact', '0:50 impact', 'The crash fireball beyond the forest'],
-              ['t-dust-3', '0:54 dust', 'The dust wall rolls over the camera'],
-            ].map(([n, cap, alt]) => (
-              <figure>
-                <img src={f(n)} alt={alt} loading="lazy" decoding="async" />
-                <figcaption>{cap}</figcaption>
-              </figure>
-            ))
-          }
+        <p class="keys"><span><i style="background:#ff3348;opacity:.55" />Umbarans alive</span><span><i style="background:var(--sage)" />Bot's health</span><span><i class="dash" />Objective taken</span></p>
+      </div>
+
+      <dl class="stats six">
+        <div><dt>{fmt(bot.total)}</dt><dd>to finish, {deathsAll} death</dd></div>
+        <div><dt>{Math.round((st.hits / st.shots) * 100)}%</dt><dd>of {st.shots} shots hit</dd></div>
+        <div><dt>{st.kills} + {st.squad_kills}</dt><dd>Umbarans down: the bot, then its squad</dd></div>
+        <div><dt>{reveals}</dt><dd>Umbarans revealed by {scans} scans</dd></div>
+        <div><dt>{dets} · {strikes}</dt><dd>detonators thrown · bomber strikes</dd></div>
+        <div><dt>{st.revived}/{st.wounded}</dt><dd>wounded troopers revived ({st.lost} lost)</dd></div>
+      </dl>
+
+      <div class="wide cmp-wrap">
+        <table class="cmp lines">
+          <thead><tr><th scope="col">Battle</th><th scope="col">Time</th><th scope="col">To objective</th><th scope="col">Counter&shy;attack</th><th scope="col">Deaths</th><th scope="col">Damage taken</th><th scope="col">Peak alive</th><th scope="col">Scans (revealed)</th><th scope="col">Frame rate</th></tr></thead>
+          <tbody>
+            {bot.lines.map((l: any, i: number) => (
+              <tr>
+                <th scope="row">{i + 1}. {level.lines[i][0]}</th>
+                <td>{fmt(l.time)}</td><td>{fmt(l.to_objective)}</td><td>{Math.round(l.counterattack)} s</td><td>{l.deaths}</td><td>{l.damage}</td><td>{l.peak_alive}</td><td>{l.scans} ({l.scan_reveals})</td><td>{Math.round(l.fps)} fps</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="caption">Battle 1's scans revealed little because the jammer blocks them until it falls; battle 3's time includes the final fight.</p>
+
+      <h3 class="sub-h">{hist.length} runs in one day</h3>
+      <p>The bot's runs are how the problems showed up. When I replaced the clearing's capture ring with three beacons, the bot kept stalling at them: one beacon stood 12 m into the trees, the bot wedged itself between trunks beside another for half an hour, and every death set all three beacons back to unlit. Each fix was checked with another run until it finished cleanly.</p>
+      <div class="wide chart">
+        <h3>Every Level 3 run on Medium, in order</h3>
+        <p class="sub">Minutes per battle. A cross marks a run that never finished.</p>
+        <p class="legend">{level.lines.map((l, i) => <span><i style={`background:${SEG[i]}`} />Battle {i + 1}</span>)}</p>
+        <div class="hist">
+          {hist.map((h, k) => (
+            <>
+              <span class="lb">Run {k + 1}</span>
+              <span class="hbar" style={`width:${(h.total / hMax) * 100}%`}>
+                {h.lines.map(([, t]: [string, number], i: number) => <i style={`flex:${t};background:${SEG[i]}`} />)}
+              </span>
+              <span class="v">{fmt(h.total)}{h.secured < 3 ? ' ✕' : ''} · {h.lines.reduce((x: number, l: any) => x + l[2], 0)} deaths</span>
+            </>
+          ))}
         </div>
       </div>
 
-      <h3 class="sub-h">The test bot</h3>
-      <p>The bot plays whole levels through the real controls and logs time, deaths and frame rate. When it played too well, I gave it an "average player" setting. Its runs showed me which fights stalled or became walls, and the reworks below came from them.</p>
+      <h3 class="sub-h">Across the game</h3>
+      <p>The same loop ran on every level: the bot found where a fight stalled or became a wall, I chose the change, and the bot played it again. It also measured where the frame rate went.</p>
       <div class="wide charts">
         <div class="chart">
           <h3>Bot runs, before and after each rework</h3>
@@ -527,10 +593,10 @@ const tanks = [
         </div>
       </div>
       <dl class="stats">
-        <div><dt>68 s</dt><dd>trailer, recorded at 60 fps</dd></div>
-        <div><dt>3</dt><dd>cuts of the trailer</dd></div>
         <div><dt>1,377</dt><dd>lines in the test bot</dd></div>
+        <div><dt>{hist.length}</dt><dd>Level 3 runs on one day</dd></div>
         <div><dt>17M → 2M</dt><dd>forest triangles per frame</dd></div>
+        <div><dt>148 → 13 ms</dt><dd>stall on landing, after warming up shaders</dd></div>
       </dl>
       <p class="after">The bot can't judge whether something is fun or looks right. That stayed my job, and I looked at every screenshot it produced.</p>
     </section>
@@ -550,6 +616,16 @@ const tanks = [
 </BaseLayout>
 
 <script>
+  // The trailer: one big play button, like the clips elsewhere on the site; the video's own controls appear once it plays.
+  document.querySelectorAll<HTMLElement>('[data-tv]').forEach((tv) => {
+    const v = tv.querySelector('video')!;
+    tv.querySelector('.tv-play')!.addEventListener('click', () => {
+      v.controls = true;
+      tv.classList.add('started');
+      void v.play();
+    });
+  });
+
   // Side menu: the section you're reading is highlighted as you scroll, and a click glides there.
   const nav = document.querySelector<HTMLElement>('[data-toc]');
   if (nav) {
@@ -609,7 +685,8 @@ const tanks = [
   }
   .page > .wide,
   .block > .wide,
-  .block > .stats {
+  .block > .stats,
+  .block > .keys {
     max-width: var(--wide);
   }
   .page > .block {
@@ -968,6 +1045,264 @@ const tanks = [
   :global(:root[data-theme='light']) .track.hp i {
     background: var(--accent);
   }
+
+  /* Trailer play button */
+  .tv {
+    position: relative;
+  }
+  .tv-play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 84px;
+    height: 84px;
+    margin: -42px 0 0 -42px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(11 11 11 / 0.72);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.25);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+    transition:
+      transform 0.25s var(--ease-out),
+      opacity 0.25s var(--ease-out);
+  }
+  .tv-play svg {
+    width: 34px;
+    height: 34px;
+    margin-left: 4px;
+    fill: #fff;
+  }
+  .tv-play:hover {
+    transform: scale(1.08);
+  }
+  .tv-play:focus-visible {
+    outline: 2px solid var(--tan);
+    outline-offset: 3px;
+  }
+  .tv.started .tv-play {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* The game: obstacles */
+  .obstacles {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+    padding: 0;
+    list-style: none;
+  }
+  .obstacles li {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-raised);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .obstacles svg {
+    width: 30px;
+    height: 30px;
+    padding: 4px;
+    border-radius: 6px;
+    background: #07060d;
+  }
+  .obstacles b {
+    font-weight: 400;
+    font-size: 17px;
+    color: var(--text);
+  }
+
+  /* Comparison tables */
+  .cmp-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cmp {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .cmp th,
+  .cmp td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    font-weight: 300;
+    color: var(--project-body);
+  }
+  .cmp thead th {
+    width: 20%;
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--text);
+    vertical-align: bottom;
+  }
+  .cmp thead th:first-child {
+    width: 14%;
+  }
+  .cmp thead img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--frame-edge);
+  }
+  .c-kick {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tan);
+  }
+  .cmp tbody th {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .cmp td b {
+    font-weight: 400;
+    color: var(--text);
+  }
+  .cmp .fin {
+    background: color-mix(in srgb, var(--rose) 8%, transparent);
+  }
+  .cmp tbody td:last-child {
+    background: color-mix(in srgb, var(--rose) 5%, transparent);
+  }
+  .cmp.lines tbody td:last-child {
+    background: none;
+  }
+  .cmp .mbar {
+    display: flex;
+    height: 14px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .mtot {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .cmp.lines {
+    min-width: 760px;
+  }
+  .cmp.lines thead th {
+    width: auto;
+    font-size: 12px;
+    color: var(--muted);
+    vertical-align: bottom;
+  }
+  .cmp.lines tbody th {
+    color: var(--text);
+    font-size: 14px;
+  }
+  .cmp.lines td {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The bot's run */
+  .pwrap {
+    overflow-x: auto;
+  }
+  .runchart {
+    display: block;
+    width: 100%;
+    min-width: 640px;
+    height: auto;
+  }
+  .runchart .band {
+    fill: var(--text);
+    fill-opacity: 0.035;
+  }
+  .runchart .bl {
+    font-size: 12px;
+    fill: var(--muted);
+  }
+  .runchart .grid {
+    stroke: var(--line);
+  }
+  .runchart .ax {
+    font-size: 11px;
+    fill: var(--muted);
+  }
+  .runchart .ax.hp {
+    fill: var(--sage);
+  }
+  .runchart .alive {
+    fill: #ff3348;
+    fill-opacity: 0.4;
+    stroke: #ff3348;
+    stroke-width: 1.2;
+  }
+  .runchart .health {
+    fill: none;
+    stroke: var(--sage);
+    stroke-width: 2;
+  }
+  :global(:root[data-theme='light']) .runchart .health {
+    stroke: var(--accent);
+  }
+  .runchart .taken {
+    stroke: var(--tan);
+    stroke-dasharray: 4 3;
+  }
+  .runchart .death {
+    stroke: var(--text);
+    stroke-width: 1.4;
+  }
+  .runchart .dl {
+    font-size: 11px;
+    fill: var(--text);
+  }
+  .keys .dash {
+    width: 14px;
+    height: 0;
+    border-top: 2px dashed var(--tan);
+    border-radius: 0;
+  }
+  .stats.six {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .hist {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr) 150px;
+    gap: 8px 12px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .hist .lb {
+    color: var(--muted);
+  }
+  .hist .v {
+    color: var(--project-body);
+    font-variant-numeric: tabular-nums;
+  }
+  .hbar {
+    display: flex;
+    height: 16px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .hbar i {
+    display: block;
+    border-right: 1px solid var(--bg-raised);
+  }
+
   /* Level 3 */
   .strip {
     display: grid;
@@ -1124,7 +1459,8 @@ const tanks = [
     display: flex;
     flex-wrap: wrap;
     gap: 6px 16px;
-    margin: 14px 0 0;
+    margin-top: 14px;
+    margin-bottom: 0;
     font-size: 12px;
     color: var(--muted);
   }
@@ -1446,6 +1782,25 @@ const tanks = [
   @media (max-width: 760px) {
     .strip {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .obstacles {
+      grid-template-columns: 1fr;
+    }
+    .stats.six {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .hist {
+      grid-template-columns: 44px minmax(0, 1fr);
+    }
+    .hist .v {
+      grid-column: 2;
+      margin-top: -6px;
+      font-size: 12px;
+    }
+    .tv-play {
+      width: 64px;
+      height: 64px;
+      margin: -32px 0 0 -32px;
     }
     .rb-pair {
       grid-template-columns: 1fr;
