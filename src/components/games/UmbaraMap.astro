@@ -1,0 +1,323 @@
+---
+// Level 3's battle map, drawn from the game's own level data (src/data/umbara-level3.json, extracted from
+// godot/scripts/level3.gd with the game's Road class). X = metres up the road, Y = left/right of it.
+// The chips show one battle at a time; hovering (or tapping) any symbol says what it is.
+// The map keeps the game's night colors in light mode too.
+import m from '../../data/umbara-level3.json';
+
+interface Props {
+  /** The objective line for each battle, as the player is told it. */
+  lines: string[];
+}
+const { lines } = Astro.props;
+
+const KIND: Record<string, [string, string, number]> = {
+  gun: ['Gun post', 'k-gun', 9], mortar: ['Mortar pit', 'k-mortar', 9], sniper: ['Sniper nest', 'k-sniper', 9], barrier: ['Barricade', 'k-barrier', 11],
+  antiair: ['Anti-air gun', 'k-aa', 12], spider: ['Crawler tank', 'k-crawler', 10], tank: ['Hover tank', 'k-hover', 12], jammer: ['Jammer', 'k-jammer', 12],
+};
+const TANK: Record<string, [string, string, number]> = { crawler: ['Crawler tank', 'k-crawler', 10], hover: ['Hover tank', 'k-hover', 12] };
+const side = (lat: number) => (lat === 0 ? 'in the middle of the road' : `${Math.abs(lat)} m to the ${lat > 0 ? 'left' : 'right'}`);
+const enc = m.encounters as any[];
+const fin = m.final as any;
+const battleOf = (s: number) => enc.findIndex((e) => s >= e.from && s <= e.to + 30) + 1 || enc.length;
+const vb = m.viewBox as number[];
+---
+
+<div class="umap">
+  <div class="chips" role="group" aria-label="Show one battle">
+    <button type="button" aria-pressed="true" data-f="">All</button>
+    {enc.map((_, i) => <button type="button" aria-pressed="false" data-f={String(i + 1)}>Battle {i + 1}</button>)}
+    <button type="button" aria-pressed="false" data-f="F">Final fight</button>
+  </div>
+  <div class="mapbox">
+    <div class="mapscroll">
+      <svg class="map" viewBox={vb.join(' ')} role="img" aria-label="Top-down battle map of Level 3, The Landing Site, from the landing on the left to the anti-air battery on the right">
+        <defs>
+          <symbol id="k-gun" viewBox="-10 -10 20 20"><rect x="-6" y="-5" width="12" height="10" rx="2" fill="#2a0c14" stroke="#ff5a6a" stroke-width="1.8" /><path d="M-1 0H-10" stroke="#ff5a6a" stroke-width="2.6" /></symbol>
+          <symbol id="k-mortar" viewBox="-10 -10 20 20"><circle r="7.5" fill="#2a1608" stroke="#ffa94d" stroke-width="1.8" /><circle r="3.2" fill="#ffa94d" /></symbol>
+          <symbol id="k-sniper" viewBox="-10 -10 20 20"><path d="M0-8.5L8 6.5H-8Z" fill="#2a0a22" stroke="#ff6fd0" stroke-width="1.8" stroke-linejoin="round" /><circle cy="1.8" r="2" fill="#ff6fd0" /></symbol>
+          <symbol id="k-barrier" viewBox="-10 -10 20 20"><rect x="-3" y="-9.5" width="6" height="19" fill="#ffb35a" /><path d="M-3-6l6-3M-3 0l6-3M-3 6l6-3" stroke="#3a1c08" stroke-width="1.4" /></symbol>
+          <symbol id="k-aa" viewBox="-10 -10 20 20"><circle r="8.5" fill="#2a2208" stroke="#ffd34d" stroke-width="1.8" /><path d="M-4.5 3.5L0-5l4.5 8.5M0-5v9" stroke="#ffd34d" stroke-width="2" fill="none" stroke-linejoin="round" /></symbol>
+          <symbol id="k-crawler" viewBox="-10 -10 20 20"><path d="M-3-3l-5-4M3-3l5-4M-4 0h-5.5M4 0h5.5M-3 3l-5 4M3 3l5 4" stroke="#ff7a3a" stroke-width="1.8" /><circle r="4.6" fill="#2a1008" stroke="#ff7a3a" stroke-width="1.8" /></symbol>
+          <symbol id="k-hover" viewBox="-10 -10 20 20"><rect x="-8.5" y="-5.5" width="17" height="11" rx="4.5" fill="#2a080e" stroke="#ff3348" stroke-width="1.8" /><circle r="3.2" fill="#ff3348" /><path d="M-1 0H-10" stroke="#ff3348" stroke-width="2.2" /></symbol>
+          <symbol id="k-jammer" viewBox="-10 -10 20 20"><circle r="2.6" fill="#b98cff" /><path d="M-4.5-4.5a6.4 6.4 0 0 0 0 9M4.5-4.5a6.4 6.4 0 0 1 0 9M-7.5-7.5a10.6 10.6 0 0 0 0 15M7.5-7.5a10.6 10.6 0 0 1 0 15" stroke="#b98cff" stroke-width="1.6" fill="none" /></symbol>
+          <symbol id="k-mine" viewBox="-10 -10 20 20"><path d="M0-7L7 0 0 7-7 0Z" fill="#ffe066" stroke="#3a2c08" stroke-width="1.4" /></symbol>
+          <symbol id="k-ambush" viewBox="-10 -10 20 20"><circle cx="-4" cy="-3" r="3" fill="#ff8a9a" /><circle cx="4" cy="-3" r="3" fill="#ff8a9a" /><circle cy="4" r="3" fill="#ff8a9a" /></symbol>
+          <symbol id="k-lz" viewBox="-10 -10 20 20"><circle r="8.5" fill="#0b1a24" stroke="#7ec8ff" stroke-width="1.8" /><path d="M-4.5-2L0 3l4.5-5" stroke="#7ec8ff" stroke-width="2.2" fill="none" /></symbol>
+          <symbol id="k-atte" viewBox="-10 -10 20 20"><rect x="-7" y="-4.5" width="14" height="9" rx="2" fill="#0b1a24" stroke="#7ec8ff" stroke-width="1.8" /><path d="M-5-4.5v-4M0-4.5v-4M5-4.5v-4M-5 4.5v4M0 4.5v4M5 4.5v4" stroke="#7ec8ff" stroke-width="1.6" /></symbol>
+          <symbol id="k-beacon" viewBox="-10 -10 20 20"><circle r="7.5" fill="#0b1a24" stroke="#7ec8ff" stroke-width="1.8" /><circle r="3" fill="#7ec8ff" /></symbol>
+          <symbol id="o-destroy" viewBox="-10 -10 20 20"><circle r="6.5" fill="none" stroke="#ff3348" stroke-width="1.8" /><path d="M0-10v6M0 4v6M-10 0h6M4 0h6" stroke="#ff3348" stroke-width="1.8" /><circle r="1.6" fill="#ff3348" /></symbol>
+          <marker id="arr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="#ff8a9a" /></marker>
+          <marker id="arr-red" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="#ff3348" /></marker>
+          <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#ff334812" /><path d="M0 0V6" stroke="#ff334855" stroke-width="1.6" /></pattern>
+          <radialGradient id="glow"><stop offset="0" stop-color="#ff3348" stop-opacity=".35" /><stop offset="1" stop-color="#ff3348" stop-opacity="0" /></radialGradient>
+        </defs>
+        <rect x={vb[0]} y={vb[1]} width={vb[2]} height={vb[3]} fill="#06050b" />
+        <path d={m.paths.deep} fill="#0c0914" />
+        <path d={m.paths.forest} fill="#130d1f" />
+        <path d={m.paths.strip} fill="#1a1029" />
+        <g>{(m.trees as number[][]).map((t) => <g><circle cx={t[0]} cy={t[1]} r={t[2]} fill="#20122f" /><circle cx={t[0] + t[2] * 0.3} cy={t[1] - t[2] * 0.3} r={t[2] * 0.22} fill="#ff3348" fill-opacity=".45" /></g>)}</g>
+        <path d={m.paths.verge} fill="#100c1a" />
+        <path d={m.paths.road} fill="#16131f" />
+        <path d={m.paths.edgeL} fill="none" stroke="#7ec8ff" stroke-width=".6" stroke-opacity=".7" />
+        <path d={m.paths.edgeR} fill="none" stroke="#7ec8ff" stroke-width=".6" stroke-opacity=".7" />
+        {(m.ticks as any[]).map((t) => <g><path d={t.d} stroke="#6a5a72" stroke-width=".7" /><text class="sm" x={t.at[0]} y={t.at[1]} text-anchor="middle" dominant-baseline="middle">{t.s} M</text></g>)}
+
+        {enc.map((e, i) => (
+          <g data-b={String(i + 1)}>
+            <path d={e.zone} fill="#ff3348" fill-opacity=".07" stroke="#ff3348" stroke-opacity=".25" stroke-width=".6" />
+            <path d={e.startLine} stroke="#ff5a6a" stroke-width="1.2" stroke-dasharray="3 2.5" />
+            <g class="it" data-tip={`Battle ${i + 1} starts when the squad crosses ${e.from} m. ${lines[i]}.`}>
+              <circle cx={e.labelAt[0]} cy={e.labelAt[1]} r="6.5" fill="#ff3348" />
+              <text class="lab" x={e.labelAt[0]} y={e.labelAt[1] + 0.3} text-anchor="middle" dominant-baseline="middle" style="font-size:8px">{i + 1}</text>
+            </g>
+          </g>
+        ))}
+        <g data-b="F">
+          <path d={fin.zone} fill="url(#hatch)" stroke="#ff3348" stroke-opacity=".5" stroke-width=".6" />
+          <g class="it" data-tip={`Final fight: ${fin.soldiers} soldiers in ${fin.waves} waves (down the road, then the left flank, then the right), with a hover tank and a crawler.`}>
+            <rect x={fin.labelAt[0] - 14} y={fin.labelAt[1] - 6} width="28" height="12" fill="#ff3348" />
+            <text class="lab" x={fin.labelAt[0]} y={fin.labelAt[1] + 0.3} text-anchor="middle" dominant-baseline="middle">FINAL</text>
+          </g>
+        </g>
+
+        {enc.map((e, i) => (
+          <g data-b={String(i + 1)}>
+            {e.objective.points && e.objective.points.map((p: number[], k: number) => (
+              <g class="it" data-tip={`Landing beacon ${k + 1}: hold E for ${e.objective.plant} s. Every beacon you light draws an attack from the trees.`}>
+                <use class="ic" href="#k-beacon" x={p[0] - 5} y={p[1] - 5} width="10" height="10" />
+              </g>
+            ))}
+            {e.reserveArrow && (
+              <g class="it" data-tip={`Reserve armor: ${e.reserve.length} more (${e.reserve.join(' and ')}) drive in from up the road, in pairs, during the battle.`}>
+                <path d={e.reserveArrow} fill="none" stroke="#ff3348" stroke-width="1.4" stroke-dasharray="3 2" marker-start="url(#arr-red)" />
+                <text class="sm" x={e.reserveAt[0]} y={e.reserveAt[1] + 7} text-anchor="end" style="fill:#ff8a9a">+{e.reserve.length} RESERVE</text>
+              </g>
+            )}
+          </g>
+        ))}
+
+        <g>{(m.mines as number[][]).map((mi) => <g class="it" data-b={String(battleOf(mi[2]))} data-tip={`Mine, ${mi[2]} m up the road. It only shows when you scan.`}><use class="ic" href="#k-mine" x={mi[0] - 2.2} y={mi[1] - 2.2} width="4.4" height="4.4" /></g>)}</g>
+        <g>{(m.ambushes as any[]).map((a) => <g class="it" data-b={String(battleOf(a.s))} data-tip={`Ambush: ${a.n} Umbarans break cover on the ${a.side > 0 ? 'left' : 'right'} when the squad reaches ${a.s} m.`}><path d={a.arrow} stroke="#ff8a9a" stroke-width="1" stroke-dasharray="2 1.5" marker-end="url(#arr)" /><use class="ic" href="#k-ambush" x={a.xy[0] - 4.5} y={a.xy[1] - 4.5} width="9" height="9" /></g>)}</g>
+
+        {enc.map((e, i) => (
+          <g data-b={String(i + 1)}>
+            {e.defences.map((d: any) => {
+              const k = KIND[d.kind];
+              const sz = k[2];
+              return (
+                <g class="it" data-tip={`${k[0]}. Battle ${i + 1}, ${d.s} m along the road, ${side(d.lat)}.${d.obj ? ' An objective.' : ''}`}>
+                  {d.obj && <circle cx={d.xy[0]} cy={d.xy[1]} r={sz * 0.85} fill="url(#glow)" stroke="#ff3348" stroke-width="1.1" />}
+                  <use class="ic" href={'#' + k[1]} x={d.xy[0] - sz / 2} y={d.xy[1] - sz / 2} width={sz} height={sz} />
+                </g>
+              );
+            })}
+          </g>
+        ))}
+        <g data-b="F">{fin.tanks.map((t: any) => { const k = TANK[t.kind]; return <g class="it" data-tip={`Final fight: a ${k[0].toLowerCase()} comes down the road with the second wave.`}><use class="ic" href={'#' + k[1]} x={t.xy[0] - k[2] / 2} y={t.xy[1] - k[2] / 2} width={k[2]} height={k[2]} /></g>; })}</g>
+
+        <g class="it" data-tip="The gunship lands the squad here. Until the jammer falls, the scan pulse and the Y-wings don't work."><use class="ic" href="#k-lz" x={(m.landing as number[])[0] - 6} y={(m.landing as number[])[1] - 6} width="12" height="12" /></g>
+        <g data-b="F" class="it" data-tip={`When the battery is silenced, a dropship sets the AT-TE down here (${(m.extra as any).atteDrop.s} m).`}><use class="ic" href="#k-atte" x={(m.extra as any).atteDrop.xy[0] - 6} y={(m.extra as any).atteDrop.xy[1] - 6} width="12" height="12" /></g>
+      </svg>
+    </div>
+    <div class="tip" role="status"></div>
+  </div>
+  <p class="hint">Swipe sideways to follow the road. Tap any symbol for what it is.</p>
+  <ul class="legend">
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-lz" x="-10" y="-10" width="20" height="20" /></svg>Squad lands</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-jammer" x="-10" y="-10" width="20" height="20" /></svg>Jammer</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-beacon" x="-10" y="-10" width="20" height="20" /></svg>Landing beacon</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-aa" x="-10" y="-10" width="20" height="20" /></svg>Anti-air gun</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-gun" x="-10" y="-10" width="20" height="20" /></svg>Gun post</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-mortar" x="-10" y="-10" width="20" height="20" /></svg>Mortar pit</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-sniper" x="-10" y="-10" width="20" height="20" /></svg>Sniper nest</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-barrier" x="-10" y="-10" width="20" height="20" /></svg>Barricade</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-crawler" x="-10" y="-10" width="20" height="20" /></svg>Crawler tank</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-hover" x="-10" y="-10" width="20" height="20" /></svg>Hover tank</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-mine" x="-10" y="-10" width="20" height="20" /></svg>Mine</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-ambush" x="-10" y="-10" width="20" height="20" /></svg>Ambush party</li>
+    <li><svg viewBox="-10 -10 20 20"><circle r="7" fill="url(#glow)" stroke="#ff3348" stroke-width="1.6" /></svg>Objective</li>
+    <li><svg viewBox="-10 -10 20 20"><path d="M-4 0h14" stroke="#ff3348" stroke-width="1.8" stroke-dasharray="3 2" /><path d="M-3-4l-6 4 6 4Z" fill="#ff3348" /></svg>Reserve tanks</li>
+    <li><svg viewBox="-10 -10 20 20"><rect x="-8" y="-8" width="16" height="16" fill="url(#hatch)" stroke="#ff3348" stroke-width="1" /></svg>Final fight</li>
+    <li><svg viewBox="-10 -10 20 20"><use href="#k-atte" x="-10" y="-10" width="20" height="20" /></svg>AT-TE drop</li>
+  </ul>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.umap').forEach((root) => {
+    const svg = root.querySelector<SVGSVGElement>('.map')!;
+    const tip = root.querySelector<HTMLElement>('.tip')!;
+    const box = root.querySelector<HTMLElement>('.mapbox')!;
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('.chips button')];
+    chips.forEach((b) =>
+      b.addEventListener('click', () => {
+        chips.forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+        svg.dataset.f = b.dataset.f;
+      }),
+    );
+    let hot: Element | null = null;
+    const show = (el: Element, ev: MouseEvent) => {
+      if (hot && hot !== el) hot.classList.remove('hot');
+      hot = el;
+      el.classList.add('hot');
+      tip.textContent = (el as HTMLElement).dataset.tip ?? '';
+      const r = box.getBoundingClientRect();
+      const w = tip.offsetWidth;
+      const h = tip.offsetHeight;
+      let x = ev.clientX - r.left + 14;
+      let y = ev.clientY - r.top + 14;
+      if (x + w > r.width - 6) x = ev.clientX - r.left - w - 14;
+      if (y + h > r.height - 6) y = ev.clientY - r.top - h - 14;
+      tip.style.left = `${Math.max(6, x)}px`;
+      tip.style.top = `${Math.max(6, y)}px`;
+      tip.classList.add('on');
+    };
+    const hide = () => {
+      tip.classList.remove('on');
+      hot?.classList.remove('hot');
+      hot = null;
+    };
+    svg.addEventListener('pointermove', (ev) => {
+      if (ev.pointerType !== 'mouse') return;
+      const el = (ev.target as Element).closest('[data-tip]');
+      if (el) show(el, ev);
+      else hide();
+    });
+    svg.addEventListener('pointerleave', (ev) => {
+      if (ev.pointerType === 'mouse') hide();
+    });
+    svg.addEventListener('click', (ev) => {
+      const el = (ev.target as Element).closest('[data-tip]');
+      if (el) show(el, ev);
+      else hide();
+    });
+    root.querySelector('.mapscroll')!.addEventListener('scroll', hide, { passive: true });
+  });
+</script>
+
+<style>
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .chips button {
+    padding: 6px 13px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+  .chips button:hover {
+    color: var(--text);
+  }
+  .chips button[aria-pressed='true'] {
+    color: var(--text);
+    border-color: var(--tan);
+  }
+  .mapbox {
+    position: relative;
+    border: 1px solid var(--frame-edge);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #07060d;
+  }
+  .mapscroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .map {
+    display: block;
+    width: 100%;
+    min-width: 880px;
+    height: auto;
+  }
+  .map :global(.it) {
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .map :global(.it:hover .ic),
+  .map :global(.it.hot .ic) {
+    filter: brightness(1.6);
+  }
+  .map[data-f='1'] :global([data-b]:not([data-b='1'])),
+  .map[data-f='2'] :global([data-b]:not([data-b='2'])),
+  .map[data-f='3'] :global([data-b]:not([data-b='3'])),
+  .map[data-f='F'] :global([data-b]:not([data-b='F'])) {
+    opacity: 0.12;
+  }
+  .map :global(.lab) {
+    font-size: 7px;
+    fill: #efe9f6;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+  .map :global(.sm) {
+    font-size: 5px;
+    fill: #9d8aa6;
+    letter-spacing: 0.1em;
+  }
+  .tip {
+    position: absolute;
+    z-index: 5;
+    max-width: 270px;
+    padding: 8px 11px;
+    border: 1px solid #ff334888;
+    border-radius: 6px;
+    background: #140d1cf2;
+    color: #efe9f6;
+    font-size: 13px;
+    line-height: 1.4;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 0.12s,
+      transform 0.12s;
+  }
+  .tip:global(.on) {
+    opacity: 1;
+    transform: none;
+  }
+  .hint {
+    display: none;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+    color: var(--project-body);
+  }
+  .legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .legend svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    padding: 2px;
+    border-radius: 4px;
+    background: #07060d;
+  }
+  @media (max-width: 760px) {
+    .hint {
+      display: block;
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+  }
+</style>

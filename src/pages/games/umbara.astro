@@ -1,34 +1,192 @@
 ---
-// Umbara, in my own words: the premise, the full trailer, frames from the game, then the three parts
-// of the process (the look, the models, the trailer and testing). The sliders, the milestone rows
-// and the frame viewer only move when the visitor uses them.
+// Umbara, in my own words: what I set out to make, the trailer, one level up close (Level 3, the
+// Landing Site: its battle map from the game's own data and how its fights are run), the assets
+// I built, then the three parts of the process: the look, the models, the trailer and testing.
+// Sliders, milestone rows, the map and the asset browser only move when the visitor uses them.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BeforeAfter from '../../components/games/BeforeAfter.astro';
 import Stepper from '../../components/games/Stepper.astro';
+import UmbaraMap from '../../components/games/UmbaraMap.astro';
+import AssetBrowser, { type Asset } from '../../components/games/AssetBrowser.astro';
+import m from '../../data/umbara-level3.json';
 import { games } from '../../data/games';
 
 const game = games.find((g) => g.slug === 'umbara')!;
 const f = (n: string) => `/games/umbara/${n}.webp`;
-const TRAILER = 'https://pub-e2867eccfdfb4aff83fb9f3d085f5084.r2.dev/umbara2.mp4';
+const a = (n: string) => `/games/umbara/assets/${n}.webp`;
+// The trailer exactly as uploaded; the player starts at the gunship's descent and stops on the title card.
+const TRAILER = 'https://pub-e2867eccfdfb4aff83fb9f3d085f5084.r2.dev/umbara2.mp4#t=14,59';
 
-const field = [
-  { n: '08', label: 'Rocket on the crawler', alt: 'A rocket turns the crawler tank into a fireball with flying debris' },
-  { n: '02', label: 'Umbaran line at the road', alt: 'Umbaran soldiers with green helmets crouched beside a fungus tree and lamp posts along the glowing road' },
-  { n: '03', label: 'Contact on the road', alt: 'Umbaran soldiers returning fire along the curving glowing road, smoke rising in the red forest' },
-  { n: '04', label: 'Wreck burning on the road', alt: 'A burning wreck on the road with a smoke column and soldiers advancing through the forest' },
-  { n: '06', label: 'Hover tank on the road', alt: 'An Umbaran hover tank approaching along the road with a blue blade glowing' },
-  { n: '07', label: 'Crawler ahead', alt: 'The Umbaran crawler tank centered on the road between red-leafed trees' },
-  { n: '09', label: 'Explosion on the road', alt: 'A fireball and debris on the road with small figures against the blast' },
-  { n: '10', label: 'Impact', alt: 'An impact fireball rising over the red forest' },
-  { n: '11', label: 'Fireball over the forest', alt: 'A large fireball filling the sky over the lit forest' },
-  { n: '12', label: 'Dust wall rolling in', alt: 'A wall of dust and smoke swallowing the forest after the crash' },
+// ---- Level 3, from the game's level file (on Medium) ----
+const enc = m.encounters as any[];
+const fin = m.final as any;
+const level = {
+  lines: [
+    ['Find and destroy the jammer', 'Scan and Y-wings are dead until it falls. It stands in the trees.'],
+    ['Mark the landing zone', 'Hold E at three beacons. Every one you light draws an attack.'],
+    ['Destroy both anti-air guns', 'Two hover tanks defend them. Then a dropship sets the AT-TE down.'],
+  ],
+  shots: [
+    ['l3-jammer', 'The jammer mast in the trees, a sniper perch beside it'],
+    ['l3-clearing', 'A crawler tank in the clearing'],
+    ['l3-battery', 'Umbarans hold the road to the battery'],
+  ],
+  bot: { total: 546, deaths: 1, lines: [[94, 0], [150, 0], [234, 1]] },
+};
+const MIX = [
+  ['hider', 'Hiders', '#ff3348'],
+  ['prone', 'Prone', '#a8325a'],
+  ['rusher', 'Rushers', '#ff8a5a'],
+  ['rocketeer', 'Rocket troopers', '#ffd34d'],
+] as const;
+const EXTRA = [
+  ['Dug in at the objective', '#8d7a99'],
+  ['Counterattack', '#e9c8f5'],
+] as const;
+function split(n: number, shares: number[]) {
+  const raw = shares.map((s) => n * s);
+  const out = raw.map(Math.floor);
+  let left = n - out.reduce((x, y) => x + y, 0);
+  raw
+    .map((v, i) => [v - Math.floor(v), i])
+    .sort((p, q) => q[0] - p[0])
+    .forEach(([, i]) => {
+      if (left > 0) {
+        out[i]++;
+        left--;
+      }
+    });
+  return out;
+}
+const battles = enc.map((e, i) => {
+  const shares = MIX.map(([k]) => e.mix[k] || 0);
+  const tot = shares.reduce((x, y) => x + y, 0);
+  const mix = split(e.sent, shares.map((s) => s / tot));
+  const crawlers = e.defences.filter((d: any) => d.kind === 'spider').length + e.reserve.filter((r: string) => r === 'crawler').length;
+  const hovers = e.defences.filter((d: any) => d.kind === 'tank').length + e.reserve.filter((r: string) => r === 'hover').length;
+  const guns = e.defences.filter((d: any) => ['gun', 'mortar', 'sniper', 'antiair'].includes(d.kind)).length;
+  return { e, n: i + 1, mix, soldiers: e.sent + e.lastStand + e.surge, crawlers, hovers, guns };
+});
+const finMix: Record<string, number> = { hider: 0, prone: 0, rusher: 0, rocketeer: 0 };
+for (let w = 0; w < fin.waves; w++)
+  for (let k = 0; k < Math.floor(fin.soldiers / fin.waves); k++) finMix[['rusher', 'hider', 'rusher', 'rocketeer', 'hider', 'prone'][k % 6]]++;
+const rows = [
+  ...battles.map((b) => ({
+    label: `Battle ${b.n}`,
+    segs: [...MIX.map(([, name, c], j) => [b.mix[j], name, c] as const), [b.e.lastStand, EXTRA[0][0], EXTRA[0][1]] as const, [b.e.surge, EXTRA[1][0], EXTRA[1][1]] as const],
+  })),
+  { label: 'Final fight', segs: MIX.map(([k, name, c]) => [finMix[k], name, c] as const) },
+].map((r) => ({ ...r, total: r.segs.reduce((x, s) => x + s[0], 0) }));
+const maxRow = Math.max(...rows.map((r) => r.total));
+const soldiersAll = battles.reduce((x, b) => x + b.soldiers, 0) + fin.soldiers;
+const tanksAll = battles.reduce((x, b) => x + b.crawlers + b.hovers, 0) + fin.tanks.length;
+const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+const b2 = battles[1];
+const pct = (k: string) => Math.round((b2.e.mix[k] || 0) * 100);
+
+// ---- The assets I chose to show (from the game's Open assets library) ----
+const assets: Asset[] = [
+  {
+    id: 'heavy', title: 'Heavy cannon walker', kind: 'Enemy', model: '/games/umbara/models/heavy.glb',
+    about: 'A six-legged artillery walker that stands astride the road, tall enough to walk under. Rebuilt from three reference views, then doubled in size after I saw it in the game.',
+    used: 'The big set-piece of Level 4: rifles barely scratch it, so you plant a tracker underneath and the bombers do the rest.',
+    built: 'A Python script in Blender (one 910-line vehicle script)', tris: '31,572',
+    images: [{ src: a('asset_heavy'), alt: 'The heavy cannon walker: a domed body on six arched legs with a cannon on a neck' }],
+  },
+  {
+    id: 'crawler', title: 'Crawler tank', kind: 'Enemy', model: '/games/umbara/models/crawler.glb',
+    about: 'A four-legged tank whose turret swings to its target. The legs hang from separate hip joints, so the game walks them in code.',
+    used: 'The armored enemy that walks the road toward the squad; massed fire or a rocket brings it down.',
+    built: 'The same vehicle script', tris: '29,522',
+    images: [{ src: a('asset_crawler'), alt: 'The crawler tank: a wide armored body on four clawed legs' }],
+  },
+  {
+    id: 'trooper', title: 'Umbaran trooper', kind: 'Enemy', model: '/games/umbara/models/trooper.glb',
+    about: 'Dark suit, pale vest, hip pouches, tall pointed boots and a clear green dome over a grey head. Built from jointed parts so the game can pose it in code; the dome and hip lights glow.',
+    used: 'Every Umbaran soldier in all five levels: riflemen, scouts and the squads that counterattack.',
+    built: 'A Python script in Blender', tris: '5,384',
+    images: [{ src: a('asset_umbaran'), alt: 'The Umbaran trooper in four poses' }],
+  },
+  {
+    id: 'glove', title: 'Armored glove and gauntlet', kind: 'Weapon kit', model: '/games/umbara/models/glove.glb', download: true,
+    about: 'My original design for the player’s own arms, built from rigid pieces so posing never stretches anything. The script fits a hand to every grip by measurement: the palm 4 mm off the grip, each finger curled until its tip touches, within human joint limits.',
+    used: 'Your arms in first person, posed on the grips of every gun.',
+    built: 'A Python script in Blender', tris: '8,392',
+    images: [
+      { src: a('glove_2'), alt: 'Both armored arms posed on a rifle grip' },
+      { src: a('glove_0'), alt: 'The armored glove, open hand' },
+      { src: a('glove_3'), alt: 'The glove from the side' },
+      { src: a('glove_1'), alt: 'The glove from the palm side' },
+    ],
+  },
+  {
+    id: 'guns', title: 'First code-built guns', kind: 'Weapon kit', model: '/games/umbara/models/early-guns.glb',
+    about: 'The first versions of the carbine, sniper rifle, rotary cannon and launcher, modelled entirely from code. Each has its origin at the grip and its barrel along forward, so the hands can find it.',
+    used: 'The game’s first arsenal, before the final weapon set.',
+    built: 'A Python script in Blender', tris: '5,972 for all four',
+    images: [
+      { src: a('asset_g_dc15s'), alt: 'The code-built carbine' },
+      { src: a('asset_g_sniper'), alt: 'The code-built sniper rifle' },
+      { src: a('asset_g_rotary'), alt: 'The code-built rotary cannon' },
+      { src: a('asset_g_rocket'), alt: 'The code-built launcher' },
+    ],
+  },
+  {
+    id: 'tree', title: 'Gnarled tree', kind: 'Flora', model: '/games/umbara/models/tree.glb', download: true,
+    about: 'A thick, lumpy trunk that splits into horn-like limbs curling up and out, with glowing red spots and thin stalks tipped with red claws. Grown in code: every call makes a new one, so no two forests match.',
+    used: 'The forest in every level, from saplings by the road to giants on the hills.',
+    built: 'A Godot script that generates it', tris: 'about 1,300 each',
+    images: [
+      { src: a('flora_tree_0'), alt: 'A gnarled tree with glowing red spots' },
+      { src: a('flora_tree_1'), alt: 'A second variation of the tree' },
+      { src: a('flora_tree_2'), alt: 'A third variation of the tree' },
+      { src: a('code_flora'), alt: 'The generator script that grows the plants' },
+    ],
+  },
+  {
+    id: 'sky', title: 'Night sky', kind: 'Shader', download: true,
+    about: 'A dark dome with a purple horizon, layered cloud lit from below, a glow toward the capital, a few stars and flashes from the battle in orbit. About 40 lines; every color is a setting, so each level tints it.',
+    used: 'The sky over every level; Level 4 turns it colder and Level 5 red.',
+    built: 'A Godot shader',
+    images: [
+      { src: a('stage_sky'), alt: 'The night sky shader over the forest' },
+      { src: a('code_sky'), alt: 'The sky shader code' },
+    ],
+  },
+  {
+    id: 'bot', title: 'Test bot and report', kind: 'Tool', download: true,
+    about: 'A scripted player: it moves, takes cover, aims with human-like error and reaction time, fires in bursts, throws detonators and calls strikes, then writes up every fight with screenshots. A Python script turns its runs into tables and intensity charts.',
+    used: 'Played every level after each change; its runs decided which fights to rework.',
+    built: 'GDScript and Python, 1,377 lines in the bot',
+    images: [
+      { src: a('bot_chart'), alt: 'An intensity chart from the bot: enemies alive and damage taken through a level' },
+      { src: a('code_bot'), alt: 'The test bot code' },
+    ],
+  },
+  {
+    id: 'sandbox', title: 'Weapon sandbox', kind: 'Tool', download: true,
+    about: 'A Godot scene for looking at every first-person gun with its hands: orbit and zoom, hip and aimed views, close-ups of each grip, and a picture-sheet mode that saves every view of every gun for automated checks.',
+    used: 'How every gun and hand pose was checked before it went into the game.',
+    built: 'GDScript (Godot 4)',
+    images: [{ src: a('code_sandbox'), alt: 'The weapon sandbox scene' }],
+  },
+];
+
+const toc = [
+  { id: 'overview', title: 'Overview' },
+  { id: 'trailer', title: 'Trailer' },
+  { id: 'level-3', title: 'Level 3 up close' },
+  { id: 'assets', title: 'Assets' },
+  { id: 'look', title: 'Look and style' },
+  { id: 'models', title: 'Blender models' },
+  { id: 'testing', title: 'Trailer and testing' },
 ];
 
 const pairs = [
-  { n: 'road', label: 'Browser prototype to Godot', alt: 'The same road: grey pillar trees in the browser prototype, then the Godot forest at night' },
-  { n: 'tank', label: 'Browser art pass to Godot', alt: 'Tanks on the road: bright white tanks on hexagon paving, then a hover tank on the Godot road' },
-  { n: 'sky', label: 'Browser art pass to Godot', alt: 'Looking up the road: red claw trees in the browser, then the Godot sky with clouds and hills' },
-  { n: 'explosion', label: 'Browser art pass to Godot', alt: 'An explosion: a single orange ball in the browser, then a fireball with smoke and debris in Godot' },
+  { n: 'road', title: 'The road: browser prototype to Godot', note: 'Plain grey pillars lit only by the helmet lamp became a forest of claw trees and glowing tentacles under a clouded night sky.', alt: 'The same road in the browser prototype and in Godot' },
+  { n: 'tank', title: 'The tanks: browser art pass to Godot', note: 'Bright white tanks on hexagon paving became a hover tank in the night palette, on a soil road with glowing edges.', alt: 'Tanks on the road in the browser and in Godot' },
+  { n: 'sky', title: 'The sky: browser art pass to Godot', note: 'A flat black sky became layered cloud lit from below, with distant hills and a glow toward the capital.', alt: 'Looking up the road at the sky in the browser and in Godot' },
+  { n: 'explosion', title: 'Explosions: browser art pass to Godot', note: 'A single orange ball became a fireball with smoke, embers, flying debris and a fire that keeps burning.', alt: 'An explosion on the road in the browser and in Godot' },
 ];
 
 const world = [
@@ -52,18 +210,9 @@ const tanks = [
   { n: 'hover', level: 'Medium', name: 'Hover tank', dmg: 3, dmgLabel: '3% from the front', hp: 79, hpLabel: '1,900', alt: 'Hover tank: a cockpit sphere between two pods with cyan blades' },
   { n: 'heavy', level: 'Hard', name: 'Heavy walker', dmg: 1.5, dmgLabel: '1.5% (rockets do full)', hp: 100, hpLabel: '2,400', alt: 'Heavy cannon walker: a domed body on six arched legs' },
 ];
-
-const toc = [
-  { id: 'overview', title: 'Overview' },
-  { id: 'trailer', title: 'Trailer' },
-  { id: 'field', title: 'In the field' },
-  { id: 'look', title: 'Look and style' },
-  { id: 'models', title: 'Blender models' },
-  { id: 'testing', title: 'Trailer and testing' },
-];
 ---
 
-<BaseLayout title={game.name} description="Umbara: a night-time first-person shooter made in Godot, with every original model built by script. The trailer, and how I made it.">
+<BaseLayout title={game.name} description="Umbara: a night-time first-person shooter made in Godot, with every original model built by script. The trailer, a level up close, the assets, and how I made it.">
   <article class="page" data-tone="grey">
     <nav class="back"><a href="/games"><span aria-hidden="true">←</span> Games</a></nav>
 
@@ -82,7 +231,7 @@ const toc = [
     </header>
 
     <section class="block premise">
-      <p>You land with a squad on a planet where it is always night, and push down a single road to the enemy capital, five levels in all. The forest glows, the enemy soldiers see in the dark and you don't, so a scan pulse, your squad and the bombers you call in are how you even the odds. I made it in Godot, and every original model in it is built by a script.</p>
+      <p>I wanted a shooter where the dark is the enemy's weapon. The forest glows, the Umbarans see in the dark and you don't, so you win by scanning, calling in bombers and moving with your squad down one road to their capital. I designed and directed it and set its look, and every original model, plant and sound is generated by a script, so changing an idea means re-running it rather than remodeling it. It went from a grey-box browser prototype to five levels in Godot in three days, each step chosen by putting two versions side by side.</p>
     </section>
 
     <section class="block" id="trailer">
@@ -95,48 +244,99 @@ const toc = [
           <source src={TRAILER} type="video/mp4" />
         </video>
       </figure>
-      <p class="caption">The full 68-second trailer: the real game running a fight I scripted and timed beat by beat, recorded at 2560 × 1440 and 60 fps. Sound on.</p>
+      <p class="caption">The real game running a fight I scripted and timed beat by beat, recorded at 2560 × 1440 and 60 fps. It starts as the gunship comes down and ends on the title card. Sound on.</p>
     </section>
 
-    <section class="block" id="field">
-      <p class="kicker">In the field</p>
-      <h2>The game in motion</h2>
-      <div class="wide gallery" data-gallery>
+    <section class="block" id="level-3">
+      <p class="kicker">Level 3 up close · The Landing Site</p>
+      <h2>A jammer blinds your helmet: no scan, no bombers, until you find it</h2>
+      <p>Each level is one road with three battles and a last fight. In Level 3 something is jamming the squad, so you find the jammer in the trees, mark a clearing with beacons, then silence the anti-air battery so a dropship can set an AT-TE down. This is the level's own map, drawn from the game's level file.</p>
+      <dl class="wide strip">
+        <div><dt>{Math.round(m.length)} m</dt><dd>of road</dd></div>
+        <div><dt>3 + 1</dt><dd>battles and a final fight</dd></div>
+        <div><dt>{soldiersAll}</dt><dd>Umbarans</dd></div>
+        <div><dt>{tanksAll}</dt><dd>tanks</dd></div>
+        <div><dt>{(m.mines as unknown[]).length}</dt><dd>mines, seen only by scanning</dd></div>
+        <div><dt>{fmt(level.bot.total)}</dt><dd>test bot's run, {level.bot.deaths} death</dd></div>
+      </dl>
+      <div class="wide"><UmbaraMap lines={level.lines.map((l) => l[0])} /></div>
+
+      <h3 class="sub-h">How a battle runs</h3>
+      <p>No fight is placed by hand, soldier by soldier. Each battle is a few numbers in the level file, and a director runs it from them. Here is Battle 2, the clearing, on Medium:</p>
+      <ol class="wide director">
+        <li><b>Build-up</b><span class="big">{b2.e.ramp[0]} → {b2.e.active}</span><p>It starts with {b2.e.ramp[0]} Umbarans alive and builds to a cap of {b2.e.active} at once over {b2.e.ramp[1]} seconds, so the fight opens lighter.</p></li>
+        <li><b>Waves</b><span class="big">{b2.e.sent}</span><p>It keeps feeding soldiers in until {b2.e.sent} have been sent: {pct('hider')}% hide in cover, {pct('prone')}% go prone, {pct('rusher')}% rush you and {pct('rocketeer')}% carry rockets.</p></li>
+        <li><b>Last stand</b><span class="big">+{b2.e.lastStand}</span><p>{b2.e.lastStand} more are dug in at the objective, so taking it is the peak of the fight.</p></li>
+        <li><b>Counterattack</b><span class="big">+{b2.e.surge}</span><p>When it falls, {b2.e.surge} come back in three waves about 9 s apart: down the road, then the left flank, then the right. Reserve tanks drive in during the battle.</p></li>
+      </ol>
+      <p class="after">The same numbers make the levels harder: on Medium the soldiers sent, the last stand and the counterattack are 1.5 times the base, and the cap on how many are alive at once is 1.15 times.</p>
+
+      <ol class="wide battles">
         {
-          field.map((it, i) => (
-            <figure class:list={{ lead: i === 0 }}>
-              <button type="button" data-i={i} aria-label={`Enlarge: ${it.label}`}>
-                <img src={f(`field-${it.n}`)} alt={it.alt} width="1600" height="900" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
-              </button>
-              <figcaption>{it.label}</figcaption>
-            </figure>
+          battles.map((b, i) => (
+            <li>
+              <img src={f(level.shots[i][0])} alt={level.shots[i][1]} width="1600" height="900" loading="lazy" decoding="async" />
+              <p class="b-kick">Battle {b.n} · {b.e.from}–{Math.round(b.e.objective.s)} m</p>
+              <h4>{level.lines[i][0]}</h4>
+              <p>{level.lines[i][1]}</p>
+              <dl>
+                <div><dt>Umbarans</dt><dd>{b.soldiers}, up to {b.e.active} at once</dd></div>
+                <div><dt>Armor</dt><dd>{[b.crawlers && `${b.crawlers} crawler${b.crawlers > 1 ? 's' : ''}`, b.hovers && `${b.hovers} hover tank${b.hovers > 1 ? 's' : ''}`].filter(Boolean).join(', ')}</dd></div>
+                <div><dt>Dug in</dt><dd>{b.guns} gun posts, mortars and snipers</dd></div>
+              </dl>
+            </li>
           ))
         }
+      </ol>
+
+      <div class="wide charts">
+        <div class="chart">
+          <h3>Who you fight</h3>
+          <p class="sub">Umbarans per battle, by kind.</p>
+          <div class="mix">
+            {rows.map((r) => (
+              <>
+                <span class="lb">{r.label}</span>
+                <span class="mbar" style={`width:${(r.total / maxRow) * 100}%`}>
+                  {r.segs.filter((s) => s[0] > 0).map((s) => <i style={`width:${(s[0] / r.total) * 100}%;background:${s[2]}`} title={`${s[1]}: ${s[0]}`} />)}
+                </span>
+                <span class="v">{r.total}</span>
+              </>
+            ))}
+          </div>
+          <p class="keys">{[...MIX.map(([, n, c]) => [n, c]), ...EXTRA].map(([n, c]) => <span><i style={`background:${c}`} />{n}</span>)}</p>
+        </div>
+        <div class="chart">
+          <h3>The test bot's run</h3>
+          <p class="sub">An average-player bot on Medium: {fmt(level.bot.total)}, {level.bot.deaths} death. A second run took 13:11, with two deaths at the beacons.</p>
+          <div class="tl">
+            {level.bot.lines.map(([t, d], i) => (
+              <span style={`width:${(t / level.bot.total) * 100}%;background:${['#5a2a3a', '#8a2a3e', '#c4303f'][i]}`}>
+                B{i + 1} · {fmt(t)}{d > 0 ? ' · ✕' : ''}
+              </span>
+            ))}
+          </div>
+          <p class="keys"><span>✕ = a death</span><span>Battle 3 includes the final fight</span></p>
+        </div>
       </div>
-      <p class="caption">Captured in the game; press any frame to enlarge it. The world, enemies and effects are mine; some figures and ships in frame are third-party models.</p>
-      <dialog class="viewer" data-viewer aria-label="Enlarged frame">
-        <img alt="" />
-        <p class="v-cap"></p>
-        <button type="button" class="v-close" aria-label="Close">×</button>
-        <button type="button" class="v-prev" aria-label="Previous frame">‹</button>
-        <button type="button" class="v-next" aria-label="Next frame">›</button>
-      </dialog>
     </section>
 
+    <section class="block" id="assets">
+      <p class="kicker">Assets</p>
+      <h2>What I built for it</h2>
+      <p>Enemies, the player's arms, guns, plants, a sky and the tools that tested it, all made from code. Pick one to see it large; the ones marked 3D can be turned and zoomed. The original designs among them are free to download from the game's site.</p>
+      <div class="wide"><AssetBrowser items={assets} label="Umbara assets" /></div>
+    </section>
     <section class="block" id="look">
       <p class="kicker">01 · Look and style</p>
       <h2>I chose the night by comparing it side by side, never in words</h2>
-      <p>The game started as a browser prototype and moved to Godot. Drag each line to see the same view then and now.</p>
+      <p>The game started as a browser prototype and moved to Godot. Drag each line to see the same view then and now, or enlarge one to see the detail.</p>
       <div class="wide pairs">
-        <figure class="lead">
-          <BeforeAfter before={f(`pair-${pairs[0].n}-before`)} after={f(`pair-${pairs[0].n}-after`)} alt={pairs[0].alt} />
-          <figcaption>{pairs[0].label}</figcaption>
-        </figure>
         {
-          pairs.slice(1).map((p) => (
-            <figure>
-              <BeforeAfter before={f(`pair-${p.n}-before`)} after={f(`pair-${p.n}-after`)} alt={p.alt} />
-              <figcaption>{p.label}</figcaption>
+          pairs.map((p, i) => (
+            <figure class:list={{ lead: i === 0 }}>
+              <BeforeAfter before={f(`pair-${p.n}-before`)} after={f(`pair-${p.n}-after`)} alt={p.alt} title={p.title} note={p.note} />
+              <figcaption>{p.title}</figcaption>
             </figure>
           ))
         }
@@ -164,7 +364,7 @@ const toc = [
           <figcaption>Four look tests of the same moment.</figcaption>
         </figure>
         <figure>
-          <BeforeAfter before={f('ungraded')} after={f('graded')} alt="Level 1 with and without its color grade" left="Ungraded" right="Graded" ratio="1600 / 737" />
+          <BeforeAfter before={f('ungraded')} after={f('graded')} alt="Level 1 with and without its color grade" left="Ungraded" right="Graded" ratio="1600 / 737" title="Level 1, ungraded and graded" note="Each level gets its own color grade: here the violets deepen, the reds glow and the dark lifts just enough to read the soldiers in the trees." />
           <figcaption>A color grade for each level. Drag to compare.</figcaption>
         </figure>
       </div>
@@ -179,7 +379,7 @@ const toc = [
     <section class="block" id="models">
       <p class="kicker">02 · Blender models</p>
       <h2>Every enemy is a script, so a redesign is a re-run</h2>
-      <p>Each model is a Python script run in Blender, with no hand sculpting. My first enemy kit was too simple, so I had the vehicles rewritten as one 910-line script, then rebuilt the heavy walker from three reference views: knee wheels, armored shins, two-talon claws and a jointed cannon. After seeing it in the game I doubled its size.</p>
+      <p>Each model is a Python script run in Blender, with no hand sculpting. My first enemy kit was too simple, so I had the vehicles rewritten as one 910-line script. Press a step to see the same three vehicles at each milestone.</p>
       <div class="wide"><Stepper steps={models} label="The enemy vehicles, first kit to now" /></div>
       <p class="after">There are three tanks, each a step up. The bars show how much a rifle hurts each one and how much health it has, so the armor teaches you when to switch weapons.</p>
       <ol class="wide tanks">
@@ -198,20 +398,26 @@ const toc = [
           ))
         }
       </ol>
-      <div class="wide walker">
-        <figure>
-          <span class="lab">First kit</span>
-          <img src={f('heavy-kit-before')} alt="The first heavy walker: a round body on four straight legs" width="1200" height="672" loading="lazy" decoding="async" />
-        </figure>
-        <figure>
-          <span class="lab">Rebuilt</span>
-          <img src={f('heavy-after')} alt="The rebuilt heavy walker with knee wheels, shin plates and a cannon on a neck" width="1200" height="900" loading="lazy" decoding="async" />
-        </figure>
-        <figcaption class="span">The heavy walker, first kit to rebuilt from three reference views.</figcaption>
-        <figure class="span">
-          <img src={f('defences')} alt="Defense models in a row: crates, a shield wall, a gun nest and a gun emplacement" width="1200" height="480" loading="lazy" decoding="async" />
-          <figcaption>The defenses, rebuilt after I called the cover "random circles stacked."</figcaption>
-        </figure>
+      <div class="wide rebuild">
+        <h3>The heavy walker, rebuilt</h3>
+        <div class="rb-pair">
+          <figure>
+            <div class="rb-frame"><img src={f('heavy-kit-before')} alt="The first heavy walker: a round body on four straight legs" width="1200" height="672" loading="lazy" decoding="async" /></div>
+            <figcaption><b>First kit</b> A round body on four straight legs: it read as a toy.</figcaption>
+          </figure>
+          <span class="rb-arrow" aria-hidden="true">→</span>
+          <figure>
+            <div class="rb-frame"><img src={f('heavy-after')} alt="The rebuilt heavy walker with knee wheels, shin plates and a cannon on a neck" width="1200" height="900" loading="lazy" decoding="async" /></div>
+            <figcaption><b>Rebuilt</b> Remodeled from three reference views, by changing the script and re-running it.</figcaption>
+          </figure>
+        </div>
+        <ul class="rb-changes">
+          <li><b>Six</b> arched legs instead of four straight ones</li>
+          <li><b>Knee wheels</b> and armored shins</li>
+          <li><b>Two-talon</b> claws for feet</li>
+          <li>A <b>jointed cannon</b> on a neck</li>
+          <li><b>2× scale</b> after seeing it in the game</li>
+        </ul>
       </div>
       <dl class="stats">
         <div><dt>910</dt><dd>lines in the vehicle script</dd></div>
@@ -224,7 +430,7 @@ const toc = [
     <section class="block" id="testing">
       <p class="kicker">03 · Trailer and testing</p>
       <h2>I directed the trailer inside the game, and let a bot play every level</h2>
-      <p>The camera path in the trailer steers clear of every trunk and wreck, and enemies are moved to spots the lens can see. Here is how its 68 seconds are laid out.</p>
+      <p>The camera path in the trailer steers clear of every trunk and wreck, and enemies are moved to spots the lens can see. Here is how the full 68-second cut is laid out.</p>
       <div class="wide chart beats-chart">
         <h3>Trailer beats</h3>
         <p class="sub">Seconds into the trailer. The fight starts when the opening ride touches down.</p>
@@ -386,49 +592,6 @@ const toc = [
     );
   }
 
-  // Frame viewer: press a frame to see it large; arrows, swipes and Escape work too.
-  const gallery = document.querySelector<HTMLElement>('[data-gallery]');
-  const viewer = document.querySelector<HTMLDialogElement>('[data-viewer]');
-  if (gallery && viewer) {
-    const items = [...gallery.querySelectorAll<HTMLButtonElement>('button')].map((b) => ({
-      src: b.querySelector('img')!.currentSrc || b.querySelector('img')!.src,
-      alt: b.querySelector('img')!.alt,
-      label: b.parentElement!.querySelector('figcaption')!.textContent ?? '',
-    }));
-    const img = viewer.querySelector('img')!;
-    const cap = viewer.querySelector<HTMLElement>('.v-cap')!;
-    let cur = 0;
-    const show = (i: number) => {
-      cur = (i + items.length) % items.length;
-      img.src = items[cur].src;
-      img.alt = items[cur].alt;
-      cap.textContent = `${items[cur].label}  ·  ${cur + 1} / ${items.length}`;
-    };
-    gallery.addEventListener('click', (e) => {
-      const b = (e.target as HTMLElement).closest('button');
-      if (!b) return;
-      show(Number(b.dataset.i));
-      viewer.showModal();
-    });
-    viewer.querySelector('.v-close')!.addEventListener('click', () => viewer.close());
-    viewer.querySelector('.v-prev')!.addEventListener('click', () => show(cur - 1));
-    viewer.querySelector('.v-next')!.addEventListener('click', () => show(cur + 1));
-    viewer.addEventListener('click', (e) => {
-      if (e.target === viewer) viewer.close();
-    });
-    viewer.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') show(cur - 1);
-      if (e.key === 'ArrowRight') show(cur + 1);
-    });
-    let x0: number | null = null;
-    viewer.addEventListener('touchstart', (e) => (x0 = e.touches[0].clientX), { passive: true });
-    viewer.addEventListener('touchend', (e) => {
-      if (x0 === null) return;
-      const dx = e.changedTouches[0].clientX - x0;
-      if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
-      x0 = null;
-    });
-  }
 </script>
 
 <style>
@@ -684,99 +847,6 @@ const toc = [
     background: #000;
   }
 
-  /* In the field: one big frame, then a grid; each opens the viewer. */
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-  }
-  .gallery .lead {
-    grid-column: 1 / -1;
-  }
-  .gallery button {
-    display: block;
-    width: 100%;
-    padding: 0;
-    border: 1px solid var(--frame-edge);
-    border-radius: 8px;
-    overflow: hidden;
-    background: #0e0e12;
-    cursor: zoom-in;
-  }
-  .gallery img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    transition: transform 0.5s var(--ease-out);
-  }
-  .gallery button:hover img {
-    transform: scale(1.03);
-  }
-  .gallery button:focus-visible {
-    outline: 2px solid var(--tan);
-    outline-offset: 3px;
-  }
-  .viewer {
-    width: min(1400px, 96vw);
-    max-width: none;
-    max-height: 96vh;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: #f7f7f5;
-    overflow: visible;
-  }
-  .viewer::backdrop {
-    background: rgb(8 8 10 / 0.9);
-  }
-  .viewer img {
-    display: block;
-    width: 100%;
-    max-height: 84vh;
-    object-fit: contain;
-    border-radius: 8px;
-  }
-  .viewer .v-cap {
-    margin: 10px 0 0;
-    font-size: 14px;
-    color: #c9c9c4;
-    text-align: center;
-  }
-  .viewer button {
-    position: absolute;
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border: 1px solid rgb(255 255 255 / 0.25);
-    border-radius: 50%;
-    background: rgb(11 11 14 / 0.7);
-    color: #f7f7f5;
-    font-size: 26px;
-    line-height: 1;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-  .viewer button:hover {
-    background: rgb(40 40 46 / 0.9);
-  }
-  .v-close {
-    top: 10px;
-    right: 10px;
-  }
-  .v-prev,
-  .v-next {
-    top: calc(50% - 40px);
-  }
-  .v-prev {
-    left: 10px;
-  }
-  .v-next {
-    right: 10px;
-  }
-
   /* Look and style */
   .pairs {
     display: grid;
@@ -898,43 +968,255 @@ const toc = [
   :global(:root[data-theme='light']) .track.hp i {
     background: var(--accent);
   }
-  .walker {
+  /* Level 3 */
+  .strip {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    margin-top: 26px;
+    margin-bottom: 26px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
   }
-  .walker figure {
+  .strip div {
+    padding: 16px 14px;
+    border-left: 1px solid var(--line);
+  }
+  .strip div:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .strip dt {
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .strip dd {
+    margin: 4px 0 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+  .director {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-raised);
+    counter-reset: d;
+  }
+  .director li {
     position: relative;
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 20px 20px 18px;
+    border-left: 1px solid var(--line);
+    counter-increment: d;
   }
-  .walker .span {
-    grid-column: 1 / -1;
+  .director li:first-child {
+    border-left: 0;
   }
-  .walker figcaption.span {
-    margin-top: -6px;
+  .director b {
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tan);
   }
-  .walker img {
+  .director b::before {
+    content: counter(d) '  ';
+  }
+  .director .big {
+    font-size: 34px;
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .block .director p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .battles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    padding: 0;
+    list-style: none;
+  }
+  .battles img {
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid var(--frame-edge);
   }
-  .walker .span img {
-    aspect-ratio: 1200 / 480;
+  .block .b-kick {
+    margin: 12px 0 4px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--tan);
   }
-  .lab {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 3px 9px;
+  .battles h4 {
+    margin: 0 0 6px;
+    font-weight: 400;
+    font-size: 19px;
+    color: var(--text);
+  }
+  .block .battles p:not(.b-kick) {
+    margin: 0 0 10px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .battles dl {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .battles dl div {
+    display: flex;
+    gap: 10px;
+  }
+  .battles dt {
+    flex: 0 0 76px;
+    color: var(--muted);
+  }
+  .battles dd {
+    margin: 0;
+    color: var(--project-body);
+  }
+  .mix {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr) 34px;
+    gap: 10px 12px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .mix .lb {
+    color: var(--muted);
+  }
+  .mix .v {
+    text-align: right;
+    color: var(--text);
+  }
+  .mbar {
+    display: flex;
+    height: 20px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .mbar i {
+    display: block;
+    height: 100%;
+    border-right: 1px solid var(--bg-raised);
+  }
+  .block .keys {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 14px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .keys span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .keys i {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+  .tl {
+    display: flex;
+    height: 38px;
     border-radius: 6px;
-    background: rgb(11 11 14 / 0.72);
-    color: #f7f7f5;
-    font-size: 11px;
+    overflow: hidden;
+  }
+  .tl span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid var(--bg-raised);
+    color: #fff;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  /* The heavy walker, first kit to rebuilt */
+  .rebuild h3 {
+    margin: 0 0 14px;
+    font-weight: 400;
+    font-size: 22px;
+  }
+  .rb-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+  }
+  .rb-frame {
+    aspect-ratio: 4 / 3;
+    border-radius: 10px;
+    border: 1px solid var(--frame-edge);
+    overflow: hidden;
+    background: #1b1a22;
+  }
+  .rb-frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .rb-pair figcaption {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--project-body);
+  }
+  .rb-pair figcaption b {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+    color: var(--tan);
+  }
+  .rb-arrow {
+    font-size: 28px;
+    color: var(--tan);
+  }
+  .rb-changes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .rb-changes li {
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--project-body);
+  }
+  .rb-changes b {
+    font-weight: 500;
+    color: var(--text);
   }
 
   /* Charts */
@@ -1162,17 +1444,22 @@ const toc = [
   }
 
   @media (max-width: 760px) {
-    .gallery {
+    .strip {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
     }
-    .gallery figcaption {
-      font-size: 12px;
+    .rb-pair {
+      grid-template-columns: 1fr;
+    }
+    .rb-arrow {
+      transform: rotate(90deg);
+      justify-self: center;
     }
     .pairs,
     .moods,
     .tanks,
-    .charts {
+    .charts,
+    .battles,
+    .director {
       grid-template-columns: 1fr;
     }
     .stats {
@@ -1196,18 +1483,6 @@ const toc = [
     .beats,
     .thumbs {
       min-width: 620px;
-    }
-    .viewer button.v-prev,
-    .viewer button.v-next {
-      display: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .gallery img {
-      transition: none;
-    }
-    .gallery button:hover img {
-      transform: none;
     }
   }
 </style>
