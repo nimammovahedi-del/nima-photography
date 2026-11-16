@@ -21,8 +21,8 @@ export const home = {
   cards: {
     photography: '{countries} countries and {cities} cities, from Norway&rsquo;s fjords to Luxor.',
     research: { caption: '{n} papers on courts, power-sharing, AI and investment.', newest: 'judicial-arms-race' },
-    projects: { caption: '{n} free tools, from LSAT practice to small claims court.', newest: 'fairclaim' },
-    games: { caption: '{n} games I made, from a cozy capybara to a night-time shooter.', newest: 'umbara' },
+    projects: { caption: '{n} tools, from free LSAT practice to government accountability.', newest: 'fairclaim' },
+    games: { caption: '{n} games I made, from an open-world capybara sim to a first-person shooter.', newest: 'umbara' },
   },
   links: [
     { icon: 'email', label: 'Email', href: 'mailto:movahedn@uci.edu' },
