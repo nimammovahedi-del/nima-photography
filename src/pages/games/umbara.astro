@@ -15,8 +15,8 @@ import { games } from '../../data/games';
 const game = games.find((g) => g.slug === 'umbara')!;
 const f = (n: string) => `/games/umbara/${n}.webp`;
 const a = (n: string) => `/games/umbara/assets/${n}.webp`;
-// The trailer exactly as uploaded; the player starts at the gunship's descent and stops on the title card.
-const TRAILER = 'https://pub-e2867eccfdfb4aff83fb9f3d085f5084.r2.dev/umbara2.mp4#t=14,59';
+// The trailer exactly as uploaded, played from the start.
+const TRAILER = 'https://pub-e2867eccfdfb4aff83fb9f3d085f5084.r2.dev/umbara2.mp4';
 
 // ---- Level 3, from the game's level file (on Medium) ----
 const enc = m.encounters as any[];
