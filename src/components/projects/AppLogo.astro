@@ -1,8 +1,8 @@
 ---
 // Each app's own icon, taken from its live site (the Ergo, Check Congress and Federal Money
-// Atlas favicons, the Fair Claim balance logo and the Best Bricks logo).
+// Atlas favicons, the Unvault logo and the Best Bricks logo).
 interface Props {
-  slug: 'ergo' | 'check-congress' | 'fairclaim' | 'fed-money' | 'best-bricks';
+  slug: 'ergo' | 'unvault' | 'check-congress' | 'best-bricks' | 'fed-money';
   size?: number;
 }
 const { slug, size = 56 } = Astro.props;
@@ -25,28 +25,23 @@ const seats = [
     )
   }
   {
-    slug === 'check-congress' && (
-      <svg viewBox="0 0 64 64">
-        <rect width="64" height="64" rx="14" fill="#050505" />
-        <g fill="#fff" transform="translate(0 9)">
-          {seats.map(([x, y]) => <circle cx={x} cy={y} r="3" />)}
+    slug === 'unvault' && (
+      <svg viewBox="0 0 32 32">
+        <rect width="32" height="32" rx="7" fill="#0e3b31" />
+        <g transform="translate(4 6.2) scale(0.7)">
+          <path d="M19.4 7.8A9.6 9.6 0 1 0 19.4 20.2" fill="none" stroke="#f7f7f5" stroke-width="3" stroke-linecap="round" />
+          <path d="M22.5 4.2 30.6 7.4V20.6L22.5 23.8Z" fill="#5dbb94" />
+          <path d="M30.6 7.4 33.4 8.7V19.3L30.6 20.6Z" fill="#2f8f69" />
         </g>
       </svg>
     )
   }
   {
-    slug === 'fairclaim' && (
+    slug === 'check-congress' && (
       <svg viewBox="0 0 64 64">
-        <rect width="64" height="64" fill="#f2f1ec" />
-        <g transform="translate(6 6) scale(0.8125)" fill="#111112">
-          <circle cx="32" cy="7" r="5" />
-          <rect x="29" y="8" width="6" height="44" rx="3" />
-          <rect x="3" y="12" width="58" height="6" rx="3" />
-          <rect x="13" y="15" width="4" height="12" rx="2" />
-          <rect x="47" y="15" width="4" height="12" rx="2" />
-          <rect x="3" y="25" width="24" height="21" rx="5" fill="#2a4bd0" />
-          <rect x="37" y="25" width="24" height="21" rx="5" fill="#f2583e" />
-          <rect x="14" y="52" width="36" height="8" rx="4" />
+        <rect width="64" height="64" rx="14" fill="#050505" />
+        <g fill="#fff" transform="translate(0 9)">
+          {seats.map(([x, y]) => <circle cx={x} cy={y} r="3" />)}
         </g>
       </svg>
     )

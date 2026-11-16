@@ -21,7 +21,7 @@ export const home = {
   cards: {
     photography: '{countries} countries and {cities} cities, from Norway&rsquo;s fjords to Luxor.',
     research: { caption: '{n} papers on courts, power-sharing, AI and investment.', newest: 'judicial-arms-race' },
-    projects: { caption: '{n} tools, from free LSAT practice to government accountability.', newest: 'fairclaim' },
+    projects: { caption: '{n} tools, from free LSAT practice to government accountability.', newest: 'unvault' },
     games: { caption: '{n} games I made, from an open-world capybara sim to a first-person shooter.', newest: 'umbara' },
   },
   links: [
