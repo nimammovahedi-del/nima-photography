@@ -1,0 +1,566 @@
+---
+// Capy Time, told as a short story in my own words: the idea, what you do, the world and its look,
+// the controls, then how I made it with Claude. Pictures are real captures of the game; clips are
+// muted and only play when pressed.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Shot from '../../components/projects/Shot.astro';
+import type { Media } from '../../data/projects';
+import { games } from '../../data/games';
+
+const game = games.find((g) => g.slug === 'capy-time')!;
+const host = 'capytime.pages.dev';
+const f = (n: string) => `/games/capy-time/${n}`;
+const still = (src: string, alt: string, ratio = '16 / 9'): Media => ({ kind: 'image', src: f(src), alt, ratio });
+const clip = (name: string, alt: string): Media => ({
+  kind: 'clip',
+  src: f(`${name}.mp4`),
+  poster: f(`${name}-poster.webp`),
+  alt,
+  loop: true,
+});
+
+const toc = [
+  { id: 'overview', title: 'Overview' },
+  { id: 'idea', title: 'The idea' },
+  { id: 'play', title: 'What you do' },
+  { id: 'world', title: 'The world' },
+  { id: 'look', title: 'The look' },
+  { id: 'controls', title: 'Controls' },
+  { id: 'built', title: 'How I made it' },
+];
+
+const steps = [
+  { name: 'A one-page brief', text: 'My own words became a short design brief: the pitch, the look, the first minute of play, and what to leave out. I updated it after every play session, so it doubles as a record of each decision.' },
+  { name: 'Six style rounds', text: 'Before any game existed, each round produced real screenshots from the engine, never mock-ups. The world settled early. The capybara took all six rounds, because the first ones read as teddy bears.' },
+  { name: 'A first playable zoo', text: 'The den and its hot spring, a plaza with a bell, pens for pandas, giraffes and foxes, a roaming goose, text-bubble chats, and things to carry and wear.' },
+  { name: 'A much bigger park', text: 'Real hills, three rivers, a lake you can dive into, the shrine on the hill, a great onsen and walk-in buildings. Then twelve more animals, a map and the list of things to try.' },
+  { name: 'A team check', text: 'For the final pass, Claude ran eleven agents at once: eight each owned one area of the game and fixed it, one only explored and listed problems, and two measured performance.' },
+  { name: 'Cooler, then phones', text: 'My laptop ran hot, so we cut the drawing load. Then came full touch controls, tested and tuned on my own iPhone.' },
+];
+---
+
+<BaseLayout title={game.name} description="Capy Time: a cozy 3D browser game about being a capybara at a Japanese zoo at dusk, and how I made it.">
+  <article class="page" data-tone="grey">
+    <nav class="back"><a href="/games"><span aria-hidden="true">←</span> Games</a></nav>
+
+    <nav class="toc" aria-label="Sections of Capy Time" data-toc>
+      <ol>{toc.map((t) => <li><a href={`#${t.id}`}>{t.title}</a></li>)}</ol>
+    </nav>
+
+    <header class="intro" id="overview">
+      <h1>{game.name}</h1>
+      <p class="tagline">A small, calm evening at the zoo, as a capybara.</p>
+      <div class="actions">
+        <a class="btn" href={game.url} target="_blank" rel="noopener">Play Capy Time <span aria-hidden="true">↗</span></a>
+        <ul class="tags">{['Free', 'Browser', 'Desktop and phone', 'three.js'].map((t) => <li>{t}</li>)}</ul>
+      </div>
+    </header>
+
+    <div class="wide hero">
+      <Shot media={still('title.webp', 'The Capy Time title screen over the capybara den at dusk, with the hot spring, lanterns and a red gate on the hill')} address={host} eager />
+    </div>
+
+    <section class="block" id="idea">
+      <h2>The idea</h2>
+      <p>Capy Time started with one question: is simply being a capybara relaxing and fun? I wanted a game with no score to chase and no way to lose. You waddle out of the capybara den, slide into a steaming hot spring, balance an orange on your head, and wander off to meet the rest of the zoo. The only trouble is a goose that likes to nip, and even that just knocks your hat off.</p>
+      <p>It is set in a Japanese open zoo where it is always lantern dusk. There are no people. Night has settled and the animals have the park to themselves. They talk in short text bubbles and make their own noises, a capybara's purr or a goose's honk, so nobody ever speaks out loud.</p>
+    </section>
+
+    <section class="block" id="play">
+      <h2>What you do</h2>
+      <p>You soak, nap, nibble hay, ring the shrine bell, shake a yuzu tree, bounce on mushrooms, ride the penguins' ice slide, dive for shells, and stack up to three found things on your head. A list of 24 things to try ticks itself off as you go. It is the closest the game comes to a goal.</p>
+      <div class="wide"><Shot media={clip('walk', 'Walking the capybara out of the den, past the hot spring and the lanterns')} address={host} /></div>
+      <p class="after">Animals become friends as you talk to them, boop them and bring them things they like. Then they ask a riddle and give you a gift. A befriended baby capybara rides on your back for a while, and if you rest long enough a small bird lands on your head.</p>
+      <div class="wide"><Shot media={clip('onsen', 'The capybara settling into the steaming hot spring in the den')} address={host} /></div>
+      <p class="after">Up the hill, eight guardian spirits from Japanese folklore live at the shrine: a nine-tailed fox, a two-tailed cat, a tanuki, a pair of lion-dogs, a kirin, a crane, a three-legged crow and a water dragon. Each asks a riddle, and a right answer earns a blessing you can feel in play, like a higher hop, faster swimming, a glide through the air, or a goose that finally stops chasing you.</p>
+      <div class="wide"><Shot media={still('riddle.webp', 'A white nine-tailed fox spirit asking a riddle at the hill shrine')} address={host} /></div>
+    </section>
+
+    <section class="block" id="world">
+      <h2>The world</h2>
+      <p>The park is about 228 by 162 meters, ringed by a wooden wall, with a lantern-lit town and mountains beyond it. Play begins at the capybara den. From there you can climb a stairway under a tunnel of red gates to a shrine on a hill, take a boardwalk to a pagoda on a lake, or dive down to a sunken gate. Three rivers cross the park, and swimming along one is faster than walking, so it is the quick way round.</p>
+      <div class="wide"><Shot media={clip('stream', 'Wading through the shallow stream by the red bridge, past koi and ripples')} address={host} /></div>
+      <div class="wide gallery">
+        <Shot media={still('stairs.webp', 'The capybara climbing stone stairs under a tunnel of red gates')} address={host} />
+        <Shot media={still('onsen.webp', 'Capybaras soaking in the great hot spring')} address={host} />
+        <Shot media={still('underwater.webp', 'Under the lake, by a sunken red gate among rocks and kelp')} address={host} />
+        <Shot media={still('penguins.webp', 'The penguin enclosure with snow, an igloo and the ice slide')} address={host} />
+      </div>
+      <p class="after">There are 34 kinds of creature and 123 animals in all, from pandas, red pandas and snow monkeys to koi, crabs and frogs in the lake. Every one is built and animated in the same plush, outlined style.</p>
+      <div class="wide"><Shot media={still('lineup.webp', 'A line-up of every animal model in the game, used to check each one in every pose')} address={host} /></div>
+      <p class="caption">The full line-up, which we used to check every animal in every pose.</p>
+    </section>
+
+    <section class="block" id="look">
+      <h2>The look</h2>
+      <p>I described the art direction as toon shading, soft pastel colors, chunky rounded shapes, dark outlines and a warm storybook feel. Smooth controls and the look came first, ahead of the number of features. The sky stays at dusk forever, purple fading to peach, lit by pools of lantern light, fireflies and steam curling off the hot springs.</p>
+      <p>Getting the capybara right took six rounds. The first ones looked like teddy bears, so we rebuilt it on a real capybara's skeleton and then made it a little chibi: a long barrel body, a wedge head, small ears, short legs in dark socks and big shiny eyes.</p>
+      <div class="wide pair">
+        <figure>
+          <Shot media={still('style-early.webp', 'An early style test: rounded bear-like capybaras around a hot spring in daylight')} address={host} />
+          <figcaption>Round 1: friendly, but they read as bears.</figcaption>
+        </figure>
+        <figure>
+          <Shot media={still('capy-final.webp', 'The final chibi capybaras at dusk, one with an orange on its head')} address={host} />
+          <figcaption>Round 6: the capybara that made it into the game.</figcaption>
+        </figure>
+      </div>
+      <p class="after">Everything is made in code. There are no 3D model files, textures or recordings. Shading uses a few hard bands of light, like a cel-shaded cartoon, and each object gets its outline from a slightly larger, inside-out copy drawn behind it. Even the sound is generated as you play: each animal has its own voice, and the music is composed live, note by note, so it never loops. There are five tunes to pick from.</p>
+    </section>
+
+    <section class="block" id="controls">
+      <h2>Controls, on a keyboard or a phone</h2>
+      <p>On a computer you walk with W and S, turn with A and D, look around with the mouse, hop with Space and boop with Q. Other keys roll over, make a noise, wear or eat what you're carrying, or switch to first person.</p>
+      <div class="wide"><Shot media={clip('hop', 'Hopping, rolling over and calling out, with nearby animals answering in speech bubbles')} address={host} /></div>
+      <p class="after">On a phone the controls change completely. A pad under your left thumb walks the capybara, and dragging the right side of the screen looks around. Tap anything with a ring over it and the capybara walks over to talk, pick it up or read it. Hop, Boop and one action button that changes with the moment (Roll, Dive, Up and Down under water, Relax in a hot spring) sit under your right thumb. The phone version starts in a lighter graphics mode, and on iPhone it walks you through adding the game to your home screen, the only way to lose Safari's bars.</p>
+      <div class="wide"><Shot media={still('phone.webp', 'Six phone screenshots: rings over animals, the Up and Down buttons under water, a riddle, and the pause menu', '1100 / 769')} address={host} /></div>
+    </section>
+
+    <section class="block how" id="built">
+      <h2>How I made it</h2>
+      <p>I directed the game and played every build; Claude wrote all of the code. We worked in short rounds, each with the same rhythm: questions, real screenshots from the engine, a build, checks, and then a build handed to me to play. Every accepted build goes live on its own.</p>
+      <dl class="stats">
+        <div><dt>34</dt><dd>kinds of animal and spirit</dd></div>
+        <div><dt>123</dt><dd>animals in the park</dd></div>
+        <div><dt>24</dt><dd>things to try</dd></div>
+        <div><dt>0</dt><dd>model, texture or sound files</dd></div>
+      </dl>
+      <ol class="chain" aria-hidden="true">{steps.map((s) => <li>{s.name}</li>)}</ol>
+      <ol class="steps">
+        {steps.map((s) => (
+          <li>
+            <h3>{s.name}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="notes">
+        <div>
+          <h3>Played by script</h3>
+          <p>Before I saw a build, a script played it in a headless browser: walking roads, climbing stairs, diving and answering riddles, and photographing the result.</p>
+        </div>
+        <div>
+          <h3>What the team found</h3>
+          <p>283 trees floating over sloping ground, 44 houses half-buried on their uphill side, doors you couldn't reach, and a penguin pool hidden under its own snow. Each fix had to be proved with a screenshot.</p>
+        </div>
+        <div>
+          <h3>Running cooler</h3>
+          <p>Capping the frame rate, drawing only when something changes and simplifying far scenery cut what's drawn at the den from about 2.45 to 1.84 million triangles. A Graphics setting lets each player choose.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="end">
+      <a class="btn big" href={game.url} target="_blank" rel="noopener">Play Capy Time <span aria-hidden="true">↗</span></a>
+      <p class="note">Free, in the browser. Works on a computer or a phone.</p>
+      <nav class="pager" aria-label="Games">
+        <a href="/games"><span aria-hidden="true">←</span> All games</a>
+        <a href="/projects">Projects <span aria-hidden="true">→</span></a>
+      </nav>
+    </footer>
+  </article>
+</BaseLayout>
+
+<script>
+  // Side menu: the section you're reading is highlighted as you scroll, and a click glides there.
+  const nav = document.querySelector<HTMLElement>('[data-toc]');
+  if (nav) {
+    const links = [...nav.querySelectorAll<HTMLAnchorElement>('a')];
+    const targets = links.map((a) => document.getElementById(a.hash.slice(1))!);
+    let current = -1;
+    const update = () => {
+      const line = window.innerHeight * 0.35;
+      let i = 0;
+      targets.forEach((t, k) => {
+        if (t && t.getBoundingClientRect().top <= line) i = k;
+      });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) i = targets.length - 1;
+      if (i === current) return;
+      current = i;
+      links.forEach((a, k) => (k === i ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+    };
+    let queued = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          update();
+        });
+      },
+      { passive: true },
+    );
+    window.addEventListener('resize', update);
+    update();
+    links.forEach((a, k) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        targets[k].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+        history.replaceState(null, '', a.hash);
+      }),
+    );
+  }
+</script>
+
+<style>
+  .page {
+    --col: 720px;
+    --wide: 1040px;
+    padding: 0 var(--gutter) 40px;
+  }
+  .page > *,
+  .block > * {
+    max-width: var(--col);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .page > .wide,
+  .block > .wide,
+  .how > .stats,
+  .how > .steps,
+  .how > .chain,
+  .how > .notes {
+    max-width: var(--wide);
+  }
+  .page > .block {
+    max-width: none;
+  }
+  .back {
+    padding-top: 28px;
+  }
+  .back a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 15px;
+  }
+  .back a span {
+    color: var(--tan);
+  }
+  .page [id] {
+    scroll-margin-top: 96px;
+  }
+
+  .toc {
+    display: none;
+  }
+  @media (min-width: 1300px) {
+    .page {
+      --wide: min(1040px, calc(100vw - 480px));
+    }
+    .toc {
+      display: block;
+      position: fixed;
+      top: 128px;
+      left: max(24px, calc((100vw - var(--wide)) / 2 - 216px));
+      width: 176px;
+      max-width: none;
+      margin: 0;
+      z-index: 5;
+    }
+  }
+  .toc ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-left: 1px solid var(--line);
+  }
+  .toc a {
+    display: block;
+    margin-left: -1px;
+    padding: 7px 0 7px 16px;
+    border-left: 2px solid transparent;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.35;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .toc a:hover,
+  .toc a[aria-current] {
+    color: var(--text);
+  }
+  .toc a[aria-current] {
+    border-left-color: var(--tan);
+  }
+
+  .intro {
+    display: grid;
+    justify-items: start;
+    gap: 16px;
+    padding: clamp(32px, 6vw, 64px) 0 clamp(28px, 4vw, 44px);
+  }
+  h1 {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 60px);
+    line-height: 1.05;
+  }
+  .tagline {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.45;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 18px;
+    margin-top: 6px;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .tags li {
+    font-size: 14px;
+    padding: 3px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--project-body);
+  }
+  .btn {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    padding: 11px 18px;
+    border-radius: 8px;
+    background: var(--cream);
+    color: var(--bg);
+    font-size: 15px;
+    text-decoration: none;
+    transition: background 0.2s var(--ease-out);
+  }
+  .btn:hover {
+    background: var(--text);
+  }
+  :global(:root[data-theme='light']) .btn {
+    background: var(--text);
+    color: var(--bg);
+  }
+  :global(:root[data-theme='light']) .btn:hover {
+    background: var(--nav);
+  }
+  .btn.big {
+    padding: 15px 26px;
+    font-size: 17px;
+  }
+  .hero {
+    padding-bottom: clamp(24px, 4vw, 40px);
+  }
+
+  .block {
+    padding: clamp(40px, 6vw, 72px) 0 0;
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-weight: 400;
+    font-size: clamp(28px, 3.6vw, 36px);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .block p {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .block .wide {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .block p.after {
+    margin-top: 0;
+  }
+  .block p.caption,
+  figcaption {
+    margin: -16px auto 30px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  figcaption {
+    margin: 12px 0 0;
+  }
+  .gallery,
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .pair figure {
+    margin: 0;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 30px;
+    margin-bottom: 40px;
+  }
+  .stats div {
+    padding: 20px 18px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-raised);
+  }
+  .stats dt {
+    font-size: 38px;
+    line-height: 1;
+    color: var(--text);
+    font-weight: 300;
+  }
+  .stats dd {
+    margin: 10px 0 0;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  h3 {
+    margin: 0 0 6px;
+    font-weight: 400;
+    font-size: 19px;
+    color: var(--text);
+  }
+  .chain {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 0;
+    margin: 0 auto 26px;
+    padding: 0;
+    list-style: none;
+    counter-reset: c;
+  }
+  .chain li {
+    counter-increment: c;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .chain li::before {
+    content: counter(c);
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    margin-right: 8px;
+    border: 1px solid var(--tan);
+    border-radius: 50%;
+    color: var(--tan);
+    font-size: 13px;
+  }
+  .chain li:not(:last-child)::after {
+    content: '';
+    width: 22px;
+    height: 1px;
+    margin: 0 10px;
+    background: var(--tan);
+    opacity: 0.6;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 40px;
+    padding: 0;
+    list-style: none;
+    counter-reset: s;
+  }
+  .steps li {
+    counter-increment: s;
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    align-content: start;
+    column-gap: 14px;
+  }
+  .steps li::before {
+    content: counter(s);
+    grid-row: 1 / span 2;
+    font-size: 20px;
+    line-height: 1.3;
+    color: var(--tan);
+    font-weight: 300;
+  }
+  .steps p,
+  .notes p {
+    margin: 0;
+    font-size: 17px;
+  }
+  .notes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 48px;
+  }
+  .notes div {
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  .end {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    padding: clamp(56px, 8vw, 96px) 0 24px;
+  }
+  .end .note {
+    margin: 0 0 26px;
+    font-size: 15px;
+    color: var(--muted);
+  }
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .pager a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 15px;
+  }
+  .pager a:hover {
+    color: var(--tan);
+  }
+
+  @media (max-width: 760px) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .notes,
+    .steps,
+    .pair {
+      grid-template-columns: 1fr;
+    }
+    .gallery {
+      gap: 10px;
+    }
+    .chain {
+      display: none;
+    }
+    .block p {
+      font-size: 17px;
+    }
+    .actions .btn,
+    .btn.big {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

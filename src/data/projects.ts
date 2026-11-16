@@ -3,9 +3,9 @@
 // public/projects/<slug>/.
 
 export type Media =
-  | { kind: 'image'; src: string; alt: string }
-  /** A short muted clip. It never plays on its own: pressing it plays it. */
-  | { kind: 'clip'; src: string; poster: string; alt: string };
+  | { kind: 'image'; src: string; alt: string; /** Width / height, e.g. '16 / 9'. Default 16 / 10. */ ratio?: string }
+  /** A short muted clip. It never plays on its own: pressing it plays it (on a loop if `loop`). */
+  | { kind: 'clip'; src: string; poster: string; alt: string; ratio?: string; loop?: boolean };
 
 export interface Section {
   title: string;

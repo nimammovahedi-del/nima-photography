@@ -11,7 +11,7 @@ interface Props {
 const { media, address, eager = false } = Astro.props;
 ---
 
-<figure class="shot">
+<figure class="shot" style={media.ratio ? `--ratio: ${media.ratio}` : undefined}>
   <div class="bar" aria-hidden="true">
     <span class="dots"><i></i><i></i><i></i></span>
     <span class="addr">{address}</span>
@@ -21,7 +21,7 @@ const { media, address, eager = false } = Astro.props;
       <img src={media.src} alt={media.alt} width="1600" height="1000" loading={eager ? 'eager' : 'lazy'} decoding="async" />
     ) : (
       <button class="clip" type="button" aria-label={`Play clip: ${media.alt}`} data-clip>
-        <video src={media.src} poster={media.poster} muted playsinline preload="none" width="1600" height="1000" />
+        <video src={media.src} poster={media.poster} muted playsinline loop={media.loop} preload="none" width="1600" height="1000" />
         <span class="play" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" /></svg>
         </span>
@@ -93,7 +93,7 @@ const { media, address, eager = false } = Astro.props;
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: var(--ratio, 16 / 10);
     object-fit: cover;
   }
   .clip {
