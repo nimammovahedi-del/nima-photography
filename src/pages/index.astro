@@ -1,5 +1,5 @@
 ---
-// The main page: a short hello (portrait, name, what I do, where I am, links) and three cards
+// The main page: a short hello (portrait, name, what I do, where I am, links) and four cards
 // into the site's sections. The cards' line drawings move only while hovered or focused.
 import { geoGraticule, geoOrthographic, geoPath } from 'd3-geo';
 import { merge } from 'topojson-client';
@@ -9,6 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { home, places, site } from '../site.config';
 import { papers } from '../data/research/papers';
 import { projects } from '../data/projects';
+import { games } from '../data/games';
 
 // ── Card captions: counts come from the data, so they stay current ──────────
 const WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
@@ -19,10 +20,12 @@ const captions = {
     .replace('{cities}', String(places.reduce((t, p) => t + p.cities.length, 0))),
   research: home.cards.research.caption.replace('{n}', word(papers.length)),
   projects: home.cards.projects.caption.replace('{n}', word(projects.length)),
+  games: home.cards.games.caption.replace('{n}', word(games.length)),
 };
 const newest = {
   research: papers.find((p) => p.slug === home.cards.research.newest)?.title,
   projects: projects.find((p) => p.slug === home.cards.projects.newest)?.name,
+  games: games.find((g) => g.slug === home.cards.games.newest)?.name,
 };
 
 // ── Globe: every country's land, with North America filled in cream ──────────
@@ -78,6 +81,23 @@ function brick(z: number, k: number) {
   return o;
 }
 const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
+
+// ── Games: a cog with rounded teeth, half hidden behind a game controller ─────
+const GEAR = { cx: 60, cy: 46, teeth: 10, tip: 29, root: 23.5 };
+const gear = (() => {
+  const { cx, cy, teeth, tip, root } = GEAR;
+  const pt = (r: number, a: number) => `${(cx + r * Math.cos(a)).toFixed(2)} ${(cy + r * Math.sin(a)).toFixed(2)}`;
+  const step = (2 * Math.PI) / teeth;
+  let d = '';
+  for (let i = 0; i < teeth; i++) {
+    const a = i * step - Math.PI / 2;
+    const [r0, r1, t0, t1, r2] = [a - step * 0.5, a - step * 0.26, a - step * 0.17, a + step * 0.17, a + step * 0.26];
+    d += `${i ? 'L' : 'M'}${pt(root, r0)}A${root} ${root} 0 0 1 ${pt(root, r1)}`;
+    d += `Q${pt(tip, (r1 + t0) / 2 - step * 0.02)} ${pt(tip, t0)}A${tip} ${tip} 0 0 1 ${pt(tip, t1)}`;
+    d += `Q${pt(tip, (t1 + r2) / 2 + step * 0.02)} ${pt(root, r2)}A${root} ${root} 0 0 1 ${pt(root, a + step * 0.5)}`;
+  }
+  return d + 'Z';
+})();
 ---
 
 <BaseLayout grey narrowNav description={`Research, projects and photography by ${site.name}.`}>
@@ -147,6 +167,37 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
         <p set:html={captions.photography} />
       </a>
 
+      <a class="card lego-card" href="/projects">
+        <svg viewBox="0 0 120 110" aria-hidden="true">
+          {bricks.map((b, k) => <g class:list={['brick', `b${k}`]} set:html={b} />)}
+        </svg>
+        <h2>Projects</h2>
+        <p>{captions.projects}</p>
+        {newest.projects && <p class="new"><span>New</span>{newest.projects}</p>}
+      </a>
+
+      <a class="card game-card" href="/games">
+        <svg viewBox="0 0 120 110" aria-hidden="true">
+          <g class="gear">
+            <path class="ln accent fill-bg" d={gear} />
+            <circle class="ln accent" cx={GEAR.cx} cy={GEAR.cy} r="8" />
+          </g>
+          <path
+            class="ln fill-bg"
+            d="M40 57h40c11 0 17 5 20 16l3.5 13c1.6 6-4.2 9.6-8.6 5.6L86 83H34l-8.9 8.6c-4.4 4-10.2.4-8.6-5.6L20 73c3-11 9-16 20-16z"
+          />
+          <path class="ln" d="M35.5 64v4.5H31v5h4.5V78h5v-4.5H45v-5h-4.5V64z" />
+          <circle class="fill-cream" cx="82" cy="65.2" r="2.7" />
+          <circle class="fill-cream" cx="82" cy="76.8" r="2.7" />
+          <circle class="fill-cream" cx="76.2" cy="71" r="2.7" />
+          <circle class="fill-accent" cx="87.8" cy="71" r="2.7" />
+          <path class="ln faint" d="M53 70.5h4M63 70.5h4" />
+        </svg>
+        <h2>Games</h2>
+        <p>{captions.games}</p>
+        {newest.games && <p class="new"><span>New</span>{newest.games}</p>}
+      </a>
+
       <a class="card book-card" href="/research">
         <svg viewBox="0 0 120 110" aria-hidden="true">
           <path class="ln fill-bg" d="M60 30C48 24 30 24 18 28v56c12-4 30-4 42 2" />
@@ -161,15 +212,6 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
         <h2>Research</h2>
         <p>{captions.research}</p>
         {newest.research && <p class="new"><span>New</span>{newest.research}</p>}
-      </a>
-
-      <a class="card lego-card" href="/projects">
-        <svg viewBox="0 0 120 110" aria-hidden="true">
-          {bricks.map((b, k) => <g class:list={['brick', `b${k}`]} set:html={b} />)}
-        </svg>
-        <h2>Projects</h2>
-        <p>{captions.projects}</p>
-        {newest.projects && <p class="new"><span>New</span>{newest.projects}</p>}
       </a>
     </nav>
   </div>
@@ -235,7 +277,7 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
 
 <style>
   .home {
-    max-width: 820px;
+    max-width: 940px;
     margin: 0 auto;
     /* BaseLayout's main already pads the sides; this keeps the column itself narrow. */
     --cream: #e5e4d8;
@@ -258,7 +300,7 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
     --b-cream-r: #b9b6a8;
   }
   :global(main:has(> .home)) {
-    max-width: 852px;
+    max-width: 972px;
     padding-left: 16px;
     padding-right: 16px;
   }
@@ -348,14 +390,14 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
   /* ── Cards ── */
   .cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
     padding: 32px 0 24px;
     border-top: 1px solid var(--line);
   }
   .card {
     display: block;
-    padding: 18px 18px 20px;
+    padding: 16px 16px 18px;
     border: 1px solid var(--line);
     border-radius: 12px;
     text-decoration: none;
@@ -382,7 +424,7 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
   }
   .card h2 {
     margin: 12px 0 2px;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 500;
     transition: color 200ms ease;
   }
@@ -402,13 +444,14 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
   .card p {
     margin: 0;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.45;
   }
   /* "New" line: the latest paper or project */
   .card .new {
     margin-top: 10px;
     color: var(--text);
-    font-size: 13px;
+    font-size: 12.5px;
   }
   .card .new span {
     margin-right: 8px;
@@ -447,8 +490,26 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
     stroke-width: 0.8;
     opacity: 0.45;
   }
-  .text-lines {
+  .text-lines,
+  .faint {
     opacity: 0.45;
+  }
+  .fill-accent {
+    fill: var(--accent);
+  }
+
+  /* Games: the cog behind the controller turns slowly while hovered */
+  .gear {
+    transform-origin: 60px 46px;
+    transform-box: view-box;
+  }
+  .game-card:is(:hover, :focus-visible) .gear {
+    animation: spin 9s linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   /* Book: three pages turn while hovered */
@@ -540,7 +601,8 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
   }
   @media (prefers-reduced-motion: reduce) {
     .card .page,
-    .card .brick {
+    .card .brick,
+    .card .gear {
       animation: none !important;
     }
   }
@@ -593,34 +655,29 @@ const bricks = [0, 1, 2, 3].map((k) => brick(k * HB, k));
       font-size: 12px;
     }
     .card .new {
-      grid-column: 2;
       margin-top: 6px;
+      font-size: 11.5px;
     }
+    .card .new span {
+      display: inline-block;
+      margin: 0 6px 3px 0;
+    }
+    /* Two by two, the drawing above the words */
     .cards {
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
     }
     .card {
-      display: grid;
-      grid-template-columns: 110px 1fr;
-      grid-template-rows: auto auto;
-      align-content: center;
-      column-gap: 16px;
-      padding: 10px 14px;
+      padding: 10px 12px 14px;
     }
     .card svg {
-      grid-row: span 3;
-      width: 110px;
-      height: 96px;
+      height: 104px;
     }
     .lego-card svg {
       transform: translateY(-14px) scale(1.12);
     }
     .card h2 {
-      align-self: end;
-      margin: 0;
+      margin-top: 6px;
     }
-    .card p {
-      align-self: start;
-    }
+  }
   }
 </style>
