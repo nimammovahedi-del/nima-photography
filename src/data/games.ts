@@ -20,8 +20,10 @@ export const games: Game[] = [
     slug: 'umbara',
     name: 'Umbara',
     summary:
-      'My next game, and a much bigger one than Capy Time. It is in development now, and it will get its own page once there is something to show.',
-    tags: ['In development'],
+      'A night-time first-person shooter where you fight an enemy you can’t see without help. Made in Godot, with every original model built by script. Watch the full trailer and see how I made it.',
+    tags: ['Godot', 'Blender by script', 'Trailer'],
+    url: 'https://umbara-asy.pages.dev/',
+    thumb: '/games/umbara/cover.webp',
     featured: true,
   },
   {

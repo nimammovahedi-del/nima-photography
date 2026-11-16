@@ -1,6 +1,6 @@
 ---
-// Games: the game in development as one big card on top, then a smaller card per finished game,
-// which opens that game's own page. Nothing moves until a card is hovered.
+// Games: the featured game as one big card on top, then a smaller card per other game; each card
+// opens that game's own page. Nothing moves until a card is hovered.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { games } from '../../data/games';
 
@@ -8,7 +8,7 @@ const featured = games.find((g) => g.featured);
 const rest = games.filter((g) => !g.featured);
 ---
 
-<BaseLayout title="Games" description="Games I've made: Capy Time, a cozy 3D capybara game for the browser, and Umbara, a bigger game in development.">
+<BaseLayout title="Games" description="Games I've made: Umbara, a night-time first-person shooter made in Godot, and Capy Time, a cozy 3D capybara game for the browser.">
   <header class="head" data-tone="grey">
     <h1>Games</h1>
     <p class="lede">Small worlds I made to wander around in.</p>
@@ -18,22 +18,23 @@ const rest = games.filter((g) => !g.featured);
     {
       featured && (
         <section class="featured" aria-labelledby="featured-name">
-          <svg class="eclipse" viewBox="0 0 400 400" aria-hidden="true">
-            <defs>
-              <radialGradient id="corona" cx="50%" cy="50%" r="50%">
-                <stop offset="58%" stop-color="#b0a27c" stop-opacity="0.38" />
-                <stop offset="70%" stop-color="#b0a27c" stop-opacity="0.1" />
-                <stop offset="100%" stop-color="#b0a27c" stop-opacity="0" />
-              </radialGradient>
-            </defs>
-            <circle class="glow" cx="200" cy="200" r="190" fill="url(#corona)" />
-            <circle class="ring" cx="200" cy="200" r="112" />
-            <circle class="moon" cx="214" cy="190" r="110" />
-          </svg>
+          <a class="cover" href={`/games/${featured.slug}`} aria-label={`${featured.name}: the trailer and how I made it`} />
+          {featured.thumb && <img class="f-img" src={featured.thumb} alt="" width="1800" height="663" loading="eager" />}
           <div class="f-text">
-            <p class="eyebrow">Coming soon</p>
-            <h2 id="featured-name">{featured.name}</h2>
+            <p class="eyebrow">Featured</p>
+            <h2 id="featured-name">
+              {featured.name}
+              <span class="arrow" aria-hidden="true">→</span>
+            </h2>
             <p class="f-summary">{featured.summary}</p>
+            <div class="links">
+              {featured.url && (
+                <a class="play" href={featured.url} target="_blank" rel="noopener">
+                  Play {featured.name} <span aria-hidden="true">↗</span>
+                </a>
+              )}
+              <span class="read">Trailer and how I made it</span>
+            </div>
           </div>
         </section>
       )
@@ -105,56 +106,48 @@ const rest = games.filter((g) => !g.featured);
     padding-bottom: 80px;
   }
 
-  /* The featured game: a wide dark panel with an eclipse drawn on the right. It stays dark in
-     light mode, like a poster. */
+  /* The featured game: its cover across the top of a wide card, the words in the dark band below.
+     It stays dark in light mode, like a poster. */
   .featured {
     position: relative;
-    display: flex;
-    align-items: flex-end;
-    min-height: clamp(320px, 42vw, 440px);
-    padding: clamp(24px, 4vw, 48px);
+    display: grid;
     border: 1px solid #2c2c33;
     border-radius: 14px;
     overflow: hidden;
-    background:
-      radial-gradient(120% 90% at 78% 40%, #24232a 0%, #141417 60%, #0e0e10 100%);
+    background: #0e0e10;
     color: #f7f7f5;
+    transition: border-color 0.3s var(--ease-out);
   }
-  .eclipse {
-    position: absolute;
-    right: clamp(-80px, -4vw, 0px);
-    top: 50%;
-    width: clamp(300px, 46vw, 500px);
+  .featured:hover {
+    border-color: color-mix(in srgb, var(--tan) 55%, #2c2c33);
+  }
+  .f-img {
+    display: block;
+    width: 100%;
     height: auto;
-    transform: translateY(-50%);
+    aspect-ratio: 1800 / 663;
+    object-fit: cover;
+    transition: filter 0.5s var(--ease-out);
   }
-  .eclipse .ring {
-    fill: none;
-    stroke: var(--tan);
-    stroke-width: 1.5;
-    opacity: 0.75;
+  .featured:hover .f-img {
+    filter: brightness(1.08);
   }
-  .eclipse .moon {
-    fill: #101012;
-  }
-  .eclipse .glow {
-    opacity: 0.8;
-    transition: opacity 0.6s var(--ease-out);
-  }
-  .featured:hover .eclipse .glow {
-    opacity: 1;
-  }
-  .eclipse .moon {
-    transition: transform 0.9s var(--ease-out);
-  }
-  .featured:hover .eclipse .moon {
-    transform: translate(-6px, 4px);
+  .featured .cover {
+    z-index: 2;
   }
   .f-text {
     position: relative;
+    z-index: 3;
     display: grid;
     gap: 10px;
-    max-width: 30rem;
+    padding: clamp(20px, 3vw, 32px) clamp(20px, 3.5vw, 40px) clamp(22px, 3.5vw, 36px);
+    pointer-events: none;
+  }
+  .f-text .f-summary {
+    max-width: 44rem;
+  }
+  .f-text .play {
+    pointer-events: auto;
   }
   .eyebrow {
     margin: 0;
@@ -166,9 +159,8 @@ const rest = games.filter((g) => !g.featured);
   .featured h2 {
     margin: 0;
     font-weight: 300;
-    font-size: clamp(44px, 7vw, 76px);
+    font-size: clamp(40px, 6vw, 64px);
     line-height: 1;
-    letter-spacing: 0.01em;
   }
   .f-summary {
     margin: 0;
@@ -176,6 +168,28 @@ const rest = games.filter((g) => !g.featured);
     line-height: 1.6;
     font-weight: 300;
     color: #dddcd3;
+  }
+  .featured .play {
+    background: var(--cream);
+    color: #18181b;
+  }
+  .featured .play:hover {
+    background: #f7f7f5;
+  }
+  .featured .read {
+    color: #f7f7f5;
+    text-decoration-color: rgb(255 255 255 / 0.3);
+  }
+  .featured:hover .read {
+    text-decoration-color: var(--tan);
+  }
+  :global(:root[data-theme='light']) .featured .play {
+    background: var(--cream);
+    color: #18181b;
+  }
+  .featured:hover .arrow {
+    opacity: 1;
+    transform: none;
   }
 
   /* A finished game: a smaller card that opens its page. */
@@ -317,17 +331,6 @@ const rest = games.filter((g) => !g.featured);
   }
 
   @media (max-width: 760px) {
-    /* Phones: the eclipse sits above the words instead of beside them. */
-    .featured {
-      min-height: 0;
-      padding-top: 210px;
-    }
-    .eclipse {
-      top: -10px;
-      right: -50px;
-      width: 260px;
-      transform: none;
-    }
     .card {
       grid-template-columns: 1fr;
       gap: 16px;
@@ -340,11 +343,9 @@ const rest = games.filter((g) => !g.featured);
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .eclipse .moon,
     .thumb img {
       transition: none;
     }
-    .featured:hover .eclipse .moon,
     .card:hover .thumb img {
       transform: none;
     }
