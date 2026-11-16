@@ -1192,6 +1192,25 @@ const tanks = [
   }
   .cmp.brief {
     min-width: 640px;
+    table-layout: fixed;
+  }
+  .cmp.brief thead th {
+    width: 21.5%;
+    vertical-align: top;
+  }
+  .cmp.brief thead th:first-child {
+    width: 14%;
+  }
+  .cmp.brief thead img {
+    height: auto;
+  }
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
   .cmp.lines thead th {
     width: auto;
