@@ -1,5 +1,6 @@
 ---
 // Two frames of the same view stacked; dragging (or the arrow keys) moves the line between them.
+// The corner button opens the same comparison large, with a note on what changed.
 // Nothing moves until the visitor drags.
 interface Props {
   before: string;
@@ -9,20 +10,51 @@ interface Props {
   right?: string;
   /** Width / height of the frames. */
   ratio?: string;
+  /** What changed, shown with the enlarged view. */
+  note?: string;
+  /** Title for the enlarged view. */
+  title?: string;
 }
-const { before, after, alt, left = 'Before', right = 'After', ratio = '16 / 9' } = Astro.props;
+const { before, after, alt, left = 'Before', right = 'After', ratio = '16 / 9', note, title } = Astro.props;
+const views = [false, true];
 ---
 
-<div class="ba" data-ba style={`--ratio: ${ratio}`}>
-  <img class="before" src={before} alt={`${alt} (${left.toLowerCase()})`} loading="lazy" decoding="async" />
-  <img class="after" src={after} alt={`${alt} (${right.toLowerCase()})`} loading="lazy" decoding="async" />
-  <span class="tag l" aria-hidden="true">{left}</span>
-  <span class="tag r" aria-hidden="true">{right}</span>
-  <span class="line" aria-hidden="true"></span>
-  <span class="knob" aria-hidden="true">
-    <svg viewBox="0 0 24 24"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5" /></svg>
-  </span>
-  <input type="range" min="0" max="100" value="50" aria-label={`Compare ${left.toLowerCase()} and ${right.toLowerCase()}: ${alt}`} />
+<div class="ba-wrap">
+  {
+    views.map((big) => {
+      const inner = (
+        <div class:list={['ba', { big }]} data-ba style={`--ratio: ${ratio}`}>
+          <img class="before" src={before} alt={`${alt} (${left.toLowerCase()})`} loading="lazy" decoding="async" />
+          <img class="after" src={after} alt={`${alt} (${right.toLowerCase()})`} loading="lazy" decoding="async" />
+          <span class="tag l" aria-hidden="true">{left}</span>
+          <span class="tag r" aria-hidden="true">{right}</span>
+          <span class="line" aria-hidden="true" />
+          <span class="knob" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5" /></svg>
+          </span>
+          <input type="range" min="0" max="100" value="50" aria-label={`Compare ${left.toLowerCase()} and ${right.toLowerCase()}: ${alt}`} />
+          {!big && (
+            <button type="button" class="grow" data-grow aria-label={`Enlarge: ${title ?? alt}`}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" /></svg>
+            </button>
+          )}
+        </div>
+      );
+      return big ? (
+        <dialog class="ba-dialog" data-ba-dialog aria-label={title ?? alt}>
+          {inner}
+          <div class="ba-note">
+            {title && <p class="ba-title">{title}</p>}
+            {note && <p>{note}</p>}
+            <p class="ba-hint">Drag the line to compare.</p>
+          </div>
+          <button type="button" class="ba-close" data-close aria-label="Close">×</button>
+        </dialog>
+      ) : (
+        inner
+      );
+    })
+  }
 </div>
 
 <script>
@@ -31,6 +63,14 @@ const { before, after, alt, left = 'Before', right = 'After', ratio = '16 / 9' }
     const set = () => el.style.setProperty('--pos', `${r.value}%`);
     r.addEventListener('input', set);
     set();
+  });
+  document.querySelectorAll<HTMLElement>('.ba-wrap').forEach((w) => {
+    const dlg = w.querySelector<HTMLDialogElement>('[data-ba-dialog]')!;
+    w.querySelector('[data-grow]')?.addEventListener('click', () => dlg.showModal());
+    dlg.querySelector('[data-close]')!.addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) dlg.close();
+    });
   });
 </script>
 
@@ -111,6 +151,95 @@ const { before, after, alt, left = 'Before', right = 'After', ratio = '16 / 9' }
   .ba:hover .knob,
   input:focus-visible ~ .knob {
     transform: scale(1.08);
+  }
+  .grow {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    border-radius: 8px;
+    background: rgb(11 11 14 / 0.72);
+    color: #f7f7f5;
+    cursor: zoom-in;
+    transition: background 0.2s ease;
+  }
+  .grow:hover {
+    background: rgb(40 40 46 / 0.92);
+  }
+  .grow svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .grow:focus-visible {
+    outline: 2px solid var(--tan);
+    outline-offset: 2px;
+  }
+  .ba-dialog {
+    width: min(1500px, 96vw);
+    max-width: none;
+    max-height: 96vh;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #f7f7f5;
+    overflow: visible;
+  }
+  .ba-dialog::backdrop {
+    background: rgb(8 8 10 / 0.97);
+  }
+  .ba.big {
+    max-height: 80vh;
+    margin: 0 auto;
+    aspect-ratio: var(--ratio);
+    width: min(100%, calc(80vh * var(--r, 1.78)));
+    border-color: #3c3c43;
+  }
+  .ba-note {
+    max-width: 760px;
+    margin: 12px auto 0;
+    text-align: center;
+  }
+  .ba-note p {
+    margin: 0 0 4px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #c9c9c4;
+  }
+  .ba-note .ba-title {
+    color: #f7f7f5;
+    font-size: 17px;
+  }
+  .ba-note .ba-hint {
+    font-size: 13px;
+    color: #8a8a86;
+  }
+  .ba-close {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    z-index: 4;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    border-radius: 50%;
+    background: rgb(11 11 14 / 0.85);
+    color: #f7f7f5;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
   }
   input {
     position: absolute;

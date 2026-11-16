@@ -1,0 +1,425 @@
+---
+// A browser for a game's assets: one item shown large (its pictures, or a 3D model you can turn),
+// with a strip of every item underneath to pick from, and arrows to step through them.
+// The 3D viewer (Google's model-viewer) is only fetched the first time someone opens a 3D view.
+export interface Asset {
+  id: string;
+  title: string;
+  kind: string;
+  about: string;
+  used: string;
+  built: string;
+  tris?: string;
+  /** Picture paths; the first is the thumbnail source (`-sm` version beside it). */
+  images: { src: string; alt: string }[];
+  /** A .glb for the 3D view. */
+  model?: string;
+  /** Free to download from the game's site. */
+  download?: boolean;
+}
+interface Props {
+  items: Asset[];
+  label: string;
+}
+const { items, label } = Astro.props;
+const sm = (src: string) => src.replace(/\.webp$/, '-sm.webp');
+---
+
+<div class="ab" data-ab aria-label={label} role="region">
+  <div class="head">
+    <p class="count" aria-live="polite"><span data-n>1</span> / {items.length}</p>
+    <div class="steps">
+      <button type="button" class="step" data-prev aria-label="Previous asset">‹</button>
+      <button type="button" class="step" data-next aria-label="Next asset">›</button>
+    </div>
+  </div>
+
+  {
+    items.map((a, i) => (
+      <article class="item" data-item hidden={i !== 0} aria-label={a.title}>
+        <div class="media">
+          <div class="stage">
+            {a.images.map((im, k) => (
+              <img src={im.src} alt={im.alt} width="1400" height="1050" loading="lazy" decoding="async" class:list={{ on: k === 0 }} data-pic />
+            ))}
+            {a.model && <div class="mv" data-mv={a.model} data-alt={`${a.title}, 3D model`} hidden />}
+          </div>
+          {(a.images.length > 1 || a.model) && (
+            <div class="views" role="group" aria-label={`Views of ${a.title}`}>
+              {a.images.map((_, k) => (
+                <button type="button" data-view={String(k)} aria-pressed={k === 0 ? 'true' : 'false'}>
+                  {a.images.length > 1 ? `Picture ${k + 1}` : 'Picture'}
+                </button>
+              ))}
+              {a.model && (
+                <button type="button" data-view="3d" aria-pressed="false" class="three">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z M12 12l8-4.5M12 12v9M12 12L4 7.5" /></svg>
+                  Turn it in 3D
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+        <div class="info">
+          <p class="kind">{a.kind}</p>
+          <h3>{a.title}</h3>
+          <p class="about">{a.about}</p>
+          <dl>
+            <div><dt>In the game</dt><dd>{a.used}</dd></div>
+            <div><dt>Built by</dt><dd>{a.built}</dd></div>
+            {a.tris && <div><dt>Triangles</dt><dd>{a.tris}</dd></div>}
+          </dl>
+          {a.download && <p class="dl">Free to download from the game's site, with the script that builds it.</p>}
+        </div>
+      </article>
+    ))
+  }
+
+  <ol class="rail" aria-label={`All ${items.length} assets`}>
+    {
+      items.map((a, i) => (
+        <li>
+          <button type="button" data-pick={String(i)} aria-pressed={i === 0 ? 'true' : 'false'}>
+            <img src={sm(a.images[0].src)} alt="" width="360" height="270" loading="lazy" decoding="async" />
+            <span>{a.title}</span>
+            {a.model && <b class="badge">3D</b>}
+          </button>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<script>
+  const MV = 'https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';
+  let mvLoading: Promise<void> | null = null;
+  const loadViewer = () =>
+    (mvLoading ??= new Promise<void>((res, rej) => {
+      const s = document.createElement('script');
+      s.type = 'module';
+      s.src = MV;
+      s.onload = () => res();
+      s.onerror = () => rej();
+      document.head.appendChild(s);
+    }));
+
+  document.querySelectorAll<HTMLElement>('[data-ab]').forEach((ab) => {
+    const items = [...ab.querySelectorAll<HTMLElement>('[data-item]')];
+    const picks = [...ab.querySelectorAll<HTMLButtonElement>('[data-pick]')];
+    const n = ab.querySelector<HTMLElement>('[data-n]')!;
+    let cur = 0;
+
+    const go = (i: number, focusRail = false) => {
+      cur = (i + items.length) % items.length;
+      items.forEach((it, k) => (it.hidden = k !== cur));
+      picks.forEach((p, k) => p.setAttribute('aria-pressed', k === cur ? 'true' : 'false'));
+      n.textContent = String(cur + 1);
+      const p = picks[cur];
+      const rail = p.closest('ol')!;
+      rail.scrollTo({ left: p.parentElement!.offsetLeft - rail.clientWidth / 2 + p.offsetWidth / 2, behavior: 'smooth' });
+      if (focusRail) p.focus();
+    };
+    picks.forEach((p, k) => p.addEventListener('click', () => go(k)));
+    ab.querySelector('[data-prev]')!.addEventListener('click', () => go(cur - 1));
+    ab.querySelector('[data-next]')!.addEventListener('click', () => go(cur + 1));
+    ab.querySelector('.rail')!.addEventListener('keydown', (e) => {
+      const k = (e as KeyboardEvent).key;
+      if (k === 'ArrowRight') go(cur + 1, true);
+      if (k === 'ArrowLeft') go(cur - 1, true);
+    });
+
+    items.forEach((it) => {
+      const pics = [...it.querySelectorAll<HTMLImageElement>('[data-pic]')];
+      const mv = it.querySelector<HTMLElement>('[data-mv]');
+      const views = [...it.querySelectorAll<HTMLButtonElement>('[data-view]')];
+      views.forEach((b) =>
+        b.addEventListener('click', async () => {
+          views.forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+          const v = b.dataset.view!;
+          if (v === '3d' && mv) {
+            pics.forEach((p) => p.classList.remove('on'));
+            mv.hidden = false;
+            if (!mv.firstElementChild) {
+              mv.classList.add('loading');
+              try {
+                await loadViewer();
+                const el = document.createElement('model-viewer');
+                el.setAttribute('src', mv.dataset.mv!);
+                el.setAttribute('alt', mv.dataset.alt!);
+                el.setAttribute('camera-controls', '');
+                el.setAttribute('touch-action', 'pan-y');
+                el.setAttribute('shadow-intensity', '1');
+                el.setAttribute('exposure', '1.1');
+                el.setAttribute('interaction-prompt', 'none');
+                el.addEventListener('load', () => mv.classList.remove('loading'));
+                mv.appendChild(el);
+              } catch {
+                mv.classList.remove('loading');
+                mv.textContent = 'The 3D view could not load.';
+              }
+            }
+          } else {
+            if (mv) mv.hidden = true;
+            pics.forEach((p, k) => p.classList.toggle('on', String(k) === v));
+          }
+        }),
+      );
+    });
+  });
+</script>
+
+<style>
+  .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .count {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .steps {
+    display: flex;
+    gap: 8px;
+  }
+  .step {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: none;
+    color: var(--text);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+  .step:hover {
+    border-color: var(--tan);
+  }
+  .item {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+  .item[hidden] {
+    display: none;
+  }
+  .stage {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--frame-edge);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #1b1a22;
+  }
+  .stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s var(--ease-out);
+  }
+  .stage img.on {
+    opacity: 1;
+  }
+  .mv {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at 50% 40%, #2c2a36, #15141a);
+    color: #c9c9c4;
+    font-size: 14px;
+  }
+  .mv[hidden] {
+    display: none;
+  }
+  .mv.loading::before {
+    content: 'Loading the 3D model…';
+    position: absolute;
+  }
+  .mv :global(model-viewer) {
+    width: 100%;
+    height: 100%;
+    --poster-color: transparent;
+  }
+  .views {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .views button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+  .views button:hover {
+    color: var(--text);
+  }
+  .views button[aria-pressed='true'] {
+    color: var(--text);
+    border-color: var(--tan);
+  }
+  .views svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+  }
+  .kind {
+    margin: 0 0 6px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tan);
+  }
+  h3 {
+    margin: 0 0 12px;
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.2;
+    color: var(--text);
+  }
+  .about {
+    margin: 0 0 16px;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  dl {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  dt {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  dd {
+    margin: 2px 0 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .dl {
+    margin: 14px 0 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .rail {
+    display: flex;
+    gap: 10px;
+    margin: 18px 0 0;
+    padding: 2px 2px 8px;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+  }
+  .rail li {
+    flex: 0 0 132px;
+    scroll-snap-align: start;
+  }
+  .rail button {
+    position: relative;
+    display: grid;
+    gap: 6px;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 13px;
+    line-height: 1.3;
+    text-align: left;
+    cursor: pointer;
+  }
+  .rail img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--frame-edge);
+    opacity: 0.65;
+    transition:
+      opacity 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .rail button:hover img {
+    opacity: 0.95;
+  }
+  .rail button:hover span {
+    color: var(--text);
+  }
+  .rail button[aria-pressed='true'] img {
+    opacity: 1;
+    border-color: var(--tan);
+    box-shadow: 0 0 0 1px var(--tan);
+  }
+  .rail button[aria-pressed='true'] span {
+    color: var(--text);
+  }
+  .rail button:focus-visible {
+    outline: 2px solid var(--tan);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgb(11 11 14 / 0.75);
+    color: #f7f7f5;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+  @media (max-width: 760px) {
+    .item {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    .rail li {
+      flex-basis: 112px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stage img {
+      transition: none;
+    }
+  }
+</style>
