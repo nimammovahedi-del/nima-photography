@@ -213,7 +213,7 @@ const toc = [
   { id: 'overview', title: 'Overview' },
   { id: 'trailer', title: 'Trailer' },
   { id: 'the-game', title: 'The game' },
-  { id: 'level-3', title: 'Level 3, compared' },
+  { id: 'level-3', title: 'Case study: Level 3' },
   { id: 'assets', title: 'Assets' },
   { id: 'look', title: 'Look and style' },
   { id: 'models', title: 'Blender models' },
@@ -293,18 +293,11 @@ const tanks = [
     <section class="block" id="the-game">
       <p class="kicker">The game</p>
       <h2>One road to the capital, and an enemy you can't see</h2>
-      <p>You fight down a single road to the Umbaran capital, across five levels. Each level is three battles, each with one objective, and then a final fight for everything they have left. Between you and the gate:</p>
-      <ul class="wide obstacles">
-        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><circle r="2.6" fill="#b98cff" /><path d="M-4.5-4.5a6.4 6.4 0 0 0 0 9M4.5-4.5a6.4 6.4 0 0 1 0 9M-7.5-7.5a10.6 10.6 0 0 0 0 15M7.5-7.5a10.6 10.6 0 0 1 0 15" stroke="#b98cff" stroke-width="1.6" fill="none" /></svg><b>The dark</b>The Umbarans see in it and you don't. A scan pulse shows them, and the mines, for a few seconds.</li>
-        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0-8.5L8 6.5H-8Z" fill="#2a0a22" stroke="#ff6fd0" stroke-width="1.8" stroke-linejoin="round" /><circle cy="1.8" r="2" fill="#ff6fd0" /></svg><b>Dug-in positions</b>Gun posts pin you down, mortars shell the road, and snipers in the canopy fire one heavy shot after a red beam.</li>
-        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><circle cx="-4" cy="-3" r="3" fill="#ff8a9a" /><circle cx="4" cy="-3" r="3" fill="#ff8a9a" /><circle cy="4" r="3" fill="#ff8a9a" /></svg><b>Ambushes</b>Parties break cover from the trees when the squad passes, and mines wait on the road.</li>
-        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><rect x="-8.5" y="-5.5" width="17" height="11" rx="4.5" fill="#2a080e" stroke="#ff3348" stroke-width="1.8" /><circle r="3.2" fill="#ff3348" /><path d="M-1 0H-10" stroke="#ff3348" stroke-width="2.2" /></svg><b>Armor</b>Crawlers crack under massed fire, hover tanks shrug rifles off from the front, and the heavy walker needs a tracker strike.</li>
-        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><circle r="6.5" fill="none" stroke="#7ec8ff" stroke-width="1.8" /><path d="M0-10v6M0 4v6M-10 0h6M4 0h6" stroke="#7ec8ff" stroke-width="1.8" /></svg><b>Help you have to earn</b>Your squad fights beside you, and Y-wing bombers come when you call them, but only when the general allows it.</li>
-      </ul>
+      <p>You fight down a single road to the Umbaran capital, across five levels. Each level is three battles, each with one objective, and then a final fight for everything they have left. The case study below shows what stands between you and the gate, using Level 3.</p>
     </section>
 
     <section class="block" id="level-3">
-      <p class="kicker">Level 3 · The Landing Site</p>
+      <p class="kicker">Case study: Level 3, The Landing Site</p>
       <h2>A jammer blinds your helmet: no scan, no bombers, until you find it</h2>
       <p>Level 3 takes your best tools away. You find the jammer in the trees, mark a clearing with beacons, then silence the anti-air battery so a dropship can set an AT-TE down. This is the level's own map, drawn from its level file: pick a battle to see only its part of the road, and hover or tap any symbol for what it is.</p>
       <dl class="wide strip">
@@ -316,11 +309,19 @@ const tanks = [
         <div><dt>{(m.ambushes as unknown[]).length}</dt><dd>ambush parties</dd></div>
       </dl>
       <div class="wide"><UmbaraMap lines={level.lines.map((l) => l[0])} /></div>
+      <h3 class="sub-h">What the symbols mean in play</h3>
+      <ul class="wide obstacles">
+        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><circle r="2.6" fill="#b98cff" /><path d="M-4.5-4.5a6.4 6.4 0 0 0 0 9M4.5-4.5a6.4 6.4 0 0 1 0 9M-7.5-7.5a10.6 10.6 0 0 0 0 15M7.5-7.5a10.6 10.6 0 0 1 0 15" stroke="#b98cff" stroke-width="1.6" fill="none" /></svg><b>The dark</b>The Umbarans see in it and you don't. A scan pulse shows them, and the mines, for a few seconds.</li>
+        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0-8.5L8 6.5H-8Z" fill="#2a0a22" stroke="#ff6fd0" stroke-width="1.8" stroke-linejoin="round" /><circle cy="1.8" r="2" fill="#ff6fd0" /></svg><b>Dug-in positions</b>Gun posts pin you down, mortars shell the road, and snipers in the canopy fire one heavy shot after a red beam.</li>
+        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><circle cx="-4" cy="-3" r="3" fill="#ff8a9a" /><circle cx="4" cy="-3" r="3" fill="#ff8a9a" /><circle cy="4" r="3" fill="#ff8a9a" /></svg><b>Ambushes</b>Parties break cover from the trees when the squad passes, and mines wait on the road.</li>
+        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><rect x="-8.5" y="-5.5" width="17" height="11" rx="4.5" fill="#2a080e" stroke="#ff3348" stroke-width="1.8" /><circle r="3.2" fill="#ff3348" /><path d="M-1 0H-10" stroke="#ff3348" stroke-width="2.2" /></svg><b>Armor</b>Crawlers crack under massed fire, hover tanks shrug rifles off from the front, and the heavy walker needs a tracker strike.</li>
+        <li><svg viewBox="-10 -10 20 20" aria-hidden="true"><circle r="6.5" fill="none" stroke="#7ec8ff" stroke-width="1.8" /><path d="M0-10v6M0 4v6M-10 0h6M4 0h6" stroke="#7ec8ff" stroke-width="1.8" /></svg><b>Help you have to earn</b>Your squad fights beside you, and Y-wing bombers come when you call them, but only when the general allows it.</li>
+      </ul>
 
       <h3 class="sub-h">The four stages, side by side</h3>
-      <p>No fight is placed by hand. Each battle is a handful of numbers in the level file, and a director runs it from them: it starts light and builds up to a cap on how many are alive at once, keeps feeding soldiers in until its budget is spent, digs more in at the objective, and sends a counterattack in three waves once it falls (down the road, then each flank). These are Level 3's numbers on Medium.</p>
+      <p>Each battle is a few numbers in the level file that a director plays out: it builds up to a cap on how many Umbarans are alive at once, digs more in at the objective, then counterattacks.</p>
       <div class="wide cmp-wrap">
-        <table class="cmp">
+        <table class="cmp brief">
           <thead>
             <tr>
               <th scope="col"><span class="sr">Stage</span></th>
@@ -339,32 +340,12 @@ const tanks = [
             </tr>
           </thead>
           <tbody>
-            <tr><th scope="row">New here</th>{newThing.map((t) => <td>{t}</td>)}</tr>
-            <tr><th scope="row">Road</th>{battles.map((b) => <td>{b.e.from}–{Math.round(b.e.objective.s)} m</td>)}<td>{Math.round(fin.from)} m on</td></tr>
-            <tr><th scope="row">Build-up</th>{battles.map((b) => <td><b>{b.e.ramp[0]} → {b.e.active}</b> alive at once, over {b.e.ramp[1]} s</td>)}<td>{fin.waves} waves, {fin.gap} s apart</td></tr>
-            <tr><th scope="row">Sent in waves</th>{battles.map((b) => <td><b>{b.e.sent}</b></td>)}<td><b>{fin.soldiers}</b></td></tr>
-            <tr>
-              <th scope="row">Who</th>
-              {rows.map((r) => (
-                <td>
-                  <span class="mbar" style={`width:${(r.total / maxRow) * 100}%`}>
-                    {r.segs.filter((sg) => sg[0] > 0).map((sg) => <i style={`width:${(sg[0] / r.total) * 100}%;background:${sg[2]}`} title={`${sg[1]}: ${sg[0]}`} />)}
-                  </span>
-                  <span class="mtot">{r.total} in all</span>
-                </td>
-              ))}
-            </tr>
-            <tr><th scope="row">Dug in at the objective</th>{battles.map((b) => <td>+{b.e.lastStand}</td>)}<td>–</td></tr>
-            <tr><th scope="row">Counterattack</th>{battles.map((b, i) => <td>{b.e.surge ? `+${b.e.surge}, in 3 waves` : i === 2 ? 'none: the final fight follows' : '–'}</td>)}<td>–</td></tr>
+            <tr><th scope="row">The twist</th>{newThing.map((t) => <td>{t}</td>)}</tr>
+            <tr><th scope="row">Umbarans</th>{battles.map((b) => <td><b>{b.soldiers}</b>, up to {b.e.active} at once</td>)}<td><b>{fin.soldiers}</b>, in {fin.waves} waves</td></tr>
             <tr><th scope="row">Armor</th>{battles.map((b) => <td>{[b.crawlers && `${b.crawlers} crawler${b.crawlers > 1 ? 's' : ''}`, b.hovers && `${b.hovers} hover tank${b.hovers > 1 ? 's' : ''}`].filter(Boolean).join(', ')}</td>)}<td>1 hover tank, 1 crawler</td></tr>
-            <tr><th scope="row">Positions</th>{enc.map((e) => <td>{[kinds(e, 'gun') && `${kinds(e, 'gun')} guns`, kinds(e, 'mortar') && `${kinds(e, 'mortar')} mortar${kinds(e, 'mortar') > 1 ? 's' : ''}`, kinds(e, 'sniper') && `${kinds(e, 'sniper')} snipers`, kinds(e, 'barrier') && 'a barricade'].filter(Boolean).join(', ')}</td>)}<td>–</td></tr>
-            <tr><th scope="row">Mines and ambushes</th>{enc.map((_, i) => <td>{minesPer[i]} mines, {ambushPer[i]} ambush{ambushPer[i] === 1 ? '' : 'es'}</td>)}<td>–</td></tr>
-            <tr><th scope="row">From above</th>{enc.map((e) => <td>{[e.shelling ? `shells every ${e.shelling} s` : '', e.airstrike ? `fighters every ${e.airstrike} s` : ''].filter(Boolean).join(', ') || 'quiet'}</td>)}<td>–</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="keys">{[...MIX.map(([, n, c]) => [n, c]), ...EXTRA].map(([n, c]) => <span><i style={`background:${c}`} />{n}</span>)}</p>
-      <p class="after">The same numbers set the difficulty: on Medium the soldiers sent, the last stand and the counterattack are 1.5 times the level file's base, and the cap on how many are alive at once is 1.15 times.</p>
     </section>
 
     <section class="block" id="assets">
@@ -426,7 +407,7 @@ const tanks = [
       <p class="kicker">02 · Blender models</p>
       <h2>Every enemy is a script, so a redesign is a re-run</h2>
       <p>Each model is a Python script run in Blender, with no hand sculpting. My first enemy kit was too simple, so I had the vehicles rewritten as one 910-line script. Press a step to see the same three vehicles at each milestone.</p>
-      <div class="wide"><Stepper steps={models} label="The enemy vehicles, first kit to now" /></div>
+      <div class="models-step"><Stepper steps={models} ratio="2 / 1" label="The enemy vehicles, first kit to now" /></div>
       <p class="after">There are three tanks, each a step up. The bars show how much a rifle hurts each one and how much health it has, so the armor teaches you when to switch weapons.</p>
       <ol class="wide tanks">
         {
@@ -1122,6 +1103,15 @@ const tanks = [
     color: var(--text);
   }
 
+  .models-step {
+    max-width: 760px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+  .models-step :global(.frame img) {
+    object-position: 50% 62%;
+  }
+
   /* Comparison tables */
   .cmp-wrap {
     overflow-x: auto;
@@ -1200,6 +1190,9 @@ const tanks = [
   }
   .cmp.lines {
     min-width: 760px;
+  }
+  .cmp.brief {
+    min-width: 640px;
   }
   .cmp.lines thead th {
     width: auto;
