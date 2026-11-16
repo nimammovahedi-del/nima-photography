@@ -19,10 +19,10 @@ const subjects = categories.filter((c) => c.slug !== 'places').map((c) => `/${c.
 const inPhotography = under('/photography') || under('/places') || subjects.some(under);
 
 const sections = [
-  { href: '/research', label: 'Research', current: under('/research') },
+  { href: '/photography', label: 'Photography', current: inPhotography },
   { href: '/projects', label: 'Projects', current: under('/projects') },
   { href: '/games', label: 'Games', current: under('/games') },
-  { href: '/photography', label: 'Photography', current: inPhotography },
+  { href: '/research', label: 'Research', current: under('/research') },
   { href: '/about', label: 'About', current: under('/about') },
 ];
 
@@ -129,7 +129,7 @@ const photoTabs = [
   /* The main page: the bar sits in the page's narrow column, with no rule under it. */
   .site-header.narrow {
     position: relative;
-    max-width: 852px;
+    max-width: 972px;
     padding: 0 16px;
     border-bottom: 0;
     background: none;
