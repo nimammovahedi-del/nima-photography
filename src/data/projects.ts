@@ -40,7 +40,7 @@ export interface Example {
 }
 
 export interface Project {
-  slug: 'ergo' | 'check-congress' | 'fairclaim' | 'fed-money' | 'best-bricks';
+  slug: 'ergo' | 'unvault' | 'check-congress' | 'best-bricks' | 'fed-money';
   name: string;
   /** Three sentences, shown on the Projects row. */
   summary: string;
@@ -63,7 +63,7 @@ export interface Project {
 
 const ergo = (f: string) => `/projects/ergo/${f}`;
 const cc = (f: string) => `/projects/check-congress/${f}`;
-const fc = (f: string) => `/projects/fairclaim/${f}`;
+const uv = (f: string) => `/projects/unvault/${f}`;
 const fm = (f: string) => `/projects/fed-money/${f}`;
 const bb = (f: string) => `/projects/best-bricks/${f}`;
 
@@ -209,6 +209,177 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: 'unvault',
+    name: 'Unvault',
+    summary:
+      'A free, independent site that makes government usable: tools to get through its processes, and facts to see what it does. It answers IRS letters, writes records requests, counts legal deadlines and walks you through small claims court in every state. It also follows Congress, the President and federal money, with every number linked to its official source.',
+    tags: ['Free', 'No sign-up', 'Government'],
+    url: 'https://unvault.org/',
+    urlLabel: 'Open Unvault',
+    tagline: 'Government, open to everyone: the steps, the deadlines and the facts, in plain words.',
+    thumbs: [uv('home-sm.webp'), uv('finder-sm.webp'), uv('federal-money-map-sm.webp')],
+    hero: { kind: 'image', src: uv('home.webp'), alt: 'Unvault’s home page: “Government, open to everyone.” beside the five areas and a search box' },
+    why: {
+      title: 'Government shouldn’t be a locked door',
+      paras: [
+        'Most people deal with a federal agency only when something has already gone wrong: a letter from the IRS, a denied claim, a family member detained, a deadline nobody explained. That is exactly when the rules are hardest to find. They aren’t secret, but they are spread across hundreds of sites, each written by the agency itself, in its own words.',
+        'I had already built separate tools for pieces of this: Check Congress for following Congress, Fair Claim for small claims court, a FOIA tracker, an immigration detention tracker and the Federal Money Atlas. Each one answered a single question well, but someone with a real problem doesn’t know which tool to look for. Unvault brings them together with dozens of new tools behind one front door.',
+        'The promise is simple. It is free for good, with no ads, no accounts and no cookies. What you type into a tool stays in your browser. And every rule, deadline and number links to its official source with the date it was last checked, because a site about government only helps if people can trust it.',
+      ],
+    },
+    sections: [
+      {
+        title: 'One front door, five areas',
+        paras: [
+          'Everything on Unvault sits in one of five areas: Oversight, Records, Finances, Courts and Rights. Together they hold 116 services, and each is labeled as what it is: a Tool you fill in, a Guide you read, Data you can explore, or a Section with several tabs.',
+          'The home page opens with a dozen of the most common tasks, like answering a letter from the IRS, getting records from a federal agency or checking whether a rent increase is fair. Below that, a directory lists every service by area and topic, and you can filter it down to just the tools or just the data.',
+        ],
+        media: { kind: 'image', src: uv('directory.webp'), alt: 'The “Every service” directory on the home page, with area tabs and Tools, Guides and Data filters' },
+      },
+      {
+        title: 'Not sure where to start?',
+        paras: [
+          'A lot of people don’t know what their problem is called. The Finder asks two plain questions, what’s going on and who it’s from, then points to the one place to begin. Say you got a letter from the IRS: it sends you to the tool for a CP2000 notice and tells you what you’ll get there before you open it.',
+          'Search works the same way. It understands everyday phrases like “irs notice” or “detained,” suggests matches as you type and puts the best one first.',
+        ],
+        media: { kind: 'clip', src: uv('finder.mp4'), poster: uv('finder-poster.webp'), alt: 'Answering the two Finder questions and getting the CP2000 tool as the place to start' },
+      },
+      {
+        title: 'Decode the letter in your hand',
+        paras: [
+          'Official letters are written for the agency, not for you. Type the code from the corner of an IRS notice, such as CP14 or CP2000, and Unvault explains in one sentence what it means, what to do next and how long you have. It covers 40 common notices and letters, and quotes the IRS’s own wording underneath so you can check it.',
+          'Every tool page follows the same layout: an overview, the steps, the forms and letters, the deadlines, common questions and the sources. Once you’ve used one, you know your way around all of them.',
+        ],
+        media: { kind: 'image', src: uv('irs-tool.webp'), alt: 'The “Which IRS letter is this?” tool explaining a CP2000 notice and its 30-day deadline' },
+      },
+      {
+        title: 'Letters that write themselves',
+        paras: [
+          'Asking an agency for records under the Freedom of Information Act is free, but the request has to say the right things. The letter builder asks who you are, which agency and what you want, then writes the letter beside the form as you type. It cites the law, sets a fee limit and asks for electronic copies.',
+          'There are builders for records requests, FOIA appeals, asking your member of Congress for help with an agency and small-claims demand letters, each with state notes where the rules differ. Letters are made on your own device. You copy, download or print them and decide where they go, so Unvault never sees them.',
+        ],
+        media: { kind: 'clip', src: uv('letter.mp4'), poster: uv('letter-poster.webp'), alt: 'Filling in the FOIA request builder while the letter updates beside it' },
+      },
+      {
+        title: 'Deadlines, counted for you',
+        paras: [
+          'Government deadlines are rarely as simple as “30 days.” A federal agency has 20 working days to answer a records request, which means skipping weekends and federal holidays, plus ten more in unusual cases. The deadline calculator counts them for you, shows how many days are used and how many are left, and lays the due dates out on a timeline.',
+          'Other calculators work out an expected tax refund date, rent notice periods and one-year filing limits.',
+        ],
+        media: { kind: 'image', src: uv('deadline.webp'), alt: 'The FOIA deadline calculator showing 9 of 20 working days used, with the due dates on a timeline' },
+      },
+      {
+        title: 'Small claims, in every state',
+        paras: [
+          'Fair Claim, my earlier small claims court guide, now lives inside Unvault. It covers all 50 states and DC: the limits for people, from $2,500 to $25,000, the filing fees, the five steps from demand letter to collecting what you’re owed, and what to do if you’re the one being sued.',
+          'Each state’s rules are cited and dated, and a checklist for court day can be printed or saved as a PDF.',
+        ],
+        media: { kind: 'image', src: uv('small-claims.webp'), alt: 'The Small claims section: 51 state rulebooks and limits from $2,500 to $25,000' },
+      },
+      {
+        title: 'Watch Congress and the President',
+        paras: [
+          'The Oversight area shows what officials actually do. The Congress section, built from Check Congress, follows every bill, roll-call vote and member of the 119th Congress, along with their campaign money and the stock trades they report, more than 12,000 so far.',
+          'Executive actions covers the President and federal agencies through the Federal Register: executive orders, other presidential documents, agency rules and the proposed rules still open for public comment. Unvault also pulls out the deadlines that executive orders give agencies, 442 of them from 149 orders, so you can see what is due and when.',
+        ],
+        media: { kind: 'image', src: uv('executive.webp'), alt: 'The Executive actions section with counts of executive orders, presidential documents and agency rules' },
+      },
+      {
+        title: 'Follow the money home',
+        paras: [
+          'The Federal Money Atlas moved in as the Federal money section. Its map shows every one of the 3,144 U.S. counties by how much federal money comes back for each dollar of federal tax, and you can split that into Social Security, grants or contracts.',
+          'Hover a county to see its figure, filter by population, or switch to a view that sizes counties by people instead of land. The same section covers spending by agency, contracts and grants, and the community projects members of Congress request.',
+        ],
+        media: { kind: 'clip', src: uv('map.mp4'), poster: uv('map-poster.webp'), alt: 'Hovering counties on the federal money map, then switching it to grants' },
+      },
+    ],
+    how: {
+      title: 'How Unvault was built',
+      intro:
+        'Unvault is a static website with no framework and no server. Scripts gather public data from official sources ahead of time, and every page is written out as plain HTML, so the site stays fast and cheap to run, and most pages can be read even without JavaScript.',
+      stats: [
+        { value: '116', label: 'services across five areas' },
+        { value: '~225', label: 'pages, each at its own address' },
+        { value: '20+', label: 'official data sources' },
+        { value: '0', label: 'accounts, ads or cookies' },
+      ],
+      flows: [
+        {
+          title: 'From public data to a page',
+          steps: [
+            {
+              name: 'Official sources',
+              text: 'Everything starts from public data: Congress.gov, the Federal Register, USAspending, the FEC, House disclosure reports, FOIA.gov, the Bureau of Prisons, HUD, the IRS and others.',
+            },
+            {
+              name: 'Export scripts',
+              text: 'Two dozen Python and Node scripts each pull one source, clean it and check every link. Broken official links are dropped, and the ones that block automated checks are kept on a list to review by hand.',
+            },
+            {
+              name: 'Data files',
+              text: 'Each script writes one small data file with its source and date attached. The earlier projects’ data, like the county figures from the Federal Money Atlas, carries over the same way.',
+            },
+            {
+              name: 'Static pages',
+              text: 'A build script renders every area, topic, tool and state page in a headless browser and saves it as a real HTML file at a clean address, along with a sitemap.',
+            },
+            {
+              name: 'Edge hosting',
+              text: 'The files are served from Cloudflare’s global network with strict security headers. There is no database and nothing to log in to.',
+            },
+            {
+              name: 'Your browser',
+              text: 'Calculators, letter builders and the map run in your browser. What you type never leaves your device, and nothing calls an AI model while you use the site.',
+            },
+          ],
+        },
+        {
+          title: 'From idea to launch',
+          steps: [
+            {
+              name: 'Research',
+              text: 'I started by mapping the processes people get stuck on, from IRS notices to records requests and court deadlines, and studying the sites already trying to help.',
+            },
+            {
+              name: 'Prototypes',
+              text: 'Two full prototypes settled the look: a calm field-manual layout in warm grey with a mint green, and illustrations drawn for each section.',
+            },
+            {
+              name: 'Real data',
+              text: 'Each section was then rebuilt on real exports, replacing sample numbers one area at a time.',
+            },
+            {
+              name: 'Fact check',
+              text: 'A dedicated pass checked every rule and deadline against its source and fixed about 110 problems, then rechecked more than 150 hand-written links.',
+            },
+            {
+              name: 'Reviews',
+              text: 'Separate reviews looked at the design, the organization and the usability, then went area by area. Each round ended with a list of fixes, done before the next build.',
+            },
+            {
+              name: 'Phone pass',
+              text: 'A final round measured every page on phone screens and redesigned the navigation and long pages so they work with one thumb.',
+            },
+          ],
+        },
+      ],
+      notes: [
+        {
+          title: 'Five projects, one home',
+          text: 'Check Congress, Fair Claim, a FOIA tracker, an immigration detention tracker and the Federal Money Atlas each became a section of Unvault. Their styles were scoped so they could share one site without clashing.',
+        },
+        {
+          title: 'Written, not generated',
+          text: 'Every page was written and checked ahead of time. Nothing on the site is an AI guessing at an answer, and deadlines in executive orders are found by fixed rules, not by a model.',
+        },
+        {
+          title: 'Honest about its limits',
+          text: 'Unvault gives information, not legal advice, and can’t act on anyone’s case. Spanish summaries cover only a few pages so far, and anyone can email a correction when something looks out of date.',
+        },
+      ],
+    },
+  },
+  {
     slug: 'check-congress',
     name: 'Check Congress',
     summary:
@@ -345,106 +516,113 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: 'fairclaim',
-    name: 'Fair Claim',
+    slug: 'best-bricks',
+    name: 'Best Bricks',
     summary:
-      'Is it worth taking someone to small claims court, and how do you do it? Fair Claim explains the five steps and gives the rules for all 50 states and DC, each with its source and the date it was checked. A cost calculator, a demand-letter writer and printable checklists help you decide and prepare.',
-    tags: ['Free', 'No sign-up', '50 states + DC'],
-    url: 'https://fairclaim.pages.dev/',
-    urlLabel: 'Open Fair Claim',
-    more: { label: 'Try the tools', url: 'https://fairclaim.pages.dev/tools/' },
-    tagline: 'Small claims court, explained, with a source for every rule.',
-    thumbs: [fc('home-sm.webp'), fc('calculator-sm.webp'), fc('letter-sm.webp')],
-    hero: { kind: 'image', src: fc('home.webp'), alt: 'The Fair Claim home page: "Small claims, explained." with a search for your state’s rules' },
+      'Which LEGO sets are actually worth the money? Best Bricks scores 4,600 sets from 2010 to 2027 out of 100, each against similar sets from its own theme, on how much plastic, pieces and minifigures you get per dollar. Search a set, filter by budget and size, or see which themes give the most for your money.',
+    tags: ['Free', 'No sign-up', '4,600 sets'],
+    url: 'https://bestbricks.pages.dev/',
+    urlLabel: 'Open Best Bricks',
+    tagline: 'Which LEGO sets are actually worth the money, scored 0 to 100.',
+    thumbs: [bb('home-sm.webp'), bb('set-sm.webp'), bb('themes-sm.webp')],
+    hero: { kind: 'image', src: bb('home.webp'), alt: 'The Best Bricks home page: "Which LEGO sets are actually worth the money?" with a set search' },
     why: {
-      title: 'Information that isn’t selling anything',
+      title: 'Know what a set is really worth',
       paras: [
-        'Small claims court can settle a money dispute without a lawyer, like a deposit a landlord kept, a refund a business won’t give or an invoice nobody paid. It can also cost more than it returns, and winning doesn’t mean being paid. Most guides either push you to sue or bury the rules in legal language.',
-        'Fair Claim is calm and neutral. It won’t talk you into suing, or out of it: the costs and the odds of being paid sit right next to the steps. It’s free, with no ads, sponsors or accounts, and it tracks nothing. It gives legal information, not legal advice.',
+        'LEGO has always been a hobby of mine. Prices change a lot from set to set and from year to year, and most buyers never see it: a big box or a low price per piece can hide a set that gives you very little for your money.',
+        'Best Bricks compares every set only with similar sets, the same theme and a similar size, so a Star Wars set scoring 80 is great value for Star Wars. It shows its working on every page and keeps the builder rating as a separate score, so value and quality never get mixed up.',
       ],
     },
     sections: [
       {
-        title: 'Five steps, start to finish',
+        title: 'Every set, one score',
         paras: [
-          'How it works walks through a case from asking for the money in writing to filing, serving the papers, the hearing and collecting the judgment. It’s frank about what each step costs in time and money, and a “Before you decide” section covers the options besides court.',
+          'Search any set by name or number and its page leads with a value score out of 100, its rank among similar sets, and a short explanation of why it scored that way. A price check shows what a set with the same contents usually costs.',
         ],
-        media: { kind: 'image', src: fc('steps.webp'), alt: 'How it works: five steps, from asking to getting paid' },
+        media: { kind: 'clip', src: bb('search.mp4'), poster: bb('search-poster.webp'), alt: 'Searching for the Venator and opening its page: 76 out of 100, Great value' },
       },
       {
-        title: 'Every state’s rules, with sources',
+        title: 'See it among similar sets',
         paras: [
-          'Type a ZIP code, city or county, or filter the table of all 50 states and DC. Each state has its own page with the most you can claim, the filing fee, who can appeal and whether lawyers are allowed, every figure linked to the law or the court and dated. Printable checklists bring the same rules to each step.',
+          'A chart on every set page places it among the sets it was compared with, by price and value score. Hover any stud to see that set, and the builder rating sits below as its own quality score.',
         ],
-        media: { kind: 'clip', src: fc('states.mp4'), poster: fc('states-poster.webp'), alt: 'Filtering the states table for “new” and opening New York’s rules' },
+        media: { kind: 'clip', src: bb('compare.mp4'), poster: bb('compare-poster.webp'), alt: 'Hovering the chart of 83 large Star Wars sets on the Venator page' },
       },
       {
-        title: 'Is it worth it?',
+        title: 'Find the best value for you',
         paras: [
-          'The cost calculator asks six questions, one at a time: your state, who’s suing, the amount, what you’d spend, your time and your odds. It then sets what you might get back beside what you’d spend, line by line, and warns you when a claim is over your state’s limit.',
+          'Explore filters every rated set by theme, budget, size, verdict and year, can hide motorized sets or show only sets with minifigures, and sorts by value, builder quality, plastic per dollar or price. Every filter is saved in the link.',
         ],
-        media: { kind: 'clip', src: fc('calculator.mp4'), poster: fc('calculator-poster.webp'), alt: 'Answering the cost calculator for a $3,200 California claim and seeing the result' },
+        media: { kind: 'clip', src: bb('explore.mp4'), poster: bb('explore-poster.webp'), alt: 'Filtering Explore to Star Wars sets from $100 to $200 rated Great value' },
       },
       {
-        title: 'Ask before you sue',
+        title: 'Theme by theme',
         paras: [
-          'Many disputes end with a clear written request. The demand letter writer builds a calm letter in seven steps, for a deposit, a refund, an unpaid invoice or damage, and adds the state law that applies. The letter updates as you type and downloads as a PDF, prints or copies, all in your browser.',
+          'Each of the 37 themes has its own page with every set ranked, how many are good value, and how its plastic per dollar and price per piece have moved since 2010.',
         ],
-        media: { kind: 'clip', src: fc('letter.mp4'), poster: fc('letter-poster.webp'), alt: 'Filling in the demand letter for a security deposit while the letter updates beside it' },
+        media: { kind: 'image', src: bb('themes.webp'), alt: 'The Themes page: every theme with its plastic per dollar' },
       },
       {
-        title: 'California, county by county',
+        title: 'Six questions, six charts',
         paras: [
-          'California goes deeper: fee tiers by claim size, the 40 official forms by step, deadlines, and a page for each of its 58 counties with courthouses, the free small claims advisor and whether you can file online. A “last day to sue” estimator turns the type of claim and a date into a rough deadline, with the statute behind it.',
+          'Insights answers what buyers actually ask: which themes give the most plastic, whether licensed sets cost more (12% less plastic per dollar), whether LEGO has got pricier (no, a dollar buys 60% more pieces than in 2010), and the best sets at every budget.',
         ],
-        media: { kind: 'clip', src: fc('deadline.mp4'), poster: fc('deadline-poster.webp'), alt: 'California’s page: a written contract broken on March 15, 2024 gives a last day to sue of about March 15, 2028' },
+        media: { kind: 'image', src: bb('insights.webp'), alt: 'Insights: Minecraft gives the most plastic per dollar, one tower per theme' },
       },
       {
-        title: 'The numbers behind the rules',
+        title: 'Every step shown',
         paras: [
-          'Charts on the home and About pages show what the checked rules add up to: limits from $2,500 in Kentucky to $25,000 in Delaware and Tennessee, which states raised theirs, who can appeal, and how often winners actually collect. Each chart has its source, its date and a data table.',
+          'How it works walks through the score in six steps with a real set, lists every source, and spells out what is left out and why.',
         ],
-        media: { kind: 'image', src: fc('limits.webp'), alt: 'A map of small claims limits: in 39 of 51 jurisdictions the limit is $10,000 or less' },
+        media: { kind: 'image', src: bb('method.webp'), alt: 'How a score is built, step 1: gather every set' },
       },
     ],
     how: {
-      title: 'How Fair Claim works',
+      title: 'How Best Bricks works',
       intro:
-        'Every rule is researched from primary sources into cited, dated research files. A Python script turns them into the site’s data, and a static website shows them, with a page for every state, California county and checklist. The tools run entirely in your browser.',
+        'A Python pipeline downloads every set’s details and parts list, works out how much you get for the price, and scores each set against similar sets. A static website shows the results, with a page for every set and theme.',
       stats: [
-        { value: '51', label: 'states and DC, each with its own page' },
-        { value: '706', label: 'state rules, each with a source and a date' },
-        { value: '58', label: 'California counties, each with its own page' },
-        { value: '0', label: 'ads, accounts or trackers' },
+        { value: '4,600', label: 'sets scored, from 37 themes, 2010 to 2027' },
+        { value: '97.5%', label: 'of sets measured from their full parts list' },
+        { value: '95%', label: 'of price differences explained by the price check' },
+        { value: '4,600', label: 'written explanations, one for every set' },
       ],
       flows: [
         {
-          title: 'The research',
+          title: 'The data',
           steps: [
             {
-              name: 'Primary sources first',
-              text: 'Every limit, fee and deadline comes from the statute, the court rules or the court’s own website, saved with its link and the date it was checked.',
+              name: 'Gather every set',
+              text: 'Brickset gives each set’s pieces, minifigures, US price and builder ratings. Gear, books, polybags, promotional items and sets under 25 pieces are left out, 2,548 in all.',
             },
             {
-              name: 'Checked again',
-              text: 'Two more rounds of checks went back over the facts: 197 values were confirmed and 161 corrected. Rules that are about to change are listed with their dates.',
+              name: 'Count the plastic',
+              text: 'Rebrickable gives every set’s full parts list. From it the pipeline works out how much plastic is in the box, minifigures included and spare parts and packaging left out, and spots sets with motors.',
             },
             {
-              name: 'Build the data',
-              text: 'A Python script merges the research files into the website’s data, plus a review spreadsheet with a row for every state and California county.',
+              name: 'Fair prices across years',
+              text: 'Prices are adjusted for inflation to September 2026 dollars with the US consumer price index, from the year LEGO last sold the set at that price, not from its launch.',
             },
           ],
         },
         {
-          title: 'The tools',
+          title: 'The score',
           steps: [
             {
-              name: 'One question at a time',
-              text: 'The calculator and the letter ask one thing per screen, with your state’s rules filled in for you, and show the result updating as you answer.',
+              name: 'Compare with similar sets',
+              text: 'Each set is grouped with sets of the same theme and size: under 200, 200 to 499, 500 to 999 or 1,000+ pieces. A set is only ever ranked within its own group.',
             },
             {
-              name: 'Nothing leaves your tab',
-              text: 'What you type is never stored or sent. The PDF letter is made in your browser, and each tool opens with a short note that this is information, not advice.',
+              name: 'Measure what you get',
+              text: 'Contents per dollar, a mix of plastic and pieces per dollar, counts for 75%; minifigures per $100 counts for 25%. Each minifigure counts as $2 of contents. Display models swap minifigures for how big the finished build is for its price.',
+            },
+            {
+              name: 'Rank, then add up',
+              text: 'Beat 90% of the group on contents per dollar and a set earns 90% of those 75 points. 75 and up is Great value, 50 is typical, and under 25 is Poor value.',
+            },
+            {
+              name: 'Quality, kept apart',
+              text: 'The Brickset builder rating becomes its own 0 to 100 quality score, steadied with 30 average ratings so a few early votes can’t dominate. It is shown beside the value score and never mixed into it.',
             },
           ],
         },
@@ -453,50 +631,49 @@ export const projects: Project[] = [
           steps: [
             {
               name: 'Static pages',
-              text: 'An Astro build writes a page for every state, county, checklist and glossary term. The location search runs in your browser on Census files.',
+              text: 'An Astro build writes a page for every set and theme, with a share card for each, drawn at build time. Search and Explore run in the browser from small data files.',
             },
             {
-              name: 'Private by design',
-              text: 'Cloudflare Pages serves the site with its own fonts, and there are no analytics, cookies or third-party scripts.',
+              name: 'Edge hosting',
+              text: 'Cloudflare Pages serves the site. New scores are a single command: download, re-score, check, then publish.',
             },
           ],
         },
       ],
       example: {
-        title: 'A worked example: a kept security deposit',
-        intro: 'A tenant in California is owed $3,200, thinks they have a 75% chance of winning and a 70% chance of collecting, and would pay $90 up front in fees.',
+        title: 'A worked example: Double-Decker Sightseeing Bus',
+        intro: 'City set 60407, 384 pieces and 5 minifigures for $29.99, ranked against 212 other City sets of 200 to 499 pieces.',
         sums: [
           {
             terms: [
-              { label: 'You can claim', value: '$3,200' },
-              { label: 'Fees added if you win', value: '$90' },
+              { label: 'Contents per dollar: 100th percentile × 75%', value: '75' },
+              { label: 'Minifigures per $100: 96th percentile × 25%', value: '24' },
             ],
-            total: { label: 'Owed if you win', value: '$3,290' },
+            total: { label: 'Value score', value: '99' },
           },
           {
             terms: [
-              { label: 'Owed if you win', value: '$3,290' },
-              { label: 'Chance of winning', value: '75%', op: '×' },
-              { label: 'Chance of collecting', value: '70%', op: '×' },
+              { label: 'You pay', value: '$29.99' },
+              { label: 'Saved against similar sets', value: '$22.09' },
             ],
-            total: { label: 'Expected back', value: '$1,727' },
+            total: { label: 'Similar sets usually cost', value: '$52.08' },
           },
         ],
         answer:
-          'On those numbers, cases like this bring back about $1,727 on average against $90 spent. Fair Claim calls that “expected recovery exceeds costs”, not a verdict, and a break-even line shows how low the chance of collecting could fall before it stops paying.',
+          '99 out of 100, Great value: the best-value City set of its size, and 42% cheaper than its contents usually cost. Its builder quality is scored apart at 79, from a 4.1 rating by 161 Brickset members.',
       },
       notes: [
         {
-          title: 'Neutral on purpose',
-          text: 'The calculator was renamed from “Is it worth it?” to “Small claims cost calculator”, and it shows what the numbers say instead of telling you what to do.',
+          title: 'Plastic, not just pieces',
+          text: 'Price per piece is easy to game: a set full of tiny pieces looks cheap. Plastic per dollar measures how much material you actually get, shown as an index where 100 is a typical set.',
         },
         {
-          title: 'Winning isn’t getting paid',
-          text: 'Courts don’t track whether winners collect. In one study of Denver’s small claims court, 55% of winners never collected anything, so collecting gets its own step.',
+          title: 'Two methods that agree',
+          text: 'The price check is a separate model fitted on every set. Its ranking agrees closely with the value score, at a rank correlation of 0.84.',
         },
         {
-          title: 'Kept up to date',
-          text: 'Each rule shows the date it was checked, and dated changes like Wisconsin’s higher limit in 2027 are on a calendar. California has full county detail; the other states have the statewide rules.',
+          title: 'Honest about its limits',
+          text: 'Prices are US list prices, so store discounts aren’t counted yet. Motorized sets are scored but flagged, since motors cost a lot and add little plastic. A resale view is planned next.',
         },
       ],
     },
@@ -674,169 +851,6 @@ export const projects: Project[] = [
         {
           title: 'Honest about its limits',
           text: 'Medicare, federal salaries and interest on the debt aren’t tied to a county, which is why the U.S. figure is under $1. Estimates are labeled, and each data release has a version number to cite.',
-        },
-      ],
-    },
-  },
-  {
-    slug: 'best-bricks',
-    name: 'Best Bricks',
-    summary:
-      'Which LEGO sets are actually worth the money? Best Bricks scores 4,600 sets from 2010 to 2027 out of 100, each against similar sets from its own theme, on how much plastic, pieces and minifigures you get per dollar. Search a set, filter by budget and size, or see which themes give the most for your money.',
-    tags: ['Free', 'No sign-up', '4,600 sets'],
-    url: 'https://bestbricks.pages.dev/',
-    urlLabel: 'Open Best Bricks',
-    tagline: 'Which LEGO sets are actually worth the money, scored 0 to 100.',
-    thumbs: [bb('home-sm.webp'), bb('set-sm.webp'), bb('themes-sm.webp')],
-    hero: { kind: 'image', src: bb('home.webp'), alt: 'The Best Bricks home page: "Which LEGO sets are actually worth the money?" with a set search' },
-    why: {
-      title: 'Know what a set is really worth',
-      paras: [
-        'LEGO has always been a hobby of mine. Prices change a lot from set to set and from year to year, and most buyers never see it: a big box or a low price per piece can hide a set that gives you very little for your money.',
-        'Best Bricks compares every set only with similar sets, the same theme and a similar size, so a Star Wars set scoring 80 is great value for Star Wars. It shows its working on every page and keeps the builder rating as a separate score, so value and quality never get mixed up.',
-      ],
-    },
-    sections: [
-      {
-        title: 'Every set, one score',
-        paras: [
-          'Search any set by name or number and its page leads with a value score out of 100, its rank among similar sets, and a short explanation of why it scored that way. A price check shows what a set with the same contents usually costs.',
-        ],
-        media: { kind: 'clip', src: bb('search.mp4'), poster: bb('search-poster.webp'), alt: 'Searching for the Venator and opening its page: 76 out of 100, Great value' },
-      },
-      {
-        title: 'See it among similar sets',
-        paras: [
-          'A chart on every set page places it among the sets it was compared with, by price and value score. Hover any stud to see that set, and the builder rating sits below as its own quality score.',
-        ],
-        media: { kind: 'clip', src: bb('compare.mp4'), poster: bb('compare-poster.webp'), alt: 'Hovering the chart of 83 large Star Wars sets on the Venator page' },
-      },
-      {
-        title: 'Find the best value for you',
-        paras: [
-          'Explore filters every rated set by theme, budget, size, verdict and year, can hide motorized sets or show only sets with minifigures, and sorts by value, builder quality, plastic per dollar or price. Every filter is saved in the link.',
-        ],
-        media: { kind: 'clip', src: bb('explore.mp4'), poster: bb('explore-poster.webp'), alt: 'Filtering Explore to Star Wars sets from $100 to $200 rated Great value' },
-      },
-      {
-        title: 'Theme by theme',
-        paras: [
-          'Each of the 37 themes has its own page with every set ranked, how many are good value, and how its plastic per dollar and price per piece have moved since 2010.',
-        ],
-        media: { kind: 'image', src: bb('themes.webp'), alt: 'The Themes page: every theme with its plastic per dollar' },
-      },
-      {
-        title: 'Six questions, six charts',
-        paras: [
-          'Insights answers what buyers actually ask: which themes give the most plastic, whether licensed sets cost more (12% less plastic per dollar), whether LEGO has got pricier (no, a dollar buys 60% more pieces than in 2010), and the best sets at every budget.',
-        ],
-        media: { kind: 'image', src: bb('insights.webp'), alt: 'Insights: Minecraft gives the most plastic per dollar, one tower per theme' },
-      },
-      {
-        title: 'Every step shown',
-        paras: [
-          'How it works walks through the score in six steps with a real set, lists every source, and spells out what is left out and why.',
-        ],
-        media: { kind: 'image', src: bb('method.webp'), alt: 'How a score is built, step 1: gather every set' },
-      },
-    ],
-    how: {
-      title: 'How Best Bricks works',
-      intro:
-        'A Python pipeline downloads every set’s details and parts list, works out how much you get for the price, and scores each set against similar sets. A static website shows the results, with a page for every set and theme.',
-      stats: [
-        { value: '4,600', label: 'sets scored, from 37 themes, 2010 to 2027' },
-        { value: '97.5%', label: 'of sets measured from their full parts list' },
-        { value: '95%', label: 'of price differences explained by the price check' },
-        { value: '4,600', label: 'written explanations, one for every set' },
-      ],
-      flows: [
-        {
-          title: 'The data',
-          steps: [
-            {
-              name: 'Gather every set',
-              text: 'Brickset gives each set’s pieces, minifigures, US price and builder ratings. Gear, books, polybags, promotional items and sets under 25 pieces are left out, 2,548 in all.',
-            },
-            {
-              name: 'Count the plastic',
-              text: 'Rebrickable gives every set’s full parts list. From it the pipeline works out how much plastic is in the box, minifigures included and spare parts and packaging left out, and spots sets with motors.',
-            },
-            {
-              name: 'Fair prices across years',
-              text: 'Prices are adjusted for inflation to September 2026 dollars with the US consumer price index, from the year LEGO last sold the set at that price, not from its launch.',
-            },
-          ],
-        },
-        {
-          title: 'The score',
-          steps: [
-            {
-              name: 'Compare with similar sets',
-              text: 'Each set is grouped with sets of the same theme and size: under 200, 200 to 499, 500 to 999 or 1,000+ pieces. A set is only ever ranked within its own group.',
-            },
-            {
-              name: 'Measure what you get',
-              text: 'Contents per dollar, a mix of plastic and pieces per dollar, counts for 75%; minifigures per $100 counts for 25%. Each minifigure counts as $2 of contents. Display models swap minifigures for how big the finished build is for its price.',
-            },
-            {
-              name: 'Rank, then add up',
-              text: 'Beat 90% of the group on contents per dollar and a set earns 90% of those 75 points. 75 and up is Great value, 50 is typical, and under 25 is Poor value.',
-            },
-            {
-              name: 'Quality, kept apart',
-              text: 'The Brickset builder rating becomes its own 0 to 100 quality score, steadied with 30 average ratings so a few early votes can’t dominate. It is shown beside the value score and never mixed into it.',
-            },
-          ],
-        },
-        {
-          title: 'The website',
-          steps: [
-            {
-              name: 'Static pages',
-              text: 'An Astro build writes a page for every set and theme, with a share card for each, drawn at build time. Search and Explore run in the browser from small data files.',
-            },
-            {
-              name: 'Edge hosting',
-              text: 'Cloudflare Pages serves the site. New scores are a single command: download, re-score, check, then publish.',
-            },
-          ],
-        },
-      ],
-      example: {
-        title: 'A worked example: Double-Decker Sightseeing Bus',
-        intro: 'City set 60407, 384 pieces and 5 minifigures for $29.99, ranked against 212 other City sets of 200 to 499 pieces.',
-        sums: [
-          {
-            terms: [
-              { label: 'Contents per dollar: 100th percentile × 75%', value: '75' },
-              { label: 'Minifigures per $100: 96th percentile × 25%', value: '24' },
-            ],
-            total: { label: 'Value score', value: '99' },
-          },
-          {
-            terms: [
-              { label: 'You pay', value: '$29.99' },
-              { label: 'Saved against similar sets', value: '$22.09' },
-            ],
-            total: { label: 'Similar sets usually cost', value: '$52.08' },
-          },
-        ],
-        answer:
-          '99 out of 100, Great value: the best-value City set of its size, and 42% cheaper than its contents usually cost. Its builder quality is scored apart at 79, from a 4.1 rating by 161 Brickset members.',
-      },
-      notes: [
-        {
-          title: 'Plastic, not just pieces',
-          text: 'Price per piece is easy to game: a set full of tiny pieces looks cheap. Plastic per dollar measures how much material you actually get, shown as an index where 100 is a typical set.',
-        },
-        {
-          title: 'Two methods that agree',
-          text: 'The price check is a separate model fitted on every set. Its ranking agrees closely with the value score, at a rank correlation of 0.84.',
-        },
-        {
-          title: 'Honest about its limits',
-          text: 'Prices are US list prices, so store discounts aren’t counted yet. Motorized sets are scored but flagged, since motors cost a lot and add little plastic. A resale view is planned next.',
         },
       ],
     },

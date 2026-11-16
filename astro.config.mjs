@@ -15,6 +15,8 @@ export default defineConfig({
     '/cities': '/photography',
     // Best Bricks was listed as "Brick Rater" while it was being built.
     '/projects/brick-rater': '/projects/best-bricks',
+    // Fair Claim is now part of Unvault (its small claims section), so its page is gone.
+    '/projects/fairclaim': '/projects',
     ...Object.fromEntries(cameraSlugs.map((s) => [`/about/${s}`, `/photography/cameras/${s}`])),
   },
 });
