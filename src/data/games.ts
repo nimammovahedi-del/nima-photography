@@ -1,5 +1,5 @@
-// The Games page: one big featured card (the game in development) above a card per finished game.
-// A finished game has its own page at /games/<slug>. Captures are kept in public/games/<slug>/.
+// The Games page: one wide banner card per game, newest first, all drawn the same way.
+// Each game has its own page at /games/<slug>. Captures are kept in public/games/<slug>/.
 
 export interface Game {
   slug: string;
@@ -9,10 +9,10 @@ export interface Game {
   tags: string[];
   /** Where to play it. Absent = still in development. */
   url?: string;
-  /** The card's picture. */
+  /** The card's wide banner (1800 × 663): the game's title screen or poster. */
   thumb?: string;
-  /** Shown big at the top of the page, above the other games. */
-  featured?: boolean;
+  /** The words of the card's link to the game's own page. */
+  read: string;
 }
 
 export const games: Game[] = [
@@ -21,10 +21,10 @@ export const games: Game[] = [
     name: 'Umbara',
     summary:
       'A night-time first-person shooter where you fight an enemy you can’t see without help. Made in Godot, with every original model built by script. Watch the full trailer and see how I made it.',
-    tags: ['Godot', 'Blender by script', 'Trailer'],
+    tags: ['Free', 'Browser', 'Godot', 'Trailer'],
     url: 'https://umbara-asy.pages.dev/',
     thumb: '/games/umbara/cover.webp',
-    featured: true,
+    read: 'Trailer and how I made it',
   },
   {
     slug: 'capy-time',
@@ -33,6 +33,7 @@ export const games: Game[] = [
       'A small, calm evening at the zoo, as a capybara. A cozy 3D game for the browser, on a computer or a phone, with no score and no way to lose.',
     tags: ['Free', 'Browser', 'Desktop and phone'],
     url: 'https://capytime.pages.dev/',
-    thumb: '/games/capy-time/den-sm.webp',
+    thumb: '/games/capy-time/banner.webp',
+    read: 'How I made it',
   },
 ];
