@@ -1,0 +1,353 @@
+---
+// Games: the featured game as one big card on top, then a smaller card per other game; each card
+// opens that game's own page. Nothing moves until a card is hovered.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { games } from '../../data/games';
+
+const featured = games.find((g) => g.featured);
+const rest = games.filter((g) => !g.featured);
+---
+
+<BaseLayout title="Games" description="Games I've made: Umbara, a night-time first-person shooter made in Godot, and Capy Time, a cozy 3D capybara game for the browser.">
+  <header class="head" data-tone="grey">
+    <h1>Games</h1>
+    <p class="lede">Small worlds I made to wander around in.</p>
+  </header>
+
+  <div class="list">
+    {
+      featured && (
+        <section class="featured" aria-labelledby="featured-name">
+          <a class="cover" href={`/games/${featured.slug}`} aria-label={`${featured.name}: the trailer and how I made it`} />
+          {featured.thumb && <img class="f-img" src={featured.thumb} alt="" width="1800" height="663" loading="eager" />}
+          <div class="f-text">
+            <p class="eyebrow">Featured</p>
+            <h2 id="featured-name">
+              {featured.name}
+              <span class="arrow" aria-hidden="true">→</span>
+            </h2>
+            <p class="f-summary">{featured.summary}</p>
+            <div class="links">
+              {featured.url && (
+                <a class="play" href={featured.url} target="_blank" rel="noopener">
+                  Play {featured.name} <span aria-hidden="true">↗</span>
+                </a>
+              )}
+              <span class="read">Trailer and how I made it</span>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <ol class="games">
+      {
+        rest.map((g) => (
+          <li class="card">
+            <a class="cover" href={`/games/${g.slug}`} aria-label={`${g.name}: how I made it`} />
+            {g.thumb && (
+              <div class="thumb" aria-hidden="true">
+                <img src={g.thumb} alt="" width="640" height="400" loading="eager" />
+              </div>
+            )}
+            <div class="text">
+              <h2>
+                {g.name}
+                <span class="arrow" aria-hidden="true">→</span>
+              </h2>
+              <p class="summary">{g.summary}</p>
+              <ul class="tags">
+                {g.tags.map((t) => <li>{t}</li>)}
+              </ul>
+              <div class="links">
+                {g.url && (
+                  <a class="play" href={g.url} target="_blank" rel="noopener">
+                    Play {g.name} <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+                <span class="read">How I made it</span>
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</BaseLayout>
+
+<style>
+  .head,
+  .list {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+  .head {
+    padding-top: clamp(32px, 6vw, 64px);
+    padding-bottom: clamp(20px, 3vw, 32px);
+    display: grid;
+    gap: 8px;
+  }
+  h1 {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(34px, 5vw, 48px);
+    line-height: 1.1;
+  }
+  .lede {
+    margin: 0;
+    font-size: 18px;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .list {
+    display: grid;
+    gap: 20px;
+    padding-bottom: 80px;
+  }
+
+  /* The featured game: its cover across the top of a wide card, the words in the dark band below.
+     It stays dark in light mode, like a poster. */
+  .featured {
+    position: relative;
+    display: grid;
+    border: 1px solid #2c2c33;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #0e0e10;
+    color: #f7f7f5;
+    transition: border-color 0.3s var(--ease-out);
+  }
+  .featured:hover {
+    border-color: color-mix(in srgb, var(--tan) 55%, #2c2c33);
+  }
+  .f-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1800 / 663;
+    object-fit: cover;
+    transition: filter 0.5s var(--ease-out);
+  }
+  .featured:hover .f-img {
+    filter: brightness(1.08);
+  }
+  .featured .cover {
+    z-index: 2;
+  }
+  .f-text {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    gap: 10px;
+    padding: clamp(20px, 3vw, 32px) clamp(20px, 3.5vw, 40px) clamp(22px, 3.5vw, 36px);
+    pointer-events: none;
+  }
+  .f-text .f-summary {
+    max-width: 44rem;
+  }
+  .f-text .play {
+    pointer-events: auto;
+  }
+  .eyebrow {
+    margin: 0;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tan);
+  }
+  .featured h2 {
+    margin: 0;
+    font-weight: 300;
+    font-size: clamp(40px, 6vw, 64px);
+    line-height: 1;
+  }
+  .f-summary {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.6;
+    font-weight: 300;
+    color: #dddcd3;
+  }
+  .featured .play {
+    background: var(--cream);
+    color: #18181b;
+  }
+  .featured .play:hover {
+    background: #f7f7f5;
+  }
+  .featured .read {
+    color: #f7f7f5;
+    text-decoration-color: rgb(255 255 255 / 0.3);
+  }
+  .featured:hover .read {
+    text-decoration-color: var(--tan);
+  }
+  :global(:root[data-theme='light']) .featured .play {
+    background: var(--cream);
+    color: #18181b;
+  }
+  .featured:hover .arrow {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* A finished game: a smaller card that opens its page. */
+  .games {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 20px;
+  }
+  .card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+    gap: 28px;
+    align-items: center;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--bg-raised);
+    transition: border-color 0.3s var(--ease-out);
+  }
+  .card:hover {
+    border-color: color-mix(in srgb, var(--tan) 55%, var(--line));
+  }
+  .cover {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: 14px;
+  }
+  .cover:focus-visible {
+    outline: 2px solid var(--tan);
+    outline-offset: 3px;
+  }
+  .thumb {
+    aspect-ratio: 16 / 10;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 1px solid var(--frame-edge);
+  }
+  .thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .card:hover .thumb img {
+    transform: scale(1.03);
+  }
+  .text {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+  .card h2 {
+    margin: 0;
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.2;
+  }
+  .arrow {
+    display: inline-block;
+    color: var(--tan);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity 0.25s var(--ease-out),
+      transform 0.25s var(--ease-out);
+  }
+  .card:hover .arrow,
+  .card:focus-within .arrow {
+    opacity: 1;
+    transform: none;
+  }
+  .summary {
+    margin: 0;
+    max-width: 52ch;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .tags li {
+    font-size: 13px;
+    padding: 2px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--project-body);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 20px;
+    margin-top: 4px;
+  }
+  .play {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 8px;
+    background: var(--cream);
+    color: #18181b;
+    font-size: 15px;
+    text-decoration: none;
+    transition: background 0.2s var(--ease-out);
+  }
+  .play:hover {
+    background: var(--text);
+  }
+  :global(:root[data-theme='light']) .play {
+    background: var(--text);
+    color: var(--bg);
+  }
+  :global(:root[data-theme='light']) .play:hover {
+    background: var(--nav);
+  }
+  .read {
+    font-size: 14px;
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 4px;
+  }
+  .card:hover .read {
+    text-decoration-color: var(--tan);
+  }
+
+  @media (max-width: 760px) {
+    .card {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 14px;
+    }
+    .play {
+      flex: 1 1 100%;
+      justify-content: center;
+      padding: 12px 16px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .thumb img {
+      transition: none;
+    }
+    .card:hover .thumb img {
+      transform: none;
+    }
+  }
+</style>

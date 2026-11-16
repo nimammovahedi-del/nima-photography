@@ -1,5 +1,5 @@
 ---
-// The top bar on every page: the NM monogram (home), the four sections and the light/dark
+// The top bar on every page: the NM monogram (home), the five sections and the light/dark
 // switch. Inside Photography a second row holds its own tabs (Places, the photo subjects, Cameras).
 import { categories } from '../site.config';
 
@@ -21,6 +21,7 @@ const inPhotography = under('/photography') || under('/places') || subjects.some
 const sections = [
   { href: '/research', label: 'Research', current: under('/research') },
   { href: '/projects', label: 'Projects', current: under('/projects') },
+  { href: '/games', label: 'Games', current: under('/games') },
   { href: '/photography', label: 'Photography', current: inPhotography },
   { href: '/about', label: 'About', current: under('/about') },
 ];
@@ -313,17 +314,23 @@ const photoTabs = [
   @media (max-width: 759px) {
     .bar {
       height: 60px;
-      gap: 10px;
+      gap: 8px;
     }
     .narrow .bar {
       padding-top: 18px;
     }
+    /* Five sections, the switch and the monogram share one line down to a 320px phone: the
+       spacing and the type shrink with the screen. */
     .sections,
     .sections ul {
-      gap: 13px;
+      gap: clamp(4px, 1.9vw, 13px);
     }
     .sections a {
-      font-size: 12.5px;
+      font-size: clamp(9.5px, 2.9vw, 12.5px);
+    }
+    .home svg {
+      width: clamp(24px, 7.5vw, 34px);
+      height: auto;
     }
     .has-sub .bar {
       height: 54px;

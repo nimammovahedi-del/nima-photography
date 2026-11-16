@@ -1,0 +1,1213 @@
+---
+// Umbara, in my own words: the premise, the full trailer, frames from the game, then the three parts
+// of the process (the look, the models, the trailer and testing). The sliders, the milestone rows
+// and the frame viewer only move when the visitor uses them.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BeforeAfter from '../../components/games/BeforeAfter.astro';
+import Stepper from '../../components/games/Stepper.astro';
+import { games } from '../../data/games';
+
+const game = games.find((g) => g.slug === 'umbara')!;
+const f = (n: string) => `/games/umbara/${n}.webp`;
+const TRAILER = 'https://pub-e2867eccfdfb4aff83fb9f3d085f5084.r2.dev/umbara2.mp4';
+
+const field = [
+  { n: '08', label: 'Rocket on the crawler', alt: 'A rocket turns the crawler tank into a fireball with flying debris' },
+  { n: '02', label: 'Umbaran line at the road', alt: 'Umbaran soldiers with green helmets crouched beside a fungus tree and lamp posts along the glowing road' },
+  { n: '03', label: 'Contact on the road', alt: 'Umbaran soldiers returning fire along the curving glowing road, smoke rising in the red forest' },
+  { n: '04', label: 'Wreck burning on the road', alt: 'A burning wreck on the road with a smoke column and soldiers advancing through the forest' },
+  { n: '06', label: 'Hover tank on the road', alt: 'An Umbaran hover tank approaching along the road with a blue blade glowing' },
+  { n: '07', label: 'Crawler ahead', alt: 'The Umbaran crawler tank centered on the road between red-leafed trees' },
+  { n: '09', label: 'Explosion on the road', alt: 'A fireball and debris on the road with small figures against the blast' },
+  { n: '10', label: 'Impact', alt: 'An impact fireball rising over the red forest' },
+  { n: '11', label: 'Fireball over the forest', alt: 'A large fireball filling the sky over the lit forest' },
+  { n: '12', label: 'Dust wall rolling in', alt: 'A wall of dust and smoke swallowing the forest after the crash' },
+];
+
+const pairs = [
+  { n: 'road', label: 'Browser prototype to Godot', alt: 'The same road: grey pillar trees in the browser prototype, then the Godot forest at night' },
+  { n: 'tank', label: 'Browser art pass to Godot', alt: 'Tanks on the road: bright white tanks on hexagon paving, then a hover tank on the Godot road' },
+  { n: 'sky', label: 'Browser art pass to Godot', alt: 'Looking up the road: red claw trees in the browser, then the Godot sky with clouds and hills' },
+  { n: 'explosion', label: 'Browser art pass to Godot', alt: 'An explosion: a single orange ball in the browser, then a fireball with smoke and debris in Godot' },
+];
+
+const world = [
+  ['Grey box', 'Grey-box prototype: a dark road with plain grey pillar trees, lit only by the helmet lamp'],
+  ['First look', 'After the look test: cyan road edges, grey pillar trees and pink ring-shaped canopies'],
+  ['Browser art pass', 'Browser art pass: a hexagon-paved road between claw trees with bright red leaves'],
+  ['First Godot build', 'First Godot build: claw trees with red leaves and tall blue tentacles over a cobbled road'],
+  ['Night tint', 'The purple night tint: a misty violet forest, glowing ribbed tentacles and lamp posts'],
+  ['Ground shader', 'The ground shader: blended soil instead of the flat painted floor'],
+  ['Current', 'The current build from the same viewpoint'],
+].map(([label, alt], i) => ({ src: f(`world-${i + 1}`), label, alt }));
+
+const models = [
+  ['First kit', 'The first kit of enemy vehicles: simple rounded shapes'],
+  ['Detail pass', 'The vehicles after the detail pass'],
+  ['Current', 'The current vehicles: crawler, hover tank and heavy walker'],
+].map(([label, alt], i) => ({ src: f(`models-${i + 1}`), label, alt }));
+
+const tanks = [
+  { n: 'crawler', level: 'Easy', name: 'Crawler', dmg: 35, dmgLabel: '35%', hp: 43, hpLabel: '1,040', alt: 'Crawler tank: a wide armored body on four clawed legs' },
+  { n: 'hover', level: 'Medium', name: 'Hover tank', dmg: 3, dmgLabel: '3% from the front', hp: 79, hpLabel: '1,900', alt: 'Hover tank: a cockpit sphere between two pods with cyan blades' },
+  { n: 'heavy', level: 'Hard', name: 'Heavy walker', dmg: 1.5, dmgLabel: '1.5% (rockets do full)', hp: 100, hpLabel: '2,400', alt: 'Heavy cannon walker: a domed body on six arched legs' },
+];
+
+const toc = [
+  { id: 'overview', title: 'Overview' },
+  { id: 'trailer', title: 'Trailer' },
+  { id: 'field', title: 'In the field' },
+  { id: 'look', title: 'Look and style' },
+  { id: 'models', title: 'Blender models' },
+  { id: 'testing', title: 'Trailer and testing' },
+];
+---
+
+<BaseLayout title={game.name} description="Umbara: a night-time first-person shooter made in Godot, with every original model built by script. The trailer, and how I made it.">
+  <article class="page" data-tone="grey">
+    <nav class="back"><a href="/games"><span aria-hidden="true">←</span> Games</a></nav>
+
+    <nav class="toc" aria-label="Sections of Umbara" data-toc>
+      <ol>{toc.map((t) => <li><a href={`#${t.id}`}>{t.title}</a></li>)}</ol>
+    </nav>
+
+    <header class="intro" id="overview">
+      <p class="eyebrow">Game development case study</p>
+      <h1>Umbara</h1>
+      <p class="tagline">Conquer the darkness. A night-time first-person shooter where you fight an enemy you can't see without help.</p>
+      <div class="actions">
+        <a class="btn" href={game.url} target="_blank" rel="noopener">Play Umbara <span aria-hidden="true">↗</span></a>
+        <ul class="tags">{['Godot 4.7', 'Models built by script in Blender', 'Design, direction, art'].map((t) => <li>{t}</li>)}</ul>
+      </div>
+    </header>
+
+    <section class="block premise">
+      <p>You land with a squad on a planet where it is always night, and push down a single road to the enemy capital, five levels in all. The forest glows, the enemy soldiers see in the dark and you don't, so a scan pulse, your squad and the bombers you call in are how you even the odds. I made it in Godot, and every original model in it is built by a script.</p>
+    </section>
+
+    <section class="block" id="trailer">
+      <figure class="wide trailer">
+        <div class="bar" aria-hidden="true">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="addr">Umbara · trailer</span>
+        </div>
+        <video controls preload="none" playsinline poster={f('trailer-poster')} width="2560" height="1440">
+          <source src={TRAILER} type="video/mp4" />
+        </video>
+      </figure>
+      <p class="caption">The full 68-second trailer: the real game running a fight I scripted and timed beat by beat, recorded at 2560 × 1440 and 60 fps. Sound on.</p>
+    </section>
+
+    <section class="block" id="field">
+      <p class="kicker">In the field</p>
+      <h2>The game in motion</h2>
+      <div class="wide gallery" data-gallery>
+        {
+          field.map((it, i) => (
+            <figure class:list={{ lead: i === 0 }}>
+              <button type="button" data-i={i} aria-label={`Enlarge: ${it.label}`}>
+                <img src={f(`field-${it.n}`)} alt={it.alt} width="1600" height="900" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              </button>
+              <figcaption>{it.label}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+      <p class="caption">Captured in the game; press any frame to enlarge it. The world, enemies and effects are mine; some figures and ships in frame are third-party models.</p>
+      <dialog class="viewer" data-viewer aria-label="Enlarged frame">
+        <img alt="" />
+        <p class="v-cap"></p>
+        <button type="button" class="v-close" aria-label="Close">×</button>
+        <button type="button" class="v-prev" aria-label="Previous frame">‹</button>
+        <button type="button" class="v-next" aria-label="Next frame">›</button>
+      </dialog>
+    </section>
+
+    <section class="block" id="look">
+      <p class="kicker">01 · Look and style</p>
+      <h2>I chose the night by comparing it side by side, never in words</h2>
+      <p>The game started as a browser prototype and moved to Godot. Drag each line to see the same view then and now.</p>
+      <div class="wide pairs">
+        <figure class="lead">
+          <BeforeAfter before={f(`pair-${pairs[0].n}-before`)} after={f(`pair-${pairs[0].n}-after`)} alt={pairs[0].alt} />
+          <figcaption>{pairs[0].label}</figcaption>
+        </figure>
+        {
+          pairs.slice(1).map((p) => (
+            <figure>
+              <BeforeAfter before={f(`pair-${p.n}-before`)} after={f(`pair-${p.n}-after`)} alt={p.alt} />
+              <figcaption>{p.label}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+      <p class="after">Every milestone build, rendered from one fixed camera with only the environment in view. Press a step to see it.</p>
+      <div class="wide"><Stepper steps={world} label="Milestones of the world, first draft to now" /></div>
+      <p class="after">Each step was chosen by comparison, not description. I tested four moods of the same moment and picked B, rejected a near-black night, and set the brightness of the whole night with one number, <strong>DIM = 0.82</strong>. A ground shader replaced the flat painted floor, and each level got its own color grade. Downloaded allied models went through the same test, and I chose a night tint so they sit in the map's palette.</p>
+      <div class="wide moods">
+        <figure>
+          <div class="looks">
+            {
+              [
+                ['a', 'A', 'Heavy Mist'],
+                ['b', 'B · chosen', 'Series Night'],
+                ['c', 'C', 'Glowing Forest'],
+                ['d', 'D', 'Clear Night'],
+              ].map(([k, tag, name]) => (
+                <figure class:list={{ chosen: k === 'b' }}>
+                  <img src={f(`look-${k}`)} alt={`Look ${tag}: ${name}`} width="950" height="470" loading="lazy" decoding="async" />
+                  <figcaption><b>{tag}</b> {name}</figcaption>
+                </figure>
+              ))
+            }
+          </div>
+          <figcaption>Four look tests of the same moment.</figcaption>
+        </figure>
+        <figure>
+          <BeforeAfter before={f('ungraded')} after={f('graded')} alt="Level 1 with and without its color grade" left="Ungraded" right="Graded" ratio="1600 / 737" />
+          <figcaption>A color grade for each level. Drag to compare.</figcaption>
+        </figure>
+      </div>
+      <dl class="stats">
+        <div><dt>4 × 4</dt><dd>moods and helmet displays tested</dd></div>
+        <div><dt>0.82</dt><dd>one brightness number for the whole night</dd></div>
+        <div><dt>18 → 13.5 m</dt><dd>road narrowed to feel more intimate</dd></div>
+        <div><dt>8</dt><dd>soil offsets blended so the ground never tiles</dd></div>
+      </dl>
+    </section>
+
+    <section class="block" id="models">
+      <p class="kicker">02 · Blender models</p>
+      <h2>Every enemy is a script, so a redesign is a re-run</h2>
+      <p>Each model is a Python script run in Blender, with no hand sculpting. My first enemy kit was too simple, so I had the vehicles rewritten as one 910-line script, then rebuilt the heavy walker from three reference views: knee wheels, armored shins, two-talon claws and a jointed cannon. After seeing it in the game I doubled its size.</p>
+      <div class="wide"><Stepper steps={models} label="The enemy vehicles, first kit to now" /></div>
+      <p class="after">There are three tanks, each a step up. The bars show how much a rifle hurts each one and how much health it has, so the armor teaches you when to switch weapons.</p>
+      <ol class="wide tanks">
+        {
+          tanks.map((t) => (
+            <li>
+              <img src={f(t.n)} alt={t.alt} width="1200" height="700" loading="lazy" decoding="async" />
+              <p class="t-name"><b>{t.level}</b> {t.name}</p>
+              <div class="meter">
+                <span>Rifle damage {t.dmgLabel}</span>
+                <span class="track"><i style={`width: ${t.dmg}%`} /></span>
+                <span>Health {t.hpLabel}</span>
+                <span class="track hp"><i style={`width: ${t.hp}%`} /></span>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="wide walker">
+        <figure>
+          <span class="lab">First kit</span>
+          <img src={f('heavy-kit-before')} alt="The first heavy walker: a round body on four straight legs" width="1200" height="672" loading="lazy" decoding="async" />
+        </figure>
+        <figure>
+          <span class="lab">Rebuilt</span>
+          <img src={f('heavy-after')} alt="The rebuilt heavy walker with knee wheels, shin plates and a cannon on a neck" width="1200" height="900" loading="lazy" decoding="async" />
+        </figure>
+        <figcaption class="span">The heavy walker, first kit to rebuilt from three reference views.</figcaption>
+        <figure class="span">
+          <img src={f('defences')} alt="Defense models in a row: crates, a shield wall, a gun nest and a gun emplacement" width="1200" height="480" loading="lazy" decoding="async" />
+          <figcaption>The defenses, rebuilt after I called the cover "random circles stacked."</figcaption>
+        </figure>
+      </div>
+      <dl class="stats">
+        <div><dt>910</dt><dd>lines in the vehicle script</dd></div>
+        <div><dt>77k</dt><dd>triangles for the three tanks</dd></div>
+        <div><dt>31.6k</dt><dd>triangles in the heavy walker</dd></div>
+        <div><dt>2×</dt><dd>walker scale after the in-game check</dd></div>
+      </dl>
+    </section>
+
+    <section class="block" id="testing">
+      <p class="kicker">03 · Trailer and testing</p>
+      <h2>I directed the trailer inside the game, and let a bot play every level</h2>
+      <p>The camera path in the trailer steers clear of every trunk and wreck, and enemies are moved to spots the lens can see. Here is how its 68 seconds are laid out.</p>
+      <div class="wide chart beats-chart">
+        <h3>Trailer beats</h3>
+        <p class="sub">Seconds into the trailer. The fight starts when the opening ride touches down.</p>
+        <div class="beats">
+          <div class="lane"><span class="ln">Picture</span>
+            <div class="track-row">
+              <span class="seg s1" style="left:0;width:30.9%">Opening ride</span>
+              <span class="seg s2" style="left:30.9%;width:19.8%">Fight in the trees</span>
+              <span class="seg s3" style="left:50.7%;width:10.3%">Crawler</span>
+              <span class="seg s4" style="left:61%;width:14.4%">Crash</span>
+              <span class="seg s5" style="left:75.4%;width:8%">Dust</span>
+              <span class="seg s6" style="left:83.4%;width:16.6%">Title card</span>
+            </div>
+          </div>
+          <div class="lane"><span class="ln">Camera</span>
+            <div class="track-row marks">
+              <span class="mk" style="left:30.9%">run</span>
+              <span class="mk" style="left:57.4%">rocket</span>
+              <span class="mk" style="left:67%">look up</span>
+              <span class="mk" style="left:74.3%">impact</span>
+            </div>
+          </div>
+          <div class="lane"><span class="ln">Sound</span>
+            <div class="track-row">
+              <span class="seg s7" style="left:0;width:79.3%">Battle and music</span>
+              <span class="seg s6" style="left:79.3%;width:20.7%">Music only</span>
+            </div>
+          </div>
+          <div class="lane axis-lane"><span class="ln"></span>
+            <div class="axis">{[0, 10, 20, 30, 40, 50, 60].map((s) => <span style={`left:${(s / 68) * 100}%`}>{s}</span>)}<span style="left:100%">68 s</span></div>
+          </div>
+        </div>
+        <div class="thumbs">
+          {
+            [
+              ['t-fight', '0:31 fight', 'The fight among the trees'],
+              ['hero-crawler-blast', '0:39 crawler', 'The crawler explodes on the road'],
+              ['t-impact', '0:50 impact', 'The crash fireball beyond the forest'],
+              ['t-dust-3', '0:54 dust', 'The dust wall rolls over the camera'],
+            ].map(([n, cap, alt]) => (
+              <figure>
+                <img src={f(n)} alt={alt} loading="lazy" decoding="async" />
+                <figcaption>{cap}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </div>
+
+      <h3 class="sub-h">The test bot</h3>
+      <p>The bot plays whole levels through the real controls and logs time, deaths and frame rate. When it played too well, I gave it an "average player" setting. Its runs showed me which fights stalled or became walls, and the reworks below came from them.</p>
+      <div class="wide charts">
+        <div class="chart">
+          <h3>Bot runs, before and after each rework</h3>
+          <p class="sub">Minutes to finish on Medium; labels show deaths.</p>
+          <p class="legend"><span><i class="k-b"></i>Before</span><span><i class="k-a"></i>After</span></p>
+          {
+            [
+              ['Level 1', 'slower build-up', 45.6, '10.3 min · 3', 25.2, '5.7 min · 0'],
+              ['Level 3', 'beacon moved', 100, '23 min · 2', 39.1, '9 min · 1'],
+              ['Level 4', 'walker line', 52.2, '12 min · 3', 36.5, '8.4 min · 2'],
+              ['Level 5', 'gate deck fixed', 98.3, '22.6 min · 14', 44.8, '10.3 min · 2'],
+            ].map(([name, why, b, bl, a, al]) => (
+              <div class="brow">
+                <p class="name">{name}<small>{why}</small></p>
+                <div class="bpair">
+                  <span class="b be"><i style={`width:${b}%`} /><em>{bl}</em></span>
+                  <span class="b af"><i style={`width:${a}%`} /><em>{al}</em></span>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+        <div class="chart">
+          <h3>Performance passes</h3>
+          <p class="sub">Milliseconds; each row is scaled to its own before.</p>
+          <p class="legend"><span><i class="k-b"></i>Before</span><span><i class="k-a"></i>After</span></p>
+          {
+            [
+              ['Frame in a fight', 'forest cut into tiles', 100, '40 ms (25 fps)', 60, '24 ms (42 fps)'],
+              ['Landing stall', 'shaders warmed up', 100, '148 ms', 8.8, '13 ms'],
+              ['Soldier cover search', '8 m grid', 100, '16 ms', 9.4, '1.5 ms'],
+              ['Effects script', 'fewer fire puffs', 100, '5 ms', 60, '3 ms'],
+            ].map(([name, why, b, bl, a, al]) => (
+              <div class="brow">
+                <p class="name">{name}<small>{why}</small></p>
+                <div class="bpair">
+                  <span class="b be"><i style={`width:${b}%`} /><em>{bl}</em></span>
+                  <span class="b af"><i style={`width:${a}%`} /><em>{al}</em></span>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+      <dl class="stats">
+        <div><dt>68 s</dt><dd>trailer, recorded at 60 fps</dd></div>
+        <div><dt>3</dt><dd>cuts of the trailer</dd></div>
+        <div><dt>1,377</dt><dd>lines in the test bot</dd></div>
+        <div><dt>17M → 2M</dt><dd>forest triangles per frame</dd></div>
+      </dl>
+      <p class="after">The bot can't judge whether something is fun or looks right. That stayed my job, and I looked at every screenshot it produced.</p>
+    </section>
+
+    <section class="block credits">
+      <p>Umbara is a private, non-commercial fan project, not affiliated with or endorsed by the owners of its setting. Some models, animations, sounds and music in my build are third-party and credited in the game; they aren't my work.</p>
+    </section>
+
+    <footer class="end">
+      <a class="btn big" href={game.url} target="_blank" rel="noopener">Play Umbara <span aria-hidden="true">↗</span></a>
+      <nav class="pager" aria-label="Games">
+        <a href="/games"><span aria-hidden="true">←</span> All games</a>
+        <a href="/games/capy-time">Capy Time <span aria-hidden="true">→</span></a>
+      </nav>
+    </footer>
+  </article>
+</BaseLayout>
+
+<script>
+  // Side menu: the section you're reading is highlighted as you scroll, and a click glides there.
+  const nav = document.querySelector<HTMLElement>('[data-toc]');
+  if (nav) {
+    const links = [...nav.querySelectorAll<HTMLAnchorElement>('a')];
+    const targets = links.map((a) => document.getElementById(a.hash.slice(1))!);
+    let current = -1;
+    const update = () => {
+      const line = window.innerHeight * 0.35;
+      let i = 0;
+      targets.forEach((t, k) => {
+        if (t && t.getBoundingClientRect().top <= line) i = k;
+      });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) i = targets.length - 1;
+      if (i === current) return;
+      current = i;
+      links.forEach((a, k) => (k === i ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+    };
+    let queued = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          update();
+        });
+      },
+      { passive: true },
+    );
+    window.addEventListener('resize', update);
+    update();
+    links.forEach((a, k) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        targets[k].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+        history.replaceState(null, '', a.hash);
+      }),
+    );
+  }
+
+  // Frame viewer: press a frame to see it large; arrows, swipes and Escape work too.
+  const gallery = document.querySelector<HTMLElement>('[data-gallery]');
+  const viewer = document.querySelector<HTMLDialogElement>('[data-viewer]');
+  if (gallery && viewer) {
+    const items = [...gallery.querySelectorAll<HTMLButtonElement>('button')].map((b) => ({
+      src: b.querySelector('img')!.currentSrc || b.querySelector('img')!.src,
+      alt: b.querySelector('img')!.alt,
+      label: b.parentElement!.querySelector('figcaption')!.textContent ?? '',
+    }));
+    const img = viewer.querySelector('img')!;
+    const cap = viewer.querySelector<HTMLElement>('.v-cap')!;
+    let cur = 0;
+    const show = (i: number) => {
+      cur = (i + items.length) % items.length;
+      img.src = items[cur].src;
+      img.alt = items[cur].alt;
+      cap.textContent = `${items[cur].label}  ·  ${cur + 1} / ${items.length}`;
+    };
+    gallery.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest('button');
+      if (!b) return;
+      show(Number(b.dataset.i));
+      viewer.showModal();
+    });
+    viewer.querySelector('.v-close')!.addEventListener('click', () => viewer.close());
+    viewer.querySelector('.v-prev')!.addEventListener('click', () => show(cur - 1));
+    viewer.querySelector('.v-next')!.addEventListener('click', () => show(cur + 1));
+    viewer.addEventListener('click', (e) => {
+      if (e.target === viewer) viewer.close();
+    });
+    viewer.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(cur - 1);
+      if (e.key === 'ArrowRight') show(cur + 1);
+    });
+    let x0: number | null = null;
+    viewer.addEventListener('touchstart', (e) => (x0 = e.touches[0].clientX), { passive: true });
+    viewer.addEventListener('touchend', (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
+      x0 = null;
+    });
+  }
+</script>
+
+<style>
+  .page {
+    --col: 720px;
+    --wide: 1040px;
+    --red: #e0505a;
+    padding: 0 var(--gutter) 40px;
+  }
+  .page > *,
+  .block > * {
+    max-width: var(--col);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .page > .wide,
+  .block > .wide,
+  .block > .stats {
+    max-width: var(--wide);
+  }
+  .page > .block {
+    max-width: none;
+  }
+  .back {
+    padding-top: 28px;
+  }
+  .back a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 15px;
+  }
+  .back a span {
+    color: var(--tan);
+  }
+  .page [id] {
+    scroll-margin-top: 96px;
+  }
+
+  .toc {
+    display: none;
+  }
+  @media (min-width: 1300px) {
+    .page {
+      --wide: min(1040px, calc(100vw - 480px));
+    }
+    .toc {
+      display: block;
+      position: fixed;
+      top: 128px;
+      left: max(24px, calc((100vw - var(--wide)) / 2 - 216px));
+      width: 176px;
+      max-width: none;
+      margin: 0;
+      z-index: 5;
+    }
+  }
+  .toc ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-left: 1px solid var(--line);
+  }
+  .toc a {
+    display: block;
+    margin-left: -1px;
+    padding: 7px 0 7px 16px;
+    border-left: 2px solid transparent;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.35;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .toc a:hover,
+  .toc a[aria-current] {
+    color: var(--text);
+  }
+  .toc a[aria-current] {
+    border-left-color: var(--tan);
+  }
+
+  .intro {
+    display: grid;
+    justify-items: start;
+    gap: 14px;
+    padding: clamp(32px, 6vw, 64px) 0 8px;
+  }
+  .eyebrow,
+  .kicker {
+    margin: 0;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tan);
+  }
+  h1 {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 60px);
+    line-height: 1.05;
+  }
+  .tagline {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.45;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 18px;
+    margin-top: 6px;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .tags li {
+    font-size: 14px;
+    padding: 3px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--project-body);
+  }
+  .btn {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    padding: 11px 18px;
+    border-radius: 8px;
+    background: var(--cream);
+    color: var(--bg);
+    font-size: 15px;
+    text-decoration: none;
+    transition: background 0.2s var(--ease-out);
+  }
+  .btn:hover {
+    background: var(--text);
+  }
+  :global(:root[data-theme='light']) .btn {
+    background: var(--text);
+    color: var(--bg);
+  }
+  :global(:root[data-theme='light']) .btn:hover {
+    background: var(--nav);
+  }
+  .btn.big {
+    padding: 15px 26px;
+    font-size: 17px;
+  }
+
+  .block {
+    padding: clamp(40px, 6vw, 72px) 0 0;
+  }
+  .block.premise {
+    padding-top: 28px;
+  }
+  .block#trailer {
+    padding-top: 28px;
+  }
+  .kicker {
+    margin-bottom: 10px;
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-weight: 400;
+    font-size: clamp(28px, 3.6vw, 36px);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .block p {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+  .block p strong {
+    font-weight: 500;
+    color: var(--text);
+  }
+  .block .wide {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .block p.caption,
+  .block figcaption {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .block p.caption {
+    margin-top: -16px;
+  }
+  figure {
+    margin: 0;
+  }
+  figcaption {
+    margin-top: 8px;
+  }
+
+  /* The trailer, in the same window frame as the screenshots elsewhere on the site. */
+  .trailer {
+    border: 1px solid var(--frame-edge);
+    box-shadow: 0 18px 50px var(--frame-shadow);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+  }
+  .trailer .bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 34px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--frame-edge);
+    background: var(--bg-raised);
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dots i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+  .addr {
+    flex: 1;
+    max-width: 340px;
+    margin: 0 auto;
+    padding: 3px 12px;
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+  }
+  .trailer video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    background: #000;
+  }
+
+  /* In the field: one big frame, then a grid; each opens the viewer. */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .gallery .lead {
+    grid-column: 1 / -1;
+  }
+  .gallery button {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--frame-edge);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #0e0e12;
+    cursor: zoom-in;
+  }
+  .gallery img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    transition: transform 0.5s var(--ease-out);
+  }
+  .gallery button:hover img {
+    transform: scale(1.03);
+  }
+  .gallery button:focus-visible {
+    outline: 2px solid var(--tan);
+    outline-offset: 3px;
+  }
+  .viewer {
+    width: min(1400px, 96vw);
+    max-width: none;
+    max-height: 96vh;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #f7f7f5;
+    overflow: visible;
+  }
+  .viewer::backdrop {
+    background: rgb(8 8 10 / 0.9);
+  }
+  .viewer img {
+    display: block;
+    width: 100%;
+    max-height: 84vh;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  .viewer .v-cap {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: #c9c9c4;
+    text-align: center;
+  }
+  .viewer button {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    border-radius: 50%;
+    background: rgb(11 11 14 / 0.7);
+    color: #f7f7f5;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .viewer button:hover {
+    background: rgb(40 40 46 / 0.9);
+  }
+  .v-close {
+    top: 10px;
+    right: 10px;
+  }
+  .v-prev,
+  .v-next {
+    top: calc(50% - 40px);
+  }
+  .v-prev {
+    left: 10px;
+  }
+  .v-next {
+    right: 10px;
+  }
+
+  /* Look and style */
+  .pairs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .pairs .lead {
+    grid-column: 1 / -1;
+  }
+  .moods {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+  }
+  .looks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .looks img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--frame-edge);
+  }
+  .looks .chosen img {
+    border-color: var(--tan);
+    box-shadow: 0 0 0 1px var(--tan);
+  }
+  .looks figcaption {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+  .looks b {
+    font-weight: 400;
+    color: var(--tan);
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .stats div {
+    padding: 20px 18px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-raised);
+  }
+  .stats dt {
+    font-size: 32px;
+    line-height: 1.05;
+    color: var(--text);
+    font-weight: 300;
+    white-space: nowrap;
+  }
+  .stats dd {
+    margin: 10px 0 0;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--project-body);
+    font-weight: 300;
+  }
+
+  /* Blender models */
+  .tanks {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    padding: 0;
+    list-style: none;
+  }
+  .tanks img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--frame-edge);
+  }
+  .block .t-name {
+    margin: 10px 0 8px;
+    font-size: 17px;
+    color: var(--text);
+  }
+  .t-name b {
+    margin-right: 6px;
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tan);
+  }
+  .meter {
+    display: grid;
+    gap: 5px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .track {
+    height: 6px;
+    margin-bottom: 4px;
+    border-radius: 3px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .track i {
+    display: block;
+    height: 100%;
+    min-width: 3px;
+    background: var(--tan);
+  }
+  .track.hp i {
+    background: var(--sage);
+  }
+  :global(:root[data-theme='light']) .track.hp i {
+    background: var(--accent);
+  }
+  .walker {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .walker figure {
+    position: relative;
+  }
+  .walker .span {
+    grid-column: 1 / -1;
+  }
+  .walker figcaption.span {
+    margin-top: -6px;
+  }
+  .walker img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--frame-edge);
+  }
+  .walker .span img {
+    aspect-ratio: 1200 / 480;
+  }
+  .lab {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: rgb(11 11 14 / 0.72);
+    color: #f7f7f5;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Charts */
+  .chart {
+    padding: 24px clamp(18px, 3vw, 28px);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-raised);
+  }
+  .chart h3,
+  .sub-h {
+    margin: 0 0 4px;
+    font-weight: 400;
+    font-size: 20px;
+    color: var(--text);
+  }
+  .sub-h {
+    margin-top: 48px;
+    margin-bottom: 14px;
+    font-size: 24px;
+  }
+  .block .chart .sub {
+    margin: 0 0 18px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .beats {
+    display: grid;
+    gap: 8px;
+  }
+  .lane {
+    display: grid;
+    grid-template-columns: 70px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+  }
+  .ln {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .track-row {
+    position: relative;
+    height: 30px;
+  }
+  .seg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    border-right: 2px solid var(--bg-raised);
+    border-radius: 4px;
+    font-size: 12px;
+    color: #18181b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .s1 { background: #8d86a6; }
+  .s2 { background: #b0a27c; }
+  .s3 { background: #c98f7f; }
+  .s4 { background: #e07a5f; }
+  .s5 { background: #c0b8c3; }
+  .s6 { background: #a4bdba; }
+  .s7 { background: #798984; color: #f7f7f5; }
+  .marks {
+    border-bottom: 1px dashed var(--line);
+  }
+  .mk {
+    position: absolute;
+    bottom: 0;
+    padding-left: 6px;
+    border-left: 2px solid var(--tan);
+    height: 24px;
+    font-size: 12px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .axis {
+    position: relative;
+    height: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .axis span {
+    position: absolute;
+    top: 4px;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+  .axis span:first-child {
+    transform: none;
+  }
+  .axis span:last-child {
+    transform: translateX(-100%);
+  }
+  .thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+    padding-left: 82px;
+  }
+  .thumbs img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--frame-edge);
+  }
+  .thumbs figcaption {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+  .charts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .block .legend {
+    display: flex;
+    gap: 16px;
+    margin: -8px 0 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .legend i {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+    border-radius: 2px;
+    vertical-align: -1px;
+  }
+  .k-b,
+  .be i {
+    background: var(--rose);
+  }
+  .k-a,
+  .af i {
+    background: var(--sage);
+  }
+  :global(:root[data-theme='light']) .k-a,
+  :global(:root[data-theme='light']) .af i {
+    background: var(--accent);
+  }
+  .brow {
+    display: grid;
+    grid-template-columns: 128px minmax(0, 1fr);
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+  .block .name {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.3;
+    color: var(--text);
+  }
+  .name small {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .bpair {
+    display: grid;
+    gap: 5px;
+  }
+  .b {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--project-body);
+  }
+  .b i {
+    display: block;
+    height: 10px;
+    min-width: 3px;
+    border-radius: 2px;
+    flex: none;
+    max-width: 62%;
+  }
+  .b em {
+    font-style: normal;
+    white-space: nowrap;
+  }
+
+  .credits {
+    padding-top: 48px;
+  }
+  .block.credits p {
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .end {
+    display: grid;
+    justify-items: center;
+    gap: 40px;
+    padding: clamp(40px, 6vw, 72px) 0 24px;
+  }
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .pager a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 15px;
+  }
+  .pager a:hover {
+    color: var(--tan);
+  }
+
+  @media (max-width: 760px) {
+    .gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .gallery figcaption {
+      font-size: 12px;
+    }
+    .pairs,
+    .moods,
+    .tanks,
+    .charts {
+      grid-template-columns: 1fr;
+    }
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .stats dt {
+      font-size: 26px;
+    }
+    .block p {
+      font-size: 17px;
+    }
+    .actions .btn,
+    .btn.big {
+      width: 100%;
+      justify-content: center;
+    }
+    /* The beats chart scrolls sideways on a phone instead of squeezing its labels. */
+    .beats-chart {
+      overflow-x: auto;
+    }
+    .beats,
+    .thumbs {
+      min-width: 620px;
+    }
+    .viewer button.v-prev,
+    .viewer button.v-next {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gallery img {
+      transition: none;
+    }
+    .gallery button:hover img {
+      transform: none;
+    }
+  }
+</style>
