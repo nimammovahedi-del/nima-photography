@@ -7,15 +7,6 @@ import { filter, filterWeight, presimplify, quantile, simplify, sphericalRingAre
 import world from 'world-atlas/countries-110m.json';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { home, site } from '../site.config';
-import { papers } from '../data/research/papers';
-import { projects } from '../data/projects';
-import { games } from '../data/games';
-
-const newest = {
-  research: papers.find((p) => p.slug === home.cards.research.newest)?.title,
-  projects: projects.find((p) => p.slug === home.cards.projects.newest)?.name,
-  games: games.find((g) => g.slug === home.cards.games.newest)?.name,
-};
 
 // ── Globe: every country's land, with North America filled in cream ──────────
 // Simplified for a 76px globe, and tiny islands dropped, so the page stays light.
@@ -160,7 +151,6 @@ const gear = (() => {
           {bricks.map((b, k) => <g class:list={['brick', `b${k}`]} set:html={b} />)}
         </svg>
         <h2>Projects</h2>
-        {newest.projects && <p class="new"><span>New</span>{newest.projects}</p>}
       </a>
 
       <a class="card game-card" href="/games">
@@ -181,7 +171,6 @@ const gear = (() => {
           <path class="ln faint" d="M53 70.5h4M63 70.5h4" />
         </svg>
         <h2>Games</h2>
-        {newest.games && <p class="new"><span>New</span>{newest.games}</p>}
       </a>
 
       <a class="card book-card" href="/research">
@@ -196,7 +185,6 @@ const gear = (() => {
           <path class="ln accent" d="M60 30v56" />
         </svg>
         <h2>Research</h2>
-        {newest.research && <p class="new"><span>New</span>{newest.research}</p>}
       </a>
     </nav>
   </div>
@@ -375,14 +363,18 @@ const gear = (() => {
   /* ── Cards ── */
   .cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    /* Narrow, upright cards: each keeps a portrait shape and its drawing grows to fill it. */
+    grid-template-columns: repeat(4, minmax(0, 196px));
+    justify-content: start;
     gap: 14px;
     padding: 32px 0 24px;
     border-top: 1px solid var(--line);
   }
   .card {
-    display: block;
-    padding: 16px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 5 / 6;
+    padding: 12px 14px 14px;
     border: 1px solid var(--line);
     border-radius: 12px;
     text-decoration: none;
@@ -397,8 +389,9 @@ const gear = (() => {
   }
   .card svg {
     display: block;
+    flex: 1;
     width: 100%;
-    height: 150px;
+    min-height: 0;
   }
   /* The resting brick is drawn low to leave room for the hover stack; lift and enlarge it so it
      sits on the same centre line as the globe and the book. */
@@ -408,8 +401,8 @@ const gear = (() => {
     transform-origin: 50% 60%;
   }
   .card h2 {
-    margin: 12px 0 0;
-    font-size: 16px;
+    margin: 10px 0 0;
+    font-size: 18px;
     font-weight: 500;
     transition: color 200ms ease;
   }
@@ -425,28 +418,6 @@ const gear = (() => {
   .card:hover h2::after,
   .card:focus-visible h2::after {
     opacity: 1;
-  }
-  .card p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.45;
-  }
-  /* "New" line: the latest paper or project */
-  .card .new {
-    margin-top: 8px;
-    color: var(--text);
-    font-size: 12.5px;
-  }
-  .card .new span {
-    margin-right: 8px;
-    padding: 1px 7px;
-    border: 1px solid currentColor;
-    border-radius: 99px;
-    color: var(--accent);
-    font-size: 10.5px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
   }
 
   /* Line-drawing look */
@@ -634,28 +605,20 @@ const gear = (() => {
       padding-top: 24px;
     }
     .card h2 {
-      font-size: 15px;
-    }
-    .card p {
-      font-size: 12px;
-    }
-    .card .new {
-      margin-top: 6px;
-      font-size: 11.5px;
-    }
-    .card .new span {
-      display: inline-block;
-      margin: 0 6px 3px 0;
+      font-size: 16.5px;
     }
     /* Two by two, the drawing above the words */
     .cards {
       grid-template-columns: 1fr 1fr;
     }
+    /* Phones keep the wider, shorter cards for readability */
     .card {
-      padding: 10px 12px 14px;
+      display: block;
+      aspect-ratio: auto;
+      padding: 8px 12px 12px;
     }
     .card svg {
-      height: 104px;
+      height: 90px;
     }
     .lego-card svg {
       transform: translateY(-14px) scale(1.12);

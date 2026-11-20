@@ -15,13 +15,6 @@ export const home = {
   tagline: 'Researcher, builder, photographer',
   roles: ['researcher', 'builder', 'photographer', 'backpacker', 'designer', 'graduate student'],
   location: 'Currently in Irvine, CA.',
-  // The four cards under the hello. `newest` is the slug of the paper, project or game shown on
-  // the card's "New" line; leave it empty to hide that line.
-  cards: {
-    research: { newest: 'judicial-arms-race' },
-    projects: { newest: 'unvault' },
-    games: { newest: 'umbara' },
-  },
   links: [
     { icon: 'email', label: 'Email', href: 'mailto:movahedn@uci.edu' },
     { icon: 'github', label: 'GitHub', href: 'https://github.com/nimammovahedi-del' },
