@@ -9,7 +9,6 @@ const photos = await getCategory('film');
 <BaseLayout title="Film" description="Film simulation photography by Nima Movahedi." film>
   <header class="page-head film-head">
     <h1>Film</h1>
-    <p>A smaller, slower collection — shot with film simulations.</p>
   </header>
   <Gallery photos={photos} variant="film" eager={1} label="Film photographs" />
 </BaseLayout>
