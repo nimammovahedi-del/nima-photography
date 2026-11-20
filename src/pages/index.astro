@@ -6,22 +6,11 @@ import { merge } from 'topojson-client';
 import { filter, filterWeight, presimplify, quantile, simplify, sphericalRingArea, sphericalTriangleArea } from 'topojson-simplify';
 import world from 'world-atlas/countries-110m.json';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { home, places, site } from '../site.config';
+import { home, site } from '../site.config';
 import { papers } from '../data/research/papers';
 import { projects } from '../data/projects';
 import { games } from '../data/games';
 
-// ── Card captions: counts come from the data, so they stay current ──────────
-const WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
-const word = (n: number) => WORDS[n] ?? String(n);
-const captions = {
-  photography: home.cards.photography
-    .replace('{countries}', String(places.length))
-    .replace('{cities}', String(places.reduce((t, p) => t + p.cities.length, 0))),
-  research: home.cards.research.caption.replace('{n}', word(papers.length)),
-  projects: home.cards.projects.caption.replace('{n}', word(projects.length)),
-  games: home.cards.games.caption.replace('{n}', word(games.length)),
-};
 const newest = {
   research: papers.find((p) => p.slug === home.cards.research.newest)?.title,
   projects: projects.find((p) => p.slug === home.cards.projects.newest)?.name,
@@ -164,7 +153,6 @@ const gear = (() => {
           <circle class="ln accent" cx={GLOBE.cx} cy={GLOBE.cy} r={GLOBE.r} />
         </svg>
         <h2>Photography</h2>
-        <p set:html={captions.photography} />
       </a>
 
       <a class="card lego-card" href="/projects">
@@ -172,7 +160,6 @@ const gear = (() => {
           {bricks.map((b, k) => <g class:list={['brick', `b${k}`]} set:html={b} />)}
         </svg>
         <h2>Projects</h2>
-        <p>{captions.projects}</p>
         {newest.projects && <p class="new"><span>New</span>{newest.projects}</p>}
       </a>
 
@@ -194,7 +181,6 @@ const gear = (() => {
           <path class="ln faint" d="M53 70.5h4M63 70.5h4" />
         </svg>
         <h2>Games</h2>
-        <p>{captions.games}</p>
         {newest.games && <p class="new"><span>New</span>{newest.games}</p>}
       </a>
 
@@ -210,7 +196,6 @@ const gear = (() => {
           <path class="ln accent" d="M60 30v56" />
         </svg>
         <h2>Research</h2>
-        <p>{captions.research}</p>
         {newest.research && <p class="new"><span>New</span>{newest.research}</p>}
       </a>
     </nav>
@@ -423,7 +408,7 @@ const gear = (() => {
     transform-origin: 50% 60%;
   }
   .card h2 {
-    margin: 12px 0 2px;
+    margin: 12px 0 0;
     font-size: 16px;
     font-weight: 500;
     transition: color 200ms ease;
@@ -449,7 +434,7 @@ const gear = (() => {
   }
   /* "New" line: the latest paper or project */
   .card .new {
-    margin-top: 10px;
+    margin-top: 8px;
     color: var(--text);
     font-size: 12.5px;
   }
