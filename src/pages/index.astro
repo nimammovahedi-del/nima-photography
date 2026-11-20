@@ -611,8 +611,14 @@ const gear = (() => {
     .cards {
       grid-template-columns: 1fr 1fr;
     }
+    /* Phones keep the wider, shorter cards for readability */
     .card {
+      display: block;
+      aspect-ratio: auto;
       padding: 8px 12px 12px;
+    }
+    .card svg {
+      height: 90px;
     }
     .lego-card svg {
       transform: translateY(-14px) scale(1.12);
